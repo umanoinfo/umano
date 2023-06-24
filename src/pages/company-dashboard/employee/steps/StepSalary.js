@@ -1,0 +1,525 @@
+import MuiChip from '@mui/material/Chip'
+
+// ** React Imports
+import { useEffect, useRef, useState } from 'react'
+
+// ** Next Import
+import Link from 'next/link'
+
+// ** MUI Imports
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import CardContent from '@mui/material/CardContent'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { DatePicker, Form, InputNumber, Schema, SelectPicker } from 'rsuite'
+
+// ** Custom Components Imports
+import { styled } from '@mui/material/styles'
+import {
+  Card,
+  CardActions,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  ListItemSecondaryAction,
+  Paper
+} from '@mui/material'
+
+// ** React Imports
+import { Fragment } from 'react'
+
+import { SalaryChange } from 'src/local-db'
+
+// ** MUI Imports
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
+
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+
+// ** Axios Imports
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+
+// ** Store Imports
+import { useDispatch, useSelector } from 'react-redux'
+
+// ** Actions Imports
+import { fetchData, deleteUser } from 'src/store/apps/employeeSalary'
+import { DataGrid } from '@mui/x-data-grid'
+
+const { StringType } = Schema.Types
+
+// Styled Grid component
+const StyledGrid1 = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  [theme.breakpoints.down('md')]: {
+    paddingTop: '0 !important'
+  },
+  '& .MuiCardContent-root': {
+    padding: theme.spacing(3, 4.75),
+    [theme.breakpoints.down('md')]: {
+      paddingTop: 0
+    }
+  }
+}))
+
+// Styled Grid component
+const StyledGrid2 = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: '0 !important'
+  },
+  [theme.breakpoints.down('md')]: {
+    order: -1
+  }
+}))
+
+// Styled component for the image
+const Img = styled('img')(({ theme }) => ({
+  height: '11rem',
+  borderRadius: theme.shape.borderRadius
+}))
+
+const StepSalary = ({ handleNext, employee }) => {
+  const [emiratesID, setEmiratesID] = useState()
+  const inputFrontEmiratesFile = useRef(null)
+  const inputBackEmiratesFile = useRef(null)
+
+  const [employeeId, setEmployeeId] = useState('')
+  const [plan, setPlan] = useState('')
+  const [userStatus, setUserStatus] = useState('')
+  const [value, setValue] = useState('')
+  const [form, setForm] = useState(false)
+  const [action, setAction] = useState('add')
+  const [positionChangeType, setPositionChangeType] = useState()
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  const [positionChangeStartTypes, setPositionChangeStartTypes] = useState([])
+  const [positionChangeEndTypes, setPositionChangeEndTypes] = useState([])
+  const [selectedSalary, setSelectedSalary] = useState()
+
+  const [salaryChanges, setSalaryChanges] = useState()
+  const [salaryChange, setSalaryChange] = useState()
+  const [startChangeDate, setStartChangeDate] = useState(new Date().toISOString().substring(0, 10))
+
+  const dispatch = useDispatch()
+
+  const store = useSelector(state => state.employeeSalary)
+
+  const [formError, setFormError] = useState({})
+  const [formValue, setFormValue] = useState({})
+  const [pageSize, setPageSize] = useState(7)
+  const formRef = useRef()
+
+  if (!employee) {
+    return (
+      <>
+        <Typography
+          sx={{
+            mt: 2,
+            mb: 3,
+            px: 2,
+            fontWeight: 400,
+            fontSize: 15,
+            color: 'red',
+            textAlign: 'center',
+            fontStyle: 'italic'
+          }}
+        >
+          You must insert employee ..
+        </Typography>
+      </>
+    )
+  } else {
+    useEffect(() => {
+      setEmployeeId(employee._id)
+      dispatch(
+        fetchData({
+          employeeId: employeeId,
+          userStatus,
+          q: value
+        })
+      ).then(setLoading(false))
+    }, [dispatch, employeeId, userStatus, value])
+  }
+
+  useEffect(() => {
+    getOptions()
+  }, [])
+
+  // ----------------------------- Get Options ----------------------------------
+
+  const getOptions = async () => {
+    const salaryChanges = SalaryChange.map(type => ({
+      label: type.title,
+      value: type.value
+    }))
+
+    setSalaryChanges(salaryChanges)
+  }
+
+  //-------------------------- validate -----------------------------------
+
+  const validateMmodel = Schema.Model({
+    overtimeSalary: StringType().isRequired('Overtime Salary is required.'),
+    lumpySalary: StringType().isRequired('lumpy Salary is required.')
+  })
+
+  // ------------------------------- Submit --------------------------------------
+
+  const handleSubmit = () => {
+    formRef.current.checkAsync().then(result => {
+      if (!result.hasError) {
+        let data = {}
+        setLoading(true)
+        data = formValue
+        data.startChangeDate = new Date(startChangeDate).toISOString().substring(0, 10)
+        data.salaryChange = salaryChange
+        data.employee_id = employee._id
+
+        if (action == 'add') {
+          data.created_at = new Date()
+          axios
+            .post('/api/employee-salary/add-salary', {
+              data
+            })
+            .then(function (response) {
+              dispatch(fetchData({ employeeId: employee._id })).then(() => {
+                toast.success('Salary Inserted Successfully.', {
+                  delay: 3000,
+                  position: 'bottom-right'
+                })
+                setForm(false)
+                setLoading(false)
+              })
+            })
+            .catch(function (error) {
+              toast.error('Error : ' + error.response.data.message + ' !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              setLoading(false)
+            })
+        }
+        if (action == 'edit') {
+          Object.assign({}, data._id, selectedSalary._id)
+          data.updated_at = new Date()
+          axios
+            .post('/api/employee-salary/edit-salary', {
+              data
+            })
+            .then(function (response) {
+              dispatch(fetchData({ employeeId: employee._id })).then(() => {
+                toast.success('Salary Updated Successfully.', {
+                  delay: 3000,
+                  position: 'bottom-right'
+                })
+                setForm(false)
+                setLoading(false)
+              })
+            })
+            .catch(function (error) {
+              toast.error('Error : ' + error.response.data.message + ' !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              setLoading(false)
+            })
+        }
+      }
+    })
+  }
+
+  const handleAdd = () => {
+    setFormValue({})
+    setAction('add')
+    setForm(true)
+  }
+
+  const handleDelete = e => {
+    setSelectedSalary(e)
+    setOpen(true)
+  }
+
+  const deletePosition = () => {
+    setLoading(true)
+    axios
+      .post('/api/employee-salary/delete-salary', {
+        selectedSalary
+      })
+      .then(function (response) {
+        dispatch(fetchData({ employeeId: employeeId })).then(() => {
+          toast.success('Employee salary Deleted Successfully.', {
+            delay: 1000,
+            position: 'bottom-right'
+          })
+          setOpen(false)
+        })
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response.data.message + ' !', {
+          delay: 1000,
+          position: 'bottom-right'
+        })
+        setLoading(false)
+      })
+  }
+
+  // ------------------------------- handle Edit --------------------------------------
+
+  const handleEdit = e => {
+    setFormValue({})
+    setSelectedSalary(e)
+    setFormValue(e)
+    setStartChangeDate(new Date(e.startChangeDate).toISOString().substring(0, 10))
+    setSalaryChange(e.salaryChange)
+    setAction('edit')
+    setForm(true)
+  }
+
+  const columns = [
+    {
+      flex: 0.3,
+      minWidth: 100,
+      field: 'lumpySalary',
+      headerName: 'Lumpy salary',
+      renderCell: ({ row }) => <Typography variant='body2'>{row.lumpySalary}</Typography>
+    },
+    {
+      flex: 0.3,
+      minWidth: 100,
+      field: 'overtimeٍٍSalary',
+      headerName: 'Overtime Salary',
+      renderCell: ({ row }) => <Typography variant='body2'>{row.overtimeSalary}</Typography>
+    },
+    {
+      flex: 0.15,
+      minWidth: 100,
+      field: 'date',
+      headerName: 'Date',
+      renderCell: ({ row }) => <Typography variant='body2'>{row.startChangeDate}</Typography>
+    },
+    {
+      flex: 0.15,
+      minWidth: 100,
+      field: 'action',
+      headerName: '',
+      renderCell: ({ row }) => (
+        <>
+          <IconButton
+            size='small'
+            onClick={e => {
+              handleEdit(row)
+            }}
+          >
+            <Icon icon='mdi:pencil-outline' fontSize={18} />
+          </IconButton>
+          <IconButton
+            size='small'
+            onClick={e => {
+              handleDelete(row)
+            }}
+          >
+            <Icon icon='mdi:delete-outline' fontSize={18} />
+          </IconButton>
+        </>
+      )
+    }
+  ]
+
+  return (
+    <Grid spacing={6}>
+      <Grid item xs={12} lg={12}>
+        <Grid container spacing={1}>
+          {/* --------------------------- Emirates  View ------------------------------------ */}
+
+          <Grid xs={12} md={7} lg={7} sx={{ px: 1, mt: 2 }}>
+            <Typography sx={{ mb: 2, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Salary</Typography>
+            <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+              Add Employee Salary
+            </Button>
+            <Card xs={12} md={12} lg={12}>
+              <DataGrid
+                autoHeight
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[7, 10, 25, 50]}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+            </Card>
+          </Grid>
+
+          {/* --------------------------- Passport  ------------------------------------ */}
+
+          <Grid xs={12} md={5} lg={5} sx={{ px: 1, mt: 2 }}>
+            {form && (
+              <Card xs={12} md={12} lg={12} sx={{ px: 1, pb: 8 }}>
+                {action == 'add' && (
+                  <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
+                    Add New Salary
+                  </Typography>
+                )}
+                {action == 'edit' && (
+                  <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
+                    Edit Position
+                  </Typography>
+                )}
+                <Form
+                  fluid
+                  ref={formRef}
+                  onChange={setFormValue}
+                  onCheck={setFormError}
+                  formValue={formValue}
+                  model={validateMmodel}
+                >
+                  <Grid container sx={{ mt: 3, px: 5 }}>
+                    <Grid container spacing={3}>
+                      <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                        <small>Lumpy Salary</small>
+                        <Form.Control
+                          type='number'
+                          controlId='lumpySalary'
+                          size='lg'
+                          name='lumpySalary'
+                          placeholder='Lumpy Salary'
+                        />
+                      </Grid>
+                      <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                        <small>Overtime Salary</small>
+                        <Form.Control
+                          controlId='overtimeSalary'
+                          type='number'
+                          size='lg'
+                          name='overtimeSalary'
+                          placeholder='Overtime Salary'
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={3}>
+                      <Grid item sm={6} xs={12} mt={2}>
+                        <small>Change Type</small>
+                        <SelectPicker
+                          size='lg'
+                          name='salaryChange'
+                          onChange={e => {
+                            setSalaryChange(e)
+                          }}
+                          value={salaryChange}
+                          data={salaryChanges}
+                          block
+                        />
+                      </Grid>
+                      <Grid item sm={6} xs={12} mt={2}>
+                        <small>Date of Start</small>
+                        <Form.Control
+                          size='lg'
+                          oneTap
+                          accepter={DatePicker}
+                          name='startChangeDate'
+                          onChange={e => {
+                            setStartChangeDate(e.toISOString().substring(0, 10))
+                          }}
+                          value={new Date(startChangeDate)}
+                          block
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Grid container>
+                      <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                        <small>Financial No</small>
+                        <Form.Control
+                          type='number'
+                          controlId='financialNo'
+                          size='lg'
+                          name='financialNo'
+                          placeholder='Financial No'
+                        />
+                      </Grid>
+                      <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                        <small>Remarks</small>
+                        <Form.Control controlId='remarks' size='lg' name='remarks' placeholder='Remarks' />
+                      </Grid>
+                    </Grid>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 3 }}>
+                      {!loading && (
+                        <>
+                          {action == 'add' && (
+                            <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
+                              Save
+                            </Button>
+                          )}
+                          {action == 'edit' && (
+                            <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
+                              Update
+                            </Button>
+                          )}
+                          <Button
+                            type='button'
+                            color='warning'
+                            variant='contained'
+                            sx={{ mr: 3 }}
+                            onClick={() => setForm(false)}
+                          >
+                            Close
+                          </Button>
+                        </>
+                      )}
+                    </Box>
+                  </Grid>
+                </Form>
+              </Card>
+            )}
+          </Grid>
+
+          {/* -------------------------- Clinician  ------------------------------------- */}
+          <Dialog
+            open={open}
+            disableEscapeKeyDown
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+            onClose={(event, reason) => {
+              if (reason !== 'backdropClick') {
+                handleClose()
+              }
+            }}
+          >
+            <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you sure , you want to delete employee salary{' '}
+                <span className='bold'>{selectedSalary && selectedSalary.positionTitle}</span>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions className='dialog-actions-dense'>
+              <Button onClick={deletePosition}>Yes</Button>
+              <Button onClick={() => setOpen(false)}>No</Button>
+            </DialogActions>
+          </Dialog>
+        </Grid>
+      </Grid>
+    </Grid>
+  )
+}
+
+export default StepSalary
