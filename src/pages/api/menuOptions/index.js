@@ -12,6 +12,10 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
 
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewEmployeeLeave')) {
+    res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+
   // ------------------------------ Fill View --------------------------------------
 
   const options = []
