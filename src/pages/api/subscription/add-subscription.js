@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(company._id) }, { $set: company }, { upsert: false })
 
-  // ------------------ LogBook ---------------------------------------------------
+  // ------------------ logBook ---------------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     Description: 'ADD Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   const insertedSubscription = await client
     .db()

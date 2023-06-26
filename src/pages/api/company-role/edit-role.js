@@ -3,11 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-
   // -------------------- Token ---------------------
 
-  const token = await getToken({req})
-  if (!token || !token.user ) {
+  const token = await getToken({ req })
+  if (!token || !token.user) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -69,7 +68,7 @@ export default async function handler(req, res) {
       .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
   }
 
-  // ---------------- LogBook ----------------
+  // ---------------- logBook ----------------
 
   let log = {
     user_id: req.body.user._id,
@@ -79,7 +78,7 @@ export default async function handler(req, res) {
     Description: 'Edit role (' + role.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: users })
 }

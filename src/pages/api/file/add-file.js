@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   const newFile = await client.db().collection('files').insertOne(file)
   // const insertedEmployee = await client.db().collection('employees').findOne({ _id: newEmployee.insertedId })
 
-  // ---------------- LogBook ------------------------------------------
+  // ---------------- logBook ------------------------------------------
 
   // let log = {
   //   user_id: myUser._id,
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   //   Description: 'Add Employee (' + insertedEmployee.firstName + ' ' + insertedEmployee.lastName + ')',
   //   created_at: new Date()
   // }
-  // const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  // const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: req.body.formData })
 }

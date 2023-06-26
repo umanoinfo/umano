@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   const newDeduction = await client.db().collection('deductions').insertOne(deduction)
   const insertedDeduction = await client.db().collection('deductions').findOne({ _id: newDeduction.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -45,6 +45,6 @@ export default async function handler(req, res) {
     Description: 'Add deduction (' + insertedDeduction.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
   res.status(201).json({ success: true, data: insertedDeduction })
 }

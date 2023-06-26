@@ -19,6 +19,9 @@ export default async function handler(req, res) {
   const id = employeeLeave._id
   delete employeeLeave._id
 
+  employeeLeave.date_from = new Date(employeeLeave.date_from)
+  employeeLeave.date_to = new Date(employeeLeave.date_to)
+
   if (
     !employeeLeave.reason ||
     !employeeLeave.employee_id ||
@@ -38,7 +41,7 @@ export default async function handler(req, res) {
     .collection('employeeLeaves')
     .updateOne({ _id: ObjectId(id) }, { $set: employeeLeave }, { upsert: false })
 
-  // ------------------ LogBook -------------------
+  // ------------------ logBook -------------------
 
   let log = {
     user_id: myUser._id,
@@ -48,7 +51,7 @@ export default async function handler(req, res) {
     Description: 'Edit employee leave (' + employeeLeave.reason + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: employeeLeave })
 }

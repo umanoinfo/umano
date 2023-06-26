@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       .collection('roles')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: '' } }, { upsert: false })
 
-    // ---------------- LogBook ----------------
+    // ---------------- logBook ----------------
 
     let log = {
       user_id: req.body.user._id,
@@ -39,14 +39,14 @@ export default async function handler(req, res) {
       Description: 'Restore role (' + selectedRole.title + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
     const deletRole = await client
       .db()
       .collection('roles')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
 
-    // ---------------- LogBook ----------------
+    // ---------------- logBook ----------------
 
     let log = {
       user_id: req.body.user._id,
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       Description: 'Delete role (' + selectedRole.title + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
 
   const users = await client

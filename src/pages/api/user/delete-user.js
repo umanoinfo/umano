@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
   }
 
-  // ---------------- LogBook ----------------
+  // ---------------- logBook ----------------
 
   let log = {
     user_id: myUser._id,

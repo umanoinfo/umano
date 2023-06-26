@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     const newEvent = await client.db().collection('events').insertOne(event)
   }
 
-  // ------------------ LogBook -------------------
+  // ------------------ logBook -------------------
 
   let log = {
     user_id: myUser._id,
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     Description: 'Edit Document (' + updateDocument.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedDocument })
 }

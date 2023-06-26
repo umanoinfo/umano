@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     .collection('employeeDeductions')
     .findOne({ _id: newEmployeeDeduction.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     Description: 'Add Employee deductions (' + insertedDeduction.reason + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedDeduction })
 }

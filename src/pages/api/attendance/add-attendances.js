@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     const newAttendance = await client.db().collection('attendances').insertOne(attendance)
   }
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     Description: 'Add attendances ',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: [] })
 }

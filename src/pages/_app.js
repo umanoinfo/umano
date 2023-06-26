@@ -110,8 +110,6 @@ const App = props => {
   const guestGuard = Component.guestGuard ?? false
   const aclAbilities = Component.acl ?? defaultACLObj
 
-  console.log(Component)
-
   return (
     <SessionProvider session={session}>
       <Provider store={store}>

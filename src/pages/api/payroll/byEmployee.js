@@ -105,6 +105,21 @@ export default async function handler(req, res) {
       },
       {
         $lookup: {
+          from: 'employeeLeaves',
+          let: { employee_id: { $toString: '$_id' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+            {
+              $match: {
+                date_from: { $gte: new Date(selectedEmployee.fromDate), $lte: new Date(selectedEmployee.toDate) }
+              }
+            }
+          ],
+          as: 'leaves_info'
+        }
+      },
+      {
+        $lookup: {
           from: 'deductions',
           let: { deductions: '$deductions' },
           pipeline: [
@@ -149,11 +164,10 @@ export default async function handler(req, res) {
   let attendances = []
   let index = 0
   const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
   const holidays = company.holidays.map(day => {
     return new Date(day.date).toLocaleDateString()
   })
-
-  console.log(holidays)
 
   if (employee)
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
@@ -169,10 +183,35 @@ export default async function handler(req, res) {
       let lateOverTimeHours = 0
       let day = ''
       let holidayDay = false
+      let leaveDay = false
+      let leaveHourly = false
       day = new Date(x).getDay()
       let workingDay = working_days.includes(weekday[day])
       let dateFormate = new Date(x).toLocaleDateString()
       holidayDay = holidays.includes(dateFormate)
+
+      // ----------------------- leaves ------------------------------------
+
+      employee[0].leaves_info.map(leave => {
+        if (leave.type == 'daily') {
+          let startLeave = new Date(leave.date_from)
+          let endLeave = new Date(leave.date_to)
+          for (let leaveItem = startLeave; leaveItem <= endLeave; leaveItem.setDate(leaveItem.getDate() + 1)) {
+            if (leaveItem.setHours(0, 0, 0, 0) == x.setHours(0, 0, 0, 0)) {
+              leaveDay = true
+            }
+          }
+        }
+        if (leave.type == 'hourly') {
+          if (new Date(leave.date_from).setHours(0, 0, 0, 0) == x.setHours(0, 0, 0, 0)) {
+            leaveHourly = true
+          }
+        }
+
+        return new Date(day.date).toLocaleDateString()
+      })
+
+      // -----------------------------------------------------------------
 
       let shift_in = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeIn.toString() + ' UTC')
       let shift_out = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeOut.toString() + ' UTC')
@@ -181,6 +220,15 @@ export default async function handler(req, res) {
       let shiftOverTime1 = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0]['1st'].toString() + ' UTC')
       let shiftOverTime2 = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0]['2nd'].toString() + ' UTC')
       let shiftOverTime3 = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0]['3rd'].toString() + ' UTC')
+
+      // ----------------------- Absence days -----------------------------------------
+
+      if ((!_in.toString() || !_out.toString()) && !leaveDay && !holidayDay && workingDay) {
+        lateFlag = true
+        lateHours = ((shift_out - shift_in) / 3600000).toFixed(3)
+      }
+
+      // -------------------------------------------------------------
 
       employee[0].attendances_info.map(att => {
         if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
@@ -201,6 +249,7 @@ export default async function handler(req, res) {
             earlyFlag = true
             earlyHours = ((shift_out - new Date('1/1/2023 ' + _out.toString() + ' UTC')) / 3600000).toFixed(3)
           }
+
           // -------------------- overtime -----------------------
 
           if (new Date('1/1/2023 ' + _in.toString() + ' UTC') < shift_in) {
@@ -227,7 +276,9 @@ export default async function handler(req, res) {
         totalHours: totalHours,
         earlyOverTimeHours: earlyOverTimeHours,
         lateOverTimeHours: lateOverTimeHours,
-        holidayDay: holidayDay
+        holidayDay: holidayDay,
+        leaveDay: leaveDay,
+        leaveHourly: leaveHourly
       })
     }
   // console.log(attendances)

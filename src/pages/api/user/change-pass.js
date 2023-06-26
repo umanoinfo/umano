@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       .collection('users')
       .findOne({ _id: ObjectId(id) })
 
-    // ---------------- LogBook ----------------
+    // ---------------- logBook ----------------
 
     let log = {
       user_id: myUser._id,

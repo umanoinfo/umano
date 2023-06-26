@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   const newShift = await client.db().collection('shifts').insertOne(shift)
   const insertedShift = await client.db().collection('shifts').findOne({ _id: newShift.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     Description: 'Add shift (' + insertedShift.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedShift })
 }

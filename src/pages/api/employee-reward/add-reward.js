@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   const newemployeeReward = await client.db().collection('employeeRewards').insertOne(employeeReward)
   const insertedReward = await client.db().collection('employeeRewards').findOne({ _id: newemployeeReward.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     Description: 'Add Employee reward (' + insertedReward.reason + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedReward })
 }

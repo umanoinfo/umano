@@ -542,6 +542,24 @@ const attendanceList = ({ attendances }) => {
                 sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
               />
             )}
+            {row.leaveDay && row.workingDay && (
+              <CustomChip
+                skin='light'
+                size='small'
+                label='Leave'
+                color='info'
+                sx={{ mx: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+              />
+            )}
+            {row.leaveHourly && row.workingDay && (
+              <CustomChip
+                skin='light'
+                size='small'
+                label='Leave'
+                color='primary'
+                sx={{ mx: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+              />
+            )}
           </>
         )
       }

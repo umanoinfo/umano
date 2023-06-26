@@ -44,10 +44,9 @@ const Loading = ({ header, description }) => {
           </Typography>
           <Typography variant='h7'>{description}</Typography>
         </BoxWrapper>
-        <Img height='300' alt='under-maintenance-illustration' src='/images/pages/misc-under-maintenance.png' />
+        <Img height='75' alt='under-maintenance-illustration' src='/images/apple-touch-icon.png' />
       </Box>
       <LinearProgress sx={{ mt: 5 }} />
-      <FooterIllustrations image={`/images/pages/misc-under-maintenance-object.png`} />
     </Box>
   )
 }

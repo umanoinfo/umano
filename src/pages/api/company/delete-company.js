@@ -37,7 +37,7 @@ export default async function handler(req, res) {
       Description: 'Restore company (' + selectedCompany.name + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
     //----------------------------- Delete --------------------------------------
     const deletCompany = await client
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       Description: 'Delete company (' + selectedCompany.name + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
 
   res.status(200).json({ success: true, data: company })

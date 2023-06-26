@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   const newRole = await client.db().collection('roles').insertOne(role)
   const insertedRole = await client.db().collection('roles').findOne({ _id: newRole.insertedId })
 
-  // ---------------- LogBook ----------------
+  // ---------------- logBook ----------------
 
   let log = {
     user_id: req.body.user._id,
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     Description: 'Add role (' + insertedRole.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedRole })
 }

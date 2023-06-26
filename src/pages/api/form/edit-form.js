@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     .collection('forms')
     .findOne({ _id: ObjectId(id) })
 
-  // ------------------ LogBook -------------------
+  // ------------------ logBook -------------------
 
   let log = {
     user_id: myUser._id,
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     Description: 'Edit Form (' + updateForm.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedForm })
 }

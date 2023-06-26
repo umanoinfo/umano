@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   // ---------------- Insert ----------------
 
   const permission = req.body.data
-  permission.user = token.user ;
+  permission.user = token.user
   if (!permission.title || !permission.alias) {
     res.status(422).json({
       message: 'Invalid input'
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   const newPermission = await client.db().collection('permissions').insertOne(permission)
   const insertedPermissio = await client.db().collection('permissions').findOne({ _id: newPermission.insertedId })
 
-  // ---------------- LogBook ----------------
+  // ---------------- logBook ----------------
 
   let log = {
     user_id: req.body.user._id,
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     Description: 'Add permission (' + insertedPermissio.title + ') to group (' + insertedPermissio.group + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedPermissio })
 }

@@ -429,11 +429,11 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       <small> %</small>
                     </TableCell>
                     <TableCell>
-                      {deduction.totalValue}
+                      {deduction.totalValue * -1}
                       <small> AED</small>
                     </TableCell>
                     <TableCell>
-                      <strong> {deduction.totalValue}</strong>
+                      <strong> {deduction.totalValue * -1}</strong>
                       <small> AED</small>
                     </TableCell>
                   </TableRow>
@@ -503,7 +503,8 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     Number(data.totalOffDayValue) +
                     Number(data.totalholidayValue) +
                     Number(data.salaries_info[0].lumpySalary) +
-                    Number(data.totalEarlyValue) +
+                    Number(data.totalEarlyValue) -
+                    Number(data.totalDeductions) +
                     Number(data.totalCompensations) -
                     Number(data.totalEmployeeDeductions) +
                     Number(data.totalEmployeeRewards)

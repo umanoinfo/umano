@@ -36,12 +36,14 @@ export default async function handler(req, res) {
   employeeLeave.user_id = myUser._id
   employeeLeave.created_at = new Date()
   employeeLeave.status = 'active'
+  employeeLeave.date_from = new Date(employeeLeave.date_from)
+  employeeLeave.date_to = new Date(employeeLeave.date_to)
 
   const newEmployeeLeave = await client.db().collection('employeeLeaves').insertOne(employeeLeave)
 
   const insertedLeave = await client.db().collection('employeeLeaves').findOne({ _id: newEmployeeLeave.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -51,7 +53,7 @@ export default async function handler(req, res) {
     Description: 'Add Employee leave (' + insertedLeave.reason + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedLeave })
 }

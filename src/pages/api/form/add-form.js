@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   const newForm = await client.db().collection('forms').insertOne(form)
   const insertedForm = await client.db().collection('forms').findOne({ _id: newForm.insertedId })
 
-  // -------------------- LogBook ------------------------------------------
+  // -------------------- logBook ------------------------------------------
 
   let log = {
     user_id: myUser._id,
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     Description: 'Add Form (' + insertedForm.title + ')',
     created_at: new Date()
   }
-  const newLogBook = await client.db().collection('LogBook').insertOne(log)
+  const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: insertedForm })
 }

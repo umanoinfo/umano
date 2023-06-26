@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       const newEvent = await client.db().collection('events').insertOne(event)
     }
 
-    // ---------------- LogBook ----------------
+    // ---------------- logBook ----------------
 
     let log = {
       user_id: myUser._id,
@@ -63,14 +63,14 @@ export default async function handler(req, res) {
       Description: 'Restore document (' + selectedDocument.title + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
     const deletePosition = await client
       .db()
       .collection('documents')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
 
-    // ---------------- LogBook ----------------
+    // ---------------- logBook ----------------
 
     let log = {
       user_id: myUser._id,
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       Description: 'Delete document (' + selectedDocument.title + ')',
       created_at: new Date()
     }
-    const newLogBook = await client.db().collection('LogBook').insertOne(log)
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
 
   res.status(201).json({ success: true, data: selectedDocument })
