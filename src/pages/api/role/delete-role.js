@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminDeleteRole')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
+
   // ---------------- Delete --------------------
 
   const role = req.body.selectedRole
@@ -89,7 +90,9 @@ export default async function handler(req, res) {
         }
       }
     }
+
     delete user._id
+    
     const updatedUser = await client
       .db()
       .collection('users')

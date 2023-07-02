@@ -481,7 +481,6 @@ const EmployeeList = classNamec => {
               sx={{
                 display: 'flex',
                 alignItems: 'center'
-                // justifyContent: 'space-between'
               }}
             >
               <FormControl size='small'>

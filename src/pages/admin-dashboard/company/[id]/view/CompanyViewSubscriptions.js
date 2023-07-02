@@ -108,9 +108,11 @@ const CompanyViewSubscriptions = ({ id }) => {
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(7)
   const [data, setData] = useState([])
+  
   useEffect(() => {
     getSubscriptions()
   }, [])
+  
   // ------------------------------ Get Users ------------------------------------
 
   const getSubscriptions = async () => {

@@ -5,8 +5,8 @@ export default async function handler(req, res) {
   const selectedCompany = req.body.selectedCompany
   const id = selectedCompany._id
 
-  // try {
   const client = await connectToDatabase()
+
   const company = await client
     .db()
     .collection('companies')
@@ -25,7 +25,5 @@ export default async function handler(req, res) {
   }
 
   res.status(200).json({ success: true, data: company })
-  // } catch (error) {
-  //   res.status(400).json({ success: false })
-  // }
+
 }

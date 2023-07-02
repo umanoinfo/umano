@@ -74,11 +74,13 @@ const DialogAddUser = ({ id }) => {
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
   const [roles, setRoles] = useState([])
+
   const [defaultValues, setDefaultValues] = useState({
     email: '',
     password: '',
     name: ''
   })
+
   const router = useRouter()
 
   useEffect(() => {
@@ -277,9 +279,10 @@ const DialogAddUser = ({ id }) => {
                       <FormLabel component='legend'>Roles</FormLabel>
                       <FormGroup sx={{ mx: 6 }}>
                         {allRoles &&
-                          allRoles.map(role => {
+                          allRoles.map((role, index) => {
                             return (
                               <FormControlLabel
+                                key={role.id}
                                 control={
                                   <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} />
                                 }

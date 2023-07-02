@@ -21,6 +21,7 @@ export default async function handler(req, res) {
 
   employeeSalary.company_id = myUser.company_id
   const newEmployeeSalary = await client.db().collection('employeeSalaries').insertOne(employeeSalary)
+  
   const insertedEmployeeSalary = await client
     .db()
     .collection('employeeSalaries')

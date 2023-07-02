@@ -276,9 +276,9 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {row.type.map(t => {
+              {row.type.map((t , index) => {
                 return (
-                  <CustomChip color='primary' skin='light' size='small' sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }} label={t} />
+                  <CustomChip key = {index} color='primary' skin='light' size='small' sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }} label={t} />
                 )
               })}
             </div>

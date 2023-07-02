@@ -19,7 +19,6 @@ import AddEventSidebar from './AddEventSidebar'
 import Calendar from './Calendar'
 import SidebarLeft from './SidebarLeft'
 import { useSession } from 'next-auth/react'
-// new imports
 
 // ** Actions
 import {

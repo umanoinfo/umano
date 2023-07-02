@@ -100,6 +100,7 @@ const Guard = ({ children, authGuard, guestGuard }) => {
 // ** Configure JSS & ClassName
 const App = props => {
   const { session, Component, emotionCache = clientSideEmotionCache, pageProps } = props
+
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
 

@@ -43,7 +43,8 @@ import axios from 'axios'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/apps/user/list/TableHeader'
-import AddUserDrawer from 'src/pages/admin-dashboard/user/AddUserDrawer'
+
+// import AddUserDrawer from 'src/pages/admin-dashboard/user/AddUserDrawer'
 
 // ** Vars
 const userRoleObj = {
@@ -390,7 +391,7 @@ const UserList = ({ apiData }) => {
         </Card>
       </Grid>
 
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} /> */}
     </Grid>
   )
 }

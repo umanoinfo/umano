@@ -20,11 +20,11 @@ export default async function handler(req, res) {
 
   const request = req.body.data
 
-  // return
   if (!request.form_id || !request.content || !request.applicant_id) {
     res.status(422).json({
       message: 'Invalid input'
     })
+    
     return
   }
 

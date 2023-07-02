@@ -21,24 +21,12 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
 
   file.company_id = myUser.company_id
   const newFile = await client.db().collection('files').insertOne(file)
-  // const insertedEmployee = await client.db().collection('employees').findOne({ _id: newEmployee.insertedId })
-
-  // ---------------- logBook ------------------------------------------
-
-  // let log = {
-  //   user_id: myUser._id,
-  //   company_id: myUser.company_id,
-  //   Module: 'Employee',
-  //   Action: 'Add',
-  //   Description: 'Add Employee (' + insertedEmployee.firstName + ' ' + insertedEmployee.lastName + ')',
-  //   created_at: new Date()
-  // }
-  // const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: req.body.formData })
 }

@@ -394,8 +394,12 @@ const AllDocumentsList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {FormType &&
-                    FormType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    FormType.map((type, index) => {
+                      return (
+                        <MenuItem key={index} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      )
                     })}
                 </Select>
               </FormControl>

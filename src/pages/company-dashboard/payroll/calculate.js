@@ -709,6 +709,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         var timeStart = new Date('01/01/2007 ' + row.timeIn)
         var timeEnd = new Date('01/01/2007 ' + row.timeOut)
+
         return <>{((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2)}</>
       }
     },

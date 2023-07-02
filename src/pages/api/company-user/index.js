@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       req.query.q = ''
     }
     const client = await connectToDatabase()
+    
     const users = await client
       .db()
       .collection('users')

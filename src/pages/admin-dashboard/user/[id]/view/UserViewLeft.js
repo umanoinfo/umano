@@ -201,9 +201,10 @@ const UserViewLeft = ({ id }) => {
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Roles:</Typography>
                     <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                      {user.roles_info.map(role => {
+                      {user.roles_info.map((role, index) => {
                         return (
                           <CustomChip
+                            key={index}
                             skin='light'
                             size='small'
                             label={role.title}

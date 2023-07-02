@@ -18,8 +18,6 @@ export default async function handler(req, res) {
     method
   } = req
 
-  // try {
-
   // ---------------------- Insert -----------------------------
 
   const form = await client
@@ -35,7 +33,4 @@ export default async function handler(req, res) {
     .toArray()
 
   res.status(200).json({ success: true, data: form })
-  // } catch (error) {
-  //   res.status(400).json({ success: false })
-  // }
 }

@@ -43,6 +43,7 @@ import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, ListItemText
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
+import NoPermission from 'src/views/noPermission'
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -76,6 +77,7 @@ const DialogAddUser = ({ id }) => {
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
   const [roles, setRoles] = useState([])
+
   const [defaultValues, setDefaultValues] = useState({
     email: '',
     password: '',
@@ -190,7 +192,8 @@ const DialogAddUser = ({ id }) => {
   if (loading) return <Loading header='Please Wait' description='User is loading'></Loading>
 
   if (session && !session.user && session.user.permissions.includes('AdminEditUser'))
-    return <NoPermission header='No Permission' description='No permission to View Users'></NoPermission>
+
+    {return <NoPermission header='No Permission' description='No permission to View Users'></NoPermission>}
 
   return (
     <>
@@ -286,9 +289,11 @@ const DialogAddUser = ({ id }) => {
                       <FormLabel component='legend'>Roles</FormLabel>
                       <FormGroup sx={{ mx: 6 }}>
                         {allRoles &&
-                          allRoles.map(role => {
+                          allRoles.map((role , index) => {
+                            
                             return (
                               <FormControlLabel
+                              key = {index}
                                 control={
                                   <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} />
                                 }

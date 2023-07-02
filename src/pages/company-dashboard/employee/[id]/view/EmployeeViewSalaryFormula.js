@@ -239,9 +239,10 @@ const EmployeeViewSalary = ({ employee }) => {
       {employee && employee.compensations_array && (
         <>
           <Box sx={{ px: 2 }}>
-            {employee.compensations_array.map(comp => {
+            {employee.compensations_array.map((comp, index) => {
               return (
                 <CustomChip
+                  key={index}
                   sx={{ m: 1 }}
                   rounded
                   label={
@@ -268,9 +269,10 @@ const EmployeeViewSalary = ({ employee }) => {
       {employee && employee.deductions_array && (
         <>
           <Box sx={{ p: 2 }}>
-            {employee.deductions_array.map(comp => {
+            {employee.deductions_array.map((comp, index) => {
               return (
                 <CustomChip
+                  key={index}
                   sx={{ m: 1 }}
                   rounded
                   label={

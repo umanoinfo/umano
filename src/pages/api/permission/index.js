@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   }
 
   const client = await connectToDatabase()
+  
   const permissions = await client
     .db()
     .collection('permissions')

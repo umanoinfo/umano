@@ -90,11 +90,6 @@ const EditEmployee = ({ popperPlacement, id }) => {
   const [sourceOfHireDataSource, setSourceOfHireDataSource] = useState([])
   const [salaryFormulaDataSource, setSalaryFormulaDataSource] = useState([])
   const [healthInsuranceTypeDataSource, setHealthInsuranceTypeDataSource] = useState([])
-  const [statusDataSource, setStatusTypesDataSource] = useState([
-    { label: 'Active', value: 'active' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'Blocked', value: 'blocked' }
-  ])
   const [countryID, setCountryID] = useState()
   const [dial, setDial] = useState()
   const [userID, setUserID] = useState()
@@ -128,16 +123,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
     getSalaryFormula()
     getDeduction()
     getCompensation()
-    dispatch(deleteInvoice('111'))
   }, [])
-
-  // useEffect(() => {
-  //   dispatch(
-  //     getEmployee({
-  //       id: 'value'
-  //     })
-  //   )
-  // }, [])
 
   // ------------------------ Get Shifts -----------------------------------
 
@@ -196,6 +182,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
     setGender(data[0].gender)
     setIsLoading(false)
   }
+
   // ----------------------------- Change Country ----------------------------------
 
   const changeCountry = selectedCountry => {
@@ -502,7 +489,6 @@ const EditEmployee = ({ popperPlacement, id }) => {
                           }}
                           name='logo'
                           onClick={() => openUpload()}
-                          // data={usersArr}
                         />
                         {newLogo && <img alt='...' width='100px' src={newLogo} onClick={() => openUpload()} />}
                         {!newLogo && (
@@ -659,7 +645,6 @@ const EditEmployee = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
-              // router.push('/company-dashboard/department')
             })
           })
           .catch(function (error) {

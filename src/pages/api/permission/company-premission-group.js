@@ -4,16 +4,12 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
   const { method } = req
-
-  //   const token = await getToken({ req })
-  //   if (!token) {
-  //     res.status(401).json({ success: false, message: 'Not Auth' })
-  //   }
   if (!req.query.q) {
     req.query.q = ''
   }
 
   const client = await connectToDatabase()
+  
   const permissions = await client
     .db()
     .collection('permissions')

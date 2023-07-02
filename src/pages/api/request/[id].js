@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     method
   } = req
 
-  // try {
   const client = await connectToDatabase()
+
   const request = await client
     .db()
     .collection('requests')

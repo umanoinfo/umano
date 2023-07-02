@@ -9,6 +9,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
+
   // if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditEmployee')) {
   //   res.status(401).json({ success: false, message: 'Not Auth' })
   // }
@@ -21,6 +22,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+    
     return
   }
 

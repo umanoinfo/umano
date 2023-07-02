@@ -27,10 +27,6 @@ const StyledBoxForShadow = styled(Box)(({ theme }) => ({
   pointerEvents: 'none',
   width: 'calc(100% + 15px)',
   height: theme.mixins.toolbar.minHeight
-  // transition: 'opacity .15s ease-in-out',
-  // '&.scrolled': {
-  //   opacity: 1
-  // }
 }))
 
 const Navigation = props => {

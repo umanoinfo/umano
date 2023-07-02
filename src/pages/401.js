@@ -55,6 +55,5 @@ const Error401 = () => {
     </Box>
   )
 }
-// Error401.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 export default Error401

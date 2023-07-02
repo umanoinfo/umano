@@ -106,11 +106,9 @@ const ChartNode = ({
     if (!node) return
     const isAncestorsCollapsed = node.firstChild.classList.contains('hidden')
     if (isAncestorsCollapsed) {
-      // 向上展开，只展开一级
       actionNode.classList.remove('isAncestorsCollapsed')
       node.firstChild.classList.remove('hidden')
     } else {
-      // 向下折叠，则折叠所有祖先节点以及祖先节点的兄弟节点
       const isSiblingsCollapsed = Array.from(actionNode.parentNode.children).some(item =>
         item.classList.contains('hidden')
       )
@@ -121,7 +119,6 @@ const ChartNode = ({
         ...('isAncestorsCollapsed' + (isSiblingsCollapsed ? '' : ' isSiblingsCollapsed')).split(' ')
       )
       node.firstChild.classList.add('hidden')
-      // 如果还有展开的祖先节点，那继续折叠关闭之
       if (node.parentNode.closest('li') && !node.parentNode.closest('li').firstChild.classList.contains('hidden')) {
         toggleAncestors(node)
       }
@@ -142,9 +139,11 @@ const ChartNode = ({
 
   const toggleSiblings = actionNode => {
     let node = actionNode.previousSibling
+
     const isSiblingsCollapsed = Array.from(actionNode.parentNode.children).some(item =>
       item.classList.contains('hidden')
     )
+
     actionNode.classList.toggle('isSiblingsCollapsed', !isSiblingsCollapsed)
     while (node) {
       if (isSiblingsCollapsed) {
@@ -163,7 +162,7 @@ const ChartNode = ({
       }
       node = node.nextSibling
     }
-    // 在展开兄弟节点的同时，还要展开父节点
+
     const isAncestorsCollapsed = actionNode.parentNode.closest('li').firstChild.classList.contains('hidden')
     if (isAncestorsCollapsed) {
       toggleAncestors(actionNode)
@@ -193,17 +192,14 @@ const ChartNode = ({
     const copyDS = { ...datasource }
     delete copyDS.relationship
     event.dataTransfer.setData('text/plain', JSON.stringify(copyDS))
-    // highlight all potential drop targets
     filterAllowedDropNodes(node.current.id)
   }
 
   const dragoverHandler = event => {
-    // prevent default to allow drop
     event.preventDefault()
   }
 
   const dragendHandler = () => {
-    // reset background of all potential drop targets
     dragNodeService.clearDragInfo()
   }
 

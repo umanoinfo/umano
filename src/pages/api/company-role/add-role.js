@@ -3,6 +3,7 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+
   // ---------------- Token ----------------
 
   const secret = process.env.NEXT_AUTH_SECRET
@@ -18,6 +19,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+    
     return
   }
   const client = await connectToDatabase()

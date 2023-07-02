@@ -4,6 +4,7 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
   const client = await connectToDatabase()
+  
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })

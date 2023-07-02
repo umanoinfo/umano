@@ -18,6 +18,7 @@ export default async function handler(req, res) {
   delete role._id
 
   const client = await connectToDatabase()
+
   const selectedRole = await client
     .db()
     .collection('roles')
@@ -91,7 +92,9 @@ export default async function handler(req, res) {
         }
       }
     }
+    
     delete user._id
+    
     const updatedUser = await client
       .db()
       .collection('users')

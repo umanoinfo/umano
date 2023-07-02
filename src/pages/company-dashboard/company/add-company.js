@@ -424,7 +424,6 @@ const DialogAddUser = ({ popperPlacement }) => {
                           }}
                           name='logo'
                           onClick={() => openUpload()}
-                          // data={usersArr}
                         />
                         {logo && <img alt='...' width='100px' src={logo} onClick={() => openUpload()} />}
                         {!logo && (

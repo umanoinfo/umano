@@ -35,7 +35,4 @@ export default async function handler(req, res) {
     .toArray()
 
   res.status(200).json({ success: true, data: employeeReward })
-  // } catch (error) {
-  //   res.status(400).json({ success: false })
-  // }
 }

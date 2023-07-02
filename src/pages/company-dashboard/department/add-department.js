@@ -44,6 +44,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [parentsDataSource, setParentsDataSource] = useState([])
+  
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
     { label: 'Pending', value: 'pending' },
@@ -53,6 +54,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [newParent, setNewParent] = useState('')
   const [newStatus, setNewStatus] = useState('active')
   const [formError, setFormError] = useState({})
+
   const [formValue, setFormValue] = useState({
     name: '',
     description: ''
@@ -98,10 +100,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const validateMmodel = Schema.Model({
     name: StringType().isRequired('This field is required.')
-    // .addRule((value, data) => {
-    //   return asyncCheckDepartmentname(value)
-    // }, 'Duplicate Department Name')
-    // .isRequired('This field is required.')
   })
 
   // ------------------------------ Get Users ------------------------------------
@@ -110,6 +108,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setIsLoading(true)
     const res = await fetch('/api/company-user')
     const { data } = await res.json()
+
     const users = data.map(user => ({
       label: user.name + '  (' + user.email + ')',
       value: user._id
@@ -124,6 +123,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
+
     const parents = data.map(departmen => ({
       label: departmen.name,
       value: departmen._id

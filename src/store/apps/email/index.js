@@ -9,6 +9,7 @@ export const fetchMails = createAsyncThunk('appEmail/fetchMails', async params =
   const response = await axios.get('/apps/email/emails', {
     params
   })
+
   return { ...response.data, filter: params }
 })
 

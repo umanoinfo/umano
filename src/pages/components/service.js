@@ -14,3 +14,9 @@ export const selectNodeService = {
   clearSelectedNodeInfo: () => subject2.next(),
   getSelectedNodeInfo: () => subject2.asObservable()
 }
+
+const List = () => {
+  return(<></>)
+}
+
+export default List

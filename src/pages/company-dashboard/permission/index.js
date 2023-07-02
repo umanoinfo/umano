@@ -154,9 +154,12 @@ const PermissionsTable = () => {
         delay: 2000,
         position: 'bottom-right'
       })
-      return
+
+      return <></>
     }
+
     setLoading(true)
+
     const data = {
       title: title,
       alias: title.replace(/\s/g, ''),
@@ -255,6 +258,7 @@ const PermissionsTable = () => {
     } else {
       type = 'admin'
     }
+
     const data = {
       _id: editValue._id,
       title: title,
@@ -295,9 +299,11 @@ const PermissionsTable = () => {
   // ----------------------------  Columns -----------------------------------------
 
   if (loading) return <Loading header='Please Wait' description='Permissions is loading'></Loading>
+
   if (session && session.user && !session.user.permissions.includes('AdminViewPermission')) {
     return <NoPermission header='No Permission' description='No permission to View permissions'></NoPermission>
   }
+
   return (
     <>
       <Grid container spacing={6}>
@@ -431,7 +437,6 @@ const PermissionsTable = () => {
               label='Permission Title'
               onChange={e => {
                 setTitle(e.target.value)
-                // getAlias(e.target.value)
               }}
               sx={{ mb: 1, mt: 1, maxWidth: 360 }}
               placeholder='Enter Permission Name'

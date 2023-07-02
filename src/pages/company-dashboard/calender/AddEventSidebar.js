@@ -274,7 +274,6 @@ const AddEventSidebar = props => {
   return (
     <Drawer
       anchor='right'
-      // variant='permanent'
       open={addEventSidebarOpen}
       onClose={handleSidebarClose}
       ModalProps={{ keepMounted: true }}

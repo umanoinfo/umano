@@ -11,11 +11,9 @@ import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { DataGrid } from '@mui/x-data-grid'
-import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
@@ -37,10 +35,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Actions Imports
 import { fetchData } from 'src/store/apps/compensation'
@@ -77,7 +71,7 @@ const dayColor = days => {
   }
 }
 
-const compensationsList = () => {
+const CompensationsList = () => {
   // ** State
   const [compensationType, setCompensationType] = useState()
   const [compensationStatus, setcompensationStatus] = useState('')
@@ -370,8 +364,12 @@ const compensationsList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {CompensationsType &&
-                    CompensationsType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    CompensationsType.map((type, indexe) => {
+                      return (
+                        <MenuItem key={index} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      )
                     })}
                 </Select>
               </FormControl>
@@ -451,4 +449,4 @@ const compensationsList = () => {
   )
 }
 
-export default compensationsList
+export default CompensationsList

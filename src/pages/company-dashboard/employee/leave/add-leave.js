@@ -274,6 +274,7 @@ const AddLeave = ({ popperPlacement, id }) => {
             label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
             value: employee._id
           })
+
           return calcLeaves(employee)
         }
       })

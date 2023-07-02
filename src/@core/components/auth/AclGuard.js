@@ -42,9 +42,8 @@ const AclGuard = props => {
   // if (ability && ability.can(aclAbilities.action, aclAbilities.subject)) {
 
   return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>
-  // }
 
-  // Render Not Authorized component if the current user has limited access
+  
   return (
     <BlankLayout>
       <NotAuthorized />

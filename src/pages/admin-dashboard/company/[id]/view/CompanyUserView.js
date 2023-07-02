@@ -88,9 +88,10 @@ const UserViewOverview = ({ id }) => {
       field: 'roles',
       headerName: 'Roles',
       renderCell: ({ row }) => {
-        return row.roles_info.map(e => {
+        return row.roles_info.map((e, index) => {
           return (
             <CustomChip
+              key={index}
               skin='light'
               size='small'
               label={e.title}
@@ -102,6 +103,7 @@ const UserViewOverview = ({ id }) => {
       }
     }
   ]
+  
   return (
     <Card>
       <CardContent>

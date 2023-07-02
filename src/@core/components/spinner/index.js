@@ -18,7 +18,7 @@ const FallbackSpinner = ({ sx }) => {
         ...sx
       }}
     >
-      <img src='/images/apple-touch-icon.png' width='75' />
+      <img src='/images/apple-touch-icon.png' width='75' alt='apple' />
       <CircularProgress disableShrink sx={{ mt: 6 }} />
     </Box>
   )

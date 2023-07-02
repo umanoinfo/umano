@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { company_id: myUser.company_id },
-            // { parent: { $exists: false } },
+            
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]
         }

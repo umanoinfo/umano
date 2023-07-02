@@ -16,14 +16,13 @@ const defineRulesFor = (role, subject) => {
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
   }
-  // can('manage', 'all') // feras added
+  
   return rules
 }
 
 export const buildAbilityFor = (role, subject) => {
+  
   return new AppAbility(defineRulesFor(role, subject), {
-    // https://casl.js.org/v5/en/guide/subject-type-detection
-    // @ts-ignore
     detectSubjectType: object => object.type
   })
 }

@@ -281,21 +281,6 @@ export default async function handler(req, res) {
         leaveHourly: leaveHourly
       })
     }
-  // console.log(attendances)
-
-  // for (let emp of employees) {
-  //   for (
-  //     var d = new Date(req.query.year, req.query.month, 0);
-  //     d <= new Date(req.query.year, req.query.month + 1, 0);
-  //     d.setDate(d.getDate() + 1)
-  //   ) {
-  //     console.log(d)
-  //   }
-  // }
-
-  //   let first = new Date(req.query.year, req.query.month - 1, 0)
-  //   let last = new Date(req.query.year, req.query.month, 0)
-  //   console.log(first, last)
 
   res.status(200).json({ success: true, data: employee, attendances: attendances })
 }

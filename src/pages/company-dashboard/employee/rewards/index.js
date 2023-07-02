@@ -395,8 +395,12 @@ const DeductionsList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {EmployeeDeductionsType &&
-                    EmployeeDeductionsType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    EmployeeDeductionsType.map((type, index) => {
+                      return (
+                        <MenuItem key={index} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      )
                     })}
                 </Select>
               </FormControl>

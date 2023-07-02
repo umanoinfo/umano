@@ -1,20 +1,14 @@
 import NextAuth from 'next-auth'
-
-// import GoogleProvider from "next-auth/providers/google";
-// import FacebookProvider from "next-auth/providers/facebook";
-//import TwitterProvider from "next-auth/providers/twitter";
 import CredentialsProvider from 'next-auth/providers/credentials'
-//import AppleProvider from "next-auth/providers/apple";
-// import LinkedInProvider from "next-auth/providers/linkedin";
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { verifyPassword } from 'src/configs/auth'
 import cookie from 'cookie'
+
 export const nextAuthOptions = (req, res) => {
   let selectedUser
   let client
 
   return {
-    //  adapter: MongoDBAdapter(clientPromise),
     session: {
       jwt: true
     },
@@ -29,9 +23,11 @@ export const nextAuthOptions = (req, res) => {
         async authorize(credentials) {
           client = await connectToDatabase()
           let usersCollection = client.db().collection('users')
+
           const user = await usersCollection.findOne({
             email: credentials.email
           })
+
           if (!user) {
             throw new Error('No user found!')
           }
@@ -39,6 +35,7 @@ export const nextAuthOptions = (req, res) => {
           if (!isValid) {
             throw new Error('Password invalid!')
           }
+
           return user
         }
       })
@@ -50,6 +47,7 @@ export const nextAuthOptions = (req, res) => {
     callbacks: {
       async redirect({ url, baseUrl }) {
         if (url) return Promise.resolve(url)
+
         return baseUrl
       },
 
@@ -63,6 +61,7 @@ export const nextAuthOptions = (req, res) => {
           const newUser = await client.db().collection('users').findOne({ email: token.email })
           session.user = newUser
         }
+
         return session
       }
     },
@@ -74,7 +73,9 @@ export const nextAuthOptions = (req, res) => {
     }
   }
 }
+
 export default (req, res) => {
+
   return NextAuth(req, res, nextAuthOptions(req, res))
 }
 

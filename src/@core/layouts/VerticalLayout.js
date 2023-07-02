@@ -68,13 +68,6 @@ const VerticalLayout = props => {
 
   const { data: session, status } = useSession()
 
-  useEffect(() => {
-    console.log(status)
-    // if (status === 'unauthenticated') {
-    //   router.push('/login')
-    // }
-  }, [])
-
   const Img = styled('img')(({ theme }) => ({
     marginTop: theme.spacing(15),
     marginBottom: theme.spacing(15),

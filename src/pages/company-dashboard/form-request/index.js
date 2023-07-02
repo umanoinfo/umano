@@ -362,8 +362,12 @@ const AllDocumentsList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {requestType &&
-                    requestType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    requestType.map((type, index) => {
+                      return (
+                        <MenuItem key={index} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      )
                     })}
                 </Select>
               </FormControl>

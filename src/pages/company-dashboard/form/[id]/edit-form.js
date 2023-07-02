@@ -22,7 +22,7 @@ import toast from 'react-hot-toast'
 import View from '../view'
 
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader, Input, InputPicker, Textarea, SelectPicker } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, Input, InputPicker, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -282,7 +282,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   onChange={setFormValue}
                   onCheck={setFormError}
                   formValue={formValue}
-                  // onChange={formValue => setFormValue(formValue)}
                   model={validateMmodel}
                 >
                   <Grid container spacing={1} sx={{ px: 5 }}>
@@ -309,7 +308,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     <Grid container spacing={2}>
                       <Grid item size='sm' sm={12} md={9} sx={{ mt: 2 }}>
                         <small>Description</small>
-                        <Form.Control rows={2} name='description' controlId='description' accepter={Textarea} />
+                        <Form.Control rows={2} name='description' controlId='description'  />
                       </Grid>
                       <Grid item sm={12} xs={12} md={3} mt={2}>
                         <small>Select status</small>

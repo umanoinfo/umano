@@ -12,6 +12,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async params => 
     e.index = index + 1
     e.id = e._id
   })
+
   return response.data
 })
 
@@ -35,6 +36,7 @@ const updateUser = createAsyncThunk('users/update', async (userData, { rejectWit
   const { id, ...fields } = userData
   try {
     const response = await userAPI.updateById(id, fields)
+
     return response.data.user
   } catch (err) {
     if (!err.response) {
@@ -51,6 +53,7 @@ export const deleteUser = createAsyncThunk('appUsers/deleteUser', async (id, { g
     data: id
   })
   dispatch(fetchData(getState().user.params))
+
   return response.data
 })
 

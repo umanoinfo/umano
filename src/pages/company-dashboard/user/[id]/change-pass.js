@@ -50,11 +50,13 @@ const DialogAddUser = ({ id }) => {
   const [email, setEmail] = useState('')
   const [user, setUser] = useState('')
   const [password, setPassword] = useState()
-  const [defaultValues, setDefaultValues] = useState({
-    email: '',
-    password: '',
-    name: ''
-  })
+
+  // const [defaultValues, setDefaultValues] = useState({
+  //   email: '',
+  //   password: '',
+  //   name: ''
+  // })
+
   const router = useRouter()
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const DialogAddUser = ({ id }) => {
         delay: 3000,
         position: 'bottom-right'
       })
+
       return
     }
     setLoading(true)

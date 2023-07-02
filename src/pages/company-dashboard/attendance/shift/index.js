@@ -252,9 +252,9 @@ const ShiftList = () => {
       minWidth: 100,
       field: 'title',
       headerName: 'Title',
-      renderCell: ({ row }) => {
+      renderCell: ({ row , index }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {row.title}
           </Typography>
         )
@@ -352,8 +352,9 @@ const ShiftList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {ShiftType &&
-                    ShiftType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    ShiftType.map((type , index) => {
+
+                      return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
                     })}
                 </Select>
               </FormControl>

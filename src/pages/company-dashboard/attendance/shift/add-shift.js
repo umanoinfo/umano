@@ -239,7 +239,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   onChange={setFormValue}
                   onCheck={setFormError}
                   formValue={formValue}
-                  // onChange={formValue => setFormValue(formValue)}
                   model={validateMmodel}
                 >
                   <Grid container spacing={1} sx={{ px: 5 }}>

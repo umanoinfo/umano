@@ -26,30 +26,33 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   const [selectedSalaryFormulaID, setSelectedSalaryFormulaID] = useState()
   const [tabValue, setTabValue] = useState('Over Time')
 
-  if (!employee) {
-    return (
-      <>
-        <Typography
-          sx={{
-            mt: 2,
-            mb: 3,
-            px: 2,
-            fontWeight: 400,
-            fontSize: 15,
-            color: 'red',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}
-        >
-          You must insert employee ..
-        </Typography>
-      </>
-    )
-  } else {
-    useEffect(() => {
-      getOptions()
-    }, [])
-  }
+
+  // ----------------------- build ------------------------------------
+
+  useEffect(() => {
+    if (!employee) {
+      return (
+        <>
+          <Typography
+            sx={{
+              mt: 2,
+              mb: 3,
+              px: 2,
+              fontWeight: 400,
+              fontSize: 15,
+              color: 'red',
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }}
+          >
+            You must insert employee ..
+          </Typography>
+        </>
+      )
+    } else {
+        getOptions()
+    }
+  }, [])
 
   // ----------------------------- Get Options ----------------------------------
 

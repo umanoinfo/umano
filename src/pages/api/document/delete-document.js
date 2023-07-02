@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('DeleteDocument')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
+  
   // ---------------- Delete --------------------
 
   const document = req.body.selectedDocument

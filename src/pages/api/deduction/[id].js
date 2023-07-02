@@ -9,6 +9,7 @@ export default async function handler(req, res) {
 
   // try {
   const client = await connectToDatabase()
+  
   const deduction = await client
     .db()
     .collection('deductions')

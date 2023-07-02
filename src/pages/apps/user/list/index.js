@@ -186,52 +186,6 @@ const columns = [
       )
     }
   },
-  // {
-  //   flex: 0.15,
-  //   field: 'role',
-  //   minWidth: 150,
-  //   headerName: 'Role',
-  //   renderCell: ({ row }) => {
-  //     return (
-  //       <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: userRoleObj[row.role].color } }}>
-  //         <Icon icon={userRoleObj[row.role].icon} fontSize={20} />
-  //         <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-  //           {row.role}
-  //         </Typography>
-  //       </Box>
-  //     )
-  //   }
-  // },
-  // {
-  //   flex: 0.15,
-  //   minWidth: 120,
-  //   headerName: 'Plan',
-  //   field: 'currentPlan',
-  //   renderCell: ({ row }) => {
-  //     return (
-  //       <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-  //         {row.currentPlan}
-  //       </Typography>
-  //     )
-  //   }
-  // },
-  // {
-  //   flex: 0.1,
-  //   minWidth: 110,
-  //   field: 'status',
-  //   headerName: 'Status',
-  //   renderCell: ({ row }) => {
-  //     return (
-  //       <CustomChip
-  //         skin='light'
-  //         size='small'
-  //         label={row.status}
-  //         color={userStatusObj[row.status]}
-  //         sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
-  //       />
-  //     )
-  //   }
-  // },
   {
     flex: 0.1,
     minWidth: 90,

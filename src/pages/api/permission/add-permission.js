@@ -6,7 +6,9 @@ export default async function handler(req, res) {
   // ---------------- Token ----------------
 
   const secret = process.env.NEXT_AUTH_SECRET
+
   const token = await getToken({ req: req, secret: secret, raw: true })
+
   if (!token) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
@@ -14,11 +16,13 @@ export default async function handler(req, res) {
   // ---------------- Insert ----------------
 
   const permission = req.body.data
+  
   permission.user = token.user
   if (!permission.title || !permission.alias) {
     res.status(422).json({
       message: 'Invalid input'
     })
+    
     return
   }
   const client = await connectToDatabase()

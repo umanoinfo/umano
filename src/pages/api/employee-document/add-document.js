@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb'
 import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
@@ -20,10 +19,13 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
   employeeDocument.company_id = myUser.company_id
+  
   const newEmployeeDocument = await client.db().collection('employeeDocuments').insertOne(employeeDocument)
+
   const insertedEmployee = await client
     .db()
     .collection('employeeDocuments')

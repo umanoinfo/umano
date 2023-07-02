@@ -133,41 +133,42 @@ const Steppositions = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
-  if (!employee) {
-    return (
-      <>
-        <Typography
-          sx={{
-            mt: 2,
-            mb: 3,
-            px: 2,
-            fontWeight: 400,
-            fontSize: 15,
-            color: 'red',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}
-        >
-          You must insert employee ..
-        </Typography>
-      </>
-    )
-  } else {
-    useEffect(() => {
+  // ----------------------- bulid -------------------------------------------
+
+  useEffect(() => {
+    if (employee) {
+      getDepartments()
       setEmployeeId(employee._id)
-      dispatch(
+        dispatch(
         fetchData({
           employeeId: employeeId,
           userStatus,
           q: value
         })
       ).then(setLoading(false))
-    }, [dispatch, employeeId, userStatus, value])
-  }
+    }
+    else{
+      return (
+        <>
+          <Typography
+            sx={{
+              mt: 2,
+              mb: 3,
+              px: 2,
+              fontWeight: 400,
+              fontSize: 15,
+              color: 'red',
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }}
+          >
+            You must insert employee ..
+          </Typography>
+        </>
+      )
+    }
 
-  useEffect(() => {
-    getDepartments()
-  }, [])
+  }, [dispatch, employeeId, userStatus, value])
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -181,7 +182,6 @@ const Steppositions = ({ handleNext, employee }) => {
       setDepartmentsDataSource(arr)
       setDepartment(response.data.data[0]._id)
     })
-    // const { data } = await res.json()
 
     const positionChangeStartTypes = PositionChangeStartTypes.map(type => ({
       label: type.title,

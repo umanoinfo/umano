@@ -16,8 +16,11 @@ import Icon from 'src/@core/components/icon'
 
 // ** Step Components
 import StepCart from 'src/views/pages/wizard-examples/checkout/StepCart'
-import StepAddress from 'src/views/pages/wizard-examples/checkout/StepAddress'
+
+import StepAddress from 'src/views/pages/wizard-examples/checkout/StepPayment'
+
 import StepPayment from 'src/views/pages/wizard-examples/checkout/StepPayment'
+
 import StepConfirmation from 'src/views/pages/wizard-examples/checkout/StepConfirmation'
 
 // ** Styled Components

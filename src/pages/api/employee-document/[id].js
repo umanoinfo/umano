@@ -8,7 +8,9 @@ export default async function handler(req, res) {
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })
+
   const myUser = await client.db().collection('users').findOne({ email: token.email })
+  
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewDocument')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
@@ -35,7 +37,4 @@ export default async function handler(req, res) {
     .toArray()
 
   res.status(200).json({ success: true, data: employee })
-  // } catch (error) {
-  //   res.status(400).json({ success: false })
-  // }
 }

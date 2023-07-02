@@ -66,41 +66,41 @@ const StepDocuments = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
-  if (!employee) {
-    return (
-      <>
-        <Typography
-          sx={{
-            mt: 2,
-            mb: 3,
-            px: 2,
-            fontWeight: 400,
-            fontSize: 15,
-            color: 'red',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}
-        >
-          You must insert employee ..
-        </Typography>
-      </>
-    )
-  } else {
-    useEffect(() => {
-      setEmployeeId(employee._id)
-      dispatch(
-        fetchData({
-          employeeId: employeeId,
-          userStatus,
-          q: value
-        })
-      ).then(setLoading(false))
-    }, [dispatch, employeeId, userStatus, value])
-  }
+  // ------------------------- build------------------------------------------
 
   useEffect(() => {
-    getDepartments()
-  }, [])
+    if (employee) {
+          getDepartments()
+    setEmployeeId(employee._id)
+    dispatch(
+      fetchData({
+        employeeId: employeeId,
+        userStatus,
+        q: value
+      })
+    ).then(setLoading(false))
+    }
+    else{
+      <Typography
+      sx={{
+        mt: 2,
+        mb: 3,
+        px: 2,
+        fontWeight: 400,
+        fontSize: 15,
+        color: 'red',
+        textAlign: 'center',
+        fontStyle: 'italic'
+      }}
+    >
+      You must insert employee ..
+    </Typography>
+    }
+
+
+  }, [dispatch, employeeId, userStatus, value])
+
+
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -277,6 +277,7 @@ const StepDocuments = ({ handleNext, employee }) => {
     setSelectedDocument(row)
     inputFile.current.click()
   }
+  
   // ------------------------------- handle Edit --------------------------------------
 
   const handleEdit = e => {
@@ -521,7 +522,6 @@ const StepDocuments = ({ handleNext, employee }) => {
                 uploadFile(e)
               }}
               name='file'
-              // onClick={() => openUploadFile()}
             />
 
             {/* -------------------------- Clinician  ------------------------------------- */}

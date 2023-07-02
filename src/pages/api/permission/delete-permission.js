@@ -14,8 +14,11 @@ export default async function handler(req, res) {
   // ---------------- Delete ----------------
 
   const selectedPermission = req.body.deleteValue
+
   const id = selectedPermission._id
+
   const client = await connectToDatabase()
+  
   const user = await client
     .db()
     .collection('permissions')

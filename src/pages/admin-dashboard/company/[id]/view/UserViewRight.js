@@ -54,12 +54,7 @@ const UserViewRight = ({ tab, id, permissions }) => {
       setActiveTab(tab)
     }
   }, [tab])
-  // useEffect(() => {
-  //   if (invoiceData) {
-  //     setIsLoading(false)
-  //   }
-  // }, [invoiceData])
-
+  
   return (
     <TabContext value={activeTab}>
       <TabList

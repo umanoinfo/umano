@@ -127,28 +127,10 @@ const StepSalary = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
-  if (!employee) {
-    return (
-      <>
-        <Typography
-          sx={{
-            mt: 2,
-            mb: 3,
-            px: 2,
-            fontWeight: 400,
-            fontSize: 15,
-            color: 'red',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}
-        >
-          You must insert employee ..
-        </Typography>
-      </>
-    )
-  } else {
-    useEffect(() => {
+  useEffect(() => {
+    if (employee) {
       setEmployeeId(employee._id)
+      getOptions()
       dispatch(
         fetchData({
           employeeId: employeeId,
@@ -156,12 +138,28 @@ const StepSalary = ({ handleNext, employee }) => {
           q: value
         })
       ).then(setLoading(false))
-    }, [dispatch, employeeId, userStatus, value])
-  }
-
-  useEffect(() => {
-    getOptions()
-  }, [])
+    }else{
+      return (
+        <>
+          <Typography
+            sx={{
+              mt: 2,
+              mb: 3,
+              px: 2,
+              fontWeight: 400,
+              fontSize: 15,
+              color: 'red',
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }}
+          >
+            You must insert employee ..
+          </Typography>
+        </>
+      )
+    }
+    
+  }, [dispatch, employeeId, userStatus, value])
 
   // ----------------------------- Get Options ----------------------------------
 

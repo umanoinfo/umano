@@ -50,7 +50,6 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   company: yup.string().required(),
   country: yup.string().required(),
-  // email: yup.string().email().required(),
   contact: yup
     .number()
     .typeError('Contact Number field is required')

@@ -12,9 +12,11 @@ import CardContent from '@mui/material/CardContent'
 import { styled, useTheme } from '@mui/material/styles'
 import TableContainer from '@mui/material/TableContainer'
 import TableCell from '@mui/material/TableCell'
+
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
+
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
 
@@ -394,9 +396,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                 </TableCell>
               </TableRow>
 
-              {data.compensations_array.map(comp => {
+              {data.compensations_array.map((comp, index) => {
                 return (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell>
                       {comp.title} <small> ( {comp.type} )</small>
                     </TableCell>
@@ -417,9 +419,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                 )
               })}
 
-              {data.deductions_array.map(deduction => {
+              {data.deductions_array.map((deduction, index) => {
                 return (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell>
                       {deduction.title} <small> ( {deduction.type} )</small>
                     </TableCell>
@@ -440,9 +442,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                 )
               })}
 
-              {data.employee_deductions_info.map(deduction => {
+              {data.employee_deductions_info.map((deduction, index) => {
                 return (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell>
                       {deduction.reason} <small> ( {deduction.type} )</small>
                     </TableCell>
@@ -458,9 +460,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </TableRow>
                 )
               })}
-              {data.employee_rewards_info.map(reward => {
+              {data.employee_rewards_info.map((reward, index) => {
                 return (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell>
                       {reward.reason} <small> ( {reward.type} )</small>
                     </TableCell>

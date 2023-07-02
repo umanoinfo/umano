@@ -23,6 +23,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
 
@@ -30,6 +31,7 @@ export default async function handler(req, res) {
     .db()
     .collection('employees')
     .updateOne({ _id: ObjectId(id) }, { $set: employee }, { upsert: false })
+    
   const getEmployee = await client
     .db()
     .collection('employees')

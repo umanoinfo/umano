@@ -342,11 +342,7 @@ const MailDetails = props => {
                       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar
-                          alt={mail.user_info[0].name}
-                          // src={mail.user_info[0].name.avatar}
-                          sx={{ width: '2.375rem', height: '2.375rem', mr: 3 }}
-                        />
+                        <Avatar alt={mail.user_info[0].name} sx={{ width: '2.375rem', height: '2.375rem', mr: 3 }} />
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Typography sx={{ color: 'text.secondary' }}>{mail.user_info[0].name}</Typography>
                           <Typography variant='body2' sx={{ color: 'text.disabled' }}>

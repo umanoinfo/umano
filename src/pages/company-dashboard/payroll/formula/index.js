@@ -371,8 +371,12 @@ const FormulaList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {FormulaType &&
-                    FormulaType.map(type => {
-                      return <MenuItem value={type.value}>{type.label}</MenuItem>
+                    FormulaType.map((type, index) => {
+                      return (
+                        <MenuItem key={index} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      )
                     })}
                 </Select>
               </FormControl>

@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox, Textarea } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -54,6 +54,7 @@ const fileType = ex => {
       return '/images/icons/file-icons/rar.png'
   }
 }
+
 const StyledList = styled(List)(({ theme }) => ({
   '& .MuiListItem-container': {
     border: `1px solid ${theme.palette.divider}`,
@@ -267,7 +268,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   onChange={setFormValue}
                   onCheck={setFormError}
                   formValue={formValue}
-                  // onChange={formValue => setFormValue(formValue)}
                   model={validateMmodel}
                 >
                   <Grid container sx={{ px: 5 }}>
@@ -300,7 +300,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
                     <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Description</small>
-                      <Form.Control rows={2} name='description' controlId='description' accepter={Textarea} />
+                      <Form.Control rows={2} name='description' controlId='description'  />
                     </Grid>
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>

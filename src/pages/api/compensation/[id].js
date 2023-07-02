@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     method
   } = req
 
-  // try {
   const client = await connectToDatabase()
+  
   const compensations = await client
     .db()
     .collection('compensations')

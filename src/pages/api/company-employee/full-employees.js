@@ -80,28 +80,6 @@ export default async function handler(req, res) {
           as: 'salaryFormulas_info'
         }
       },
-      //   {
-      //     $lookup: {
-      //       from: 'deductions',
-      //       let: { deductions: '$deductions' },
-      //       pipeline: [
-      //         { $addFields: { string_id: { $toString: '$_id' } } },
-      //         { $match: { $expr: { $in: ['$string_id', '$$deductions'] } } }
-      //       ],
-      //       as: 'deductions_array'
-      //     }
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: 'compensations',
-      //       let: { compensations: '$compensations' },
-      //       pipeline: [
-      //         { $addFields: { string_id: { $toString: '$_id' } } },
-      //         { $match: { $expr: { $in: ['$string_id', '$$compensations'] } } }
-      //       ],
-      //       as: 'compensations_array'
-      //     }
-      //   },
       {
         $lookup: {
           from: 'employeePositions',

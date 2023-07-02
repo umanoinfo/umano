@@ -102,11 +102,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [employeeTypesDataSource, setEmployeeTypesDataSource] = useState([])
   const [sourceOfHireDataSource, setSourceOfHireDataSource] = useState([])
   const [healthInsuranceTypeDataSource, setHealthInsuranceTypeDataSource] = useState([])
-  const [statusDataSource, setStatusTypesDataSource] = useState([
-    { label: 'Active', value: 'active' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'Blocked', value: 'blocked' }
-  ])
   const [countryID, setCountryID] = useState()
   const [dial, setDial] = useState()
   const [selectedEmployee, setSelectedEmployee] = useState()
@@ -506,7 +501,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
                           }}
                           name='logo'
                           onClick={() => openUpload()}
-                          // data={usersArr}
                         />
                         {newLogo && <img alt='...' width='100px' src={newLogo} onClick={() => openUpload()} />}
                         {!newLogo && (
@@ -661,7 +655,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
         setLoading(true)
         data = formValue
         data.countryID = countryID
-        // data.healthType = healthType
         data.dateOfBirth = dateOfBirth
         data.sourceOfHire = sourceOfHire
         data.employeeType = employeeType
@@ -704,7 +697,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
         data = formValue
         data._id = selectedEmployee._id
         data.countryID = countryID
-        // data.healthType = healthType
         data.dateOfBirth = dateOfBirth
         data.sourceOfHire = sourceOfHire
         data.employeeType = employeeType

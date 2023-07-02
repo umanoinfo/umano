@@ -24,6 +24,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
   const client = await connectToDatabase()
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
     .db()
     .collection('permissions')
     .updateOne({ _id: ObjectId(id) }, { $set: permission }, { upsert: false })
+    
   const updatedPermission = await client
     .db()
     .collection('permissions')
@@ -82,6 +84,7 @@ export default async function handler(req, res) {
 
   for (const user of users) {
     user.permissions = []
+
     const user_id = user._id
 
     for (const role_id of user.roles) {
@@ -98,6 +101,7 @@ export default async function handler(req, res) {
       }
     }
     delete user._id
+    
     const updatedUser = await client
       .db()
       .collection('users')

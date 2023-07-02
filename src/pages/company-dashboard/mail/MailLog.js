@@ -414,11 +414,7 @@ const MailLog = props => {
                         >
                           <Icon icon='mdi:send' />
                         </IconButton>
-                        <Avatar
-                          alt={mail.user_info[0].name}
-                          // src={mail.from.avatar}
-                          sx={{ mr: 3, width: '2rem', height: '2rem' }}
-                        />
+                        <Avatar alt={mail.user_info[0].name} sx={{ mr: 3, width: '2rem', height: '2rem' }} />
                         <Box
                           sx={{
                             display: 'flex',

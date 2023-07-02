@@ -255,9 +255,6 @@ const UserList = ({ apiData }) => {
 
         return c
       })
-      // const ws = XLSX.utils.json_to_sheet(ex)
-      // XLSX.utils.book_append_sheet(wb, ws, 'Comments')
-      // XLSX.writeFile(wb, 'survey-data.xlsx')
     }
 
     return (

@@ -135,30 +135,36 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
     type: StringType().isRequired('This field is required.')
   })
 
-  if (!employee) {
-    return (
-      <>
-        <Typography
-          sx={{
-            mt: 2,
-            mb: 3,
-            px: 2,
-            fontWeight: 400,
-            fontSize: 15,
-            color: 'red',
-            textAlign: 'center',
-            fontStyle: 'italic'
-          }}
-        >
-          You must insert employee ..
-        </Typography>
-      </>
-    )
-  } else {
-    useEffect(() => {
-      getOptions()
-    }, [])
-  }
+  // ----------------------- bulid -----------------------------
+
+  useEffect(() => {
+    if (!employee) {
+      return (
+        <>
+          <Typography
+            sx={{
+              mt: 2,
+              mb: 3,
+              px: 2,
+              fontWeight: 400,
+              fontSize: 15,
+              color: 'red',
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }}
+          >
+            You must insert employee ..
+          </Typography>
+        </>
+      )
+    } else {
+        getOptions()
+    }
+
+  }, [])
+
+
+
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -191,6 +197,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
         delay: 3000,
         position: 'bottom-right'
       })
+      
       return
     }
     let data = {}

@@ -12,6 +12,7 @@ export const fetchData = createAsyncThunk('appEmployeePosition/fetchData', async
     e.index = index + 1
     e.id = e._id
   })
+
   return response.data
 })
 

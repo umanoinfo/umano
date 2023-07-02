@@ -55,6 +55,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   const [allCountries, setAllCountries] = useState([])
   const [countriesDataSource, setCountriesDataSource] = useState([])
   const [companyTypesDataSource, setCompanyTypesDataSource] = useState([])
+
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
     { label: 'Pending', value: 'pending' },
@@ -69,6 +70,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   const [newLogo, setNewLogo] = useState()
   const [newStatus, setNewStatus] = useState()
   const [formError, setFormError] = useState({})
+
   const [formValue, setFormValue] = useState({
     name: ''
   })
@@ -123,6 +125,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     setLoading(true)
     const res = await fetch('/api/user/manager-users')
     const { data } = await res.json()
+
     const users = data.map(user => ({
       label: user.name + '  (' + user.email + ')',
       value: user._id
@@ -439,7 +442,6 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                           }}
                           name='logo'
                           onClick={() => openUpload()}
-                          // data={usersArr}
                         />
                         {newLogo && <img alt='...' width='100px' src={newLogo} onClick={() => openUpload()} />}
                         {!newLogo && (

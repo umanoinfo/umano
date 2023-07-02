@@ -56,6 +56,7 @@ const fileType = ex => {
       return '/images/icons/file-icons/rar.png'
   }
 }
+
 const StyledList = styled(List)(({ theme }) => ({
   '& .MuiListItem-container': {
     border: `1px solid ${theme.palette.divider}`,
@@ -172,9 +173,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       </Typography>
                       {selectedDocument.description}
                       <Box>
-                        {selectedDocument.type.map(t => {
+                        {selectedDocument.type.map((t, index) => {
                           return (
                             <CustomChip
+                            key ={index}
                               skin='light'
                               size='small'
                               label={t}

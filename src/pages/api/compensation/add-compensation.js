@@ -24,6 +24,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
 
@@ -33,6 +34,7 @@ export default async function handler(req, res) {
   compensation.status = 'active'
 
   const newCompensation = await client.db().collection('compensations').insertOne(compensation)
+  
   const insertedCompensation = await client
     .db()
     .collection('compensations')

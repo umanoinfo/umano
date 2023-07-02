@@ -63,6 +63,7 @@ import Cleave from 'cleave.js/react'
 import 'cleave.js/dist/addons/cleave-phone.us'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
+import Loading from 'src/views/loading'
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -435,7 +436,6 @@ const DialogAddUser = ({ popperPlacement }) => {
                           }}
                           name='logo'
                           onClick={() => openUpload()}
-                          // data={usersArr}
                         />
                         {logo && <img alt='...' width='100px' src={logo} onClick={() => openUpload()} />}
                         {!logo && (

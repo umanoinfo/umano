@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   // ---------------------------------------------------------------
 
   const client = await connectToDatabase()
+  
   const roles = await client
     .db()
     .collection('roles')

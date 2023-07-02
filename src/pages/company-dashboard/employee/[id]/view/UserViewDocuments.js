@@ -25,9 +25,9 @@ const UserViewOverview = ({ employee }) => {
     <>
       {employee && employee.documents_info && (
         <Grid xs={12} md={12} lg={12} sx={{ px: 1, mt: 2 }}>
-          {employee.documents_info.map(doc => {
+          {employee.documents_info.map((doc, index) => {
             return (
-              <Card xs={12} md={12} lg={12} sx={{ mb: 1 }}>
+              <Card key={index} xs={12} md={12} lg={12} sx={{ mb: 1 }}>
                 <Grid container sx={{ px: 1 }}>
                   <CardContent sx={{ p: theme => `${theme.spacing(6)} !important` }}>
                     <Typography variant='h6' sx={{ mb: 2 }}>

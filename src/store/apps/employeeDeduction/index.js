@@ -12,6 +12,7 @@ export const fetchData = createAsyncThunk('appEmployeeDeduction/fetchData', asyn
     e.id = e._id
     e.index = index + 1
   })
+
   return response.data
 })
 

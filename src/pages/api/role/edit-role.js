@@ -23,12 +23,15 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
+
     return
   }
+
   const newRole = await client
     .db()
     .collection('roles')
     .updateOne({ _id: ObjectId(id) }, { $set: role }, { upsert: false })
+
   const updatedRole = await client
     .db()
     .collection('roles')
@@ -63,7 +66,9 @@ export default async function handler(req, res) {
         }
       }
     }
+
     delete user._id
+    
     const updatedUser = await client
       .db()
       .collection('users')

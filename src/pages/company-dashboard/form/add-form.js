@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox, Textarea, SelectPicker } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox,  SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -99,6 +99,7 @@ const fileType = ex => {
       return '/images/icons/file-icons/rar.png'
   }
 }
+
 const StyledList = styled(List)(({ theme }) => ({
   '& .MuiListItem-container': {
     border: `1px solid ${theme.palette.divider}`,
@@ -158,6 +159,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [selectValue, setSelectValue] = useState('')
 
   const editorRef = useRef()
+
   const getSunEditorInstance = sunEditor => {
     editorRef.current = sunEditor
   }
@@ -219,8 +221,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setFiles(temp)
   }
 
-  // const Textarea = forwardRef((props, ref) => <Input as='textarea' />)
-
   // ------------------------------ View ---------------------------------
 
   if (loading) return <Loading header='Please Wait' description={loadingDescription}></Loading>
@@ -244,7 +244,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   onChange={setFormValue}
                   onCheck={setFormError}
                   formValue={formValue}
-                  // onChange={formValue => setFormValue(formValue)}
                   model={validateMmodel}
                 >
                   <Grid container spacing={1} sx={{ px: 5 }}>
@@ -270,7 +269,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Description</small>
-                      <Form.Control rows={2} name='description' controlId='description' accepter={Textarea} />
+                      <Form.Control rows={2} name='description' controlId='description'  />
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Content</small>
@@ -295,10 +294,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           }}
                           value={selectValue}
                           onChange={e => {
-                            // setContent(content + e.target.value);
                             editorRef.current.insertHTML('<span>' + e.target.value + '</span>', false, true, 0)
                             setContent(editorRef.current.getContents())
-                            // setDivcontent(test2(editorRef.current.getContents(), arr))
                             setSelectValue('')
                           }}
                         >
@@ -326,7 +323,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         setContents={content}
                         onChange={e => {
                           setContent(e)
-                          // setDivcontent(test2(e, arr))
                         }}
                       />
                     </Grid>

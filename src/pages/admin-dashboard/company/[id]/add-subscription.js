@@ -186,9 +186,6 @@ const DialogAddUser = ({ id }) => {
                         <InputGroup size='lg'>
                           <Form.Control
                             name='availableUsers'
-                            // onChange={e => {
-                            //   setAvailableUsers(e)
-                            // }}
                             min='1'
                             max='100'
                             type='number'

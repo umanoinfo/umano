@@ -12,6 +12,7 @@ export const fetchData = createAsyncThunk('appRole/fetchData', async params => {
     e.index = index + 1
     e.id = e._id
   })
+
   return response.data
 })
 

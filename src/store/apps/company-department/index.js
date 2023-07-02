@@ -12,6 +12,7 @@ export const fetchDepartmentData = createAsyncThunk('appRoles/fetchData', async 
     e.index = index + 1
     e.id = e._id
   })
+
   return response.data
 })
 

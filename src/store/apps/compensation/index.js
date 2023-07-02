@@ -12,6 +12,7 @@ export const fetchData = createAsyncThunk('appCompensation/fetchData', async par
     e.index = index + 1
     e.id = e._id
   })
+
   return response.data
 })
 

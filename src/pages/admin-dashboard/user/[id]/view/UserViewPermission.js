@@ -104,6 +104,7 @@ const UserViewPermission = ({ id }) => {
                       {group.permissions.map((permission, index) => {
                         return (
                           <FormControlLabel
+                            key={index}
                             sx={{ pr: 5 }}
                             label={permission.title}
                             control={

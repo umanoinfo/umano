@@ -16,7 +16,9 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
-import DocumentCard from '/DocumentCard'
+
+// import DocumentCard from '/DocumentCard'
+
 import CustomRadioIcons from 'src/@core/components/custom-radio/icons'
 
 const data = [
@@ -212,14 +214,17 @@ const StepAddress = ({ handleNext }) => {
         <Typography sx={{ mb: 4 }}>Select your preferable address</Typography>
         <Grid container spacing={4}>
           {data.map((item, index) => (
-            <DocumentCard
-              key={index}
-              data={data[index]}
-              name='custom-radios-address'
-              selected={selectedBasicRadio}
-              gridProps={{ sm: 6, xs: 12 }}
-              handleChange={handleBasicRadioChange}
-            />
+<></>
+
+            // <DocumentCard
+            //   key={index}
+            //   data={data[index]}
+            //   name='custom-radios-address'
+            //   selected={selectedBasicRadio}
+            //   gridProps={{ sm: 6, xs: 12 }}
+            //   handleChange={handleBasicRadioChange}
+            // />
+
           ))}
         </Grid>
         <Button variant='outlined' sx={{ mt: 4 }}>

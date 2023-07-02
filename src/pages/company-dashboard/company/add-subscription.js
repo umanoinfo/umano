@@ -114,13 +114,17 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [userID, setUserId] = useState()
   const [usersCount, setUsersCount] = useState(1)
   const [formError, setFormError] = useState({})
+
   const [formValue, setFormValue] = useState({
     name: ''
   })
 
   const dispatch = useDispatch()
+
   const formRef = useRef()
+
   const { StringType } = Schema.Types
+  
   const {
     reset,
     control,

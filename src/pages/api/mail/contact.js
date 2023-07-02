@@ -15,9 +15,11 @@ const generateEmailContent = data => {
     (str, [key, val]) => (str += `${CONTACT_MESSAGE_FIELDS[key]}: \n${val} \n \n`),
     ''
   )
+  
   const htmlData = Object.entries(data).reduce((str, [key, val]) => {
     return (str += `<h3 className="form-heading" align="left">${CONTACT_MESSAGE_FIELDS[key]}</h3><p className="form-answer" align="left">${val}</p>`)
   }, '')
+
   return {
     to: data.email,
     text: stringData,
@@ -58,6 +60,8 @@ const handler = async (req, res) => {
 
     return res.status(200).json({ success: true })
   }
+
   return res.status(400).json({ message: 'Bad request', success: false })
 }
+
 export default handler

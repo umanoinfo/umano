@@ -1,14 +1,9 @@
 import { ObjectId } from 'mongodb'
-// import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
   const { method } = req
 
-  //   const token = await getToken({ req })
-  //   if (!token) {
-  //     res.status(401).json({ success: false, message: 'Not Auth' })
-  //   }
   if (!req.query.companyStatus) {
     req.query.companyStatus = ''
   }
@@ -20,6 +15,7 @@ export default async function handler(req, res) {
   }
 
   const client = await connectToDatabase()
+  
   const companies = await client
     .db()
     .collection('companies')
