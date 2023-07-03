@@ -68,7 +68,8 @@ const VerticalLayout = props => {
   const { data: session, status } = useSession()
 
   if(session && session.user && session.user.status != 'active'){
-    console.log(session.user.status)
+
+
     return(
       <>
           <Box className='content-center'>
