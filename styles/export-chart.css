@@ -4,7 +4,7 @@
   border: 1px solid #aaa;
 }
 
-button {
+/* button {
   box-sizing: border-box;
   padding: 6px 12px;
   font-size: 1rem;
@@ -15,9 +15,9 @@ button {
   cursor: pointer;
   user-select: none;
   color: #fff;
-  background-color: #5cb85c;
-  border: 2px solid #5cb85c;
-}
+  background-color: #05445e;
+  border: 2px solid #05445e;
+} */
 
 button[disabled] {
   cursor: not-allowed;
@@ -28,6 +28,6 @@ button[disabled] {
 button:hover,
 button:focus,
 button:active {
-  color: #5cb85c;
-  background-color: #fff;
+  color: #fff;
+  background-color: #05445e;
 }

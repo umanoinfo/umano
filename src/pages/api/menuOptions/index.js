@@ -10,9 +10,13 @@ export default async function handler(req, res) {
   // ------------------------------- Token -------------------------------------
 
   const token = await getToken({ req })
+  if( !token || !token.email ){
+    return 
+  }
+
   const myUser = await client.db().collection('users').findOne({ email: token.email })
 
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewEmployeeLeave')) {
+  if (!myUser || !myUser.permissions ) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 

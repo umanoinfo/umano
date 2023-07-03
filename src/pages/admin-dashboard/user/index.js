@@ -279,9 +279,10 @@ const UserList = ({ apiData }) => {
   }
 
   // ----------------------------- Columns --------------------------------------------
+  
   const columns = [
     {
-      flex: 0.12,
+      flex: 0.02,
       minWidth: 100,
       field: 'index',
       headerName: '#',
@@ -391,6 +392,7 @@ const UserList = ({ apiData }) => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false)
         })
       })
       .catch(function (error) {
@@ -404,7 +406,7 @@ const UserList = ({ apiData }) => {
 
   //   --------------------------- Return ----------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Role is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Users are loading'></Loading>
 
   if (session && !session.user && session.user.permissions.includes('AdminViewUser'))
     return <NoPermission header='No Permission' description='No permission to View Users'></NoPermission>

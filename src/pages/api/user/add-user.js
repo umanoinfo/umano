@@ -16,6 +16,11 @@ export default async function handler(req, res) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
+  // if (myUser.status != 'active' ) {
+  //   res.status(401).json({ success: false, message: 'Not Auth' })
+  // }
+
+
   // --------------------------- Change Password ---------------------------------
 
   const user = req.body.data

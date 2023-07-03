@@ -300,7 +300,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                   </Grid>
 
                   <FormControl fullWidth sx={{ mb: 6 }}>
-                    <Controller
+                  {country && country.dial &&  <Controller
                       name='phone'
                       control={control}
                       rules={{ required: true }}
@@ -314,11 +314,11 @@ const DialogAddUser = ({ popperPlacement }) => {
                           placeholder='00000000'
                           error={Boolean(errors.phone)}
                           InputProps={{
-                            startAdornment: <InputAdornment position='start'>+963</InputAdornment>
+                            startAdornment: <InputAdornment position='start'>+{country.dial}</InputAdornment>
                           }}
                         />
                       )}
-                    />
+                    />}
                     {errors.phone && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.phone.message}</FormHelperText>
                     )}

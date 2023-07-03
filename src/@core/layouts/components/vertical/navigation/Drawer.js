@@ -113,7 +113,7 @@ const Drawer = props => {
         ...navMenuProps?.PaperProps
       }}
       sx={{
-        width: navCollapsed ? collapsedNavWidth : navWidth,
+        width: navCollapsed ? collapsedNavWidth : navWidth, 
         ...userNavMenuStyle
       }}
       {...userNavMenuProps}

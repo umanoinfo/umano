@@ -64,9 +64,9 @@ const UserViewRight = ({ tab, id, permissions }) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='card' label='Cards' icon={<Icon icon='mdi:bookmark-outline' />} />
+        {/* <Tab value='card' label='Cards' icon={<Icon icon='mdi:bookmark-outline' />} /> */}
         <Tab value='permission' label='Permissions' icon={<Icon icon='mdi:link-variant' />} />
-        <Tab value='activity' label='Activity' icon={<Icon icon='mdi:lock-outline' />} />
+        {/* <Tab value='activity' label='Activity' icon={<Icon icon='mdi:lock-outline' />} /> */}
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (

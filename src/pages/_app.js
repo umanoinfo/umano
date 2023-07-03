@@ -61,7 +61,6 @@ import '../../styles/ChartContainer.css'
 import '../../styles/ChartNode.css'
 
 import { SessionProvider } from 'next-auth/react'
-import { useSession } from 'next-auth/react'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -78,25 +77,6 @@ if (themeConfig.routingLoader) {
   })
 }
 
-// function Auth({ children }) {
-//   const { status } = useSession({ required: true })
-//   console.log('5555555', status)
-//   if (status === 'loading') {
-//     return <div>Loading...</div>
-//   }
-
-//   return children
-// }
-
-const Guard = ({ children, authGuard, guestGuard }) => {
-  const { status } = useSession({ required: true })
-  if (status === 'unauthenticated') {
-    return <div>ffff...</div>
-  } else {
-    return { children }
-  }
-}
-
 // ** Configure JSS & ClassName
 const App = props => {
   const { session, Component, emotionCache = clientSideEmotionCache, pageProps } = props
@@ -107,7 +87,6 @@ const App = props => {
   const getLayout =
     Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
   const setConfig = Component.setConfig ?? undefined
-  const authGuard = Component.authGuard ?? true
   const guestGuard = Component.guestGuard ?? false
   const aclAbilities = Component.acl ?? defaultACLObj
 
@@ -125,9 +104,6 @@ const App = props => {
                         {getLayout(<Component {...pageProps} />)}
                       </AclGuard>
                     </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
                   </ThemeComponent>
                 )
               }}

@@ -14,7 +14,6 @@ import themeConfig from 'src/configs/themeConfig'
 
 // ** Components
 import AppBar from './components/vertical/appBar'
-import Customizer from 'src/@core/components/customizer'
 import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
@@ -68,6 +67,25 @@ const VerticalLayout = props => {
 
   const { data: session, status } = useSession()
 
+  if(session && session.user && session.user.status != 'active'){
+    console.log(session.user.status)
+    return(
+      <>
+          <Box className='content-center'>
+            <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <Typography variant='h1' sx={{ mb: 2.5 }}>
+                405
+              </Typography>
+              <Typography variant='h5' sx={{ mb: 2.5, fontSize: '1.5rem !important' }}>
+                You are not active! 🔐
+              </Typography>
+              <Typography variant='body2'>You don&prime;t have permission to access this page.</Typography>
+            </Box>
+          </Box>
+        </>
+    )
+  }
+
   const Img = styled('img')(({ theme }) => ({
     marginTop: theme.spacing(15),
     marginBottom: theme.spacing(15),
@@ -84,6 +102,7 @@ const VerticalLayout = props => {
   return (
     <>
       {status == 'loading' && <>Loading</>}
+
       {status == 'unauthenticated' && (
         <>
           <Box className='content-center'>
@@ -158,7 +177,6 @@ const VerticalLayout = props => {
               <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
             </MainContentWrapper>
           </VerticalLayoutWrapper>
-          {disableCustomizer || hidden ? null : <Customizer />}
           {scrollToTop ? (
             scrollToTop(props)
           ) : (

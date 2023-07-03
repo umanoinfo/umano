@@ -121,10 +121,10 @@ const UserViewLeft = ({ id }) => {
                 <Typography variant='h6' sx={{ mb: 2 }}>
                   {user.name}
                 </Typography>
-                <CustomChip
+                 <CustomChip
                   skin='light'
                   size='small'
-                  label={user.role}
+                  label={user.email}
                   color={roleColors[user.role]}
                   sx={{
                     height: 20,
@@ -137,7 +137,7 @@ const UserViewLeft = ({ id }) => {
                 />
               </CardContent>
 
-              <CardContent sx={{ my: 1 }}>
+              {/* <CardContent sx={{ my: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
@@ -162,7 +162,7 @@ const UserViewLeft = ({ id }) => {
                     </div>
                   </Box>
                 </Box>
-              </CardContent>
+              </CardContent> */}
 
               <CardContent>
                 <Typography variant='h6'>Details</Typography>
