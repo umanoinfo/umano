@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   // ------------------------------- Token -------------------------------------
 
   // const token = await getToken({ req })
+  
   res.status(401).json({ success: false, data: "token" })
 
 
@@ -242,4 +243,5 @@ export default async function handler(req, res) {
   // }
 
   // res.status(200).json({ success: true, data: options })
+
 }
