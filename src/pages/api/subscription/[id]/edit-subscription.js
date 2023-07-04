@@ -14,9 +14,12 @@ export default async function handler(req, res) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
-  // ------------------ Add Subscription --------------------------------------------
+  // ------------------ Edit Subscription --------------------------------------------
 
   const subscription = req.body.data
+  const id = subscription._id
+  delete subscription._id
+
   if (!subscription.company_id || !subscription.start_at || !subscription.end_at || !subscription.availableUsers) {
     res.status(422).json({
       message: 'Invalid input'
@@ -24,7 +27,8 @@ export default async function handler(req, res) {
     
     return
   }
-  const newSubscription = await client.db().collection('subscriptions').insertOne(subscription)
+
+  const newSubscription = await client.db().collection('subscriptions').findOne({ _id: ObjectId(id) })
 
   // ------------------ update company  -----------------------------------------
 
@@ -46,8 +50,8 @@ export default async function handler(req, res) {
     user_id: myUser._id,
     company_id: myUser.company_id,
     Module: 'Subscription',
-    Action: 'ADD',
-    Description: 'ADD Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
+    Action: 'Edit',
+    Description: 'Edit Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
     created_at: new Date()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)

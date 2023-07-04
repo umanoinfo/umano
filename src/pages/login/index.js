@@ -14,6 +14,8 @@ import { styled, useTheme } from '@mui/material/styles'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
+import LinearProgress from '@mui/material/LinearProgress'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -35,13 +37,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { signOut, signIn } from 'next-auth/react'
 
 // ** Styled Components
-const LoginIllustrationWrapper = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(20),
-  paddingRight: '0 !important',
-  [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(10)
-  }
-}))
+
 
 const LoginIllustration = styled('img')(({ theme }) => ({
   maxWidth: '48rem',
@@ -91,6 +87,7 @@ const defaultValues = {
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [loading , setLoading ]= useState(false)
 
   // ** Hooks
 
@@ -115,6 +112,7 @@ const LoginPage = () => {
   //----------------- SignIn ------------------------------
 
   const onSubmit = data => {
+    setLoading(true)
     const { email, password } = data
     signIn('credentials', {
       email: email,
@@ -233,11 +231,11 @@ const LoginPage = () => {
                 )}
               </FormControl>
 
-............................................
-
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mt: 10, mb: 7 }}>
+              {!loading && <Button fullWidth size='large' type='submit' variant='contained' sx={{ mt: 10, mb: 7 }}>
                 Login
-              </Button>
+              </Button>}
+              {loading && <LinearProgress sx={{ mt: 10, mb: 7 }} />}
+
               {/* <Button
                 fullWidth
                 size='large'

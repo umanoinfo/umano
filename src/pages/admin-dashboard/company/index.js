@@ -198,6 +198,7 @@ const CompaniesList = () => {
   }
 
   // -------------------------- Delete --------------------------------
+
   const deleteCompany = () => {
     axios
       .post('/api/company/delete-company', {
@@ -301,7 +302,7 @@ const CompaniesList = () => {
 
   const columns = [
     {
-      flex: 0.12,
+      flex: 0.05,
       minWidth: 100,
       field: 'index',
       headerName: '#',

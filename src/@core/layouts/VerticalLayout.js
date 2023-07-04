@@ -9,6 +9,9 @@ import Box from '@mui/material/Box'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Spinner Import
+import Spinner from 'src/@core/components/spinner'
+
 // ** Theme Config Import
 import themeConfig from 'src/configs/themeConfig'
 
@@ -102,7 +105,14 @@ const VerticalLayout = props => {
 
   return (
     <>
-      {status == 'loading' && <>Loading</>}
+      {status == 'loading' &&<Box className='content-center'>
+            <Box sx={{ mt:50 , p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <Typography variant='h6' sx={{mt:6 ,  mb: 2.5 }}>
+                Please Wait
+              </Typography>
+              <Spinner sx={{ height: '100%' }} />
+            </Box>
+          </Box>}
 
       {status == 'unauthenticated' && (
         <>

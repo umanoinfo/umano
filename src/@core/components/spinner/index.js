@@ -2,6 +2,8 @@
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import LinearProgress from '@mui/material/LinearProgress'
+
 
 const FallbackSpinner = ({ sx }) => {
   // ** Hook
@@ -19,8 +21,9 @@ const FallbackSpinner = ({ sx }) => {
       }}
     >
       <img src='/images/apple-touch-icon.png' width='75' alt='apple' />
-      <CircularProgress disableShrink sx={{ mt: 6 }} />
+      <LinearProgress  />
     </Box>
+    
   )
 }
 
