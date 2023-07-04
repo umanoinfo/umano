@@ -9,237 +9,237 @@ export default async function handler(req, res) {
 
   // ------------------------------- Token -------------------------------------
 
-  const token = await getToken({ req })
-  res.status(401).json({ success: false, data: token })
+  // const token = await getToken({ req })
+  res.status(401).json({ success: false, data: "token" })
 
 
-  if( !token || !token.email ){
+  // if( !token || !token.email ){
 
-    res.status(401).json({ success: false, message: 'Not Auth' })
-  }
+  //   res.status(401).json({ success: false, message: 'Not Auth' })
+  // }
 
-  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  // const myUser = await client.db().collection('users').findOne({ email: token.email })
 
-  if (!myUser || !myUser.permissions ) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
-  }
+  // if (!myUser || !myUser.permissions ) {
+  //   res.status(401).json({ success: false, message: 'Not Auth' })
+  // }
 
-  // ------------------------------ Fill View --------------------------------------
+  // // ------------------------------ Fill View --------------------------------------
 
-  const options = []
+  // const options = []
 
-  // -------------------------------- Admin Dashboard -------------------------------------
+  // // -------------------------------- Admin Dashboard -------------------------------------
 
-  if (myUser && myUser.type == 'admin') {
-    options.push({ sectionTitle: 'Admin Dashboard' })
-  }
-  if (myUser && myUser.permissions.includes('AdminViewCompany')) {
-    options.push({ title: 'Companies', icon: 'mdi:google-circles-extended', path: '/admin-dashboard/company' })
-  }
-  if (myUser && myUser.permissions.includes('AdminViewUser')) {
-    options.push({
-      title: 'Users',
-      icon: 'mdi:account-outline',
-      path: '/admin-dashboard/user'
-    })
-  }
-  if (myUser && (myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
-    options.push({
-      title: 'Roles & Permissions',
-      icon: 'mdi:shield-outline',
-      children: [
-        {
-          title: 'Roles',
-          path: '/admin-dashboard/role'
-        },
-        {
-          title: 'Permissions',
-          path: '/admin-dashboard/permission'
-        }
-      ]
-    })
-  }
+  // if (myUser && myUser.type == 'admin') {
+  //   options.push({ sectionTitle: 'Admin Dashboard' })
+  // }
+  // if (myUser && myUser.permissions.includes('AdminViewCompany')) {
+  //   options.push({ title: 'Companies', icon: 'mdi:google-circles-extended', path: '/admin-dashboard/company' })
+  // }
+  // if (myUser && myUser.permissions.includes('AdminViewUser')) {
+  //   options.push({
+  //     title: 'Users',
+  //     icon: 'mdi:account-outline',
+  //     path: '/admin-dashboard/user'
+  //   })
+  // }
+  // if (myUser && (myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
+  //   options.push({
+  //     title: 'Roles & Permissions',
+  //     icon: 'mdi:shield-outline',
+  //     children: [
+  //       {
+  //         title: 'Roles',
+  //         path: '/admin-dashboard/role'
+  //       },
+  //       {
+  //         title: 'Permissions',
+  //         path: '/admin-dashboard/permission'
+  //       }
+  //     ]
+  //   })
+  // }
 
-  // -------------------------------- Company Dashboard -------------------------------------
+  // // -------------------------------- Company Dashboard -------------------------------------
 
-  if (myUser && myUser.company_id) {
-    options.push({ sectionTitle: 'Company Dashboard' })
-  }
+  // if (myUser && myUser.company_id) {
+  //   options.push({ sectionTitle: 'Company Dashboard' })
+  // }
 
-  if (myUser && myUser.permissions.includes('ViewEvent')) {
-    options.push({
-      title: 'Calender',
-      icon: 'mdi-calendar-multiple-check',
-      path: '/company-dashboard/calender'
-    })
-  }
+  // if (myUser && myUser.permissions.includes('ViewEvent')) {
+  //   options.push({
+  //     title: 'Calender',
+  //     icon: 'mdi-calendar-multiple-check',
+  //     path: '/company-dashboard/calender'
+  //   })
+  // }
 
-  if (myUser && myUser.permissions.includes('ViewDepartment')) {
-    options.push({
-      title: 'Departments',
-      icon: 'mdi-view-module',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/department'
-        },
-        {
-          title: 'Structure',
-          path: '/company-dashboard/department/organizational-structure'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewEmployee')) {
-    options.push({
-      title: 'Employees',
-      icon: 'mdi:badge-account-horizontal-outline',
+  // if (myUser && myUser.permissions.includes('ViewDepartment')) {
+  //   options.push({
+  //     title: 'Departments',
+  //     icon: 'mdi-view-module',
+  //     children: [
+  //       {
+  //         title: 'List',
+  //         path: '/company-dashboard/department'
+  //       },
+  //       {
+  //         title: 'Structure',
+  //         path: '/company-dashboard/department/organizational-structure'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewEmployee')) {
+  //   options.push({
+  //     title: 'Employees',
+  //     icon: 'mdi:badge-account-horizontal-outline',
 
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/employee'
-        },
-        {
-          title: 'Leave',
-          path: '/company-dashboard/employee/leave/'
-        },
-        {
-          title: 'Deductions',
-          path: '/company-dashboard/employee/deduction/'
-        },
-        {
-          title: 'Rewards',
-          path: '/company-dashboard/employee/rewards/'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewDocument')) {
-    options.push({
-      title: 'Documents',
-      icon: 'mdi:checkbox-multiple-blank-outline',
-      children: [
-        {
-          title: 'DOH',
-          path: '/company-dashboard/document/doh-list'
-        },
-        {
-          title: 'Civil Defense',
-          path: '/company-dashboard/document/civil-list'
-        },
-        {
-          title: 'Waste Management',
-          path: '/company-dashboard/document/waste-list'
-        },
-        {
-          title: 'MCC',
-          path: '/company-dashboard/document/mcc-list'
-        },
-        {
-          title: 'Tasneef',
-          path: '/company-dashboard/document/tasneef-list'
-        },
-        {
-          title: 'Oshad',
-          path: '/company-dashboard/document/oshad-list'
-        },
-        {
-          title: 'ADHICS',
-          path: '/company-dashboard/document/adhics-list'
-        },
-        {
-          title: 'Third Party Contracts',
-          path: '/company-dashboard/document/third-list'
-        },
-        {
-          title: 'All',
-          path: '/company-dashboard/document'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewForm')) {
-    options.push({
-      title: 'Forms',
-      icon: 'ri:input-cursor-move',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/form/'
-        },
-        {
-          title: 'Requests',
-          path: '/company-dashboard/form-request/'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewAttendance')) {
-    options.push({
-      title: 'Attendance',
-      icon: 'material-symbols:date-range-outline-rounded',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/attendance/list/'
-        },
-        {
-          title: 'Days',
-          path: '/company-dashboard/attendance/days/'
-        },
-        {
-          title: 'Shifts',
-          path: '/company-dashboard/attendance/shift/'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewPayroll')) {
-    options.push({
-      title: 'Payroll',
-      icon: 'mdi:money',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/payroll/'
-        },
-        {
-          title: 'Salary Formula',
-          path: '/company-dashboard/payroll/formula/'
-        },
-        {
-          title: 'Compensations',
-          path: '/company-dashboard/payroll/compensation/'
-        },
-        {
-          title: 'Deductions',
-          path: '/company-dashboard/payroll/deduction/'
-        }
-      ]
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewMail')) {
-    options.push({
-      title: 'Mails',
-      icon: 'ic:baseline-mail-outline',
-      path: '/company-dashboard/mail'
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewCompanyUser')) {
-    options.push({
-      title: 'Users',
-      icon: 'mdi:account-outline',
-      path: '/company-dashboard/user'
-    })
-  }
-  if (myUser && myUser.permissions.includes('ViewCompanyRole')) {
-    options.push({
-      title: 'Roles',
-      icon: 'mdi:shield-outline',
-      path: '/company-dashboard/role'
-    })
-  }
+  //     children: [
+  //       {
+  //         title: 'List',
+  //         path: '/company-dashboard/employee'
+  //       },
+  //       {
+  //         title: 'Leave',
+  //         path: '/company-dashboard/employee/leave/'
+  //       },
+  //       {
+  //         title: 'Deductions',
+  //         path: '/company-dashboard/employee/deduction/'
+  //       },
+  //       {
+  //         title: 'Rewards',
+  //         path: '/company-dashboard/employee/rewards/'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewDocument')) {
+  //   options.push({
+  //     title: 'Documents',
+  //     icon: 'mdi:checkbox-multiple-blank-outline',
+  //     children: [
+  //       {
+  //         title: 'DOH',
+  //         path: '/company-dashboard/document/doh-list'
+  //       },
+  //       {
+  //         title: 'Civil Defense',
+  //         path: '/company-dashboard/document/civil-list'
+  //       },
+  //       {
+  //         title: 'Waste Management',
+  //         path: '/company-dashboard/document/waste-list'
+  //       },
+  //       {
+  //         title: 'MCC',
+  //         path: '/company-dashboard/document/mcc-list'
+  //       },
+  //       {
+  //         title: 'Tasneef',
+  //         path: '/company-dashboard/document/tasneef-list'
+  //       },
+  //       {
+  //         title: 'Oshad',
+  //         path: '/company-dashboard/document/oshad-list'
+  //       },
+  //       {
+  //         title: 'ADHICS',
+  //         path: '/company-dashboard/document/adhics-list'
+  //       },
+  //       {
+  //         title: 'Third Party Contracts',
+  //         path: '/company-dashboard/document/third-list'
+  //       },
+  //       {
+  //         title: 'All',
+  //         path: '/company-dashboard/document'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewForm')) {
+  //   options.push({
+  //     title: 'Forms',
+  //     icon: 'ri:input-cursor-move',
+  //     children: [
+  //       {
+  //         title: 'List',
+  //         path: '/company-dashboard/form/'
+  //       },
+  //       {
+  //         title: 'Requests',
+  //         path: '/company-dashboard/form-request/'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewAttendance')) {
+  //   options.push({
+  //     title: 'Attendance',
+  //     icon: 'material-symbols:date-range-outline-rounded',
+  //     children: [
+  //       {
+  //         title: 'List',
+  //         path: '/company-dashboard/attendance/list/'
+  //       },
+  //       {
+  //         title: 'Days',
+  //         path: '/company-dashboard/attendance/days/'
+  //       },
+  //       {
+  //         title: 'Shifts',
+  //         path: '/company-dashboard/attendance/shift/'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewPayroll')) {
+  //   options.push({
+  //     title: 'Payroll',
+  //     icon: 'mdi:money',
+  //     children: [
+  //       {
+  //         title: 'List',
+  //         path: '/company-dashboard/payroll/'
+  //       },
+  //       {
+  //         title: 'Salary Formula',
+  //         path: '/company-dashboard/payroll/formula/'
+  //       },
+  //       {
+  //         title: 'Compensations',
+  //         path: '/company-dashboard/payroll/compensation/'
+  //       },
+  //       {
+  //         title: 'Deductions',
+  //         path: '/company-dashboard/payroll/deduction/'
+  //       }
+  //     ]
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewMail')) {
+  //   options.push({
+  //     title: 'Mails',
+  //     icon: 'ic:baseline-mail-outline',
+  //     path: '/company-dashboard/mail'
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewCompanyUser')) {
+  //   options.push({
+  //     title: 'Users',
+  //     icon: 'mdi:account-outline',
+  //     path: '/company-dashboard/user'
+  //   })
+  // }
+  // if (myUser && myUser.permissions.includes('ViewCompanyRole')) {
+  //   options.push({
+  //     title: 'Roles',
+  //     icon: 'mdi:shield-outline',
+  //     path: '/company-dashboard/role'
+  //   })
+  // }
 
-  res.status(200).json({ success: true, data: options })
+  // res.status(200).json({ success: true, data: options })
 }
