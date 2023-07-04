@@ -233,7 +233,7 @@ const LoginPage = () => {
                 )}
               </FormControl>
 
-.
+............................................
 
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mt: 10, mb: 7 }}>
                 Login
