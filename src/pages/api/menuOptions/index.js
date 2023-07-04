@@ -10,6 +10,9 @@ export default async function handler(req, res) {
   // ------------------------------- Token -------------------------------------
 
   const token = await getToken({ req })
+  res.status(401).json({ success: false, data: token })
+
+
   if( !token || !token.email ){
 
     res.status(401).json({ success: false, message: 'Not Auth' })
