@@ -17,6 +17,8 @@ export default async function handler(req, res) {
     toDate = new Date(req.query.toDate).setHours(23, 59, 59, 999)
   }
 
+  console.log(req.query.employee_no)
+
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })
@@ -31,10 +33,12 @@ export default async function handler(req, res) {
     .db()
     .collection('attendances')
     .aggregate([
+      {$addFields: {employee_no_str: {$toString: '$employee_no'}}},
       {
         $match: {
           $and: [
             { company_id: myUser.company_id },
+            { employee_no_str: { $regex: req.query.employee_no  }},
             {
               date: {
                 $gt: new Date(fromDate),
@@ -55,7 +59,7 @@ export default async function handler(req, res) {
       },
       {
         $sort: {
-          created_at: -1
+          date: -1
         }
       }
     ])

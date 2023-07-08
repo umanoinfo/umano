@@ -21,28 +21,44 @@ import Icon from 'src/@core/components/icon'
 
 import { Form, SelectPicker, DatePicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
+import attendance from 'src/store/apps/attendance'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogEditAttendance = ({ open, setOpen, employee, setupdate }) => {
-  let new_date = employee.date.split('T')
-  new_date[1] = employee.time
-  new_date = new_date.toString()
+const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateData }) => {
+
+  let new_date_in = attendance.date.split('T')
+  new_date_in[1] = attendance.timeIn
+
+  let new_date_out = attendance.date.split('T')
+  new_date_out[1] = attendance.timeOut
+
+  console.log(new_date_in[1] , new_date_out[1] )
+
+  // new_date = new_date.toString()
+
+  // console.log(attendance.timeIn)
+  // let arr = [attendance.timeIn.split(':')]
+
+  // let time_in = new Date(new_date).setHours(arr[0])
+  // console.log(time_in)
 
   const statusData = [{ label: 'active', value: 'active' }]
 
   // ** States
-  const [date, setDate] = useState(new Date(new_date))
-  const [status, setStatus] = useState(employee.status)
+  const [date, setDate] = useState(new Date(new_date_in))
+  const [timeIn , setTimeIn] = useState(new Date(new_date_in))
+  const [timeOut , setTimeOut] = useState(new Date(new_date_out))
+  const [status, setStatus] = useState(attendance.status)
 
   if (!open) {
     return <></>
   }
 
   const handleSubmit = () => {
-    const new_data = { ...employee, time: date.toLocaleTimeString(), date: date, status: status }
+    const new_data = { ...attendance, timeIn: timeIn.toLocaleTimeString(), timeOut : timeOut.toLocaleTimeString() , date: date, status: status }
     const { employee_info, ...data } = new_data
 
     axios
@@ -55,6 +71,8 @@ const DialogEditAttendance = ({ open, setOpen, employee, setupdate }) => {
           position: 'bottom-right'
         })
         setupdate(new Date())
+        console.log(response.data)
+        updateData()
         setOpen(false)
       })
       .catch(function (error) {
@@ -71,7 +89,7 @@ const DialogEditAttendance = ({ open, setOpen, employee, setupdate }) => {
       open={open}
       maxWidth='md'
       scroll='body'
-      onClose={() => setOpen(false)}
+      onClose={() => setOpen(false) }
       onBackdropClick={() => setOpen(false)}
     >
       <DialogContent sx={{ pb: 6, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
@@ -88,14 +106,14 @@ const DialogEditAttendance = ({ open, setOpen, employee, setupdate }) => {
           </Typography>
         </Box>
         <Form>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
+          <Grid container mb={3}>
+            <Grid item xs={6} mb={3}>
               <div>
                 <Form.Group>
-                  <label>Employee Name :</label>
+                  <small>Employee Name</small>
                   <Form.Control
-                    size='lg'
-                    value={employee.employee_info[0].firstName + ' ' + employee.employee_info[0].lastName}
+                    size='md'
+                    value={attendance.employee_info[0].firstName + ' ' + attendance.employee_info[0].lastName}
                     name='user name'
                     placeholder='user name'
                     disabled
@@ -103,51 +121,68 @@ const DialogEditAttendance = ({ open, setOpen, employee, setupdate }) => {
                 </Form.Group>
               </div>
             </Grid>
+
+            <Grid container spacing={2}>
             <Grid item sm={6} xs={12}>
-              <div>
-                <Form.Group>
-                  <small>Date</small>
-                  <DatePicker
-                    format='yyyy-MM-dd'
-                    size='lg'
-                    onChange={e => {
-                      setDate(e)
-                    }}
-                    value={date}
-                    name='Date'
-                    block
-                  />
-                </Form.Group>
-              </div>
+                <div>
+                  <Form.Group>
+                    <small>Date</small>
+                    <DatePicker
+                      format='yyyy-MM-dd'
+                      size='md'
+                      onChange={e => {
+                        setDate(e)
+                      }}
+                      value={date}
+                      name='Date'
+                      block
+                    />
+                  </Form.Group>
+                </div>
+              </Grid>
+              <Grid item sm={3} xs={4}>
+                <div>
+                  <Form.Group>
+                    <small>Time in</small>
+                    <DatePicker
+                      format='HH:mm:SS'
+                      size='md'
+                      onChange={e => {
+                        setTimeIn(e)
+                      }}
+                      value={timeIn}
+                      name='Date'
+                      block
+                    />
+                  </Form.Group>
+                </div>
+              </Grid>
+              <Grid item sm={3} xs={4}>
+                <div>
+                  <Form.Group>
+                    <small>Time out</small>
+                    <DatePicker
+                      format='HH:mm:SS'
+                      size='md'
+                      onChange={e => {
+                        setTimeOut(e)
+                      }}
+                      value={timeOut}
+                      name='Date'
+                      block
+                    />
+                  </Form.Group>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item sm={6} xs={12}>
-              <div>
-                <Form.Group>
-                  <small>Time</small>
-                  <DatePicker
-                    format='hh:mm:ss'
-                    size='lg'
-                    onChange={e => {
-                      setDate(e)
-                    }}
-                    value={date}
-                    name='Date'
-                    block
-                  />
-                </Form.Group>
-              </div>
-            </Grid>
-            <Grid item sm={6} xs={12}>
-              <small>Status</small>
-              <Form.Group>
-                <SelectPicker size='lg' name='status' onChange={setStatus} value={status} data={statusData} block />
-              </Form.Group>
-            </Grid>
+ 
+
+
           </Grid>
         </Form>
       </DialogContent>
-      <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'start' }}>
-        <Button variant='contained' sx={{ mr: 2 }} onClick={() => handleSubmit()}>
+      <DialogActions sx={{ pb: { xs: 8, sm: 12.5  }, justifyContent: 'start' }}>
+        <Button variant='contained' sx={{ mr: 2 , ml:10 }} onClick={() => handleSubmit()}>
           Submit
         </Button>
         <Button variant='outlined' color='secondary' onClick={() => setOpen(false)}>

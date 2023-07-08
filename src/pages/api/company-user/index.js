@@ -4,14 +4,15 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
 
+  const client = await connectToDatabase()
 
-  // -------------------- Token ---------------------
+  // ---------------------------- Token -------------------------------------
 
-  // const token = await getToken({req})
-
-  // if (!token || !token.user || !token.user.permissions.includes('AdminViewUser')) {
-  //   res.status(401).json({ success: false, message: 'Not Auth' })
-  // }
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewUser')) {
+    res.status(401).json({ success: false, message: 'Not Auth' })
+  }
 
   try {
     if (!req.query.userStatus) {
@@ -23,7 +24,6 @@ export default async function handler(req, res) {
     if (!req.query.q) {
       req.query.q = ''
     }
-    const client = await connectToDatabase()
     
     const users = await client
       .db()
@@ -34,8 +34,9 @@ export default async function handler(req, res) {
             $and: [
               { $or: [{ type: 'employee' }, { type: 'manager' }] },
               { status: { $regex: req.query.userStatus } },
+              { company_id : { $regex: myUser.company_id }},
               { type: { $regex: req.query.type } },
-              { name: { $regex: req.query.q } },
+              { name: { $regex: req.query.q , '$options' : 'i' } },
               { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
             ]
           }

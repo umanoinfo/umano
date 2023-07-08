@@ -209,15 +209,15 @@ const AllDocumentsList = () => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          {session && session.user && session.user.permissions.includes('ViewForm') && (
+          {/* {session && session.user && session.user.permissions.includes('ViewForm') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
-          )}
+          )} */}
           {session && session.user && session.user.permissions.includes('AddFormRequest') && (
             <MenuItem onClick={handleAddRequest} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='ic:outline-file-open' fontSize={20} />
+              <Icon icon='ph:file' fontSize={20} />
               Add Request
             </MenuItem>
           )}

@@ -74,6 +74,32 @@ export const EmployeeDeductionsType = [
   { label: 'Type2', value: 'Type2' }
 ]
 
+export const countries = [
+  {
+    "_id":"618e8986133c2b25923f2248",
+    "name": "United Arab Emirates",
+    "en": "United Arab Emirates (the)",
+    "es": "Emiratos Árabes Unidos (los)",
+    "fr": "Ukraine",
+    "ru": "Объединенные Арабские Эмираты",
+    "ar": "الإمارات العربية المتحدة",
+    "dial": 971,
+    "ISO3": "ARE",
+    "MARC": "ts",
+    "FIPS": "AE",
+    "ISO2": "AE",
+    "currency_name": "UAE Dirham",
+    "currency_code": "AED",
+    "Region Name": "Asia",
+    "Sub-region Name": "Western Asia",
+    "Capital": "Abu Dhabi",
+    "Continent": "AS",
+    "Languages": "ar-AE,fa,en,hi,ur",
+    "states":[{name:'Abu Dhabi'},{name:'Ajman'},{name:'Dubai'},{name:'Fujairah'},{name:'Ras al-Khaimah'},{name:'Umm al-Quwain'}]
+  }
+]
+
+
 export const EditorOptions = [
   {
     label: 'Input Text',

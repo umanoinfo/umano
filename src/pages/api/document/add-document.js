@@ -36,8 +36,8 @@ export default async function handler(req, res) {
     let event = {}
     event.title = 'Expiry date for ' + document.title
     event.allDay = true
-    event.Description = 'Expiry date for ' + document.title
-    event.StartDate = document.expiryDate
+    event.description = 'Expiry date for ' + document.title
+    event.startDate = document.expiryDate
     event.endDate = document.expiryDate
     event.type = 'Document'
     event.users = []

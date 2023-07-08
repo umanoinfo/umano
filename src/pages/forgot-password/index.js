@@ -1,16 +1,40 @@
-// ** Next Import
-import Link from 'next/link'
+// ** React Imports
+import { useState } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
+import LinearProgress from '@mui/material/LinearProgress'
+
+import { getProviders, signIn, useSession } from "next-auth/react";
+
+import { getCsrfToken } from "next-auth/react";
+
+
+// ** Next Imports
+import Link from 'next/link'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+
+// ** Third Party Imports
+import * as yup from 'yup'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+// ** Hooks
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -18,22 +42,15 @@ import themeConfig from 'src/configs/themeConfig'
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
-// ** Hooks
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { signOut } from 'next-auth/react'
+import { FormControlLabel } from '@mui/material'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
-// ** Demo Imports
-import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+// ** Styled Components
 
-// Styled Components
-const ForgotPasswordIllustrationWrapper = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(20),
-  paddingRight: '0 !important',
-  [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(10)
-  }
-}))
 
-const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
+const LoginIllustration = styled('img')(({ theme }) => ({
   maxWidth: '48rem',
   [theme.breakpoints.down('xl')]: {
     maxWidth: '38rem'
@@ -60,13 +77,6 @@ const BoxWrapper = styled(Box)(({ theme }) => ({
   }
 }))
 
-const TypographyStyled = styled(Typography)(({ theme }) => ({
-  fontWeight: 600,
-  letterSpacing: '0.18px',
-  marginBottom: theme.spacing(1.5),
-  [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
-}))
-
 const LinkStyled = styled(Link)(({ theme }) => ({
   display: 'flex',
   '& svg': { mr: 1.5 },
@@ -76,36 +86,155 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const ForgotPassword = () => {
+const TypographyStyled = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  letterSpacing: '0.18px',
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
+}))
+
+
+
+const schema = yup.object().shape({
+  email: yup.string().email().required()
+})
+
+const defaultValues = {
+  password: '',
+  email: ''
+}
+
+const ForgetPassword = ({ csrfToken, providers, query }) => {
+
+  const [badToken, setBadtoken] = useState();
+  const [checkingToken, setCheckingToken] = useState(false);
+  const [loading , setLoading ]= useState(false)
+  const [user, setUser] = useState();
+  const [errorReset, setErrorReset] = useState();
+  const [mailsent, setmailsent] = useState(query.token ? true : false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [newPassword , setNewPassword]= useState()
+  const [passwordConf , setPasswordConf]= useState()
+
   // ** Hooks
+
   const theme = useTheme()
   const { settings } = useSettings()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
   // ** Vars
   const { skin } = settings
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
-  const handleSubmit = e => {
-    e.preventDefault()
-  }
+  const {
+    control,
+    setError,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
 
-  const imageSource =
-    skin === 'bordered' ? 'auth-v2-forgot-password-illustration-bordered' : 'auth-v2-forgot-password-illustration'
+  const router = useRouter()
+  
+  useEffect(() => {
+    if (router.query.email && router.query.token) {
+      setCheckingToken(true);
+      fetch("/api/reset-password/check-token/", {
+        body: JSON.stringify({ email: query.email, token: query.token }),
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setCheckingToken(false);
+          if (data.success) {
+            setUser(data.user);
+            setBadtoken(false);
+          } else {
+            setBadtoken(true);
+            setError(data.message);
+          }
+        });
+    }
+  }, []);
+
+
+  const setPassword = (e) => {
+
+    if (passwordConf === newPassword && (passwordConf && passwordConf.length > 5 && newPassword && newPassword.length > 5)) {
+      setLoading(true);
+      setErrorReset()
+      fetch("/api/reset-password/set-password/", {
+        method: "POST",
+        body: JSON.stringify({ password: newPassword, user: user }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }).then(res=>res.json()).then(data=>{
+        console.log(data);
+        if(data.success)
+        {
+            signIn("credentials",{email:user.email,password:newPassword}).then(()=>{
+                window.location.href='/';
+            });
+        }
+        else
+        {
+            setError(data.message);
+        }
+      });
+    } else {
+      setErrorReset("Passwords don't matched! or Passwords length 5 character at least");
+    }
+  };
+
+  //----------------- Request mail ------------------------------
+
+
+  const onSubmit = (data) => {
+    setLoading(true);
+    const { email } = data
+    fetch("/api/reset-password/request/", {
+      method: "POST",
+      body: JSON.stringify({ email: email }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLoading(false);
+        console.log(data);
+        if (data.success) {
+          setmailsent(true);
+        }
+      });
+  };
+
+  // -----------------------------------------------------
+
+  const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
 
   return (
     <Box className='content-right'>
       {!hidden ? (
+
         <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
-          <ForgotPasswordIllustrationWrapper>
-            <ForgotPasswordIllustration
-              alt='forgot-password-illustration'
+            <LoginIllustration
+              alt='login-illustration'
+              width={300}
               src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
             />
-          </ForgotPasswordIllustrationWrapper>
-          <FooterIllustrationsV2 image={`/images/pages/auth-v2-forgot-password-mask-${theme.palette.mode}.png`} />
         </Box>
       ) : null}
-      <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
+      <RightWrapper  sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
         <Box
           sx={{
             p: 7,
@@ -127,105 +256,211 @@ const ForgotPassword = () => {
                 justifyContent: 'center'
               }}
             >
-              <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 195.571 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint0_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 196.084 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 173.147 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fillOpacity='0.4'
-                  fill='url(#paint1_linear_7821_79167)'
-                  transform='matrix(-0.865206 0.501417 0.498585 0.866841 94.1973 0)'
-                />
-                <rect
-                  rx='25.1443'
-                  width='50.2886'
-                  height='143.953'
-                  fill={theme.palette.primary.main}
-                  transform='matrix(0.865206 0.501417 -0.498585 0.866841 71.7728 0)'
-                />
-                <defs>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint0_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                  <linearGradient
-                    y1='0'
-                    x1='25.1443'
-                    x2='25.1443'
-                    y2='143.953'
-                    id='paint1_linear_7821_79167'
-                    gradientUnits='userSpaceOnUse'
-                  >
-                    <stop />
-                    <stop offset='1' stopOpacity='0' />
-                  </linearGradient>
-                </defs>
-              </svg>
+              {/* --------------------------------- Logo --------------------------------------------- */}
+              
+              <Box sx={{ px: 1}}>
+                <img src='/images/apple-touch-icon.png' width='32px' />
+              </Box>
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
                 {themeConfig.templateName}
               </Typography>
             </Box>
+            {/* ----------------------------------------------------------------------------------------------------- */}
+
+            {checkingToken && (
+              <div className="contianer">
+              <Box sx={{ mb: 6 }}>
+                  <TypographyStyled
+                    variant='h5'
+                    sx={{ mb: 5 }}
+                  >Checking...</TypographyStyled>
+                </Box>
+              </div>)}
+            
+            {query.email && query.token && badToken == false && (
+            <>
             <Box sx={{ mb: 6 }}>
-              <TypographyStyled variant='h5'>Forgot Password? 🔒</TypographyStyled>
-              <Typography variant='body2'>
-                Enter your email and we&prime;ll send you instructions to reset your password
-              </Typography>
+              <TypographyStyled
+                variant='h5'
+                sx={{ mb: 5 }}
+              >{`Reset Password`}</TypographyStyled>
+              <Typography variant='body2'>Please insert new password</Typography>
             </Box>
-            <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-              <TextField autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 5.25 }}>
-                Send reset link
-              </Button>
-              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <LinkStyled href='/login'>
-                  <Icon icon='mdi:chevron-left' fontSize='2rem' />
-                  <span>Back to login</span>
-                </LinkStyled>
-              </Typography>
-            </form>
+   
+
+              <FormControl fullWidth>
+                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+                New Password
+                </InputLabel>
+                <Controller
+                  name='newPassword'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <OutlinedInput
+                      value={value}
+                      onBlur={onBlur}
+                      label='New Password'
+                      onChange={(e) => {
+                        setNewPassword(e.target.value);
+                      }}
+                      id='auth-login-v2-password'
+                      error={Boolean(errorReset)}
+                      type={showPassword ? 'text' : 'password'}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  )}
+                />
+              </FormControl>
+
+
+              <FormControl fullWidth sx={{mt:3}}>
+                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.passwordConf)}>
+                Confirm new password
+                </InputLabel>
+                <Controller
+                  name='passwordConf'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <OutlinedInput
+                      value={value}
+                      onBlur={onBlur}
+                      label='Confirm new password'
+                      onChange={(e) => {
+                        setPasswordConf(e.target.value);
+                      }}
+                      id='auth-login-v2-password'
+                      error={Boolean(errorReset)}
+                      type={showPassword ? 'text' : 'password'}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  )}
+                />
+              </FormControl>
+
+              {errorReset && (
+                  <FormHelperText sx={{ color: 'error.main' }} id=''>
+                    {errorReset}
+                  </FormHelperText>
+                )}
+
+
+              {!loading && <Button onClick = {()=>{setPassword()}} fullWidth size='large' type='submit' variant='contained' sx={{ mt: 10, mb: 7 }}>
+                Save Password & Sign in
+              </Button>}
+              {loading && <LinearProgress sx={{ mt: 10, mb: 7 }} />}
+         
+            </>
+            )}
+      
+
+            {mailsent && !query.token && (
+              <div className="container">
+                <Box sx={{ mb: 6 }}>
+                  <TypographyStyled
+                    variant='h5'
+                    sx={{ mb: 5 }}
+                  >Reset Link sent</TypographyStyled>
+                  <Typography variant='body2'>Please check your email and use the link as soon as possible!</Typography>
+                </Box>
+                    <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <LinkStyled href='/login'>
+                      <Icon icon='mdi:chevron-left' fontSize='2rem' />
+                      <span>Back to login</span>
+                    </LinkStyled>
+                  </Typography>
+              </div>
+            )}
+
+            {(!mailsent || badToken) && (
+              <>
+                <Box sx={{ mb: 6 }}>
+                  <TypographyStyled
+                    variant='h5'
+                    sx={{ mb: 5 }}
+                  >Reset Password?</TypographyStyled>
+                  <Typography variant='body2'>Enter your email and we&prime;ll send you instructions to reset your password</Typography>
+                </Box>
+                <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name='email'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          autoFocus
+                          label='Email'
+                          value={value}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          error={Boolean(errors.email)}
+                          placeholder='admin@admin.com'
+                        />
+                      )}
+                    />
+                    {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+                  </FormControl>
+
+                  {!loading && <Button fullWidth size='large' type='submit' variant='contained' sx={{ mt: 4, mb: 7 }}>
+                  Send reset link
+                  </Button>}
+                  {loading && <LinearProgress sx={{ mt: 10, mb: 7 }} />}
+
+                  <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <LinkStyled href='/login'>
+                      <Icon icon='mdi:chevron-left' fontSize='2rem' />
+                      <span>Back to login</span>
+                    </LinkStyled>
+                  </Typography>
+
+                </form>
+              </>
+            )}
+
+
           </BoxWrapper>
         </Box>
       </RightWrapper>
     </Box>
   )
 }
-ForgotPassword.guestGuard = true
-ForgotPassword.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
-export default ForgotPassword
+ForgetPassword.getLayout = page => <BlankLayout>{page}</BlankLayout>
+ForgetPassword.guestGuard = true
+
+export default ForgetPassword
+
+
+export async function getServerSideProps(context) {
+  const providers = await getProviders();
+
+  return {
+    props: {
+      query: context.query,
+      csrfToken: await getCsrfToken(context),
+      providers,
+    },
+  };
+}

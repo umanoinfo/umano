@@ -385,7 +385,7 @@ const AddFormRequest = ({ popperPlacement, id }) => {
                     <small>Form Request</small>
                     <Typography sx={{ fontWeight: 'bold' }}>{selectedForm.title} </Typography>
                   </Grid>
-                  <Grid item sm={12} md={4}>
+                  <Grid item sm={12} md={4} mb={5}>
                     <small>Applicant</small>
                     <SelectPicker
                       size='sm'
@@ -398,7 +398,7 @@ const AddFormRequest = ({ popperPlacement, id }) => {
                     />
                   </Grid>
 
-                  <div style={{ width: '100%', minWidth: '595px' }}>
+                  <div style={{ width: '100%', minWidth: '595px'  }}>
                     <div className='content' ref={printRef}>
                       {selectedForm && <View divcontent={selectedForm.content} options={options}></View>}
                     </div>

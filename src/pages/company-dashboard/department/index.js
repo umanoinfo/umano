@@ -239,7 +239,7 @@ const DepartmentList = ({ apiData }) => {
 
   const columns = [
     {
-      flex: 0.12,
+      flex: 0.02,
       minWidth: 100,
       field: 'index',
       headerName: '#',
@@ -289,7 +289,7 @@ const DepartmentList = ({ apiData }) => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {row.user_info[0] && (
+            { row.user_info[0] && (
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography noWrap variant='caption' sx={{ color: 'text.primary' }}>
                   {row.user_info[0].name}
@@ -303,19 +303,21 @@ const DepartmentList = ({ apiData }) => {
         )
       }
     },
-    {
-      flex: 0.08,
-      minWidth: 60,
-      field: 'employees',
-      headerName: 'Employees',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap variant='caption' sx={{ color: 'text.primary' }}>
-            0
-          </Typography>
-        )
-      }
-    },
+
+    // {
+    //   flex: 0.08,
+    //   minWidth: 60,
+    //   field: 'employees',
+    //   headerName: 'Employees',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <Typography noWrap variant='caption' sx={{ color: 'text.primary' }}>
+    //         0
+    //       </Typography>
+    //     )
+    //   }
+    // },
+    
     {
       flex: 0.08,
       minWidth: 60,
@@ -386,7 +388,7 @@ const DepartmentList = ({ apiData }) => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Department List
+              Departments List
             </Typography>
           </Breadcrumbs>
 

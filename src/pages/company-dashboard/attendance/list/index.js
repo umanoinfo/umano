@@ -164,11 +164,16 @@ const AllDocumentsList = () => {
         selectedAttendance
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          fromDate: fromDate,
+          toDate: toDate,
+          employee_no: value
+        })).then(() => {
           toast.success('Attendance Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
           })
+
           setOpen(false)
         })
       })
@@ -199,6 +204,7 @@ const AllDocumentsList = () => {
     }
 
     const handleRowOptionsClose = () => {
+      
       setAnchorEl(null)
     }
 
@@ -206,6 +212,10 @@ const AllDocumentsList = () => {
       setSelectedEditRow(row)
       setOpenEditDialog(true)
       handleRowOptionsClose()
+    }
+
+    const handleEditClose = ()=>{
+      console.log("55555")
     }
 
     const handleRowView = () => {
@@ -392,6 +402,14 @@ const AllDocumentsList = () => {
       })
   }
 
+  const updateData= data => {
+    dispatch(fetchData({
+      fromDate: fromDate,
+      toDate: toDate,
+      employee_no: value
+    }))
+  }
+
   // ------------------------------- Table columns --------------------------------------------
 
   const columns = [
@@ -559,16 +577,16 @@ const AllDocumentsList = () => {
               </FormControl>
             </Grid>
             <Grid item sm={3} xs={12} mt={0}>
-              <FormControl fullWidth size='small' sx={{ mt: 0 }}>
+              {/* <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Name</small>
                 <Input placeholder='Name' size='sm' />
-              </FormControl>
+              </FormControl> */}
             </Grid>
 
             <Grid item sm={4} xs={12} textAlign={right}>
               {session && session.user && session.user.permissions.includes('AddAttendance') && (
                 <>
-                  <Button
+                  {/* <Button
                     type='button'
                     variant='contained'
                     size='small'
@@ -576,7 +594,7 @@ const AllDocumentsList = () => {
                     onClick={() => addAttendance()}
                   >
                     Add
-                  </Button>
+                  </Button> */}
                   <Button type='button' variant='contained' size='small' sx={{ mt: 2 }} onClick={() => importExcel()}>
                     Import
                   </Button>
@@ -637,7 +655,8 @@ const AllDocumentsList = () => {
         <DialogEditAttendance
           open={openEditDialog}
           setOpen={setOpenEditDialog}
-          employee={SelectedEditRow}
+          attendance={SelectedEditRow}
+          updateData ={updateData}
           setupdate={setupdate}
         />
       ) : null}

@@ -193,7 +193,7 @@ const ViewFormRequest = ({ popperPlacement, id }) => {
                   {!loading && (
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5, mx: 2 }}>
                       <>
-                        <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => hancle}>
+                        <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => close()}>
                           Back
                         </Button>
                       </>

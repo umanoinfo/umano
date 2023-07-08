@@ -18,9 +18,8 @@ export default async function handler(req, res) {
           $match: {
             _id: ObjectId(id),
             $and: [
-              { $or: [{ type: 'admin' }, { type: 'manager' }] },
               {
-                $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }, { type: 'admin' }, { type: 'manager' }]
+                $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }, { type: 'employee' }, { type: 'manager' }]
               }
             ]
           }

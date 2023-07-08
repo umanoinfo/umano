@@ -106,7 +106,7 @@ const DialogAddUser = () => {
   const onSubmit = data => {
     setLoading(true)
     data.type = 'employee'
-    data.comany_id = session.user.company_id
+    data.company_id = session.user.company_id
     data.status = userStatus
     data.permissions = []
     data.roles = []

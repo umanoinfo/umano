@@ -324,7 +324,7 @@ const AllDocumentsList = () => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Forms List
+              Forms Requests List
             </Typography>
           </Breadcrumbs>
           <Divider />
@@ -394,11 +394,11 @@ const AllDocumentsList = () => {
               >
                 Export
               </Button>
-              {/* {session && session.user && session.user.permissions.includes('AddFormRequest') && ( */}
+              {/* {session && session.user && session.user.permissions.includes('AddFormRequest') && (
               <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addFormRequest()}>
                 Add Request
               </Button>
-              {/* )} */}
+              )} */}
             </Grid>
           </Grid>
 

@@ -30,6 +30,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
+import { Breadcrumbs } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -250,6 +251,10 @@ const UserList = ({ apiData }) => {
       handleRowOptionsClose()
     }
 
+    const handleActivation =()=>{
+      activationLink(row)
+    }
+
     const handlePassword = () => {
       router.push('/company-dashboard/user/' + row._id + '/change-pass')
       handleRowOptionsClose()
@@ -259,6 +264,37 @@ const UserList = ({ apiData }) => {
       setSelectedUser(row)
       setOpen(true)
     }
+
+
+    //----------------- Request mail ------------------------------
+
+      const activationLink = (row) => {
+        setLoading(true);
+        const { email } = row
+        fetch("/api/reset-password/request/", {
+          method: "POST",
+          body: JSON.stringify({ email: email }),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if(data.success){
+              toast.success("Email Sent" , {
+              delay: 5000,
+              })
+            }
+            else{
+              toast.error(data.message , {
+              delay: 5000,
+            })
+            }
+        
+            setLoading(false);
+          });
+      };
 
     return (
       <>
@@ -296,6 +332,12 @@ const UserList = ({ apiData }) => {
             <MenuItem onClick={handlePassword} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:key-outline' fontSize={20} />
               Change Password
+            </MenuItem>
+          )}
+          {session && session.user.permissions.includes('ChangePassword') && (
+            <MenuItem onClick={handleActivation} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:mail-outline' fontSize={20} />
+              Send Activation Password
             </MenuItem>
           )}
           {session && session.user.permissions.includes('DeleteUser') && (
@@ -391,7 +433,7 @@ const UserList = ({ apiData }) => {
               size='small'
               label={e.title}
               color={userStatusObj[e.title]}
-              sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+              sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } ,mr:1 }}
             />
           )
         })
@@ -456,7 +498,7 @@ const UserList = ({ apiData }) => {
 
   //   --------------------------- Return ----------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Role is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Users are loading'></Loading>
 
   if (session && !session.user && session.user.permissions.includes('ViewUser'))
     return <NoPermission header='No Permission' description='No permission to View Users'></NoPermission>
@@ -465,7 +507,18 @@ const UserList = ({ apiData }) => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Users List' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
+
+        <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Users List
+            </Typography>
+          </Breadcrumbs>
+
+          <Divider />
+          
           <CardContent>
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>

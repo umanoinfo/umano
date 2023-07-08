@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       const selectedRole = await client
         .db()
         .collection('roles')
-        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'admin' }] } }])
+        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'company' }] } }])
         .toArray()
 
       if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {

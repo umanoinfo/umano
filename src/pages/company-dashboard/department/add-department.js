@@ -9,8 +9,10 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import { Divider, InputAdornment } from '@mui/material'
+import { Divider, InputAdornment, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
+import { Breadcrumbs } from '@mui/material'
+import Link from 'next/link'
 
 // ** Rsuite Imports
 import { Form, Schema, SelectPicker, Input } from 'rsuite'
@@ -70,6 +72,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const value = ''
 
   useEffect(() => {
+
+    toast.success('Department  Inserted Successfully.', {
+      delay: 3000,
+      position: 'bottom-right'
+    })
+
+
     dispatch(
       fetchData({
         parent,
@@ -203,7 +212,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Department' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
+              Departments List
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Add Department
+            </Typography>
+          </Breadcrumbs>
+
             <CardContent></CardContent>
             <Divider />
             <Grid container>

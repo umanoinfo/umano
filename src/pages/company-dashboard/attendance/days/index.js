@@ -9,6 +9,7 @@ import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 
 import {
+  Breadcrumbs,
   Divider,
   IconButton,
   List,
@@ -35,6 +36,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
+import Link from 'next/link'
 
 const { ArrayType } = Schema.Types
 
@@ -158,6 +160,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Days Definition
+            </Typography>
+          </Breadcrumbs>
             <CardHeader title='Days Definition' sx={{ pb: 0, pt: 2 }} />
             <Divider />
             <Grid container>

@@ -57,6 +57,7 @@ import { padding } from '@mui/system'
 
 // ** Data
 import { companiesTypes } from 'src/local-db'
+import { countries } from 'src/local-db'
 
 // ** CleaveJS Imports
 import Cleave from 'cleave.js/react'
@@ -76,7 +77,6 @@ const showErrors = (field, valueLen, min) => {
 }
 
 const schema = yup.object().shape({
-  // country: yup.object().required(),
   phone: yup.string().required(),
   address: yup
     .string()
@@ -95,6 +95,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [type, setType] = useState(companiesTypes[0])
+  const [state, setState] = useState()
   const [files, setFiles] = useState([])
   const [minDate, setMinDate] = useState(new Date())
   const [maxDate, setMaxDate] = useState(new Date())
@@ -144,14 +145,10 @@ const DialogAddUser = ({ popperPlacement }) => {
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
-    setIsLoading(true)
-    const res = await fetch('/api/country')
-    const { data } = await res.json()
-    setIsLoading(false)
-    setCountriesDataSource(data)
-    const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
-    setCountryIndex(index)
-    setCountry(data[index])
+
+    setCountriesDataSource(countries)
+    setCountry(countries[0])
+    setState(countries[0].states[0])
   }
 
   // -------------------------------- Upload Image -----------------------------------------
@@ -165,7 +162,9 @@ const DialogAddUser = ({ popperPlacement }) => {
   const onSubmit = data => {
     setLoading(true)
     data.type = type.value
+    data.state = state.name
     data.country_id = country._id
+    console.log(country)
     data.start_at = new Date(start_at).toISOString().substring(0, 10)
     data.end_at = new Date(end_at).toISOString().substring(0, 10)
     data.user_id = userID
@@ -218,6 +217,11 @@ const DialogAddUser = ({ popperPlacement }) => {
     setType(newValue)
   }
 
+  const handleStateChange = (event, newValue) => {
+    console.log(newValue)
+    setState(newValue)
+  }
+
   const handleUserChange = (event, newValue) => {
     setUserId(newValue._id)
   }
@@ -245,7 +249,7 @@ const DialogAddUser = ({ popperPlacement }) => {
             <Grid container>
               <Grid item xs={12} sm={7} md={7} sx={{ p: 2, mb: 5 }}>
                 <form onSubmit={handleSubmit(onSubmit)} sx={{ mb: 12 }}>
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <Controller
                       name='name'
                       control={control}
@@ -268,7 +272,7 @@ const DialogAddUser = ({ popperPlacement }) => {
 
                   <Grid container spacing={1}>
                     <Grid item sm={5} xs={12}>
-                      <FormControl fullWidth sx={{ mb: 6 }}>
+                      <FormControl fullWidth sx={{ mb: 3 }}>
                         <Autocomplete
                           size='small'
                           options={companiesTypes}
@@ -280,9 +284,13 @@ const DialogAddUser = ({ popperPlacement }) => {
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item sm={7} xs={12}>
+                   
+                  </Grid>
+
+                  <Grid container spacing={1}>
+                  <Grid item sm={7} xs={12}>
                       {countriesDataSource.length > 0 && (
-                        <FormControl fullWidth sx={{ mb: 6 }}>
+                        <FormControl fullWidth sx={{ mb: 3 }}>
                           <Autocomplete
                             size='small'
                             options={countriesDataSource}
@@ -297,9 +305,29 @@ const DialogAddUser = ({ popperPlacement }) => {
                         </FormControl>
                       )}
                     </Grid>
+                    <Grid item sm={5} xs={12}>
+                     {country && <FormControl fullWidth sx={{ mb: 3 }}>
+                        <Autocomplete
+                          size='small'
+                          options={country.states}
+                          value={state}
+                          onChange={handleStateChange}
+                          defaultValue={country.states[0]}
+                          getOptionLabel={option => option.name}
+                          error={Boolean(errors.state)}
+                          renderInput={params => <TextField {...params} label='State' error={Boolean(errors.states)} />}
+                        /> 
+                         
+                         {errors.state && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.state.message}</FormHelperText>
+                    )}
+                      </FormControl>}
+                    
+                    </Grid>
+   
                   </Grid>
 
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                   {country && country.dial &&  <Controller
                       name='phone'
                       control={control}
@@ -324,7 +352,24 @@ const DialogAddUser = ({ popperPlacement }) => {
                     )}
                   </FormControl>
 
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  <Controller
+                      name='website'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <TextField
+                          type='text'
+                          size='small'
+                          value={value}
+                          label='Website'
+                          onChange={onChange}
+                          placeholder='www.website.com'
+                        />
+                      )}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <Controller
                       name='address'
                       control={control}
@@ -348,7 +393,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                     )}
                   </FormControl>
 
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <Autocomplete
                       size='small'
                       options={usersDataSource}
@@ -395,7 +440,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                     </Grid>
 
                     <Grid item sm={6} xs={12}>
-                      <FormControl fullWidth sx={{ mb: 6, pr: 2 }} size='small'>
+                      <FormControl fullWidth sx={{ mb: 3, pr: 2 }} size='small'>
                         <InputLabel id='status-select'>Select Status</InputLabel>
                         <Select
                           fullWidth
@@ -414,7 +459,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                     </Grid>
                   </Grid> */}
 
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <Box sx={{ pt: 3, display: 'inline-block', alignItems: 'center', flexDirection: 'column' }}>
                       <Card
                         variant='h6'

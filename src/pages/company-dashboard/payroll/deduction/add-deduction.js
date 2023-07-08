@@ -8,7 +8,7 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 
-import { Divider, Tab, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 
 import toast from 'react-hot-toast'
 import TabList from '@mui/lab/TabList'
@@ -31,6 +31,7 @@ import NoPermission from 'src/views/noPermission'
 const { StringType } = Schema.Types
 
 import { TabContext, TabPanel } from '@mui/lab'
+import Link from 'next/link'
 
 const AddDepartment = ({ popperPlacement, id }) => {
   // ** States
@@ -120,7 +121,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Deduction' sx={{ pb: 0, pt: 2 }} />
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/payroll/deduction/'>
+            Deductions
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+            Add Deduction
+            </Typography>
+          </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>

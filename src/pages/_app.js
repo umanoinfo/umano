@@ -92,8 +92,11 @@ const App = props => {
 
   return (
     <SessionProvider session={session}>
+
       <Provider store={store}>
+
         <CacheProvider value={emotionCache}>
+
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
               {({ settings }) => {
@@ -104,6 +107,9 @@ const App = props => {
                         {getLayout(<Component {...pageProps} />)}
                       </AclGuard>
                     </WindowWrapper>
+                    <ReactHotToast>
+                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                    </ReactHotToast>
                   </ThemeComponent>
                 )
               }}

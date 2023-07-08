@@ -1,10 +1,10 @@
 import nodemailer from 'nodemailer'
 
-const email = 'sms@hr-trust.com'
-const pass = 'SMS@2022'
+const email = 'feras@robin-sass.pioneers.network'
+const pass = 'b^o}=~7GpXoC'
 
 export const transporter = nodemailer.createTransport({
-  host: 'mail.hr-trust.com',
+  host: 'mail.robin-sass.pioneers.network',
   port: 465,
   secure: true, // true for 465, false for other ports
   auth: {

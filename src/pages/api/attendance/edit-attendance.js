@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   // ------------------------------- Edit -------------------------------------
 
   const attendance = req.body.data
-  if (!attendance.date || !attendance.time || !attendance.employee_id) {
+  if (!attendance.date || !attendance.timeIn ||  !attendance.timeOut || !attendance.employee_no) {
     res.status(422).json({
       message: 'Invalid input'
     })
@@ -30,6 +30,9 @@ export default async function handler(req, res) {
   delete attendance._id
   delete attendance.user_id
   attendance.user_id = myUser._id
+  attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
+  attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
+  attendance.date = new Date(attendance.date)
 
   const newAttendance = await client
     .db()

@@ -21,11 +21,12 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import TableContainer from '@mui/material/TableContainer'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import { Breadcrumbs } from '@mui/material'
 
 import Icon from 'src/@core/components/icon'
 import Loading from 'src/views/loading'
 
-import { fetchData } from 'src/store/apps/company-role'
+import { fetchData } from 'src/store/apps/companyRole'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -33,6 +34,9 @@ import { toast } from 'react-hot-toast'
 
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
+
+// ** Next Imports
+import Link from 'next/link'
 
 const RolesComponent = () => {
   // ** States
@@ -49,7 +53,7 @@ const RolesComponent = () => {
   const [loading, setLoading] = useState(true)
 
   const dispatch = useDispatch()
-  const store = useSelector(state => state.roles)
+  const store = useSelector(state => state.companyRole)
   const { data: session, status } = useSession()
 
   useEffect(() => {
@@ -236,7 +240,7 @@ const RolesComponent = () => {
                 )}
               </Box>
               <div>
-                {session && !session.user.permissions.includes('EditRole') && (
+                {session && session.user.permissions.includes('EditRole') && (
                   <IconButton onClick={e => handelEdit(role)} sx={{ color: 'text.secondary' }}>
                     <Icon icon='mdi:edit-outline' fontSize={20} />
                   </IconButton>
@@ -254,7 +258,7 @@ const RolesComponent = () => {
     ))
 
   if (loading) return <Loading header='Please Wait' description='Role is loading'></Loading>
-  if (session && session.user && session.user.permissions.includes('ViewRole')) {
+  if (session && session.user && !session.user.permissions.includes('ViewRole')) {
     return <NoPermission header='No Permission' description='No permission to View Roles'></NoPermission>
   }
 
@@ -262,8 +266,14 @@ const RolesComponent = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Roles List' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
-          <Divider />
+        <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Roles List
+            </Typography>
+          </Breadcrumbs>          <Divider />
 
           <Grid item xs={12} sx={{ m: 5 }}>
             <Grid container spacing={6} className='match-height'>
@@ -309,6 +319,7 @@ const RolesComponent = () => {
                   </Card>
                 </Grid>
               )}
+              
               {/* --------------------------------------- ADD Edit Dialog ------------------------------------------- */}
               <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
                 <DialogTitle sx={{ textAlign: 'center' }}>

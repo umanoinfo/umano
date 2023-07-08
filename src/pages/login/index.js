@@ -16,6 +16,9 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 
+// ** Next Imports
+import Link from 'next/link'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -35,6 +38,7 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 import { signOut, signIn } from 'next-auth/react'
+import { FormControlLabel } from '@mui/material'
 
 // ** Styled Components
 
@@ -128,6 +132,7 @@ const LoginPage = () => {
   return (
     <Box className='content-right'>
       {!hidden ? (
+
         <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
             <LoginIllustration
               alt='login-illustration'
@@ -159,11 +164,15 @@ const LoginPage = () => {
               }}
             >
               {/* --------------------------------- Logo --------------------------------------------- */}
-
+              
+              <Box sx={{ px: 1}}>
+                <img src='/images/apple-touch-icon.png' alt = 'umano' width='32px' />
+              </Box>
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
                 {themeConfig.templateName}
               </Typography>
             </Box>
+            
             {/* ----------------------------------------------------------------------------------------------------- */}
 
             <Box sx={{ mb: 6 }}>
@@ -171,7 +180,7 @@ const LoginPage = () => {
                 variant='h5'
                 sx={{ mb: 5 }}
               >{`Welcome to ${themeConfig.templateName}! `}</TypographyStyled>
-              <Typography variant='body2'>Please sign-in to your account and start</Typography>
+              <Typography variant='body2'>Please sign-in</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth sx={{ mb: 4 }}>
@@ -230,6 +239,18 @@ const LoginPage = () => {
                   </FormHelperText>
                 )}
               </FormControl>
+              <Box
+                sx={{ mb: 2 ,mt:1, display: 'flex', flexWrap: 'wrap'}}
+              >
+                <Typography
+                  variant='body2'
+                  component={Link}
+                  href='/forgot-password'
+                  sx={{ color: 'primary.main', textDecoration: 'none' }}
+                >
+                  Forgot Password?
+                </Typography>
+              </Box>
 
               {!loading && <Button fullWidth size='large' type='submit' variant='contained' sx={{ mt: 10, mb: 7 }}>
                 Login

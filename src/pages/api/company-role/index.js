@@ -9,18 +9,23 @@ export default async function handler(req, res) {
     req.query.q = ''
   }
   
+  
+  const client = await connectToDatabase()
+
   // -------------------- Token ---------------------
 
   const token = await getToken({req})
-  if (!token || !token.user || !token.user.permissions.includes('ViewRole')) {
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+
+  
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewRole')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
 
   // ---------------------------------------------------------------
 
-  const client = await connectToDatabase()
-  
+
   const roles = await client
     .db()
     .collection('roles')
@@ -28,7 +33,7 @@ export default async function handler(req, res) {
       {
         $match: {
           $and: [{ type: 'company' },
-          { company_id : token.user.company_id },
+          { company_id : myUser.company_id },
           { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }]
         }
       },

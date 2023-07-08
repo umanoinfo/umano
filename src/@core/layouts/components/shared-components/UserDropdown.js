@@ -157,13 +157,13 @@ const UserDropdown = props => {
             Pricing
           </Box>
         </MenuItem> */}
-        {/* <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/faq')}>
+        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/forgot-password')}>
           <Box sx={styles}>
-            <Icon icon='mdi:help-circle-outline' />
-            FAQ
+            <Icon icon='mdi:cog-outline' />
+            Change Password
           </Box>
-        </MenuItem> */}
-        {/* <Divider /> */}
+        </MenuItem>
+        <Divider />
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}

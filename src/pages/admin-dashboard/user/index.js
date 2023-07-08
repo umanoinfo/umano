@@ -224,10 +224,38 @@ const UserList = ({ apiData }) => {
       handleRowOptionsClose()
     }
 
-    const handleDelete = () => {
+    const handleActivation =()=>{
+      activationLink(row)
+    }
+
+    const handleDelete = (row) => {
       setSelectedUser(row)
       setOpen(true)
     }
+
+      //----------------- Request mail ------------------------------
+
+
+  const activationLink = (row) => {
+    console.log(row)
+    setLoading(true);
+    const { email } = row
+    fetch("/api/reset-password/request/", {
+      method: "POST",
+      body: JSON.stringify({ email: email }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast(data.message , {
+          delay: 5000,
+        })
+        setLoading(false);
+      });
+  };
 
     return (
       <>
@@ -265,6 +293,12 @@ const UserList = ({ apiData }) => {
             <MenuItem onClick={handlePassword} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:key-outline' fontSize={20} />
               Change Password
+            </MenuItem>
+          )}
+          {session && session.user.permissions.includes('AdminChangePassword') && (
+            <MenuItem onClick={handleActivation} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:mail-outline' fontSize={20} />
+              Send Activation Password
             </MenuItem>
           )}
           {session && session.user.permissions.includes('AdminDeleteUser') && (

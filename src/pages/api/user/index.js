@@ -35,7 +35,7 @@ export default async function handler(req, res) {
             { $or: [{ type: 'admin' }, { type: 'manager' }] },
             { status: { $regex: req.query.userStatus } },
             { type: { $regex: req.query.type } },
-            { name: { $regex: req.query.q } },
+            { name: { $regex: req.query.q , '$options' : 'i' } },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]
         }

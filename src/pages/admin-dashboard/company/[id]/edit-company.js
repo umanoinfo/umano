@@ -34,6 +34,7 @@ import { useRouter } from 'next/router'
 
 // ** Data
 import { companiesTypes } from 'src/local-db'
+import { countries } from 'src/local-db'
 
 // ** CleaveJS Imports
 
@@ -63,12 +64,14 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   ])
   const [countryID, setCountryID] = useState()
   const [dial, setDial] = useState()
+  const [states, setStates] = useState()
   const [end_at, setEnd_at] = useState(new Date().toISOString().substring(0, 10))
   const [start_at, setStart_at] = useState(new Date().toISOString().substring(0, 10))
   const [userID, setUserID] = useState()
   const [newType, setNewType] = useState()
   const [newLogo, setNewLogo] = useState()
   const [newStatus, setNewStatus] = useState()
+  const [newState , setNewState] = useState()
   const [formError, setFormError] = useState({})
 
   const [formValue, setFormValue] = useState({
@@ -141,6 +144,8 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     axios
       .get('/api/company/' + id, {})
       .then(function (response) {
+
+        console.log(response.data.data[0].state)
         setFormValue(response.data.data[0])
         setType(response.data.data[0].type)
         setNewLogo(response.data.data[0].logo)
@@ -149,9 +154,18 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         setNewType(response.data.data[0].type)
         setNewStatus(response.data.data[0].status)
         setDial(response.data.data[0].country_info[0].dial)
-        setAddress(response.data.data[0].country_info[0].address)
         setEnd_at(response.data.data[0].end_at)
+        setNewState(response.data.data[0].state)
+
+        const index = allCountries.findIndex(i => i._id == response.data.data[0].country_id)
+
+        const statesDS = allCountries[index].states.map(state => ({
+          label: state.name,
+          value: state.name
+        }))
+        setStates(statesDS)
         setLoading(false)
+
       })
       .catch(function (error) {
         setLoading(false)
@@ -163,22 +177,18 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     value: type.value
   }))
 
-  // ----------------------------- Get Countries ----------------------------------
+    // ----------------------------- Get Countries ----------------------------------
 
-  const getCountries = async () => {
-    setLoading(true)
-    const res = await fetch('/api/country')
-    const { data } = await res.json()
-    setAllCountries(data)
+    const getCountries = async () => {
 
-    const countriesDataSource = data.map(country => ({
-      label: country.name,
-      value: country._id
-    }))
-
-    setCompanyTypesDataSource(types)
-    setCountriesDataSource(countriesDataSource)
-  }
+      const countriesDataSource = countries.map(country => ({
+        label: country.name,
+        value: country._id
+      }))
+      setAllCountries(countries)
+      setCountriesDataSource(countriesDataSource)
+      setCompanyTypesDataSource(types)
+    }
 
   // ---------------------------- upload Image---------------------------------------
 
@@ -214,6 +224,21 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     setCountryID(selectedCountry)
     const index = allCountries.findIndex(i => i._id == selectedCountry)
     setDial(allCountries[index].dial)
+
+    const statesDS = allCountries[index].states.map(state => ({
+      label: state.name,
+      value: state.name
+    }))
+
+    setStates(statesDS)
+  }
+
+
+  
+  // ----------------------- Change State --------------------------------------------
+
+  const changeState = selectedState => {
+    setNewState(selectedState)
   }
 
   // ----------------------- Change Type --------------------------------------------
@@ -241,6 +266,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         data.user_id = userID
         data.logo = newLogo
         data.status = newStatus
+        data.state = newState
         data.start_at = new Date(formValue.start_at).toISOString().substring(0, 10)
         data.end_at = new Date(formValue.end_at).toISOString().substring(0, 10)
         data.updated_at = new Date()
@@ -282,7 +308,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   return (
     <>
       <Grid item xs={12} sm={7} lg={7}></Grid>
-      <Grid container spacing={6}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title='Edit Company' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
@@ -302,16 +328,15 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                     <Grid item sm={12} xs={12} mt={1}>
                       <Form.Group controlId='name'>
                         <small>Company Name *</small>
-                        <Form.Control size='lg' checkAsync name='name' placeholder='Please enter abc' />
+                        <Form.Control size='md' checkAsync name='name' placeholder='Please enter abc' />
                       </Form.Group>
                     </Grid>
                   </Grid>
-
-                  <Grid container spacing={3} mt={1}>
+                  <Grid container spacing={3} mt={0}>
                     <Grid item sm={5} xs={12}>
                       <small>Type</small>
                       <SelectPicker
-                        size='lg'
+                        size='md'
                         name='newType'
                         onChange={e => {
                           changeType(e)
@@ -321,10 +346,13 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                         block
                       />
                     </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3} mt={0}>
                     <Grid item sm={7} xs={12}>
                       <small>Country</small>
                       <SelectPicker
-                        size='lg'
+                        size='md'
                         name='country_id'
                         onChange={e => {
                           changeCountry(e)
@@ -334,15 +362,37 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                         block
                       />
                     </Grid>
+                    {newStatus && <Grid item sm={5} xs={12}>
+                      <small>State</small>
+                      <SelectPicker
+                        size='md'
+                        name='newState'
+                        onChange={e => {
+                          changeState(e)
+                        }}
+                        value={newState}
+                        data={states}
+                        block
+                      />
+                    </Grid>}
                   </Grid>
+
                   <Grid container spacing={3} mt={1}>
                     <Grid item sm={12} xs={12}>
                       <Form.Group controlId='input-group'>
                         <small>Phone</small>
-                        <InputGroup size='lg'>
+                        <InputGroup size='md'>
                           <InputGroup.Addon>+{dial}</InputGroup.Addon>
-                          <Form.Control name='phone' type='number' size='lg' />
+                          <Form.Control name='phone' type='number' size='md' />
                         </InputGroup>
+                      </Form.Group>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={3} mt={1}>
+                    <Grid item sm={12} xs={12}>
+                      <Form.Group>
+                        <small>Website</small>
+                        <Form.Control rows={2} name='website' />
                       </Form.Group>
                     </Grid>
                   </Grid>
@@ -358,7 +408,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                     <Grid item sm={12} xs={12}>
                       <small>Manager</small>
                       <SelectPicker
-                        size='lg'
+                        size='md'
                         name='user_id'
                         onChange={e => {
                           changeUser(e)
@@ -375,7 +425,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                       <Grid item sm={4} xs={12}>
                         <small>Subscription start</small>
                         <Form.Control
-                          size='lg'
+                          size='md'
                           oneTap
                           accepter={DatePicker}
                           name='start_at'
@@ -392,7 +442,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                       <Grid item sm={4} xs={12}>
                         <small>Subscription End</small>
                         <Form.Control
-                          size='lg'
+                          size='md'
                           oneTap
                           name='end_at'
                           accepter={DatePicker}
@@ -408,7 +458,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                     <Grid item sm={4} xs={12}>
                       <small>Select status</small>
                       <Form.Control
-                        size='lg'
+                        size='md'
                         name='status'
                         onChange={e => {
                           setNewStatus(e)
@@ -420,7 +470,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                       />
                     </Grid>
                   </Grid>
-                  <FormControl fullWidth sx={{ mb: 6 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <Box sx={{ pt: 3, display: 'inline-block', alignItems: 'center', flexDirection: 'column' }}>
                       <Card
                         variant='h6'

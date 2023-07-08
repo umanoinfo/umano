@@ -328,7 +328,7 @@ const CompensationsList = () => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Compensations List
+              Forms List
             </Typography>
           </Breadcrumbs>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
@@ -364,7 +364,7 @@ const CompensationsList = () => {
                 >
                   <MenuItem value=''>All Type</MenuItem>
                   {CompensationsType &&
-                    CompensationsType.map((type, indexe) => {
+                    CompensationsType.map((type, index) => {
                       return (
                         <MenuItem key={index} value={type.value}>
                           {type.label}
