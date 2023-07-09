@@ -47,5 +47,36 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  res.status(200).json({ success: true, data: document })
+
+    const logBook = await client
+    .db()
+    .collection('logBook')
+    .aggregate([
+      {
+        $match: {
+          linked_id: ObjectId(document[0]._id)
+        }
+      },
+       {
+        $lookup: {
+          from: 'users',
+          let: { id: { $toObjectId: '$user_id' } },
+          pipeline: [
+            { $addFields: { user_id: { $toObjectId: '$_id' } } },
+            {
+              $match: { $expr: { $eq: ['$user_id', '$$id'] } }
+            }
+          ],
+          as: 'user_info'
+        }
+      },
+      {
+        $sort: {
+          created_at: -1
+        }
+      }
+    ])
+    .toArray()
+
+  res.status(200).json({ success: true, data: document , logBook: logBook})
 }

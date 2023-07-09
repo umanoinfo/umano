@@ -56,6 +56,7 @@ export default async function handler(req, res) {
     company_id: myUser.company_id,
     Module: 'Document',
     Action: 'Add',
+    linked_id: insertedDocument._id ,
     Description: 'Add Document (' + insertedDocument.title + ')',
     created_at: new Date()
   }

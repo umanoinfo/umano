@@ -52,6 +52,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NoPermission from 'src/views/noPermission'
 import { right } from '@popperjs/core'
+import { Breadcrumbs } from '@mui/material'
 
 // ** Status Obj
 
@@ -77,10 +78,8 @@ const dayColor = days => {
 
 const AllDocumentsList = () => {
   // ** State
-  const [Types, setTypes] = useState([])
+  const [type, setType] = useState(['DOH'])
   const [documentStatus, setdocumentStatus] = useState('')
-  const [eventStatus, setEventStatus] = useState('')
-  const [eventType, setEventType] = useState('')
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
@@ -97,12 +96,12 @@ const AllDocumentsList = () => {
   useEffect(() => {
     dispatch(
       fetchData({
-        documentTypes: 'DOH,CIVIL defense,Waste management,MCC,Tasneef,Oshad,ADHICS,Third Party Contracts,Others',
+        documentTypes: 'Others',
         documentStatus,
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, Types, documentStatus, value])
+  }, [dispatch, type, documentStatus, value])
 
   // ----------------------- Handle ------------------------------
 
@@ -228,9 +227,9 @@ const AllDocumentsList = () => {
 
   const columns = [
     {
-      flex: 0.05,
-      minWidth: 100,
-      field: 'index',
+      flex: 0.02,
+      minWidth: 25,
+      field: '#',
       headerName: '#',
       renderCell: ({ row }) => {
         return (
@@ -277,16 +276,9 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {row.type.map((t, index) => {
+              {row.type.map((t , index) => {
                 return (
-                  <CustomChip
-                    key={index}
-                    color='primary'
-                    skin='light'
-                    size='small'
-                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                    label={t}
-                  />
+                  <CustomChip key = {index} color='primary' skin='light' size='small' sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }} label={t} />
                 )
               })}
             </div>
@@ -360,10 +352,15 @@ const AllDocumentsList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader
-            title='All Documents List'
-            sx={{ pt: 3, pb: 0, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }}
-          />
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Waste management Documents List
+            </Typography>
+          </Breadcrumbs>
+          <Divider />
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
             <Grid item sm={2} xs={6}>
               <FormControl fullWidth size='small'>
@@ -397,6 +394,14 @@ const AllDocumentsList = () => {
             </Grid>
             <Grid item sm={2} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
+              <Button
+                sx={{ mr: 4, mb: 2 }}
+                color='secondary'
+                variant='outlined'
+                startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+              >
+                Export
+              </Button>
               {session && session.user && session.user.permissions.includes('AddDocument') && (
                 <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addDocument()}>
                   Add Document

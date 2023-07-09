@@ -114,7 +114,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
     'Tasneef',
     'Oshad',
     'ADHICS',
-    'Third Party Contracts'
+    'Third Party Contracts',
+    'Others'
   ].map(item => ({
     label: item,
     value: item
@@ -291,7 +292,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <Form.Control
                           controlId='version'
                           size='sm'
-                          type='number'
+                          type='text'
                           name='version'
                           placeholder='Version'
                         />

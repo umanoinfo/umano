@@ -14,12 +14,13 @@ import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 import { Divider, InputAdornment, Typography } from '@mui/material'
 import List from '@mui/material/List'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
-import ListItem from '@mui/material/ListItem'
-import Avatar from '@mui/material/Avatar'
-import toast from 'react-hot-toast'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableRow from '@mui/material/TableRow'
+import TableHead from '@mui/material/TableHead'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
 
 // ** Rsuite Imports
 import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox, Textarea } from 'rsuite'
@@ -56,6 +57,14 @@ const fileType = ex => {
       return '/images/icons/file-icons/rar.png'
   }
 }
+
+  const selectData = [
+    'Active',
+    'Canceled'
+  ].map(item => ({
+    label: item,
+    value: item
+  }))
 
 const StyledList = styled(List)(({ theme }) => ({
   '& .MuiListItem-container': {
@@ -94,6 +103,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [loading, setLoading] = useState(false)
   const [files, setFiles] = useState([])
   const [selectedDocument, setSelectedDocument] = useState()
+  const [selectedFiles, setSelectedFiles] = useState()
+  const [selectedLogBook, setSelectedLogBook] = useState()
 
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
@@ -112,10 +123,32 @@ const AddDepartment = ({ popperPlacement, id }) => {
     getDocument()
   }, [])
 
+  // ** Day Color
+
+  const dayColor = days => {
+    if (days > 30) {
+      return 'success'
+    }
+    if (days < 30 && days > 6) {
+      return 'warning'
+    }
+    if (days <= 5) {
+      return 'error'
+    }
+  }
+
   const getDocument = () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       setSelectedDocument(response.data.data[0])
+      setSelectedLogBook(response.data.logBook)
+
+      let files = response.data.data[0].files_info.filter((file)=>{
+        if(!file.deleted_at){
+          return file
+        }
+      })
+      setSelectedFiles(files)
       setLoading(false)
     })
   }
@@ -142,6 +175,20 @@ const AddDepartment = ({ popperPlacement, id }) => {
     let temp = files
     temp.push(e.blobFile)
     setFiles(temp)
+  }
+
+  const changeFileType = (e) => {
+    let files = selectedDocument.files_info.filter((file)=>{
+      if((!file.deleted_at && e.includes('Active')) ){
+        return file
+      }
+      if((file.deleted_at && e.includes('Canceled')) ){
+        return file
+      }
+    })
+    setSelectedFiles(files)
+    console.log(e)
+    console.log(selectData)
   }
 
   const removeFile = e => {}
@@ -211,6 +258,38 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             </Typography>
                           </Box>
                         )}
+                        {selectedDocument.expiryDateFlag && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Expiry Date:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                            <span>-</span>
+                            </Typography>
+                          </Box>
+                        )}
+                        {!selectedDocument.expiryDateFlag && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Expiry Date:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                            {selectedDocument.expiryDate}
+                            </Typography>
+                            <CustomChip
+                              skin='light'
+                              size='small'
+                              label={
+                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
+                                ' Day'
+                              }
+                              color={dayColor(
+                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
+                              )}
+                              sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
+                            />
+                          </Box>
+                        )}
                         {selectedDocument.status && (
                           <Box sx={{ display: 'flex', mb: 2.7 }}>
                             <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
@@ -232,6 +311,28 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Box>
                         )}
                       </Box>
+                      <Typography variant='h6' sx={{ mt: 10}}>History</Typography>
+                      <Divider ></Divider>
+                      {selectedLogBook && <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align='left'>Date</TableCell>
+                              <TableCell align='left'>User</TableCell>
+                              <TableCell align='left'>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {selectedLogBook.map((row , index) => (
+                              <TableRow key={row.index} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
+                                <TableCell align='left'>{new Date(row.created_at).toLocaleString()}</TableCell>
+                                <TableCell align='left'>{row.user_info[0].name}</TableCell>
+                                <TableCell align='left'>{row.Description}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>}
                     </CardContent>
                   </Card>
                 )}
@@ -249,14 +350,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     }}
                   >
                     <Typography sx={{ fontWeight: 'bold' }}>Files</Typography>
+                    <TagPicker
+                        name='type'
+                        controlId='type'
+                        accepter={TagPicker}
+                        defaultValue={['Active']}
+                        data={selectData}
+                        style={{ width: '280px' }}
+                        onChange={changeFileType}
+                      />
                   </Box>
 
                   <Divider />
                   <Box sx={{ p: 2 }}>
-                    {selectedDocument && selectedDocument.files_info.length == 0 && <span>No Files To Show.</span>}
-                    {selectedDocument &&
-                      selectedDocument.files_info.length > 0 &&
-                      selectedDocument.files_info.map((file, index) => {
+                    {selectedFiles && selectedFiles.length == 0 && <span>No Files To Show.</span>}
+                    {selectedFiles &&
+                      selectedFiles.length > 0 &&
+                      selectedFiles.map((file, index) => {
                         return (
                           <>
                             <Box

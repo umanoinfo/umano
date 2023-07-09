@@ -151,8 +151,16 @@ export default async function handler(req, res) {
           path: '/company-dashboard/document/third-list'
         },
         {
-          title: 'All',
+          title: 'Others',
+          path: '/company-dashboard/document/others'
+        },
+        {
+          title: 'All Documents',
           path: '/company-dashboard/document'
+        },
+        {
+          title: 'All Files',
+          path: '/company-dashboard/document/files'
         }
       ]
     })

@@ -78,6 +78,7 @@ export default async function handler(req, res) {
       company_id: myUser.company_id,
       Module: 'Document',
       Action: 'Delete',
+      linked_id: selectedDocument._id ,
       Description: 'Delete document (' + selectedDocument.title + ')',
       created_at: new Date()
     }

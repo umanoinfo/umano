@@ -1,7 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
-import axios from 'axios'
 
 export default async function handler(req, res) {
   const client = await connectToDatabase()
@@ -27,6 +26,19 @@ export default async function handler(req, res) {
 
   file.company_id = myUser.company_id
   const newFile = await client.db().collection('files').insertOne(file)
+
+  // -------------------- logBook ------------------------------------------
+
+    let log = {
+      user_id: myUser._id,
+      company_id: myUser.company_id,
+      Module: 'File',
+      Action: 'Add',
+      linked_id: ObjectId(file.linked_id) ,
+      Description: 'Add File (' + file.name + ')',
+      created_at: new Date()
+    }
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(201).json({ success: true, data: req.body.formData })
 }

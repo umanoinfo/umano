@@ -204,10 +204,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // -------------------------------- Routes -----------------------------------------------
 
-  const close = () => {
-    router.push('/company-dashboard/department')
-  }
-
   const addToFiles = e => {
     let temp = files
     temp.push(e.blobFile)
@@ -264,7 +260,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <Form.Control
                           controlId='version'
                           size='sm'
-                          type='number'
+                          type='text'
                           name='version'
                           placeholder='Version'
                         />
