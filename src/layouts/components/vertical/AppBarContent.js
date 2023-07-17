@@ -15,7 +15,7 @@ import ShortcutsDropdown from 'src/@core/layouts/components/shared-components/Sh
 
 const notifications = [
   {
-    meta: 'Today',
+    meta: 'لإلإ',
     avatarAlt: 'Flora',
     title: 'Congratulation Flora! 🎉',
     avatarImg: '/images/avatars/4.png',
@@ -113,6 +113,8 @@ const AppBarContent = props => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
+  
+
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
@@ -126,7 +128,7 @@ const AppBarContent = props => {
         {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}
         <ModeToggler settings={settings} saveSettings={saveSettings} />
         {/* <ShortcutsDropdown settings={settings} shortcuts={shortcuts} /> */}
-        {/* <NotificationDropdown settings={settings} notifications={notifications} /> */}
+        <NotificationDropdown settings={settings} notifications={notifications} />
         <UserDropdown settings={settings} />
       </Box>
     </Box>

@@ -368,6 +368,10 @@ const StepDocuments = ({ handleNext, employee }) => {
     }
   ]
 
+  if (!employee) {
+    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+  }
+  
   return (
     <>
       <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Documents</Typography>

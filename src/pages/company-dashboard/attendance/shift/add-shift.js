@@ -294,7 +294,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             </Grid>
 
                             <Grid item sm={12} md={1.33}>
-                              <small>Available late</small>
+                              <small>Max. Time-In</small>
                               <Form.Control
                                 sx={{
                                   '& input[type="time"]::-webkit-calendar-picker-indicator': {
@@ -314,7 +314,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               />
                             </Grid>
                             <Grid item sm={12} md={1.33}>
-                              <small>Available early</small>
+                              <small>Min. Time Out</small>
                               <Form.Control
                                 sx={{
                                   '& input[type="time"]::-webkit-calendar-picker-indicator': {

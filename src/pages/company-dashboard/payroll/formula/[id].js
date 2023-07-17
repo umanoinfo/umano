@@ -194,7 +194,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Grid item sm={12} md={6}>
                             <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                               <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                First over time :
+                                Over time :
                               </Typography>
                               <Form.Control
                                 controlId='firstOverTime'
@@ -204,10 +204,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='First'
                               />
                               <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                houre
+                                Hour/s
                               </Typography>
                             </Box>
-                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                            {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                               <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                 Second over time :
                               </Typography>
@@ -219,7 +219,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='Second'
                               />
                               <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                houre
+                                Hour/s
                               </Typography>
                             </Box>
                             <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -234,9 +234,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='Third'
                               />
                               <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                houre
+                                Hour/s
                               </Typography>
-                            </Box>
+                            </Box> */}
 
                             <Box sx={{ mb: 1, mt: 8, display: 'flex', alignItems: 'center' }}>
                               <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
@@ -250,7 +250,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='Holiday'
                               />
                               <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                houre
+                                Hour/s
                               </Typography>
                             </Box>
                             <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -265,7 +265,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='Weekend'
                               />
                               <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                houre
+                                Hour/s
                               </Typography>
                             </Box>
                           </Grid>
@@ -287,7 +287,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Justified'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  day
+                                Day/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -302,7 +302,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Not Justified'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  day
+                                Day/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -317,7 +317,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Sick'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  day
+                                Day/s
                                 </Typography>
                               </Box>
                             </Grid>
@@ -335,7 +335,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Justified'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  houre
+                                  Hour/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -350,7 +350,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Not Justified'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  houre
+                                  Hour/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -366,7 +366,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='Sick'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  houre
+                                  Hour/s
                                 </Typography>
                               </Box>
                             </Grid>
@@ -388,7 +388,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='From 1 to 5 year'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  day
+                                Day/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -403,7 +403,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   placeholder='More than 5 year'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  day
+                                Day/s
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>

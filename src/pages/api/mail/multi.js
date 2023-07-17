@@ -12,6 +12,7 @@ const CONTACT_MESSAGE_FIELDS = {
 }
 
 const generateEmailContent = data => {
+
   const stringData = Object.entries(data).reduce(
     (str, [key, val]) => (str += `${CONTACT_MESSAGE_FIELDS[key]}: \n${val} \n \n`),
     ''
@@ -89,6 +90,7 @@ const handler = async (req, res) => {
         subject: data.subject
       })
       .then(async res => {
+
         email.status = 'success'
         email.note = res
         const newEmail = await client.db().collection('emails').insertOne(email)

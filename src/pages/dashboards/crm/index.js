@@ -11,19 +11,19 @@ import CardStatisticsVertical from 'src/@core/components/card-statistics/card-st
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
-import CrmAward from 'src/views/dashboards/crm/CrmAward'
-import CrmTable from 'src/views/dashboards/crm/CrmTable'
-import CrmTotalGrowth from 'src/views/dashboards/crm/CrmTotalGrowth'
-import CrmTotalProfit from 'src/views/dashboards/crm/CrmTotalProfit'
-import CrmMonthlyBudget from 'src/views/dashboards/crm/CrmMonthlyBudget'
-import CrmExternalLinks from 'src/views/dashboards/crm/CrmExternalLinks'
-import CrmWeeklyOverview from 'src/views/dashboards/crm/CrmWeeklyOverview'
-import CrmPaymentHistory from 'src/views/dashboards/crm/CrmPaymentHistory'
-import CrmOrganicSessions from 'src/views/dashboards/crm/CrmOrganicSessions'
-import CrmProjectTimeline from 'src/views/dashboards/crm/CrmProjectTimeline'
-import CrmMeetingSchedule from 'src/views/dashboards/crm/CrmMeetingSchedule'
-import CrmSocialNetworkVisits from 'src/views/dashboards/crm/CrmSocialNetworkVisits'
-import CrmMostSalesInCountries from 'src/views/dashboards/crm/CrmMostSalesInCountries'
+import CrmAward from 'src/views/dashboards/company/CrmAward'
+import CrmTable from 'src/views/dashboards/company/CrmTable'
+import CrmTotalGrowth from 'src/views/dashboards/company/CrmTotalGrowth'
+import CrmTotalProfit from 'src/views/dashboards/company/CrmTotalProfit'
+import CrmMonthlyBudget from 'src/views/dashboards/company/CrmMonthlyBudget'
+import CrmExternalLinks from 'src/views/dashboards/company/CrmExternalLinks'
+import CrmWeeklyOverview from 'src/views/dashboards/company/CrmWeeklyOverview'
+import CrmPaymentHistory from 'src/views/dashboards/company/CrmPaymentHistory'
+import CrmOrganicSessions from 'src/views/dashboards/company/CrmOrganicSessions'
+import CrmProjectTimeline from 'src/views/dashboards/company/CrmProjectTimeline'
+import CrmMeetingSchedule from 'src/views/dashboards/company/CrmMeetingSchedule'
+import CrmSocialNetworkVisits from 'src/views/dashboards/company/CrmSocialNetworkVisits'
+import CrmMostSalesInCountries from 'src/views/dashboards/company/CrmMostSalesInCountries'
 
 const CrmDashboard = () => {
   return (

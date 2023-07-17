@@ -8,7 +8,9 @@ import CardContent from '@mui/material/CardContent'
 // ** Custom Components Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
-const CrmTotalGrowth = () => {
+const CrmTotalGrowth = ( props) => {
+    const { expiaryDocuments_count , documents_count } = props
+
   // ** Hook
   const theme = useTheme()
 
@@ -44,7 +46,7 @@ const CrmTotalGrowth = () => {
               fontWeight: 600,
               fontSize: '1rem',
               color: theme.palette.text.secondary,
-              formatter: val => (typeof val === 'string' ? `${val}%` : '12%')
+              formatter: val => (typeof val === 'string' ? `${val}%` : Math.floor((Number( expiaryDocuments_count ) / Number(documents_count ))*100)+'%' )
             },
             value: {
               offsetY: 6,
@@ -64,14 +66,13 @@ const CrmTotalGrowth = () => {
       <CardContent>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant='h6' sx={{ mr: 1.5 }}>
-            $27.9k
+            Documents Expired
           </Typography>
-          <Typography variant='subtitle2' sx={{ color: 'success.main' }}>
-            +16%
+          <Typography variant='subtitle2' sx={{ color: 'primary.main' }}>
+            {expiaryDocuments_count} from {documents_count}
           </Typography>
         </Box>
-        <Typography variant='body2'>Total Growth</Typography>
-        <ReactApexcharts type='donut' height={135} options={options} series={[35, 30, 23]} />
+        <ReactApexcharts type='donut' height={135} options={options} series={[ Number(documents_count - expiaryDocuments_count ) , Number(expiaryDocuments_count )]} />
       </CardContent>
     </Card>
   )

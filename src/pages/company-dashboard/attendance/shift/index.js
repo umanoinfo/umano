@@ -260,18 +260,59 @@ const ShiftList = () => {
         )
       }
     },
-
     {
-      flex: 0.11,
-      minWidth: 120,
-      field: 'end',
-      headerName: 'Created at',
-      renderCell: ({ row }) => {
-        return <>{new Date(row.created_at).toISOString().substring(0, 10)}</>
-
-        // return <>{new Date(row.created_at)}</>
+      flex: 0.17,
+      minWidth: 100,
+      field: 'timeIn',
+      headerName: 'Time in',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.times[0].timeIn}
+          </Typography>
+        )
       }
     },
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'timeOut',
+      headerName: 'Time out',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.times[0].timeOut}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'maxTimeIn',
+      headerName: 'Max. Time-In',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.times[0].availableLate}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'maxTimeOut',
+      headerName: 'Max. Time-Out',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.times[0].availableEarly}
+          </Typography>
+        )
+      }
+    },
+
     {
       flex: 0.07,
       minWidth: 45,

@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
 import Loading from 'src/views/loading'
+import React from 'react'
 
 const { StringType } = Schema.Types
 
@@ -69,6 +70,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const departmentStatus = 'active'
   const parent = ''
   const value = ''
+  const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
     dispatch(
@@ -244,7 +246,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 >
                   <Grid container spacing={3}>
                     <Grid item sm={8} xs={12} mt={2}>
-                      <small>Top Department</small>
+                      <small>Core Department</small>
                       <SelectPicker
                         size='lg'
                         name='parent '
@@ -261,7 +263,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} mt={2}>
                       <Form.Group controlId='name'>
-                        <small>Department Name</small>
+                        <small>Department/Section Name</small>
                         <Form.Control size='lg' checkAsync name='name' placeholder='Department Name' />
                       </Form.Group>
                     </Grid>
@@ -270,15 +272,15 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} mt={2}>
                       <Form.Group name='description'>
-                        <small>Department Description</small>
-                        <Form.Control rows={3} size='lg' name='description' placeholder='Department Description' />
+                        <small>Department/Section Description</small>
+                        <Form.Control rows={3}  accepter={Textarea} size='lg' name='description' placeholder='Department Description' />
                       </Form.Group>
                     </Grid>
                   </Grid>
 
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} mt={2}>
-                      <small>Head of Department</small>
+                      <small>Head of Department/Section</small>
                       <SelectPicker
                         size='lg'
                         name='user_id'

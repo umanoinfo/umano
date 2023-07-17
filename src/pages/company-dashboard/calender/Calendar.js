@@ -52,7 +52,7 @@ const Calendar = props => {
 
   const [eventStatus, setEventStatus] = useState('')
 
-  const chepColor = { Meet: 'primary', Task: 'info', Document: 'success' }
+  const chepColor = { Meet: 'primary', Task: 'info', Document: 'success' , Holiday: 'secondary' }
 
   let types = []
   types = store.data.map(el => el.type)

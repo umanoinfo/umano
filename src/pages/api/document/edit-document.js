@@ -27,6 +27,7 @@ export default async function handler(req, res) {
 
   const id = document._id
   delete document._id
+  document.expiryDate = new Date(document.expiryDate)
 
   const updateDocument = await client
     .db()

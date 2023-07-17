@@ -18,13 +18,8 @@ export default async function handler(req, res) {
 
   // -------------------- Insert ---------------------------------------------
 
-  // const event = JSON.parse(req.body).data
   const event = req.body.data
-
-  // let v = JSON.parse(req.body)
-  // res.status(200).json({ success: true, data: v })
-
-  // return
+  
   if (!event.title || !event.startDate || !event.description) {
     res.status(422).json({
       message: 'Invalid input'

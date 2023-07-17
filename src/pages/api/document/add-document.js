@@ -27,6 +27,7 @@ export default async function handler(req, res) {
     return
   }
   document.company_id = myUser.company_id
+  document.expiryDate = new Date(document.expiryDate)
   const newDocument = await client.db().collection('documents').insertOne(document)
   const insertedDocument = await client.db().collection('documents').findOne({ _id: newDocument.insertedId })
 
@@ -34,9 +35,9 @@ export default async function handler(req, res) {
 
   if (!insertedDocument.expiryDateFlag) {
     let event = {}
-    event.title = 'Expiry date for ' + document.title
+    event.title = document.title + ' Expired'
     event.allDay = true
-    event.description = 'Expiry date for ' + document.title
+    event.description = document.title + ' Expired'
     event.startDate = document.expiryDate
     event.endDate = document.expiryDate
     event.type = 'Document'

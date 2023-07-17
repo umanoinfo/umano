@@ -20,6 +20,7 @@ import axios from 'axios'
 
 import { Form, Schema, SelectPicker, DatePicker, Toggle, CheckPicker, Input, Divider } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
+import React from 'react';
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -31,6 +32,7 @@ import { updateEvent } from 'src/store/apps/calendar'
 import { LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 const capitalize = string => string && string[0].toUpperCase() + string.slice(1)
+const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 const defaultState = {
   title: '',
@@ -115,7 +117,7 @@ const AddEventSidebar = props => {
     axios
       .post('/api/event/delete-event', { selectedForm: values })
       .then(function (response) {
-        handleSidebarClose()
+        sendEmails(response.data.data._id  ,  values.type + ' ' + values.title + ' Canceled'), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
       })
       .catch(function (error) {
         // handle error
@@ -153,7 +155,7 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
-            sendEmails(response.data.data._id), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
+            sendEmails(response.data.data._id , 'New ' + values.type + ' ' + values.title ), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
           })
           .catch(function (error) {
             toast.error('Error : Error !', {
@@ -180,7 +182,7 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
-            handleSidebarClose()
+            sendEmails(response.data.data._id  , 'Update ' + values.type + ' ' + values.title), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
           })
           .catch(function (error) {
             toast.error('Error : ' + error.response.data.message + ' !', {
@@ -200,15 +202,15 @@ const AddEventSidebar = props => {
     setValues(defaultState)
   }
 
-  const sendEmails = id => {
+  const sendEmails = (id , subject ) => {
     setSendingEmails(true)
     if (values.users) {
       let data = {}
       data.event_id = id
       data.users = values.users
       data.type = values.type
-      data.subject = 'New ' + values.type + ' ' + values.title
-      data.message = values.description
+      data.subject =  subject 
+      data.message =  values.description
       if (values.startDate == values.endDate) {
         data.date =
           values.type +
@@ -402,16 +404,17 @@ const AddEventSidebar = props => {
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
                     <Form.Group>
-                      <small> description</small>
+                      <small> Description</small>
                       <Form.Control
                         rows={3}
                         size='md'
+                        accepter={Textarea}
                         onChange={e => {
                           setValues({ ...values, description: e })
                         }}
                         value={values.description}
                         name='description'
-                        placeholder=' description'
+                        placeholder=' Description'
                         checkAsync
                       />
                     </Form.Group>
@@ -423,8 +426,8 @@ const AddEventSidebar = props => {
                     <Form.Group>
                       <small>Start Date</small>
                       <DatePicker
-                        format='yyyy-MM-dd HH:mm'
                         size='md'
+                        format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
                         onChange={e => {
                           setValues({ ...values, startDate: e })
                         }}
@@ -441,7 +444,8 @@ const AddEventSidebar = props => {
                       <small>End Date</small>
                       <DatePicker
                         itemType='date'
-                        format='yyyy-MM-dd HH:mm'
+                        showTimeSelect={!values.allDay}
+                        format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
                         size='md'
                         onChange={e => {
                           setValues({ ...values, endDate: e })
@@ -474,7 +478,7 @@ const AddEventSidebar = props => {
 
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
-                    <small>Users</small>
+                    <small>Employees</small>
                     <CheckPicker
                       controlId='users'
                       onChange={e => {

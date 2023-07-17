@@ -341,6 +341,10 @@ const StepSalary = ({ handleNext, employee }) => {
     }
   ]
 
+  if (!employee) {
+    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+  } 
+
   return (
     <Grid spacing={6}>
       <Grid item xs={12} lg={12}>

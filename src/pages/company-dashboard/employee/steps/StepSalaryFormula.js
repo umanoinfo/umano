@@ -30,27 +30,8 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   // ----------------------- build ------------------------------------
 
   useEffect(() => {
-    if (!employee) {
-      return (
-        <>
-          <Typography
-            sx={{
-              mt: 2,
-              mb: 3,
-              px: 2,
-              fontWeight: 400,
-              fontSize: 15,
-              color: 'red',
-              textAlign: 'center',
-              fontStyle: 'italic'
-            }}
-          >
-            You must insert employee ..
-          </Typography>
-        </>
-      )
-    } else {
-        getOptions()
+    if (employee) {
+      getOptions()
     }
   }, [])
 
@@ -129,6 +110,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
 
   // ------------------------------- handle Edit --------------------------------------
 
+  if (!employee) {
+    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+  }
+
   return (
     <Grid spacing={6}>
       <Grid item xs={12} lg={12}>
@@ -159,20 +144,20 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     <Tab value='Compensation' label='Compensation' />
                   </TabList>
                   <TabPanel value='Over Time'>
-                    <Typography sx={{ mb: 5 }}>Over Time</Typography>
+                    <Typography sx={{  mt: 5, mb:5 }}>Over Time</Typography>
                     <Grid item sm={12} md={4}>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                         <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          First over time :
+                          Over time :
                         </Typography>
                         {selectedSalaryFormula && selectedSalaryFormula.firstOverTime && (
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.firstOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          houre
+                        Hour/s
                         </Typography>
                       </Box>
-                      <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                      {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                         <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                           Second over time :
                         </Typography>
@@ -193,9 +178,9 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                           houre
                         </Typography>
-                      </Box>
+                      </Box> */}
 
-                      <Box sx={{ mb: 1, mt: 8, display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                         <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                           Holiday :
                         </Typography>
@@ -203,7 +188,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.holidayOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          houre
+                        Hour/s
                         </Typography>
                       </Box>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -214,7 +199,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.weekendOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          houre
+                        Hour/s
                         </Typography>
                       </Box>
                     </Grid>
@@ -223,7 +208,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='Absence'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={6}>
-                        <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
+                        <Typography sx={{ mt: 5, mb:5 }}>Absence Days</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Justified :
@@ -234,7 +219,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            day
+                          Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -247,7 +232,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            day
+                          Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -258,7 +243,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.sickAbsenceDay}</Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            day
+                          Day/s
                           </Typography>
                         </Box>
                       </Grid>
@@ -274,7 +259,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            houre
+                          Hour/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -287,7 +272,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            houre
+                          Hour/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -298,7 +283,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.sickAbsenceHoure}</Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            houre
+                          Hour/s
                           </Typography>
                         </Box>
                       </Grid>
@@ -307,10 +292,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='Compensation'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
-                        <Typography sx={{ mt: 5, mb: 1 }}>End of service compensation</Typography>
+                        <Typography sx={{ mt: 5, mb:5 }}>End of service compensation</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            From 1 to 5 year :
+                            From 1 to 5 Hour/s :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.compensationFrom1To5 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -318,12 +303,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            day
+                          Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            More than 5 year :
+                            More than 5 Hour/s :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.compensationMoreThan5 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -331,7 +316,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            day
+                          Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -342,7 +327,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.maxCompensation}</Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                            year
+                            Year/s
                           </Typography>
                         </Box>
                       </Grid>

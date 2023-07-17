@@ -48,7 +48,7 @@ const AppCalendar = () => {
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
   const [close, setClose] = useState(false)
 
-  const [params, setParams] = useState('Meet,Task,Document')
+  const [params, setParams] = useState('Meet,Task,Document,Holiday')
   const [UpdateEvent, setUpdateEvent] = useState(null)
 
   // ** Hooks

@@ -31,6 +31,7 @@ import employeeReward from 'src/store/apps/employeeReward'
 import attendance from 'src/store/apps/attendance'
 import employeeLeave from 'src/store/apps/employeeLeave'
 import payroll from 'src/store/apps/payroll'
+import file from 'src/store/apps/file'
 
 export const store = configureStore({
   reducer: {
@@ -62,6 +63,7 @@ export const store = configureStore({
     employeeReward,
     attendance,
     employeeLeave,
-    payroll
+    payroll,
+    file
   }
 })

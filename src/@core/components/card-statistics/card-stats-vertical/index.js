@@ -28,22 +28,22 @@ const CardStatsVertical = props => {
             <Typography variant='subtitle2' sx={{ color: trend === 'positive' ? 'success.main' : 'error.main' }}>
               {trendNumber}
             </Typography>
-            <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize='1.25rem' />
+            {/* <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} fontSize='1.25rem' /> */}
           </Box>
         </Box>
-        <Typography variant='h6' sx={{ mb: 1 }}>
+        <Typography variant='h6' sx={{ mb: 1 , mt:6 }}>
           {stats}
         </Typography>
         <Typography variant='body2' sx={{ mb: 5 }}>
           {title}
         </Typography>
-        <CustomChip
+        {/* <CustomChip
           skin='light'
           size='small'
           label={chipText}
           color='secondary'
           sx={{ height: 20, fontWeight: 500, fontSize: '0.75rem', alignSelf: 'flex-start', color: 'text.secondary' }}
-        />
+        /> */}
       </CardContent>
     </Card>
   )

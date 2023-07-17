@@ -117,6 +117,39 @@ const AllDocumentsList = () => {
     setdocumentStatus(e.target.value)
   }, [])
 
+  const handleClick = (data) => {
+
+    switch (data){
+      case 'DOH':
+        router.push('/company-dashboard/document/doh-list')
+        break;
+      case 'CIVIL defense':
+        router.push('/company-dashboard/document/civil-list')
+        break;
+      case 'Waste management':
+        router.push('/company-dashboard/document/waste-list')
+        break;
+      case 'MCC':
+        router.push('/company-dashboard/document/mcc-list')
+        break;
+      case 'Tasneef':
+      router.push('/company-dashboard/document/tasneef-list')
+      break;
+      case 'Oshad':
+        router.push('/company-dashboard/document/oshad-list')
+        break;
+      case 'ADHICS':
+        router.push('/company-dashboard/document/adhics-list')
+        break;
+      case 'Third Party Contracts':
+        router.push('/company-dashboard/document/third-list')
+        break;
+      case 'Others':
+        router.push('/company-dashboard/document/others')
+        break;
+    }
+  }
+
   // -------------------------- Delete Document --------------------------------
 
   const deleteDocument = () => {
@@ -270,7 +303,7 @@ const AllDocumentsList = () => {
       flex: 0.25,
       field: 'type',
       minWidth: 100,
-      headerName: 'Types',
+      headerName: 'Tags',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
@@ -279,6 +312,7 @@ const AllDocumentsList = () => {
               {row.type.map((t, index) => {
                 return (
                   <CustomChip
+                    onClick={() =>handleClick(t) }
                     key={index}
                     color='primary'
                     skin='light'
@@ -297,12 +331,12 @@ const AllDocumentsList = () => {
       flex: 0.11,
       minWidth: 120,
       field: 'end',
-      headerName: 'End Subscription',
+      headerName: 'Expiry date',
       renderCell: ({ row }) => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && row.expiryDate}
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString() }
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'
@@ -394,7 +428,7 @@ const AllDocumentsList = () => {
                   label='Search'
                   value={value}
                   sx={{ mr: 6, mb: 2 }}
-                  placeholder='Search User'
+                  placeholder='Search Document'
                   onChange={e => handleFilter(e.target.value)}
                 />
               </FormControl>

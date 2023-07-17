@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   // ------------------------------- Edit -------------------------------------
 
   const event = req.body.data
-  if (!event.title || !event.StartDate || !event.Description) {
+  if (!event.title || !event.startDate || !event.description) {
     res.status(422).json({
       message: 'Invalid input'
     })
@@ -27,6 +27,8 @@ export default async function handler(req, res) {
   const id = event._id
   delete event._id
   delete event.user_id
+  delete event.calendar
+  delete event.user_info
   event.user_id = myUser._id
 
   const newEvent = await client

@@ -12,7 +12,7 @@ import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
-import { Divider, InputAdornment, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Breadcrumbs, Divider, InputAdornment, Typography } from '@mui/material'
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -41,6 +41,7 @@ import NoPermission from 'src/views/noPermission'
 
 import { styled } from '@mui/material/styles'
 import { grey } from '@mui/material/colors'
+import Link from 'next/link'
 
 const { StringType, ArrayType } = Schema.Types
 
@@ -208,7 +209,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='View Document' sx={{ pb: 0, pt: 2 }} />
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/document/'>
+                All Documents
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              View Document
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -245,94 +256,105 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </CardContent>
 
                     <CardContent>
-                      <Typography variant='h6'>Details</Typography>
                       <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
-                      <Box sx={{ pt: 2, pb: 1 }}>
-                        {selectedDocument.version && (
-                          <Box sx={{ display: 'flex', mb: 2.7 }}>
-                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Version:
-                            </Typography>
-                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                              {selectedDocument.version}
-                            </Typography>
-                          </Box>
-                        )}
-                        {selectedDocument.expiryDateFlag && (
-                          <Box sx={{ display: 'flex', mb: 2.7 }}>
-                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Expiry Date:
-                            </Typography>
-                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                            <span>-</span>
-                            </Typography>
-                          </Box>
-                        )}
-                        {!selectedDocument.expiryDateFlag && (
-                          <Box sx={{ display: 'flex', mb: 2.7 }}>
-                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Expiry Date:
-                            </Typography>
-                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                            {selectedDocument.expiryDate}
-                            </Typography>
-                            <CustomChip
-                              skin='light'
-                              size='small'
-                              label={
-                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
-                                ' Day'
-                              }
-                              color={dayColor(
-                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
-                              )}
-                              sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
-                            />
-                          </Box>
-                        )}
-                        {selectedDocument.status && (
-                          <Box sx={{ display: 'flex', mb: 2.7 }}>
-                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Status:
-                            </Typography>
-                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                              {selectedDocument.status}
-                            </Typography>
-                          </Box>
-                        )}
-                        {selectedDocument.created_at && (
-                          <Box sx={{ display: 'flex', mb: 2.7 }}>
-                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Created at:
-                            </Typography>
-                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                              {new Date(selectedDocument.created_at).toISOString().substring(0, 10)}
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                      <Typography variant='h6' sx={{ mt: 10}}>History</Typography>
-                      <Divider ></Divider>
-                      {selectedLogBook && <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell align='left'>Date</TableCell>
-                              <TableCell align='left'>User</TableCell>
-                              <TableCell align='left'>Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {selectedLogBook.map((row , index) => (
-                              <TableRow key={row.index} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
-                                <TableCell align='left'>{new Date(row.created_at).toLocaleString()}</TableCell>
-                                <TableCell align='left'>{row.user_info[0].name}</TableCell>
-                                <TableCell align='left'>{row.Description}</TableCell>
+                        <Box sx={{ pt: 2, pb: 1 }}>
+                          {selectedDocument.version && (
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Version:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {selectedDocument.version}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedDocument.expiryDateFlag && (
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Expiry Date:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              <span>-</span>
+                              </Typography>
+                            </Box>
+                          )}
+                          {!selectedDocument.expiryDateFlag && (
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Expiry Date:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              {selectedDocument.expiryDate}
+                              </Typography>
+                              <CustomChip
+                                skin='light'
+                                size='small'
+                                label={
+                                  Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
+                                  ' Day'
+                                }
+                                color={dayColor(
+                                  Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
+                                )}
+                                sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
+                              />
+                            </Box>
+                          )}
+                          {selectedDocument.status && (
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Status:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {selectedDocument.status}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedDocument.created_at && (
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Created at:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {new Date(selectedDocument.created_at).toISOString().substring(0, 10)}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                        <div>
+                          <Accordion>
+                            <AccordionSummary
+                              id='panel-header-1'
+                              aria-controls='panel-content-1'
+                              expandIcon={<Icon icon='mdi:chevron-down' />}
+                            >
+                              <Typography >History</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                            {selectedLogBook && 
+                        <TableContainer component={Paper}>
+                          <Table sx={{ minWidth: 600 }} size='small' aria-label='a dense table'>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align='left'>Date</TableCell>
+                                <TableCell align='left'>User</TableCell>
+                                <TableCell align='left'>Action</TableCell>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>}
+                            </TableHead>
+                            <TableBody>
+                              {selectedLogBook.map((row , index) => (
+                                <TableRow key={row.index} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
+                                  <TableCell align='left'>{new Date(row.created_at).toLocaleString()}</TableCell>
+                                  <TableCell align='left'>{row.user_info[0].name}</TableCell>
+                                  <TableCell align='left'>{row.Description}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>}
+                            </AccordionDetails>
+                          </Accordion>
+                        </div>
                     </CardContent>
                   </Card>
                 )}
@@ -350,16 +372,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     }}
                   >
                     <Typography sx={{ fontWeight: 'bold' }}>Files</Typography>
-                    <TagPicker
-                        name='type'
-                        controlId='type'
-                        accepter={TagPicker}
-                        defaultValue={['Active']}
-                        data={selectData}
-                        style={{ width: '280px' }}
-                        onChange={changeFileType}
-                      />
-                  </Box>
+                      <>
+                        <TagPicker
+                            name='type'
+                            controlId='type'
+                            accepter={TagPicker}
+                            defaultValue={['Active']}
+                            data={selectData}
+                            style={{ width: '280px' }}
+                            onChange={changeFileType}
+                            placeholder="Select Status"
+                          />
+                      </>
+                     </Box>
 
                   <Divider />
                   <Box sx={{ p: 2 }}>

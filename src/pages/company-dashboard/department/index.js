@@ -269,7 +269,7 @@ const DepartmentList = ({ apiData }) => {
       flex: 0.1,
       field: 'parent',
       minWidth: 100,
-      headerName: 'Parent',
+      headerName: 'Core Department',
       renderCell: ({ row }) => {
         return (
           <>

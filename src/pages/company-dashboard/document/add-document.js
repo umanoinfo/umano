@@ -149,6 +149,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.preparedBy = formValue.preparedBy
         data.approvedBy = formValue.approvedBy
         data.status = 'active'
+        data.expiryDateFlag = expiryDateFlag
         if (!expiryDateFlag) {
           data.expiryDate = expiryDate
         } else {
@@ -273,7 +274,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 >
                   <Grid container sx={{ px: 5 }}>
                     <Grid item spacing={3} sm={12} md={12}>
-                      <small>Type</small>
+                      <small>Tags</small>
                       <Form.Control
                         name='type'
                         controlId='type'

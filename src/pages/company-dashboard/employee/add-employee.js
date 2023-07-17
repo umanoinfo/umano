@@ -815,7 +815,19 @@ const AddEmployee = ({ popperPlacement, id }) => {
   }))
 
   const renderContent = () => {
-    return getStepContent(activeStep)
+    console.log(activeStep , selectedEmployee)
+    if(selectedEmployee){
+      return getStepContent(activeStep)
+    }
+    if(!selectedEmployee && activeStep == 0){
+      return getStepContent(activeStep)
+    }
+    if(!selectedEmployee && [1,2,3,4,5].includes(activeStep)){
+      toast.error('You must insert employee ..', {
+        delay: 1000,
+        position: 'bottom-right'
+      })
+    }
   }
 
   if (session && session.user && !session.user.permissions.includes('AddEmployee'))

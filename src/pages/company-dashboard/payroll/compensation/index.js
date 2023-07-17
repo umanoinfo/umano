@@ -253,6 +253,32 @@ const CompensationsList = () => {
       }
     },
     {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'fixedValue',
+      headerName: 'Fixed Value',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+             {row.fixedValue>0 ? row.fixedValue: '-' } 
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'percentageValue',
+      headerName: 'Percentage Value',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.percentageValue>0 ? row.percentageValue +'%': '-' } 
+          </Typography>
+        )
+      }
+    },
+    {
       flex: 0.08,
       field: 'type',
       minWidth: 100,
@@ -328,7 +354,7 @@ const CompensationsList = () => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Forms List
+              Compensations List
             </Typography>
           </Breadcrumbs>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>

@@ -161,6 +161,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
             data
           })
           .then(function (response) {
+            if(files.length == 0){
+              goToIndex()
+            }
             let doc_id = response.data.data._id
             let count = 0
             files.map(async file => {
@@ -180,7 +183,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     .post('/api/file/add-file', {
                       data
                     })
-                    .then(res => {})
+                    .then(res => {
+                      
+                    })
                 })
               }
               goToIndex()
@@ -241,7 +246,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 >
                   <Grid container sx={{ px: 5 }}>
                     <Grid item spacing={3} sm={12} md={12}>
-                      <small>Type</small>
+                      <small>Tags</small>
                       <Form.Control
                         name='type'
                         controlId='type'

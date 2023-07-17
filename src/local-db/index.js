@@ -41,7 +41,8 @@ export const SalaryChange = [
 export const EventType = [
   { label: 'Task', value: 'Task', color: 'info' },
   { label: 'Meet', value: 'Meet', color: 'primary' },
-  { label: 'Document', value: 'Document', color: 'success' }
+  { label: 'Document', value: 'Document', color: 'success' },
+  { label: 'Holiday', value: 'Holiday', color: 'secondary' }
 ]
 
 export const FormType = [
@@ -133,7 +134,7 @@ export const GetHealthInsuranceTypes = string => {
     return e.value == string
   })
 
-  return selected[0].title
+  return
 }
 
 export const GetSourceOfHire = string => {

@@ -58,20 +58,14 @@ const data = [
   }
 ]
 
-const CrmMeetingSchedule = () => {
+const CrmMeetingSchedule = ( {birthdays}) => {
   return (
     <Card>
       <CardHeader
-        title='Meeting Schedule'
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Edit', 'Share']}
-            iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-          />
-        }
+        title='Eevents'
       />
       <CardContent>
-        {data.map((item, index) => {
+        {birthdays.map((item, index) => {
           return (
             <Box
               key={item.title}
@@ -81,7 +75,7 @@ const CrmMeetingSchedule = () => {
                 mb: index !== data.length - 1 ? 6.5 : undefined
               }}
             >
-              <Avatar src={item.src} variant='rounded' sx={{ mr: 3, width: 38, height: 38 }} />
+              <Avatar src={item.logo} variant='rounded' sx={{ mr: 3, width: 38, height: 38 }} />
               <Box
                 sx={{
                   width: '100%',
@@ -93,7 +87,7 @@ const CrmMeetingSchedule = () => {
               >
                 <Box sx={{ mr: 2, display: 'flex', mb: 0.4, flexDirection: 'column' }}>
                   <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
-                    {item.title}
+                    {item.firstName} {item.lastName}
                   </Typography>
                   <Box
                     sx={{
@@ -107,14 +101,14 @@ const CrmMeetingSchedule = () => {
                     }}
                   >
                     <Icon icon='mdi:calendar-blank-outline' fontSize='1rem' />
-                    <Typography variant='caption'>{item.subtitle}</Typography>
+                    <Typography variant='caption'>{new Date(item.dateOfBirth).toLocaleDateString()}</Typography>
                   </Box>
                 </Box>
                 <CustomChip
                   skin='light'
                   size='small'
-                  label={item.chipText}
-                  color={item.chipColor}
+                  label='Birthday'
+                  color='primary'
                   sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500 }}
                 />
               </Box>

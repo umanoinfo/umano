@@ -48,6 +48,36 @@ export default async function handler(req, res) {
     .collection('users')
     .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
 
+  //------------------------ Holidy Event -------------------------
+
+  const holidyEvents = await  client.db().collection('events').aggregate(
+    [
+      {$match: {
+        company_id: { $regex: myUser.company_id } ,
+        type: { $regex: 'Holiday' } ,
+      }}
+    ]).toArray()
+    holidyEvents.map ( async (e)=>{
+    await client.db().collection('events').deleteOne( {_id:ObjectId(e._id)})
+    })
+
+    company.holidays.map((day)=>{
+      let event ={}
+      event.title = day.name
+      event.allDay = true
+      event.description = day.name
+      event.startDate = new Date (day.date)
+      event.endDate = new Date (day.date)
+      event.type = 'Holiday'
+      event.users = []
+      event.status = 'active'
+      event.created_at = new Date ()
+      event.company_id = myUser.company_id
+      event.user_id = myUser._id
+      const newEvent = client.db().collection('events').insertOne(event)
+    })
+
+
   // -------------------------- logBook ---------------------------
 
   let log = {

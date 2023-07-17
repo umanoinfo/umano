@@ -37,13 +37,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/document'
+import { fetchData } from 'src/store/apps/file'
 
 // ** Third Party Components
 import axios from 'axios'
@@ -56,32 +52,31 @@ import { Breadcrumbs } from '@mui/material'
 
 // ** Status Obj
 
-const StatusObj = {
-  active: 'success',
-  pending: 'warning',
-  blocked: 'error'
-}
-
-// ** Day Color
-
-const dayColor = days => {
-  if (days > 30) {
-    return 'success'
-  }
-  if (days < 30 && days > 6) {
-    return 'warning'
-  }
-  if (days <= 5) {
+const StatusColor = deleted_at => {
+  if(deleted_at){
     return 'error'
   }
+  if(!deleted_at){
+    return 'success'
+  }
 }
+
+const StatusLabel = deleted_at => {
+  if(deleted_at){
+    return 'Canceled'
+  }
+  if(!deleted_at){
+    return 'Active'
+  }
+}
+
+
 
 const AllDocumentsList = () => {
   // ** State
   const [Types, setTypes] = useState([])
-  const [documentStatus, setdocumentStatus] = useState('')
-  const [eventStatus, setEventStatus] = useState('')
-  const [eventType, setEventType] = useState('')
+  const [fileStatus, setFileStatus] = useState('')
+  const [fileTypes, setFileTypes] = useState('')
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
@@ -92,18 +87,18 @@ const AllDocumentsList = () => {
   // ** Hooks
 
   const dispatch = useDispatch()
-  const store = useSelector(state => state.document)
+  const store = useSelector(state => state.file)
   const router = useRouter()
 
   useEffect(() => {
     dispatch(
       fetchData({
-        documentTypes: 'DOH,CIVIL defense,Waste management,MCC,Tasneef,Oshad,ADHICS,Third Party Contracts,Others',
-        documentStatus,
+        fileTypes,
+        fileStatus,
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, Types, documentStatus, value])
+  }, [dispatch, fileTypes , fileStatus, value])
 
   // ----------------------- Handle ------------------------------
 
@@ -115,9 +110,13 @@ const AllDocumentsList = () => {
     setValue(val)
   }, [])
 
-  const handleStatusChange = useCallback(e => {
-    setdocumentStatus(e.target.value)
-  }, [])
+
+    // -------------------------- open_file ---------------------------------
+
+    const open_file = fileName => {
+      window.open('https://robin-sass.pioneers.network/assets/testFiles/document/' + fileName, '_blank')
+    }
+
 
   // -------------------------- Delete Document --------------------------------
 
@@ -142,39 +141,6 @@ const AllDocumentsList = () => {
         })
         setLoading(false)
       })
-  }
-
-  const handleClick = (data) => {
-
-    switch (data){
-      case 'DOH':
-        router.push('/company-dashboard/document/doh-list')
-        break;
-      case 'CIVIL defense':
-        router.push('/company-dashboard/document/civil-list')
-        break;
-      case 'Waste management':
-        router.push('/company-dashboard/document/waste-list')
-        break;
-      case 'MCC':
-        router.push('/company-dashboard/document/mcc-list')
-        break;
-      case 'Tasneef':
-      router.push('/company-dashboard/document/tasneef-list')
-      break;
-      case 'Oshad':
-        router.push('/company-dashboard/document/oshad-list')
-        break;
-      case 'ADHICS':
-        router.push('/company-dashboard/document/adhics-list')
-        break;
-      case 'Third Party Contracts':
-        router.push('/company-dashboard/document/third-list')
-        break;
-      case 'Others':
-        router.push('/company-dashboard/document/others')
-        break;
-    }
   }
 
   // -------------------------- Add Document -----------------------------------------------
@@ -213,51 +179,7 @@ const AllDocumentsList = () => {
       setOpen(true)
     }
 
- 
-
-    // ------------------------------ Table Definition ---------------------------------
-
-    return (
-      <>
-        <IconButton size='small' onClick={handleRowOptionsClick}>
-          <Icon icon='mdi:dots-vertical' />
-        </IconButton>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={rowOptionsOpen}
-          onClose={handleRowOptionsClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-          PaperProps={{ style: { minWidth: '8rem' } }}
-        >
-          {session && session.user && session.user.permissions.includes('ViewDocument') && (
-            <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
-              View
-            </MenuItem>
-          )}
-          {session && session.user && session.user.permissions.includes('EditDocument') && (
-            <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
-              Edit
-            </MenuItem>
-          )}
-          {session && session.user && session.user.permissions.includes('DeleteDocument') && (
-            <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:delete-outline' fontSize={20} />
-              Delete
-            </MenuItem>
-          )}
-        </Menu>
-      </>
-    )
+   
   }
 
   // ------------------------------- Table columns --------------------------------------------
@@ -284,27 +206,31 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.title}
+              <a href='#' onClick={e => open_file(row.url)}>
+                {row.name}
+              </a>
           </Typography>
         )
       }
     },
     {
-      flex: 0.07,
-      field: 'version',
+      flex: 0.15,
+      field: 'document',
       minWidth: 100,
-      headerName: 'Version',
+      headerName: 'Document',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
-            {row.version}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              { row.document_info[0].title}
+            </div>
           </Box>
         )
       }
     },
     {
-      flex: 0.25,
+      flex: 0.35,
       field: 'type',
       minWidth: 100,
       headerName: 'Tags',
@@ -313,17 +239,16 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {row.type.map((t, index) => {
+              {row.document_info[0].type.map((t, index) => {
                 return (
-                    <CustomChip
-                      key={index}
-                      color='primary'
-                      skin='light'
-                      size='small'
-                      onClick={() =>handleClick(t) }
-                      sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                      label={t}
-                    />
+                  <CustomChip
+                    key={index}
+                    color='primary'
+                    skin='light'
+                    size='small'
+                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                    label={t}
+                  />
                 )
               })}
             </div>
@@ -335,27 +260,12 @@ const AllDocumentsList = () => {
       flex: 0.11,
       minWidth: 120,
       field: 'end',
-      headerName: 'Expiry Date',
+      headerName: 'Date',
       renderCell: ({ row }) => {
         return (
-          <>
-            {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString() }
-            {!row.expiryDateFlag && (
-              <CustomChip
-                skin='light'
-                size='small'
-                label={
-                  Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
-                  ' Day'
-                }
-                color={dayColor(
-                  Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
-                )}
-                sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
-              />
-            )}
-          </>
+         <>
+         { new Date(row.document_info[0].created_at).toLocaleString()}
+         </>
         )
       }
     },
@@ -369,20 +279,12 @@ const AllDocumentsList = () => {
           <CustomChip
             skin='light'
             size='small'
-            label={row.status}
-            color={StatusObj[row.status]}
+            label={StatusLabel(row.deleted_at)}
+            color={StatusColor(row.deleted_at)}
             sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
           />
         )
       }
-    },
-    {
-      flex: 0.01,
-      minWidth: 45,
-      sortable: false,
-      field: 'actions',
-      headerName: '',
-      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ]
 
@@ -402,28 +304,11 @@ const AllDocumentsList = () => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              All Documents List
+              All Files List
             </Typography>
           </Breadcrumbs>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
-            <Grid item sm={2} xs={6}>
-              <FormControl fullWidth size='small'>
-                <InputLabel id='status-select'>Select Status</InputLabel>
-                <Select
-                  fullWidth
-                  value={documentStatus}
-                  id='select-status'
-                  label='Select Status'
-                  labelId='status-select'
-                  onChange={handleStatusChange}
-                  inputProps={{ placeholder: 'Select Status' }}
-                >
-                  <MenuItem value=''>All Status</MenuItem>
-                  <MenuItem value='active'>Active</MenuItem>
-                  <MenuItem value='pending'>Pending</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+
             <Grid item sm={3} xs={12}>
               <FormControl fullWidth size='small'>
                 <TextField
@@ -431,18 +316,13 @@ const AllDocumentsList = () => {
                   label='Search'
                   value={value}
                   sx={{ mr: 6, mb: 2 }}
-                  placeholder='Search Document'
+                  placeholder='Search File'
                   onChange={e => handleFilter(e.target.value)}
                 />
               </FormControl>
             </Grid>
             <Grid item sm={2} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
-              {session && session.user && session.user.permissions.includes('AddDocument') && (
-                <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addDocument()}>
-                  Add Document
-                </Button>
-              )}
             </Grid>
           </Grid>
 

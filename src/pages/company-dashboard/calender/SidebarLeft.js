@@ -25,7 +25,8 @@ const SidebarLeft = props => {
   const colorsArr = [
     ['Meet', 'primary'],
     ['Task', 'info'],
-    ['Document', 'success']
+    ['Document', 'success'],
+    ['Holiday', 'secondary']
   ]
 
   let types = []
@@ -103,9 +104,9 @@ const SidebarLeft = props => {
           control={
             <Checkbox
               color='secondary'
-              checked={params.includes('Meet') && params.includes('Task') && params.includes('Document')}
+              checked={params.includes('Meet') && params.includes('Task') && params.includes('Document') && params.includes('Holiday')}
               onChange={e => {
-                setParams(params == '' ? 'Meet,Task,Document' : '')
+                setParams(params == '' ? 'Meet,Task,Document,Holiday' : '')
               }}
             />
           }
