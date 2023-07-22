@@ -33,11 +33,27 @@ export default async function handler(req, res) {
       },
       {
         $sort: {
-          created_at: -1
+          startChangeDate: 1
         }
       }
     ])
     .toArray()
+
+    salaries.map((salary , index)=>{
+      if(index == 0){
+        salary.lumpySalaryPercentageChange = '-' 
+        salary.overtimeSalaryPercentageChange = '-' 
+      }else{
+
+        let lastLumpySalary = salaries[index-1].lumpySalary
+        let lastOvertimeSalary = salaries[index-1].overtimeSalary
+
+        salary.lumpySalaryPercentageChange = (((salary.lumpySalary - lastLumpySalary) / (lastLumpySalary))*100).toFixed(0)
+        salary.overtimeSalaryPercentageChange = (((salary.overtimeSalary - lastOvertimeSalary) / lastOvertimeSalary)*100).toFixed(0)
+      }
+    })
+
+
 
   res.status(200).json({ success: true, data: salaries })
 }

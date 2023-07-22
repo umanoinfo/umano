@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { DatePicker, Form, InputNumber, Schema, SelectPicker } from 'rsuite'
+import { DatePicker, Form, Loader, Schema, SelectPicker } from 'rsuite'
 
 // ** Custom Components Imports
 import { styled } from '@mui/material/styles'
@@ -31,18 +31,13 @@ import {
   Paper
 } from '@mui/material'
 
+import CustomChip from 'src/@core/components/mui/chip'
+
+
 // ** React Imports
 import { Fragment } from 'react'
 
 import { SalaryChange } from 'src/local-db'
-
-// ** MUI Imports
-import List from '@mui/material/List'
-import Divider from '@mui/material/Divider'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -106,12 +101,10 @@ const StepSalary = ({ handleNext, employee }) => {
   const [value, setValue] = useState('')
   const [form, setForm] = useState(false)
   const [action, setAction] = useState('add')
-  const [positionChangeType, setPositionChangeType] = useState()
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
-  const [positionChangeStartTypes, setPositionChangeStartTypes] = useState([])
-  const [positionChangeEndTypes, setPositionChangeEndTypes] = useState([])
+  const [fileLoading, setFileLoading] = useState(false)
   const [selectedSalary, setSelectedSalary] = useState()
 
   const [salaryChanges, setSalaryChanges] = useState()
@@ -126,6 +119,7 @@ const StepSalary = ({ handleNext, employee }) => {
   const [formValue, setFormValue] = useState({})
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
+  const inputFile = useRef()
 
   useEffect(() => {
     if (employee) {
@@ -172,6 +166,66 @@ const StepSalary = ({ handleNext, employee }) => {
     setSalaryChanges(salaryChanges)
   }
 
+  const open_file = fileName => {
+    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeSalary/' + fileName, '_blank')
+  }
+
+  const openUploadFile = row => {
+    setSelectedSalary(row)
+    inputFile.current.click()
+  }
+
+  const uploadFile = async event => {
+    setFileLoading(true)
+    const file = event.target.files[0]
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('id', selectedSalary._id)
+    formData.append('type', 'employeeSalary')
+    let data = {}
+    data.id = selectedSalary._id
+    data.formData = formData
+    axios
+      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .then(response => {
+        let data = {}
+        data = {}
+        data = {...selectedSalary}
+        data.updated_at = new Date()
+        data.file = response.data
+        delete data.department_info
+        
+        axios
+          .post('/api/employee-salary/edit-salary', {
+            data
+          })
+          .then(function (response) {
+            dispatch(fetchData({ employeeId: employee._id })).then(() => {
+              toast.success('Salary (' + selectedSalary.positionTitle + ') Updated Successfully.', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              setForm(false)
+              setLoading(false)
+            })
+          })
+          .catch(function (error) {
+            toast.error('Error : ' + error.response.data.message + ' !', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+              setLoading(false)
+              })
+              setFileLoading(false)
+            })
+            .catch(function (error) {
+              toast.error('Error : ' + error.response + ' !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+            })
+      }
+
   //-------------------------- validate -----------------------------------
 
   const validateMmodel = Schema.Model({
@@ -186,9 +240,9 @@ const StepSalary = ({ handleNext, employee }) => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
-        data = formValue
-        data.startChangeDate = new Date(startChangeDate).toISOString().substring(0, 10)
-        data.salaryChange = salaryChange
+        data = {...formValue}
+        console.log(startChangeDate)
+        data.startChangeDate = new Date(startChangeDate)
         data.employee_id = employee._id
 
         if (action == 'add') {
@@ -244,6 +298,22 @@ const StepSalary = ({ handleNext, employee }) => {
     })
   }
 
+  const colorChip =(data)=>{
+    if(data > 0)
+    return 'success'
+    if(data < 0)
+    return 'error'
+  }
+
+  const labelChip =(data)=>{
+    if(data > 0)
+    return (data + '%')
+    if(data < 0)
+    return (data + '%')
+    if(data == '-')
+    return ('-')
+  }
+
   const handleAdd = () => {
     setFormValue({})
     setAction('add')
@@ -296,22 +366,45 @@ const StepSalary = ({ handleNext, employee }) => {
       flex: 0.3,
       minWidth: 100,
       field: 'lumpySalary',
-      headerName: 'Lumpy salary',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.lumpySalary}</Typography>
+      headerName: 'Basic Salary',
+      renderCell: ({ row }) => (
+      <>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{(Number(row.lumpySalary)).toFixed(2)}</Typography>
+        <CustomChip
+            skin='light'
+            size='small'
+            label={labelChip(row.lumpySalaryPercentageChange)}
+            color={colorChip(row.lumpySalaryPercentageChange)}
+            sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
+          />
+          
+      </>
+      )
     },
     {
       flex: 0.3,
       minWidth: 100,
       field: 'overtimeٍٍSalary',
       headerName: 'Overtime Salary',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.overtimeSalary}</Typography>
+      renderCell: ({ row }) => ( 
+      <>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{(Number(row.overtimeSalary)).toFixed(2)}</Typography>
+          <CustomChip
+            skin='light'
+            size='small'
+            label={labelChip(row.overtimeSalaryPercentageChange)}
+            color={colorChip(row.overtimeSalaryPercentageChange)}
+            sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
+          />
+        </>)
     },
     {
       flex: 0.15,
       minWidth: 100,
       field: 'date',
       headerName: 'Date',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.startChangeDate}</Typography>
+      renderCell: ({ row }) => 
+      <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString()}</Typography>
     },
     {
       flex: 0.15,
@@ -320,6 +413,13 @@ const StepSalary = ({ handleNext, employee }) => {
       headerName: '',
       renderCell: ({ row }) => (
         <>
+          {fileLoading && (
+            <span style={{ alignItems: 'center' }}>
+              <Loader size='xs' />
+            </span>
+          )}
+
+          {!fileLoading && (<span>
           <IconButton
             size='small'
             onClick={e => {
@@ -336,6 +436,21 @@ const StepSalary = ({ handleNext, employee }) => {
           >
             <Icon icon='mdi:delete-outline' fontSize={18} />
           </IconButton>
+          {row.file && (
+            <IconButton size='small' onClick={() => open_file(row.file)}>
+              <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
+            </IconButton>
+          )}
+          <IconButton
+            size='small'
+            onClick={e => {
+              openUploadFile(row)
+            }}
+          >
+            <Icon icon='mdi:upload-outline' fontSize={18} />
+          </IconButton>
+
+        </span>)}
         </>
       )
     }
@@ -395,17 +510,17 @@ const StepSalary = ({ handleNext, employee }) => {
                   <Grid container sx={{ mt: 3, px: 5 }}>
                     <Grid container spacing={3}>
                       <Grid item sm={12} md={6} sx={{ mt: 2 }}>
-                        <small>Lumpy Salary</small>
+                        <small>Monthly Basic Salary</small>
                         <Form.Control
                           type='number'
                           controlId='lumpySalary'
                           size='lg'
                           name='lumpySalary'
-                          placeholder='Lumpy Salary'
+                          placeholder='Basic Salary'
                         />
                       </Grid>
                       <Grid item sm={12} md={6} sx={{ mt: 2 }}>
-                        <small>Overtime Salary</small>
+                        <small>Monthly Overtime Salary</small>
                         <Form.Control
                           controlId='overtimeSalary'
                           type='number'
@@ -418,7 +533,7 @@ const StepSalary = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Change Type</small>
+                        <small>Salary Adjustment</small>
                         <SelectPicker
                           size='lg'
                           name='salaryChange'
@@ -520,7 +635,18 @@ const StepSalary = ({ handleNext, employee }) => {
           </Dialog>
         </Grid>
       </Grid>
+      <input
+          id='file'
+          ref={inputFile}
+          hidden
+          type='file'
+          onChange={e => {
+            uploadFile(e)
+          }}
+          name='file'
+        />
     </Grid>
+    
   )
 }
 

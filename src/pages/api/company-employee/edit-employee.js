@@ -19,6 +19,7 @@ export default async function handler(req, res) {
   const id = employee._id
   delete employee._id
   employee.dateOfBirth = new Date(employee.dateOfBirth)
+  employee.joiningDate = new Date(employee.joiningDate)
 
   if (!employee.firstName || !employee.lastName) {
     res.status(422).json({

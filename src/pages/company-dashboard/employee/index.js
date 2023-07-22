@@ -221,6 +221,11 @@ const EmployeeList = classNamec => {
       handleRowOptionsClose()
     }
 
+    const handleRowTimeLine = () => {
+      router.push('/company-dashboard/employee/' + row._id + '/employeeTimeLine')
+      handleRowOptionsClose()
+    }
+
     const handleDelete = () => {
       setSelectedEmployee(row)
       setOpen(true)
@@ -250,6 +255,12 @@ const EmployeeList = classNamec => {
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
+            </MenuItem>
+          )}
+          {session && session.user.permissions.includes('ViewEmployee') && (
+            <MenuItem onClick={handleRowTimeLine} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:clock-outline' fontSize={20} />
+              TimeLine
             </MenuItem>
           )}
           {session && session.user.permissions.includes('EditEmployee') && (

@@ -1,5 +1,6 @@
 // ** React Imports
 import { useEffect, useRef, useState } from 'react'
+import React from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -9,7 +10,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { Checkbox, DatePicker, Form, InputNumber, Loader, Schema, SelectPicker } from 'rsuite'
+import { Checkbox, DatePicker, Form, Input, Loader, Schema, SelectPicker } from 'rsuite'
 
 // ** Custom Components Imports
 import { styled } from '@mui/material/styles'
@@ -66,6 +67,8 @@ const StepDocuments = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
+  const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
+
   // ------------------------- build------------------------------------------
 
   useEffect(() => {
@@ -115,7 +118,7 @@ const StepDocuments = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = {}
+        let data = {...formValue}
         data.documentTitle = formValue.documentTitle
         data.documentNo = formValue.documentNo
         data.documentDescription = formValue.documentDescription
@@ -446,6 +449,8 @@ const StepDocuments = ({ handleNext, employee }) => {
                           controlId='documentDescription'
                           size='sm'
                           type='text'
+                          accepter={Textarea}
+                          rows={3}
                           name='documentDescription'
                           placeholder='Document Description'
                         />

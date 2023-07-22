@@ -56,8 +56,10 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 import { addUser } from 'src/store/apps/user'
-import { Breadcrumbs, Divider, InputAdornment, Stepper } from '@mui/material'
+import { Breadcrumbs, Divider, Stepper } from '@mui/material'
 import { useRouter } from 'next/router'
+
+
 
 // ** Data
 import { EmployeesTypes, MaritalStatus, SourceOfHire, HealthInsuranceTypes } from 'src/local-db'
@@ -78,6 +80,7 @@ const { StringType, NumberType } = Schema.Types
 import Icon from 'src/@core/components/icon'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
+import React from 'react';
 
 const styles = {
   marginBottom: 10
@@ -108,6 +111,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [healthType, setHealthType] = useState()
   const [newLogo, setNewLogo] = useState()
   const [dateOfBirth, setDateOfBirth] = useState(new Date().toISOString().substring(0, 10))
+  const [joiningDate , setJoiningDate] = useState(new Date().toISOString().substring(0, 10))
   const [newStatus, setNewStatus] = useState('active')
   const [maritalStatus, setMaritalStatus] = useState()
   const [employeeType, setEmployeeType] = useState()
@@ -126,6 +130,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const store = useSelector(state => state.companyEmployee)
 
   const { data: session, status } = useSession()
+  const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   const companyStatus = ''
   const value = ''
@@ -330,7 +335,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
               model={validateMmodel}
             >
               <Grid container>
-                <Grid item xs={12} sm={7} md={7} sx={{ p: 2, mb: 5 }}>
+                <Grid item xs={12} sm={12} md={12} sx={{ p: 2, mb: 5 }}>
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} md={5} mt={1}>
                       <Form.Group controlId='idNo'>
@@ -341,13 +346,19 @@ const AddEmployee = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={3}>
-                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                    <Grid item sm={12} xs={12} md={4} mt={2}>
                       <Form.Group controlId='firstName'>
                         <small>First Name</small>
                         <Form.Control size='sm' checkAsync name='firstName' placeholder='First Name' />
                       </Form.Group>
                     </Grid>
-                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                    <Grid item sm={12} xs={12} md={4} mt={2}>
+                      <Form.Group controlId='lastName'>
+                        <small>Middle Name</small>
+                        <Form.Control size='sm' checkAsync name='middleName' placeholder='Middle Name' />
+                      </Form.Group>
+                    </Grid>
+                    <Grid item sm={12} xs={12} md={4} mt={2}>
                       <Form.Group controlId='lastName'>
                         <small>Last Name</small>
                         <Form.Control size='sm' checkAsync name='lastName' placeholder='Last Name' />
@@ -356,47 +367,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={3}>
-                    <Grid item sm={12} xs={12} md={12} mt={2}>
-                      <Form.Group controlId='email'>
-                        <small>Email</small>
-                        <Form.Control size='sm' checkAsync name='email' placeholder='Email' />
-                      </Form.Group>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={3}>
-                    <Grid item sm={12} xs={12} mt={2}>
-                      <small>Nationality</small>
-                      <SelectPicker
-                        size='sm'
-                        name='countryID'
-                        onChange={e => {
-                          changeCountry(e)
-                        }}
-                        value={countryID}
-                        data={countriesDataSource}
-                        block
-                      />
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={3}>
-                    <Grid item sm={7} xs={12} mt={2}>
-                      <small>Health insurance type</small>
-                      <Form.Control size='sm' checkAsync name='healthType' placeholder='Health insurance type' />
-
-                      {/* <SelectPicker
-                        size='sm'
-                        name='healthType'
-                        onChange={e => {
-                          changeHealthType(e)
-                        }}
-                        value={healthType}
-                        data={healthInsuranceTypeDataSource}
-                        block
-                      /> */}
-                    </Grid>
-                    <Grid item sm={5} xs={12} mt={2}>
+                    <Grid item sm={5} md={4} xs={12} mt={2}>
                       <small>Date of birth</small>
                       <Form.Control
                         size='sm'
@@ -410,39 +381,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         block
                       />
                     </Grid>
-                  </Grid>
-
-                  <Grid item sm={12} xs={12} mt={2}>
-                    <small>Source of Hire</small>
-                    <SelectPicker
-                      size='sm'
-                      name='sourceOfHire'
-                      onChange={e => {
-                        changeSourceOfHire(e)
-                      }}
-                      value={sourceOfHire}
-                      data={sourceOfHireDataSource}
-                      block
-                    />
-                  </Grid>
-
-                  <Grid container spacing={3}>
-                    <Grid item sm={6} xs={12} spacing={3} mt={2}>
-                      <Grid item sm={12} xs={12}>
-                        <small>Employee Type (contract Type)</small>
-                        <SelectPicker
-                          size='sm'
-                          name='employeeType'
-                          onChange={e => {
-                            changeEmployeeType(e)
-                          }}
-                          value={employeeType}
-                          data={employeeTypesDataSource}
-                          block
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item sm={6} xs={12} spacing={3} mt={2}>
+                    <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
                       <Grid item sm={12} xs={12}>
                         <small>Marital status</small>
                         <SelectPicker
@@ -463,7 +402,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     <Grid item sm={6} xs={12} spacing={3} mt={2}>
                       <Grid item sm={12} xs={12}>
                         <small>Gender</small>
-
                         <RadioGroup
                           name='radioList'
                           value={gender}
@@ -478,10 +416,126 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
 
-                <Grid item xs={12} sm={5} md={5} sx={{ p: 2, mb: 5 }}>
-                  <Box sx={{ border: 'solid', borderRadius: 1, borderColor: 'primary', borderWidth: 1 }}>
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} xs={12} md={12} mt={2}>
+                      <small>Nationality</small>
+                      <SelectPicker
+                        size='sm'
+                        name='countryID'
+                        onChange={e => {
+                          changeCountry(e)
+                        }}
+                        value={countryID}
+                        data={countriesDataSource}
+                        block
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                      <small>Mobile phone</small>
+                      <Form.Control
+                        controlId='mobilePhone'
+                        size='sm'
+                        type='number'
+                        name='mobilePhone'
+                        placeholder='Mobile phone'
+                      />
+                    </Grid>
+                    <Grid item sm={12} md={4} sx={{ mt: 2 }}>
+                      <small>Work phone</small>
+                      <Form.Control
+                        controlId='workPhone'
+                        type='number'
+                        size='sm'
+                        name='workPhone'
+                        placeholder='Work phone'
+                      />
+                    </Grid>
+                    <Grid item sm={12} md={2} sx={{ mt: 2 }}>
+                      <small>Extension</small>
+                      <Form.Control
+                        size='sm'
+                        type='number'
+                        controlId='extension'
+                        name='extension'
+                        placeholder='Extension'
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                      <Form.Group controlId='email'>
+                        <small>Email</small>
+                        <Form.Control size='sm' checkAsync name='email' placeholder='Email' />
+                      </Form.Group>
+                    </Grid>
+                    <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                      <small>Other email</small>
+                      <Form.Control controlId='otherEmail' size='sm' name='otherEmail' placeholder='Other Email' />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                      <Form.Group>
+                        <small>Emergency Contact Name</small>
+                        <Form.Control
+                          controlId='emergencyContactName'
+                          size='sm'
+                          type='text'
+                          rows={2}
+                          name='emergencyContactName'
+                          placeholder='Emergency Contact Name'
+                        />
+                      </Form.Group>
+                    </Grid>
+                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                      <Form.Group>
+                        <small>Emergency Contact Mobile</small>
+                        <Form.Control
+                          controlId='emergencyContactMobile'
+                          size='sm'
+                          type='text'
+                          rows={2}
+                          name='emergencyContactMobile'
+                          placeholder='Emergency Contact Mobile'
+                        />
+                      </Form.Group>
+                    </Grid>
+                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                      <Form.Group>
+                        <small>Emergency Contact Relationship</small>
+                        <Form.Control
+                          controlId='emergencyContactRelationship'
+                          size='sm'
+                          type='text'
+                          rows={2}
+                          name='emergencyContactRelationship'
+                          placeholder='Emergency Contact Relationship'
+                        />
+                      </Form.Group>
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} md={8} xs={12} mt={2}>
+                      <Form.Group>
+                        <small>Address</small>
+                        <Form.Control
+                          size='sm'
+                          controlId='address'
+                          accepter={Textarea}
+                          rows={5}
+                          name='address'
+                          placeholder='Address'
+                        />
+                      </Form.Group>
+                    </Grid>
+                    <Grid item sm={12} md={4} xs={12} mt={2}>
                     <FormControl fullWidth sx={{ alignItems: 'center', mb: 6, height: '100%' }}>
                       <Box
                         sx={{
@@ -511,81 +565,98 @@ const AddEmployee = ({ popperPlacement, id }) => {
                             Upload Logo
                           </Button> */}
                       </Box>
-                      <Divider />
-
-                      <Grid container sx={{ mt: 3, px: 5 }}>
-                        <Grid item sm={12} md={12} sx={{ mt: 2 }}>
-                          <small>Other email</small>
-                          <Form.Control controlId='otherEmail' size='sm' name='otherEmail' placeholder='Other Email' />
-                        </Grid>
-                        <Grid item sm={12} md={12} sx={{ mt: 2 }}>
-                          <small>Mobile phone</small>
-                          <Form.Control
-                            controlId='mobilePhone'
-                            size='sm'
-                            type='number'
-                            name='mobilePhone'
-                            placeholder='Mobile phone'
-                          />
-                        </Grid>
-                        <Grid container spacing={3}>
-                          <Grid item sm={12} md={8} sx={{ mt: 3 }}>
-                            <small>Work phone</small>
-                            <Form.Control
-                              controlId='workPhone'
-                              type='number'
-                              size='sm'
-                              name='workPhone'
-                              placeholder='Work phone'
-                            />
-                          </Grid>
-                          <Grid item sm={12} md={4} sx={{ mt: 3 }}>
-                            <small>Extension</small>
-                            <Form.Control
-                              size='sm'
-                              type='number'
-                              controlId='extension'
-                              name='extension'
-                              placeholder='Extension'
-                            />
-                          </Grid>
-                        </Grid>
-
-                        <Grid container spacing={3}>
-                          <Grid item sm={12} xs={12} mt={2}>
-                            <Form.Group>
-                              <small>Emergency contact information</small>
-                              <Form.Control
-                                controlId='emergencyContact'
-                                size='sm'
-                                type='number'
-                                rows={2}
-                                name='emergencyContact'
-                                placeholder='Emergency information'
-                              />
-                            </Form.Group>
-                          </Grid>
-                        </Grid>
-
-                        <Grid container spacing={3}>
-                          <Grid item sm={12} xs={12} mt={2}>
-                            <Form.Group>
-                              <small>Address</small>
-                              <Form.Control
-                                size='sm'
-                                controlId='address'
-                                rows={2}
-                                name='address'
-                                placeholder='Address'
-                              />
-                            </Form.Group>
-                          </Grid>
-                        </Grid>
-                      </Grid>
                     </FormControl>
-                  </Box>
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} xs={12} md={7} mt={2}>
+                      <small>Source of Hire</small>
+                      <SelectPicker
+                        size='sm'
+                        name='sourceOfHire'
+                        onChange={e => {
+                          changeSourceOfHire(e)
+                        }}
+                        value={sourceOfHire}
+                        data={sourceOfHireDataSource}
+                        block
+                      />
+                    </Grid>
+                    <Grid item sm={5} xs={12} md={5} mt={2}>
+                        <small>Joining Date</small>
+                        <Form.Control
+                          size='sm'
+                          oneTap
+                          accepter={DatePicker}
+                          name='joiningDate'
+                          onChange={e => {
+                            setJoiningDate(e.toISOString().substring(0, 10))
+                          }}
+                          value={new Date(joiningDate)}
+                          block
+                        />
+                      </Grid>
+                  </Grid>
+
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} md={6} xs={12} mt={2}>
+                      <small>Health insurance type</small>
+                      <Form.Control size='sm' checkAsync name='healthType' placeholder='Health insurance type' />
+                    </Grid>
+                    <Grid item sm={12} md={6} xs={12} mt={2}>
+                      <small>Employee Type (contract Type)</small>
+                      <SelectPicker
+                        size='sm'
+                        name='employeeType'
+                        onChange={e => {
+                          changeEmployeeType(e)
+                        }}
+                        value={employeeType}
+                        data={employeeTypesDataSource}
+                        block
+                      />
+                    </Grid>
+                  </Grid>
+                  <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
+                    Home Country Details
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item sm={12} md={3} sx={{ mt: 2 }}>
+                      <small>Phone Number</small>
+                      <Form.Control
+                        controlId='homePhoneNumber'
+                        size='sm'
+                        type='number'
+                        name='HomePhoneNumber'
+                        placeholder='Phone Number'
+                      />
+                    </Grid>
+                    <Grid item sm={12} md={3} sx={{ mt: 2 }}>
+                      <small>Mobile Number</small>
+                      <Form.Control
+                        controlId='homeMobileNumber'
+                        type='number'
+                        size='sm'
+                        name='homeMobileNumber'
+                        placeholder='Mobile Number'
+                      />
+                    </Grid>
+                    <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                      <small>Address</small>
+                      <Form.Control
+                        size='sm'
+                        type='text'
+                        controlId='homeAddress'
+                        name='homeAddress'
+                        placeholder='Address'
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
+          
               </Grid>
+
               <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
               <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
                 {!loading && (
@@ -655,7 +726,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
         setLoading(true)
         data = formValue
         data.countryID = countryID
-        data.dateOfBirth = dateOfBirth
+        data.dateOfBirth = new Date(dateOfBirth)
+        data.joiningDate = new Date(joiningDate)
         data.sourceOfHire = sourceOfHire
         data.employeeType = employeeType
         data.maritalStatus = maritalStatus

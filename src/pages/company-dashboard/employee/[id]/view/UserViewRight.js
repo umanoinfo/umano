@@ -78,6 +78,7 @@ const UserViewRight = ({ tab, id, employee, permissions }) => {
         <Tab value='leaves' label='Leaves' icon={<Icon icon='material-symbols:view-timeline-outline' />} />
         <Tab value='deductions' label='Deductions' icon={<Icon icon='mdi:tag-minus-outline' />} />
         <Tab value='reawards' label='Reawards' icon={<Icon icon='mdi:tag-plus-outline' />} />
+        
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (

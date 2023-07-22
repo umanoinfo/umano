@@ -212,8 +212,9 @@ const DeductionsList = () => {
   // ------------------------------- Table columns --------------------------------------------
 
   const renderClient = row => {
-    if (row.avatar) {
-      return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
+
+    if (row.logo) {
+      return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
     } else {
       return (
         <CustomAvatar

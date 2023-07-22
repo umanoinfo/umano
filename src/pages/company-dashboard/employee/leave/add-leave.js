@@ -268,13 +268,13 @@ const AddLeave = ({ popperPlacement, id }) => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data
-      employees = employees.map(employee => {
+      employees = employees.map((employee , index) => {
+   
         if (employee.shift_info[0]) {
           arr.push({
             label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
             value: employee._id
           })
-
           return calcLeaves(employee)
         }
       })
@@ -554,11 +554,11 @@ const AddLeave = ({ popperPlacement, id }) => {
   const [leavesDataSource, setLeavesDataSource] = useState([])
 
   const fillTable = id => {
+    console.log(employeesFullInfo)
     let val = employeesFullInfo.find(val => val._id == id)
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id
-
       return e
     })
     setLeavesDataSource(val)

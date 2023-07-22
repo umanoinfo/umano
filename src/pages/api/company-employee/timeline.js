@@ -15,9 +15,6 @@ export default async function handler(req, res) {
 
   const id = req.body.data.id
 
-  // if(!req.body.data.compensations){ req.body.data.compensations =[]}
-  // try {
-
   // ---------------------- Insert -----------------------------
 
   const employee = await client
@@ -132,5 +129,39 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  res.status(200).json({ success: true, data: employee })
+
+    let timeline = []
+
+    if(employee[0].joiningDate)
+    {timeline.push({color:'success' , date : new Date (employee[0].joiningDate) , title : "Joining Date" , description : ""  })}
+
+    employee[0].employeePositions_info.map((position)=>{
+      timeline.push({color:'primary' , date : new Date (position.startChangeDate) , title : "New Position" , description : " Position " + position.positionTitle+ " " +position.startChangeDate+ " - " +position.endChangeDate })
+    })
+
+    employee[0].salaries_info.map((salary)=>{
+      timeline.push({color:'warning' , date : new Date (salary.startChangeDate) , title : "New Salary" , description : " Salary Change ( " + salary.salaryChange+ " ) "  , subTitle :  " Basic Salary : " +salary.lumpySalary })
+    })
+
+    employee[0].deductions_info.map((deduction)=>{
+      timeline.push({color:'error' , date : new Date (deduction.date) , title : "Deduction" , description :  deduction.reason + " : " +deduction.description  , subTitle : "Value : " + deduction.value })
+    })
+
+    employee[0].rewards_info.map((reward)=>{
+      timeline.push({color:'info' , date : new Date (reward.date) , title : "Reward" , description : reward.reason + " : " +reward.description  , subTitle : "Value : " + reward.value })
+    })
+
+    function compare( a, b ) {
+      if ( a.date < b.date ){
+        return -1;
+      }
+      if ( a.date > b.date ){
+        return 1;
+      }
+      return 0;
+    }
+
+    timeline.sort( compare );
+
+  res.status(200).json({ success: true, data: employee , timeline:timeline})
 }

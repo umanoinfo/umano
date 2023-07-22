@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { DatePicker, Form, InputNumber, Schema, SelectPicker } from 'rsuite'
+import { DatePicker, Form, Loader, Schema, SelectPicker } from 'rsuite'
 
 // ** Custom Components Imports
 import { styled } from '@mui/material/styles'
@@ -56,8 +56,7 @@ import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/employeePosition'
-import { fetchDepartmentData } from 'src/store/apps/company-department'
+import { fetchData } from 'src/store/apps/employeePosition'
 import { DataGrid } from '@mui/x-data-grid'
 
 const { StringType } = Schema.Types
@@ -115,7 +114,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const [positionChangeStartTypes, setPositionChangeStartTypes] = useState([])
   const [positionChangeEndTypes, setPositionChangeEndTypes] = useState([])
   const [selectedPosition, setSelectedPosition] = useState()
-
+  const [fileLoading, setFileLoading] = useState(false)
   const [startChangeType, setStartChangeType] = useState()
   const [startChangeDate, setStartChangeDate] = useState(new Date().toISOString().substring(0, 10))
 
@@ -133,6 +132,8 @@ const Steppositions = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
+  const inputFile = useRef(null)
+
   // ----------------------- bulid -------------------------------------------
 
   useEffect(() => {
@@ -141,7 +142,7 @@ const Steppositions = ({ handleNext, employee }) => {
       setEmployeeId(employee._id)
         dispatch(
         fetchData({
-          employeeId: employeeId,
+          employeeId: employee._id,
           userStatus,
           q: value
         })
@@ -188,7 +189,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = {}
+        let data = {formValue}
         data.positionTitle = formValue.positionTitle
         data.startChangeType = startChangeType
         data.endChangeType = endChangeType
@@ -288,6 +289,61 @@ const Steppositions = ({ handleNext, employee }) => {
       })
   }
 
+  const uploadFile = async event => {
+    setFileLoading(true)
+    const file = event.target.files[0]
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('id', selectedPosition._id)
+    formData.append('type', 'employeePosition')
+    let data = {}
+    data.id = selectedPosition._id
+    data.formData = formData
+    axios
+      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .then(response => {
+        let data = {}
+        data = {}
+        data = {...selectedPosition}
+        data.updated_at = new Date()
+        data.file = response.data
+        delete data.department_info
+        
+        axios
+          .post('/api/employee-position/edit-position', {
+            data
+          })
+          .then(function (response) {
+            dispatch(fetchData({ employeeId: employee._id })).then(() => {
+              toast.success('Position (' + selectedPosition.positionTitle + ') Updated Successfully.', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              setForm(false)
+              setLoading(false)
+            })
+          })
+          .catch(function (error) {
+            toast.error('Error : ' + error.response.data.message + ' !', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+              setLoading(false)
+              })
+              setFileLoading(false)
+            })
+            .catch(function (error) {
+              toast.error('Error : ' + error.response + ' !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+            })
+  }
+
+  const open_file = fileName => {
+    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeePosition/' + fileName, '_blank')
+  }
+
   // ------------------------------- handle Edit --------------------------------------
 
   const handleEdit = e => {
@@ -305,20 +361,18 @@ const Steppositions = ({ handleNext, employee }) => {
     setForm(true)
   }
 
+  const openUploadFile = row => {
+    setSelectedPosition(row)
+    inputFile.current.click()
+  }
+
   const columns = [
     {
-      flex: 0.3,
-      minWidth: 100,
-      field: 'department',
-      headerName: 'Department',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.department_info[0].name}</Typography>
-    },
-    {
-      flex: 0.3,
+      flex: 0.2,
       minWidth: 100,
       field: 'title',
       headerName: 'Title',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.positionTitle}</Typography>
+      renderCell: ({ row }) => <Typography variant='body2'>{row.department_info[0].name} / {row.positionTitle}</Typography>
     },
     {
       flex: 0.15,
@@ -335,13 +389,19 @@ const Steppositions = ({ handleNext, employee }) => {
       renderCell: ({ row }) => <Typography variant='body2'>{row.endChangeDate}</Typography>
     },
     {
-      flex: 0.15,
+      flex: 0.2,
       minWidth: 100,
       field: 'action',
       headerName: '',
       renderCell: ({ row }) => (
         <>
-          <IconButton
+          {fileLoading && (
+            <span style={{ alignItems: 'center' }}>
+              <Loader size='xs' />
+            </span>
+          )}
+          {!fileLoading && (<span>
+                <IconButton
             size='small'
             onClick={e => {
               handleEdit(row)
@@ -357,6 +417,21 @@ const Steppositions = ({ handleNext, employee }) => {
           >
             <Icon icon='mdi:delete-outline' fontSize={18} />
           </IconButton>
+          {row.file && (
+                <IconButton size='small' onClick={() => open_file(row.file)}>
+                  <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
+                </IconButton>
+              )}
+          <IconButton
+            size='small'
+            onClick={e => {
+              openUploadFile(row)
+            }}
+          >
+            <Icon icon='mdi:upload-outline' fontSize={18} />
+          </IconButton>
+          </span>)}
+      
         </>
       )
     }
@@ -532,6 +607,17 @@ const Steppositions = ({ handleNext, employee }) => {
               </Card>
             )}
           </Grid>
+
+          <input
+              id='file'
+              ref={inputFile}
+              hidden
+              type='file'
+              onChange={e => {
+                uploadFile(e)
+              }}
+              name='file'
+            />
 
           {/* -------------------------- Clinician  ------------------------------------- */}
           <Dialog
