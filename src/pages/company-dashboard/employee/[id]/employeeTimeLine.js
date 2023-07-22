@@ -78,8 +78,8 @@ const EmployeeTimeLine = ({ id }) => {
         <Divider></Divider>
         {!isLoading  && timeline && (
             <Timeline>
-            { timeline.map((time)=>{ return(
-            <TimelineItem>
+            { timeline.map((time , index)=>{ return(
+            <TimelineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot color={time.color} />
                 <TimelineConnector />

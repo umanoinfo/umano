@@ -275,6 +275,7 @@ const AddLeave = ({ popperPlacement, id }) => {
             label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
             value: employee._id
           })
+          
           return calcLeaves(employee)
         }
       })
@@ -559,7 +560,9 @@ const AddLeave = ({ popperPlacement, id }) => {
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id
+
       return e
+
     })
     setLeavesDataSource(val)
   }

@@ -62,8 +62,9 @@ const StatusObj = {
   blocked: 'error'
 }
 
-const leaveList = () => {
+const LeaveList = () => {
   // ** State
+  
   const [leaveType, setLeaveType] = useState('')
   const [leaveStatus, setLeaveStatus] = useState('')
   const [value, setValue] = useState('')
@@ -469,4 +470,4 @@ const leaveList = () => {
 
 }
 
-export default leaveList
+export default LeaveList
