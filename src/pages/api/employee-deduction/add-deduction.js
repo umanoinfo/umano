@@ -29,30 +29,33 @@ export default async function handler(req, res) {
     return
   }
 
-  employeeDeduction.company_id = myUser.company_id
-  employeeDeduction.user_id = myUser._id
-  employeeDeduction.created_at = new Date()
-  employeeDeduction.status = 'active'
-  employeeDeduction.date = new Date(employeeDeduction.date)
+  employees.forEach(async empId => {
+    employeeReward.employee_id = empId 
+    employeeDeduction.company_id = myUser.company_id
+    employeeDeduction.user_id = myUser._id
+    employeeDeduction.created_at = new Date()
+    employeeDeduction.status = 'active'
+    employeeDeduction.date = new Date(employeeDeduction.date)
 
-  const newEmployeeDeduction = await client.db().collection('employeeDeductions').insertOne(employeeDeduction)
+    const newEmployeeDeduction = await client.db().collection('employeeDeductions').insertOne(employeeDeduction)
 
-  const insertedDeduction = await client
-    .db()
-    .collection('employeeDeductions')
-    .findOne({ _id: newEmployeeDeduction.insertedId })
+    const insertedDeduction = await client
+      .db()
+      .collection('employeeDeductions')
+      .findOne({ _id: newEmployeeDeduction.insertedId })
 
-  // -------------------- logBook ------------------------------------------
+    // -------------------- logBook ------------------------------------------
 
-  let log = {
-    user_id: myUser._id,
-    company_id: myUser.company_id,
-    Module: 'Employee Deductions',
-    Action: 'Add',
-    Description: 'Add Employee deductions (' + insertedDeduction.reason + ')',
-    created_at: new Date()
-  }
-  const newlogBook = await client.db().collection('logBook').insertOne(log)
+    let log = {
+      user_id: myUser._id,
+      company_id: myUser.company_id,
+      Module: 'Employee Deductions',
+      Action: 'Add',
+      Description: 'Add Employee deductions (' + insertedDeduction.reason + ')',
+      created_at: new Date()
+    }
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
+  });
 
   res.status(201).json({ success: true, data: insertedDeduction })
 }
