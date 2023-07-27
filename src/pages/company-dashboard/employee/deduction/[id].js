@@ -8,7 +8,10 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 
-import { Divider, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Typography } from '@mui/material'
+
+// ** Next Imports
+import Link from 'next/link'
 
 import toast from 'react-hot-toast'
 
@@ -76,7 +79,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       let arr = []
       res.data.data.map(employee => {
         arr.push({
-          label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
+          label: employee.firstName + ' ' + employee.lastName +  '  :  ' + employee.idNo,
           value: employee._id
         })
       })
@@ -153,7 +156,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Deduction' sx={{ pb: 0, pt: 2 }} />
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/employee/deduction/'>
+            Deductions
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Edit Deduction
+            </Typography>
+          </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={8} md={8} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -166,7 +179,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   model={validateMmodel}
                 >
                   <Grid container spacing={1} sx={{ px: 5 }}>
-                    <Grid item sm={12} md={4}>
+                    <Grid item sm={12} md={3}>
                       <small>Type</small>
                       <Form.Control
                         size='sm'
@@ -191,12 +204,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       />
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 6, mb: 8 }}>
-                      <Grid item sm={12} md={6}>
+                      <Grid item sm={12} md={10}>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Date :
                           </Typography>
-                          <Form.Control controlId='date' name='date' accepter={DatePicker} value={formValue.date} />
+                          <Form.Control block controlId='date' name='date' accepter={DatePicker} value={formValue.date} />
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>

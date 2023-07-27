@@ -212,7 +212,6 @@ const DeductionsList = () => {
   // ------------------------------- Table columns --------------------------------------------
 
   const renderClient = row => {
-
     if (row.logo) {
       return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
     } else {
@@ -280,7 +279,7 @@ const DeductionsList = () => {
       minWidth: 100,
       headerName: 'Value',
       renderCell: ({ row }) => {
-        return <>{row.value} UAD</>
+        return <>{row.value} AED</>
       }
     },
     {
@@ -309,11 +308,9 @@ const DeductionsList = () => {
       flex: 0.11,
       minWidth: 120,
       field: 'end',
-      headerName: 'Created at',
+      headerName: 'Date',
       renderCell: ({ row }) => {
         return <>{new Date(row.date).toISOString().substring(0, 10)}</>
-
-        // return <>{new Date(row.created_at)}</>
       }
     },
     {

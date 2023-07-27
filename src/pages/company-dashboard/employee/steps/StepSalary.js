@@ -533,7 +533,7 @@ const StepSalary = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Salary Adjustment</small>
+                        <small>Reason</small>
                         <SelectPicker
                           size='lg'
                           name='salaryChange'

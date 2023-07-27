@@ -176,7 +176,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     <TableBody>
                       <TableRow>
                         <MUITableCell>
-                          <Typography variant='body2'>Lumpy Salary:</Typography>
+                          <Typography variant='body2'>Basic Salary:</Typography>
                         </MUITableCell>
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
@@ -230,7 +230,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     <TableBody>
                       <TableRow>
                         <MUITableCell>
-                          <Typography variant='body2'>First OverTime:</Typography>
+                          <Typography variant='body2'>OverTime:</Typography>
                         </MUITableCell>
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
@@ -238,7 +238,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                           </Typography>
                         </MUITableCell>
                       </TableRow>
-                      <TableRow>
+                      {/* <TableRow>
                         <MUITableCell>
                           <Typography variant='body2'>Second OverTime:</Typography>
                         </MUITableCell>
@@ -257,7 +257,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                             <strong>{data.hourlySalary * data.salaryFormulas_info[0].thirdOverTime}</strong>
                           </Typography>
                         </MUITableCell>
-                      </TableRow>
+                      </TableRow> */}
                       <TableRow>
                         <MUITableCell>
                           <Typography variant='body2'>Holiday:</Typography>

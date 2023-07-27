@@ -141,6 +141,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
                     <Tab value='Over Time' label='Over Time' />
                     <Tab value='Absence' label='Absence' />
+                    <Tab value='Leave' label='Leave' />
                     <Tab value='Compensation' label='Compensation' />
                   </TabList>
                   <TabPanel value='Over Time'>
@@ -235,17 +236,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           Day/s
                           </Typography>
                         </Box>
-                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Sick :
-                          </Typography>
-                          {selectedSalaryFormula && selectedSalaryFormula.sickAbsenceDay && (
-                            <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.sickAbsenceDay}</Typography>
-                          )}
-                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Day/s
-                          </Typography>
-                        </Box>
+                        
                       </Grid>
                       <Grid item sm={12} md={6}>
                         <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
@@ -275,20 +266,87 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           Hour/s
                           </Typography>
                         </Box>
-                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Sick :
-                          </Typography>
-                          {selectedSalaryFormula && selectedSalaryFormula.sickAbsenceHoure && (
-                            <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.sickAbsenceHoure}</Typography>
-                          )}
-                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Hour/s
-                          </Typography>
-                        </Box>
                       </Grid>
                     </Grid>
                   </TabPanel>
+
+
+                  <TabPanel value='Leave'>
+                    <Grid container spacing={1} sx={{ px: 5 }}>
+                      <Grid item sm={12} md={6}>
+                        <Typography sx={{ mt: 5, mb:5 }}>Leave</Typography>
+     
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Paid Leave :
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.paidLeave && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.paidLeave}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Unpaid Leave :
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.unpaidLeave && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.unpaidLeave}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Sick Leave :
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.sickLeave && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.sickLeave}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Maternity Leave :
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.maternityLeave && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.maternityLeave}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Parental Leave :
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.parentalLeave && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.parentalLeave}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item sm={12} md={6}>
+                      </Grid>
+                    </Grid>
+                  </TabPanel>
+
                   <TabPanel value='Compensation'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>

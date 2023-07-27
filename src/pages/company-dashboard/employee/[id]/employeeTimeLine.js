@@ -37,24 +37,22 @@ const ImgShoe = styled('img')(({ theme }) => ({
 }))
 
 const EmployeeTimeLine = ({ id }) => {
+  const [isLoading, setIsLoading] = useState()
+  const [employeeTimeline, setEmployeeTimeline] = useState()
+  const [timeline, setTimeline] = useState()
 
-  const [ isLoading , setIsLoading] = useState()
-  const [ employeeTimeline , setEmployeeTimeline] = useState()
-  const [ timeline , setTimeline] = useState()
-
-  useEffect(()=>{
+  useEffect(() => {
     getTimeline()
-  } , [])
+  }, [])
 
-  const getTimeline = () =>{
+  const getTimeline = () => {
     let data = { id: id }
     setIsLoading(true)
-    axios.post('/api/company-employee/timeline/',{data}).then((response)=>{
+    axios.post('/api/company-employee/timeline/', { data }).then(response => {
       setEmployeeTimeline(response.data.data[0])
       setTimeline(response.data.timeline)
       setIsLoading(false)
       console.log(response.data.timeline)
-
     })
   }
 
@@ -66,53 +64,87 @@ const EmployeeTimeLine = ({ id }) => {
 
   return (
     <>
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={4} lg={4}>
-        <EmployeeViewLeft employee={employeeTimeline} id={id} />
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={4} lg={4}>
+          <EmployeeViewLeft employee={employeeTimeline} id={id} />
+        </Grid>
+        <Grid item xs={12} md={8} lg={8}>
+          <Card sx={{ p: 5 }}>
+            <Typography variant='h6' sx={{ mb: 2 }}>
+              Employee Timeline
+            </Typography>
+            <Divider></Divider>
+            {!isLoading && timeline && (
+              <Timeline>
+                {timeline.map((time, index) => {
+                  return (
+                    <TimelineItem key={index}>
+                      <TimelineContent sx={{ '& svg': { verticalAlign: 'bottom', mx: 4 } }}>
+                        {index % 2 == 0 ? (
+                          <div>
+                            <Box
+                              sx={{
+                                mb: 2,
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                              }}
+                            >
+                              <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
+                                {time.title}
+                              </Typography>
+                              <Typography variant='caption'>{new Date(time.date).toLocaleDateString()}</Typography>
+                            </Box>
+                            <Typography variant='body2' sx={{ color: 'text.primary' }}>
+                              <span>{time.description}</span>
+                            </Typography>
+                            <Typography variant='caption'>{time.subTitle}</Typography>
+                          </div>
+                        ) : null}
+                      </TimelineContent>
+                      <TimelineSeparator>
+                        <TimelineDot color={time.color} />
+                        <TimelineConnector />
+                      </TimelineSeparator>
+                      <TimelineContent sx={{ '& svg': { verticalAlign: 'bottom', mx: 4 } }}>
+                        {index % 2 != 0 ? (
+                          <div>
+                            <Box
+                              sx={{
+                                mb: 2,
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                              }}
+                            >
+                              <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
+                                {time.title}
+                              </Typography>
+                              <Typography variant='caption'>{new Date(time.date).toLocaleDateString()}</Typography>
+                            </Box>
+                            <Typography variant='body2' sx={{ color: 'text.primary' }}>
+                              <span>{time.description}</span>
+                            </Typography>
+                            <Typography variant='caption'>{time.subTitle}</Typography>
+                          </div>
+                        ) : null}
+                      </TimelineContent>
+                    </TimelineItem>
+                  )
+                })}
+              </Timeline>
+            )}
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={8} lg={8}>
-        <Card sx ={{ p:5}}>
-        <Typography variant='h6' sx={{ mb: 2 }}>
-          Employee Timeline
-        </Typography>
-        <Divider></Divider>
-        {!isLoading  && timeline && (
-            <Timeline>
-            { timeline.map((time , index)=>{ return(
-            <TimelineItem key={index}>
-              <TimelineSeparator>
-                <TimelineDot color={time.color} />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ '& svg': { verticalAlign: 'bottom', mx: 4 } }}>
-                <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-                    {time.title}
-                  </Typography>
-                  <Typography variant='caption'>{new Date(time.date).toLocaleDateString()}</Typography>
-                </Box>
-                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                  <span>{time.description}</span>
-                </Typography>
-                <Typography variant='caption'>{time.subTitle}</Typography>
-              </TimelineContent>
-            </TimelineItem> 
-            )
-            
-            })}
-          </Timeline>
-        )}
-        </Card>
-      </Grid>
-    </Grid>
-  </>
-
+    </>
   )
 }
 
 EmployeeTimeLine.getInitialProps = async ({ query: { id } }) => {
   return { id: id }
 }
-
 
 export default EmployeeTimeLine

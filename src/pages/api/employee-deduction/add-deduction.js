@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   const employeeDeduction = req.body.data
   if (
     !employeeDeduction.reason ||
-    !employeeDeduction.employee_id ||
+    !employeeDeduction.employees ||
     !employeeDeduction.value ||
     !employeeDeduction.type
   ) {
@@ -29,20 +29,20 @@ export default async function handler(req, res) {
     return
   }
 
-  employees.forEach(async empId => {
-    employeeReward.employee_id = empId 
-    employeeDeduction.company_id = myUser.company_id
-    employeeDeduction.user_id = myUser._id
-    employeeDeduction.created_at = new Date()
-    employeeDeduction.status = 'active'
-    employeeDeduction.date = new Date(employeeDeduction.date)
+  const emp_array = employeeDeduction.employees
 
-    const newEmployeeDeduction = await client.db().collection('employeeDeductions').insertOne(employeeDeduction)
+  delete employeeDeduction.employees
+  emp_array.map(async (empId, index) => {
+    let newEmp = {}
+    newEmp = { ...employeeDeduction }
+    newEmp.employee_id = empId
+    newEmp.company_id = myUser.company_id
+    newEmp.user_id = myUser._id
+    newEmp.created_at = new Date()
+    newEmp.status = 'active'
+    newEmp.date = new Date(newEmp.date)
 
-    const insertedDeduction = await client
-      .db()
-      .collection('employeeDeductions')
-      .findOne({ _id: newEmployeeDeduction.insertedId })
+    const newEmployeeDeduction = await client.db().collection('employeeDeductions').insertOne(newEmp)
 
     // -------------------- logBook ------------------------------------------
 
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       created_at: new Date()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
-  });
+  })
 
-  res.status(201).json({ success: true, data: insertedDeduction })
+  res.status(201).json({ success: true, data: employeeDeduction })
 }

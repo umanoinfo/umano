@@ -517,7 +517,7 @@ const Steppositions = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Change Type</small>
+                        <small>Reason</small>
                         <SelectPicker
                           size='lg'
                           name='startChangeType'
@@ -547,7 +547,7 @@ const Steppositions = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Change Type</small>
+                        <small>Reason</small>
                         <SelectPicker
                           size='lg'
                           name='startChangeType'

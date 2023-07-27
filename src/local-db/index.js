@@ -24,18 +24,25 @@ export const HealthInsuranceTypes = [
 ]
 
 export const PositionChangeStartTypes = [
-  { title: 'PositionChange1', value: 'PositionChange1' },
-  { title: 'PositionChange2', value: 'PositionChange2' }
+  { title: 'Temporary Delegate', value: 'Temporary Delegate' },
+  { title: 'Promotion', value: 'Promotion' },
+  { title: 'Permanent Transfer', value: 'Permanent Transfer' },
+  { title: 'other', value: 'other' }
 ]
 
 export const PositionChangeEndTypes = [
-  { title: 'On Position', value: 'onPosition' },
-  { title: 'PositionChange', value: 'PositionChange' }
+  { title: 'Temporary Delegate', value: 'Temporary Delegate' },
+  { title: 'Promotion', value: 'Promotion' },
+  { title: 'Permanent Transfer', value: 'Permanent Transfer' },
+  { title: 'other', value: 'other' }
 ]
 
 export const SalaryChange = [
-  { title: 'SalaryChange1', value: 'SalaryChange1' },
-  { title: 'SalaryChange2', value: 'SalaryChange2' }
+  { title: 'Promotion', value: 'Promotion' },
+  { title: 'Financial increment', value: 'Financial increment' },
+  { title: 'Violations', value: 'Violations' },
+  { title: 'Fines', value: 'Fines' },
+  { title: 'other', value: 'other' }
 ]
 
 export const EventType = [
@@ -71,8 +78,20 @@ export const DeductionsType = [
 ]
 
 export const EmployeeDeductionsType = [
-  { label: 'Type1', value: 'Type1' },
-  { label: 'Type2', value: 'Type2' }
+  { label: 'Absences', value: 'Absences' },
+  { label: 'Violations', value: 'Violations' },
+  { label: 'Fines', value: 'Fines' },
+  { label: 'Loan', value: 'Loan' },
+  { label: 'Utilities', value: 'Utilities' },
+  { label: 'Assets damage', value: 'Assets damage' },
+  { label: 'Other', value: 'Other' }
+]
+
+export const EmployeeRewardsType = [
+  { label: 'Performance increment', value: 'Performance increment' },
+  { label: 'Commissions', value: 'Commissions' },
+  { label: 'Reimbursement', value: 'Reimbursement' },
+  { label: 'Other', value: 'Other' }
 ]
 
 export const countries = [

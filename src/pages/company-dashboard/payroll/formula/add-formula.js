@@ -56,13 +56,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
     weekendOverTime: 2,
     justifiedAbsenceDay: 1,
     notJustifiedAbsenceDay: 2,
-    sickAbsenceDay: 0.3,
     justifiedAbsenceHoure: 1,
     notJustifiedAbsenceHoure: 2,
-    sickAbsenceHoure: 0.3,
     compensationFrom1To5: 21,
     compensationMoreThan5: 30,
-    maxCompensation: 2
+    maxCompensation: 2,
+    paidLeave: 100 ,
+    unpaidLeave: 0,
+    sickLeave: 30,
+    maternityLeave: 100 ,
+    parentalLeave: 100
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -181,6 +184,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
                           <Tab value='Over Time' label='Over Time' />
                           <Tab value='Absence' label='Absence' />
+                          <Tab value='Leave' label='Leave' />
                           <Tab value='Compensation' label='Compensation' />
                         </TabList>
                         <TabPanel value='Over Time'>
@@ -201,37 +205,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 Hour/s
                               </Typography>
                             </Box>
-                            {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Second over time :
-                              </Typography>
-                              <Form.Control
-                                controlId='secondOverTime'
-                                type='number'
-                                size='sm'
-                                name='secondOverTime'
-                                placeholder='Second'
-                              />
-                              <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Hour/s
-                              </Typography>
-                            </Box>
-                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Third over time :
-                              </Typography>
-                              <Form.Control
-                                controlId='thirdOverTime'
-                                type='number'
-                                size='sm'
-                                name='thirdOverTime'
-                                placeholder='Third'
-                              />
-                              <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Hour/s
-                              </Typography>
-                            </Box> */}
-
                             <Box sx={{ mb: 1, mt: 8, display: 'flex', alignItems: 'center' }}>
                               <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                 Holiday :
@@ -271,7 +244,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Justified :
+                                  paidLeave :
                                 </Typography>
                                 <Form.Control
                                   controlId='justifiedAbsenceDay'
@@ -294,21 +267,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   size='sm'
                                   name='notJustifiedAbsenceDay'
                                   placeholder='Not Justified'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Day/s
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Sick :
-                                </Typography>
-                                <Form.Control
-                                  controlId='sickAbsenceDay'
-                                  type='number'
-                                  size='sm'
-                                  name='sickAbsenceDay'
-                                  placeholder='Sick'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                                 Day/s
@@ -347,22 +305,91 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   Hour/s
                                 </Typography>
                               </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                            </Grid>
+                          </Grid>
+                        </TabPanel>
+                        <TabPanel value='Leave'>
+                          <Grid container spacing={1} sx={{ px: 5 }}>
+                            <Grid item sm={12} md={6}>
+                              <Typography sx={{ mt: 5, mb: 1 }}>leaves</Typography>
+                              <Box sx={{ mb: 1,  mt: 5, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Sick :
+                                  Paid leave :
                                 </Typography>
-
                                 <Form.Control
-                                  controlId='sickAbsenceHoure'
-                                  type='number'
+                                  controlId='paidLeave'
                                   size='sm'
-                                  name='sickAbsenceHoure'
-                                  placeholder='Sick'
+                                  type='number'
+                                  name='paidLeave'
+                                  placeholder='Paid leave'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  Hour/s
+                                %
                                 </Typography>
                               </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  Unpaid Leave :
+                                </Typography>
+                                <Form.Control
+                                  controlId='unpaidLeave'
+                                  size='sm'
+                                  type='number'
+                                  name='unpaidLeave'
+                                  placeholder='Unpaid Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  Sick Leave :
+                                </Typography>
+                                <Form.Control
+                                  controlId='sickLeave'
+                                  size='sm'
+                                  type='number'
+                                  name='sickLeave'
+                                  placeholder='Sick Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                Maternity Leave :
+                                </Typography>
+                                <Form.Control
+                                  controlId='maternityLeave'
+                                  size='sm'
+                                  type='number'
+                                  name='maternityLeave'
+                                  placeholder='Maternity Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                Parental Leave :
+                                </Typography>
+                                <Form.Control
+                                  controlId='parentalLeave'
+                                  size='sm'
+                                  type='number'
+                                  name='parentalLeave'
+                                  placeholder='Parental Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+             
+                            </Grid>
+                            <Grid item sm={12} md={6}>
                             </Grid>
                           </Grid>
                         </TabPanel>

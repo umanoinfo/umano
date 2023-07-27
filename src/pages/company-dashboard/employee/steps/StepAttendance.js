@@ -122,9 +122,11 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   const dispatch = useDispatch()
 
   const default_value = {
-    availableNotJustifiedLeaves: 30,
-    availableJustifiedLeaves: 14,
-    availableSickLeaves: 30
+    availablePaidLeave: 14,
+    availableUnpaidLeave: 30,
+    availableSickLeave: 30,
+    availableMaternityLeave: 60,
+    availableParentalLeave: 7,
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -181,9 +183,11 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
         setSelectedShiftID(employee.shift_id)
         setSelectedTimes(shifts.find(x => x._id == employee.shift_id).times[0])
         setFormValue({
-          availableNotJustifiedLeaves: employee.availableNotJustifiedLeaves,
-          availableJustifiedLeaves: employee.availableJustifiedLeaves,
-          availableSickLeaves: employee.availableSickLeaves
+          availablePaidLeave: employee.availablePaidLeave,
+          availableUnpaidLeave: employee.availableUnpaidLeave,
+          availableSickLeave: employee.availableSickLeave,
+          availableMaternityLeave: employee.availableMaternityLeave,
+          availableParentalLeave: employee.availableParentalLeave
         })
       }
     }
@@ -203,9 +207,13 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
     let data = {}
     data._id = employee._id
     data.shift_id = selectedShift._id
-    data.availableNotJustifiedLeaves = formValue.availableNotJustifiedLeaves
-    data.availableJustifiedLeaves = formValue.availableJustifiedLeaves
-    data.availableSickLeaves = formValue.availableSickLeaves
+
+    data.availablePaidLeave = formValue.availablePaidLeave
+    data.availableUnpaidLeave = formValue.availableUnpaidLeave
+    data.availableSickLeave = formValue.availableSickLeave
+    data.availableMaternityLeave = formValue.availableMaternityLeave
+    data.availableParentalLeave = formValue.availableParentalLeave
+
     axios
       .post('/api/company-employee/edit-shift/', {
         data
@@ -306,51 +314,52 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
                   formValue={formValue}
                   model={validateMmodel}
                 >
+
                   <Grid container spacing={1} sx={{ px: 2, mt: 3 }}>
-                    <Grid item sm={12} md={4}>
+                    <Grid item sm={12} md={3}>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                        <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Justified :
+                        <Typography variant='body2' sx={{  width: '100%' }}>
+                          Paid :
                         </Typography>
                         <Form.Control
-                          controlId='availableJustifiedLeaves'
+                          controlId='availablePaidLeave'
                           size='sm'
                           type='number'
-                          name='availableJustifiedLeaves'
-                          placeholder='Justified'
+                          name='availablePaidLeave'
+                          placeholder='Paid leave'
                         />
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                           day
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item sm={12} md={4}>
+                    <Grid item sm={12} md={3}>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                        <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Not Justified :
+                        <Typography variant='body2' sx={{  width: '100%' }}>
+                          Unpaid :
                         </Typography>
                         <Form.Control
-                          controlId='availableNotJustifiedLeaves'
+                          controlId='availableUnpaidLeave'
                           type='number'
                           size='sm'
-                          name='availableNotJustifiedLeaves'
-                          placeholder='Not Justified'
+                          name='availableUnpaidLeave'
+                          placeholder='Unpaid Leave'
                         />
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                           day
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item sm={12} md={4}>
+                    <Grid item sm={12} md={3}>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                        <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Sick Leave:
+                        <Typography variant='body2' sx={{  width: '100%' }}>
+                          Sick :
                         </Typography>
                         <Form.Control
-                          controlId='availableSickLeaves'
+                          controlId='availableSickLeave'
                           type='number'
                           size='sm'
-                          name='availableSickLeaves'
+                          name='availableSickLeave'
                           placeholder='Sick'
                           sx={{ mr: 1, width: '100%' }}
                         />
@@ -359,6 +368,42 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
                         </Typography>
                       </Box>
                     </Grid>
+                    { employee.gender == 'female' && <Grid item sm={12} md={3}>
+                      <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body2' sx={{  width: '100%' }}>
+                        Maternity :
+                        </Typography>
+                        <Form.Control
+                          controlId='availableMaternityLeave'
+                          type='number'
+                          size='sm'
+                          name='availableMaternityLeave'
+                          placeholder='Maternity Leave'
+                          sx={{ mr: 1, width: '100%' }}
+                        />
+                        <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          day
+                        </Typography>
+                      </Box>
+                    </Grid>}
+                    { employee.gender == 'male' && <Grid item sm={12} md={3}>
+                      <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body2' sx={{  width: '100%' }}>
+                        Parental :
+                        </Typography>
+                        <Form.Control
+                          controlId='availableParentalLeave'
+                          type='number'
+                          size='sm'
+                          name='availableParentalLeave'
+                          placeholder='Parental Leave'
+                          sx={{ mr: 1, width: '100%' }}
+                        />
+                        <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          day
+                        </Typography>
+                      </Box>
+                    </Grid>}
                   </Grid>
                 </Form>
               </>

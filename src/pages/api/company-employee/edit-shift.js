@@ -33,9 +33,11 @@ export default async function handler(req, res) {
   delete employee._id
 
   employee.shift_id = req.body.data.shift_id
-  employee.availableNotJustifiedLeaves = req.body.data.availableNotJustifiedLeaves
-  employee.availableJustifiedLeaves = req.body.data.availableJustifiedLeaves
-  employee.availableSickLeaves = req.body.data.availableSickLeaves
+  employee.availablePaidLeave = req.body.data.availablePaidLeave
+  employee.availableUnpaidLeave = req.body.data.availableUnpaidLeave
+  employee.availableSickLeave = req.body.data.availableSickLeave
+  employee.availableMaternityLeave = req.body.data.availableMaternityLeave
+  employee.availableParentalLeave = req.body.data.availableParentalLeave
 
   const updatEmployee = await client
     .db()

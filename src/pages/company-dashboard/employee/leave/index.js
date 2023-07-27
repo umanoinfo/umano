@@ -62,6 +62,24 @@ const StatusObj = {
   blocked: 'error'
 }
 
+const statusName = {
+  paidLeave: 'Paid leave' ,
+  unpaidLeave: 'Unpaid Leave',
+  sickLeave: 'Sick Leave',
+  maternityLeave: 'Maternity Leave',
+  parentalLeave: 'Parental Leave',
+  otherLeave: 'Other Leave' 
+}
+
+const statusDs = [
+  { label: 'Paid leave', value: 'paidLeave' },
+  { label: 'Unpaid Leave', value: 'unpaidLeave' },
+  { label: 'Sick Leave', value: 'sickLeave' },
+  { label: 'Maternity Leave', value: 'maternityLeave' },
+  { label: 'Parental Leave', value: 'parentalLeave' },
+  { label: 'Other Leave', value: 'otherLeave' }
+]
+
 const LeaveList = () => {
   // ** State
   
@@ -250,7 +268,6 @@ const LeaveList = () => {
       headerName: 'Employee',
       renderCell: ({ row }) => {
         const { email, firstName, lastName } = row.employee_info[0]
-
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row.employee_info[0])}
@@ -289,8 +306,30 @@ const LeaveList = () => {
                 color='primary'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize' }}
                 label={row.type}
+              />
+            </div>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.08,
+      field: 'status_reason',
+      minWidth: 100,
+      headerName: 'Status',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
+            <Icon fontSize={20} />
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              <CustomChip
+                color='info'
+                skin='light'
+                size='small'
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize' }}
+                label={statusName[row.status_reason]}
               />
             </div>
           </Box>
@@ -300,26 +339,31 @@ const LeaveList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'end',
-      headerName: 'Created at',
+      field: 'from',
+      headerName: 'From Date',
       renderCell: ({ row }) => {
-        return <>{new Date(row.created_at).toISOString().substring(0, 10)}</>
+        const [date, time, ...r] = row.date_from.split('T')
+        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
+      }
+    },
+    {
+      flex: 0.11,
+      minWidth: 120,
+      field: 'to',
+      headerName: 'To Date',
+      renderCell: ({ row }) => {
+        const [date, time, ...r] = row.date_to.split('T')
+        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
       }
     },
     {
       flex: 0.07,
       minWidth: 45,
-      field: 'status',
-      headerName: 'Status',
+      field: 'paidValue',
+      headerName: 'Paid Value',
       renderCell: ({ row }) => {
         return (
-          <CustomChip
-            skin='light'
-            size='small'
-            label={row.status}
-            color={StatusObj[row.status]}
-            sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
-          />
+          <>{row.paidValue} %</>
         )
       }
     },
@@ -356,6 +400,24 @@ const LeaveList = () => {
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
             <Grid item sm={2} xs={6} sx={{ p: 2, pb: 0 }}>
               <FormControl fullWidth size='small'>
+                <InputLabel id='status-select'>Select Type</InputLabel>
+                <Select
+                  fullWidth
+                  value={leaveType}
+                  id='select-type'
+                  label='Select Type'
+                  labelId='select-type'
+                  onChange={HandleTypeChange}
+                  inputProps={{ placeholder: 'Select Type' }}
+                >
+                  <MenuItem value=''>All Type</MenuItem>
+                  <MenuItem value='daily'>Daily</MenuItem>
+                  <MenuItem value='hourly'>Hourly</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={6}>
+              <FormControl fullWidth size='small'>
                 <InputLabel id='status-select'>Select Status</InputLabel>
                 <Select
                   fullWidth
@@ -366,30 +428,12 @@ const LeaveList = () => {
                   onChange={HandleStatusChange}
                   inputProps={{ placeholder: 'Select Status' }}
                 >
-                  <MenuItem value=''>All Status</MenuItem>
-                  <MenuItem value='active'>Active</MenuItem>
-                  <MenuItem value='pending'>Pending</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item sm={2} xs={6}>
-              <FormControl fullWidth size='small'>
-                <InputLabel id='status-select'>Select Type</InputLabel>
-                <Select
-                  fullWidth
-                  value={leaveType}
-                  id='select-type'
-                  label='Select Type'
-                  labelId='type-select'
-                  onChange={HandleTypeChange}
-                  inputProps={{ placeholder: 'Select Type' }}
-                >
                   <MenuItem value=''>All Type</MenuItem>
-                  {EmployeeDeductionsType &&
-                    EmployeeDeductionsType.map((type, index) => {
+                  {statusDs &&
+                    statusDs.map((status, index) => {
                       return (
-                        <MenuItem key={index} value={type.value}>
-                          {type.label}
+                        <MenuItem key={index} value={status.value}>
+                          {status.label}
                         </MenuItem>
                       )
                     })}

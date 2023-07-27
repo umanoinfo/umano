@@ -8,12 +8,13 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 
-import { Divider, Tab, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker, DatePicker, Input } from 'rsuite'
+import { Form, Schema, SelectPicker, DatePicker, Input, CheckPicker } from 'rsuite'
+
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -26,8 +27,9 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
+import Link from 'next/link'
 
-const { StringType, NumberType, DateType } = Schema.Types
+const { StringType, NumberType, DateType, ArrayType } = Schema.Types
 
 const Textarea = forwardRef((props, ref) => <Input {...props} as='textarea' ref={ref} />)
 
@@ -46,7 +48,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const default_value = {
     type: '',
-    employee_id: '',
+    employees: [],
     date: null,
     resolution_number: 0,
     description: '',
@@ -64,7 +66,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const validateMmodel = Schema.Model({
     type: StringType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
-    employee_id: StringType().isRequired('This field is required.'),
+    employees: ArrayType().isRequired('This field is required.'),
     value: NumberType().isRequired('This field is required.'),
     date: DateType().isRequired('This field is required.')
   })
@@ -76,7 +78,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       let arr = []
       res.data.data.map(employee => {
         arr.push({
-          label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
+          label: employee.firstName + ' ' + employee.lastName +  '  :  ' + employee.idNo,
           value: employee._id
         })
       })
@@ -141,7 +143,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Deduction' sx={{ pb: 0, pt: 2 }} />
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/employee/deduction/'>
+                Deductions
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Deduction
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={8} md={8} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -154,7 +166,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   model={validateMmodel}
                 >
                   <Grid container spacing={1} sx={{ px: 5 }}>
-                    <Grid item sm={12} md={4}>
+                    <Grid item sm={12} md={3}>
                       <small>Type</small>
                       <Form.Control
                         size='sm'
@@ -168,27 +180,30 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Grid>
                     <Grid item sm={12} md={8}>
                       <small>Employee</small>
-                      <Form.Control
+                      <CheckPicker
                         size='sm'
-                        controlId='employee_id'
-                        name='employee_id'
-                        accepter={SelectPicker}
+                        controlId='employees'
+                        name='employees'
                         data={employeesDataSource}
                         block
-                        value={formValue.employee_id}
+                        onChange={e => {
+                          setFormValue({ ...formValue, employees: e })
+                        }}
+                        value={formValue.employees}
                       />
                     </Grid>
+                    <Divider></Divider>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 6, mb: 8 }}>
-                      <Grid item sm={12} md={6}>
+                      <Grid item sm={12} md={10}>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Date :
                           </Typography>
-                          <Form.Control controlId='date' name='date' accepter={DatePicker} value={formValue.date} />
+                          <Form.Control block controlId='date' name='date' accepter={DatePicker} value={formValue.date} />
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Value (UAD) :
+                            Value (AED) :
                           </Typography>
                           <Form.Control
                             controlId='value'

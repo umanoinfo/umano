@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           $and: [
             { reason: { $regex: req.query.q } },
             { type: { $regex: req.query.leaveType } },
-            { status: { $regex: req.query.leaveStatus } },
+            { status_reason: { $regex: req.query.leaveStatus } },
             { company_id: myUser.company_id },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]

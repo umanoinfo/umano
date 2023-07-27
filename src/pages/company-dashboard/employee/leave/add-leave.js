@@ -17,7 +17,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Icon from 'src/@core/components/icon'
 import CustomChip from 'src/@core/components/mui/chip'
 
-import { Divider, Tab, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 
 import toast from 'react-hot-toast'
 
@@ -36,6 +36,7 @@ import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 import { DataGrid } from '@mui/x-data-grid'
+import Link from 'next/link'
 
 const { StringType, NumberType, DateType } = Schema.Types
 
@@ -60,9 +61,12 @@ const AddLeave = ({ popperPlacement, id }) => {
   // new states
 
   const [statusDs, setStatusDs] = useState([
-    { label: 'Justified ', value: 'justified' },
-    { label: 'Not Justified', value: 'notJustified' },
-    { label: 'Sick', value: 'sick' }
+    { label: 'Paid leave', value: 'paidLeave' },
+    { label: 'Unpaid Leave', value: 'unpaidLeave' },
+    { label: 'Sick Leave', value: 'sickLeave' },
+    { label: 'Maternity Leave', value: 'maternityLeave' },
+    { label: 'Parental Leave', value: 'parentalLeave' },
+    { label: 'Other Leave', value: 'otherLeave' }
   ])
 
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -74,13 +78,13 @@ const AddLeave = ({ popperPlacement, id }) => {
   // --------------forms values--------------------------------
 
   const default_value = {
-    type: 'hourly',
+    type: 'daily',
     employee_id: '',
     date_from: null,
     date_to: null,
     resolution_number: 0,
     description: '',
-    status_reason: 'justified',
+    status_reason: 'paidLeave',
     reason: ''
   }
   const [formValue, setFormValue] = useState(default_value)
@@ -133,22 +137,22 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const calcDeffTime = val => {
+   
     return val.map(val => {
       if (val.type == 'daily') {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
         return { ...val, leave_value: diffDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60))
-
         return { ...val, leave_value: diffDays }
       }
     })
   }
 
   function calculateIntersectionValue(timeRanges1, timeRanges2) {
+
     let totalIntersection = 0
 
     for (let i = 0; i < timeRanges1.length; i++) {
@@ -178,90 +182,161 @@ const AddLeave = ({ popperPlacement, id }) => {
     return parseInt(hours) * 60 + parseInt(minutes)
   }
 
+  const statusName = {
+    paidLeave: 'Paid leave' ,
+    unpaidLeave: 'Unpaid Leave',
+    sickLeave: 'Sick Leave',
+    maternityLeave: 'Maternity Leave',
+    parentalLeave: 'Parental Leave',
+    otherLeave: 'Other Leave' 
+  }
+  
+  
+
   const calcLeaves = employee => {
     employee = {
       ...employee,
-      takenJustifiedLeaves: 0,
-      takenNotJustifiedLeaves: 0,
-      takenSickLeaves: 0
+      takenPaidLeaves: 0,
+      takenUnpaidLeaves: 0,
+      takenSickLeaves: 0,
+      takenMaternityLeaves: 0,
+      takenParentalLeaves: 0,
+      takenOthers: 0
     }
     const leaves = employee.leaves_info
-
+    
     const range1 = employee.shift_info[0].times.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
-    const rangeJustified = []
-    const rangeNotJustified = []
+
+
+    const rangePaidLeave = []
+    const rangeUnpaidLeave = []
     const rangeSick = []
+    const rangeMaternityLeave = []
+    const rangeParentalLeave = []
+    const rangeOthers = []
 
-    const justified = calcDeffTime(
+    // Paid Leave
+
+    const paidLeave = calcDeffTime(
       leaves.filter(val => {
-        return val.status_reason == 'justified'
+        return val.status_reason == 'paidLeave'
       })
     ).map(val => {
       if (val.type == 'daily') {
-        employee.takenJustifiedLeaves += val.leave_value
-
+        employee.takenPaidLeaves += val.leave_value
         return val
       } else {
-        rangeJustified.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
-
+        rangePaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
         return val
       }
     })
 
-    const notJustified = calcDeffTime(
+    let totalMinutes = range1.reduce((acc, cu) => {
+      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+    }, 0)
+
+    employee.takenPaidLeaves += +(
+      1 -
+      (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave)) / totalMinutes
+    ).toFixed(2)
+
+    // Unpaid Leave
+
+    const unpaidLeave = calcDeffTime(
       leaves.filter(val => {
-        return val.status_reason == 'notJustified'
+        return val.status_reason == 'unpaidLeave'
       })
     ).map(val => {
       if (val.type == 'daily') {
-        employee.takenNotJustifiedLeaves += val.leave_value
-
+        employee.takenUnpaidLeaves += val.leave_value
         return val
       } else {
-        rangeNotJustified.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
-
+        rangeUnpaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
         return val
       }
     })
+    totalMinutes = range1.reduce((acc, cu) => {
+      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+    }, 0)
+    employee.takenUnpaidLeaves += +(
+      1 -
+      (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave)) / totalMinutes
+    ).toFixed(2)
 
-    const sick = calcDeffTime(
+    // Sick Leave
+
+    const sickLeave = calcDeffTime(
       leaves.filter(val => {
-        return val.status_reason == 'sick'
+        return val.status_reason == 'sickLeave'
       })
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenSickLeaves += val.leave_value
-
         return val
       } else {
         rangeSick.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
-
         return val
       }
     })
-
-    const totalMinutes = range1.reduce((acc, cu) => {
+    totalMinutes = range1.reduce((acc, cu) => {
       return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
     }, 0)
-
-    employee.takenJustifiedLeaves += +(
-      1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeJustified)) / totalMinutes
-    ).toFixed(2)
-    employee.takenNotJustifiedLeaves += +(
-      1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeNotJustified)) / totalMinutes
-    ).toFixed(2)
-
     employee.takenSickLeaves += +(
       1 -
       (totalMinutes - calculateIntersectionValue(range1, rangeSick)) / totalMinutes
     ).toFixed(2)
-    console.log(employee)
+
+    // Maternity Leave
+
+    const maternityLeave = calcDeffTime(
+      leaves.filter(val => {
+        return val.status_reason == 'maternityLeave'
+      })
+    ).map(val => {
+      if (val.type == 'daily') {
+        employee.takenMaternityLeaves += val.leave_value
+        return val
+      } else {
+        rangeMaternityLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+        return val
+      }
+    })
+    totalMinutes = range1.reduce((acc, cu) => {
+      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+    }, 0)
+    employee.takenMaternityLeaves += +(
+      1 -
+      (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave)) / totalMinutes
+    ).toFixed(2)
+
+    // Parental Leave
+
+    const parentalLeave = calcDeffTime(
+      leaves.filter(val => {
+        return val.status_reason == 'parentalLeave'
+      })
+    ).map(val => {
+      if (val.type == 'daily') {
+        employee.takenParentalLeaves += val.leave_value
+        return val
+      } else {
+        rangeParentalLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+        return val
+      }
+    })
+    totalMinutes = range1.reduce((acc, cu) => {
+      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+    }, 0)
+    employee.takenParentalLeaves += +(
+      1 -
+      (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave)) / totalMinutes
+    ).toFixed(2)
 
     return employee
+
+   
   }
 
   const getEmployees = () => {
@@ -272,7 +347,7 @@ const AddLeave = ({ popperPlacement, id }) => {
    
         if (employee.shift_info[0]) {
           arr.push({
-            label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
+            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
             value: employee._id
           })
           
@@ -314,40 +389,56 @@ const AddLeave = ({ popperPlacement, id }) => {
         const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange)) / totalMinutes).toFixed(2)
 
         if (data.type == 'hourly') {
-          if (data.status_reason == 'justified') {
-            if (+selectedEmployee.availableJustifiedLeaves < newHours + +selectedEmployee.takenJustifiedLeaves) {
-              toast.error('Error : Your justifaied leaves are over the limit  !', {
+          if (data.status_reason == 'paidLeave') {
+            if (+selectedEmployee.availablePaidLeave < newHours + +selectedEmployee.takenPaidLeave) {
+              toast.error('Error : Your paid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
-
               return
             }
           }
-          if (data.status_reason == 'notJustified') {
-            if (+selectedEmployee.availableNotJustifiedLeaves < newHours + +selectedEmployee.takenNotJustifiedLeaves) {
-              toast.error('Error : Your not justifaied leaves are over the limit  !', {
+          if (data.status_reason == 'unpaidLeave') {
+            if (+selectedEmployee.availableUnpaidLeave < newHours + +selectedEmployee.takenUnpaidLeaves) {
+              toast.error('Error : Your not un paid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
-
               return
             }
           }
-          if (data.status_reason == 'sick') {
-            if (+selectedEmployee.availableSickLeaves < newHours + +selectedEmployee.takenSickLeaves) {
+          if (data.status_reason == 'sickLeave') {
+            if (+selectedEmployee.availableSickLeave < newHours + +selectedEmployee.takenSickLeaves) {
               toast.error('Error : Your Sick leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
-
               return
             }
           }
-        } else {
-          if (data.status_reason == 'justified') {
-            if (+selectedEmployee.availableJustifiedLeaves < diffDays + +selectedEmployee.takenJustifiedLeaves) {
-              toast.error('Error : Your justifaied leaves are over the limit  !', {
+          if (data.status_reason == 'maternityLeave') {
+            if (+selectedEmployee.availableMaternityLeave < newHours + +selectedEmployee.takenMaternityLeaves) {
+              toast.error('Error : Your maternity leaves are over the limit  !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              return
+            }
+          }
+          if (data.status_reason == 'parentalLeave') {
+            if (+selectedEmployee.availableParentalLeave < newHours + +selectedEmployee.takenParentalLeaves) {
+              toast.error('Error : Your parental leaves are over the limit  !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              return
+            }
+          }
+        } 
+        else {
+          if (data.status_reason == 'paidLeave') {
+            if (+selectedEmployee.availablePaidLeave < diffDays + +selectedEmployee.takenPaidLeave) {
+              toast.error('Error : Your paid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
@@ -355,9 +446,9 @@ const AddLeave = ({ popperPlacement, id }) => {
               return
             }
           }
-          if (data.status_reason == 'notJustified') {
-            if (+selectedEmployee.availableNotJustifiedLeaves < diffDays + +selectedEmployee.takenNotJustifiedLeaves) {
-              toast.error('Error : Your not justifaied leaves are over the limit  !', {
+          if (data.status_reason == 'unpaidLeave') {
+            if (+selectedEmployee.availableUnpaidLeave < diffDays + +selectedEmployee.takenUnpaidLeaves) {
+              toast.error('Error : Your not unpaid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
@@ -365,9 +456,29 @@ const AddLeave = ({ popperPlacement, id }) => {
               return
             }
           }
-          if (data.status_reason == 'sick') {
-            if (+selectedEmployee.availableSickLeaves < diffDays + +selectedEmployee.takenSickLeaves) {
-              toast.error('Error : Your Sick leaves are over the limit  !', {
+          if (data.status_reason == 'sickLeave') {
+            if (+selectedEmployee.availableSickLeave < diffDays + +selectedEmployee.takenSickLeaves) {
+              toast.error('Error : Your sick leaves are over the limit  !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+
+              return
+            }
+          }
+          if (data.status_reason == 'maternityLeave') {
+            if (+selectedEmployee.availableMaternityLeave < diffDays + +selectedEmployee.takenMaternityLeaves) {
+              toast.error('Error : Your maternity leaves are over the limit  !', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+
+              return
+            }
+          }
+          if (data.status_reason == 'parentalLeave') {
+            if (+selectedEmployee.availableParentalLeave < diffDays + +selectedEmployee.takenParentalLeaves) {
+              toast.error('Error : Your parental leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
@@ -441,30 +552,21 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   //---------------------table -------------------------------------
+
   const columns = [
     {
-      flex: 0.02,
+      flex: 0.04,
       minWidth: 50,
       field: 'index',
-      headerName: '#',
+      headerName: 'Doc No',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.index}
-          </Typography>
+          <>
+            {row.resolution_number}
+          </>
         )
       }
     },
-    {
-      flex: 0.08,
-      field: 'reason',
-      minWidth: 100,
-      headerName: 'Reason',
-      renderCell: ({ row }) => {
-        return <>{row.reason}</>
-      }
-    },
-
     {
       flex: 0.08,
       field: 'type',
@@ -479,7 +581,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 color='primary'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize'}}
                 label={row.type}
               />
             </div>
@@ -498,15 +600,24 @@ const AddLeave = ({ popperPlacement, id }) => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               <CustomChip
-                color='primary'
+                color='info'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                label={row.status_reason}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize' }}
+                label={statusName[row.status_reason]}
               />
             </div>
           </Box>
         )
+      }
+    },
+    {
+      flex: 0.08,
+      field: 'reason',
+      minWidth: 100,
+      headerName: 'Reason',
+      renderCell: ({ row }) => {
+        return <>{row.reason}</>
       }
     },
     {
@@ -519,7 +630,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date} {time.substring(0, 5)}
+            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -534,7 +645,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date} {time.substring(0, 5)}
+            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -550,9 +661,11 @@ const AddLeave = ({ popperPlacement, id }) => {
       }
     }
   ]
+
   const [pageSize, setPageSize] = useState(10)
   const [employeesFullInfo, setEmployeesFullInfo] = useState([])
   const [leavesDataSource, setLeavesDataSource] = useState([])
+
 
   const fillTable = id => {
     console.log(employeesFullInfo)
@@ -575,17 +688,27 @@ const AddLeave = ({ popperPlacement, id }) => {
     const employee = employeesFullInfo.find(val => {
       return val._id == e
     })
+
     let temp_reasons = []
-    if (employee.takenJustifiedLeaves <= +employee.availableJustifiedLeaves) {
-      temp_reasons.push({ label: 'Justified ', value: 'justified' })
+
+    if (employee.takenPaidLeaves < +employee.availablePaidLeave) {
+      temp_reasons.push({ label: 'Paid leave ', value: 'paidLeave' })
     }
-    if (employee.takenNotJustifiedLeaves <= +employee.availableNotJustifiedLeaves) {
-      temp_reasons.push({ label: 'Not Justified', value: 'notJustified' })
+    if (employee.takenUnpaidLeaves < +employee.availableUnpaidLeave) {
+      temp_reasons.push({ label: 'Unpaid Leave', value: 'unpaidLeave' })
     }
-    if (employee.takenSickLeaves <= +employee.availableSickLeaves) {
-      temp_reasons.push({ label: 'Sick', value: 'sick' })
+    if (employee.takenSickLeaves < +employee.availableSickLeave) {
+      temp_reasons.push({ label: 'Sick Leave', value: 'sickLeave' })
     }
+    if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
+      temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
+    }
+    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'male') {
+      temp_reasons.push({ label: 'Parental Leave', value: 'parentalLeave' })
+    }
+    temp_reasons.push({ label: 'Other Leave', value: 'otherLeave' })
     setStatusDs(temp_reasons)
+
     setFormValue({
       ...formValue,
       employee_id: e,
@@ -593,8 +716,17 @@ const AddLeave = ({ popperPlacement, id }) => {
       date_to: null,
       resolution_number: 0,
       description: '',
-      status_reason: 'justified',
+      status_reason: 'paidLeave',
+      paidValue:employee.salaryFormulas_info[0].paidLeave ,
       reason: ''
+    })
+  }
+
+  const changeStatus = e =>{
+    formValue.status_reason = e
+    setFormValue({
+      ...formValue,
+      paidValue:selectedEmployee.salaryFormulas_info[0][e] ,
     })
   }
 
@@ -610,25 +742,16 @@ const AddLeave = ({ popperPlacement, id }) => {
               <Form.Control
                 disabledDate={val => {
                   let i = !days.includes(val.getDay())
-
                   let j = holyDays.includes(val.toDateString())
-
                   return i || j
                 }}
-                controlId='date_from'
+                controlid='date_from'
                 format='yyyy-MM-dd '
                 name='date_from'
                 accepter={DatePicker}
                 value={formValue.date_from}
               />
             </div>
-            {/* <Form.Control
-              controlId='date_from'
-              format='HH:mm'
-              name='date_from'
-              accepter={DatePicker}
-              value={formValue.date_from}
-            /> */}
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'end' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
@@ -643,7 +766,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
                   return i || j
                 }}
-                controlId='date_to'
+                controlid='date_to'
                 format=' yyyy-MM-dd'
                 name='date_to'
                 accepter={DatePicker}
@@ -651,7 +774,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               />
             </div>
             {/* <Form.Control
-              controlId='date_to'
+              controlid='date_to'
               format=' HH:mm'
               name='date_to'
               accepter={DatePicker}
@@ -671,14 +794,13 @@ const AddLeave = ({ popperPlacement, id }) => {
               <Form.Control
                 disabledDate={val => {
                   let i = !days.includes(val.getDay())
-
                   let j = holyDays.includes(val.toDateString())
-
                   return i || j
                 }}
-                controlId='date_from'
+                controlid='date_from'
                 format='yyyy-MM-dd '
                 name='date_from'
+                size='small'
                 accepter={DatePicker}
                 value={formValue.date_from}
                 onChange={e => {
@@ -690,8 +812,9 @@ const AddLeave = ({ popperPlacement, id }) => {
                 disabledDate={val => {
                   return !disableDates(val)
                 }}
-                controlId='date_from'
+                controlid='date_from'
                 format='HH:mm'
+                size='small'
                 name='date_from'
                 accepter={DatePicker}
                 value={formValue.date_from}
@@ -711,9 +834,10 @@ const AddLeave = ({ popperPlacement, id }) => {
 
                   return i || j
                 }}
-                controlId='date_to'
+                controlid='date_to'
                 format=' yyyy-MM-dd'
                 name='date_to'
+                size='small'
                 accepter={DatePicker}
                 value={formValue.date_to}
                 disabled
@@ -722,9 +846,10 @@ const AddLeave = ({ popperPlacement, id }) => {
                 disabledDate={val => {
                   return !disableDates(val)
                 }}
-                controlId='date_to'
+                controlid='date_to'
                 format=' HH:mm'
                 name='date_to'
+                size='small'
                 accepter={DatePicker}
                 value={formValue.date_to}
               />
@@ -739,9 +864,9 @@ const AddLeave = ({ popperPlacement, id }) => {
     return (
       <Card sx={{ margin: '5px' }}>
         <CardContent>
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <Box sx={{ mb: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              <Typography variant='body2'>{name}</Typography>
+              <Typography  sx={{ color: 'primary' }}>{name}</Typography>
               <Typography variant='h6'>{count}</Typography>
             </Box>
           </Box>
@@ -750,7 +875,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               <Box sx={{ mb: 2.5, display: 'flex', alignItems: 'center' }}>
                 <Typography variant='body2'>Taken</Typography>
               </Box>
-              <Typography variant='h6'>{((taken / count) * 100).toFixed(2)} %</Typography>
+              <Typography >{((taken / count) * 100).toFixed(1)} %</Typography>
               <Typography variant='caption' sx={{ color: 'text.disabled' }}>
                 {taken}
               </Typography>
@@ -762,7 +887,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                   Left
                 </Typography>
               </Box>
-              <Typography variant='h6'>{(100 - (taken / count) * 100).toFixed(2)} %</Typography>
+              <Typography >{(100 - (taken / count) * 100).toFixed(1)} %</Typography>
               <Typography variant='caption' sx={{ color: 'text.disabled' }}>
                 {count - taken}
               </Typography>
@@ -773,11 +898,11 @@ const AddLeave = ({ popperPlacement, id }) => {
             variant='determinate'
             sx={{
               height: 10,
-              '&.MuiLinearProgress-colorPrimary': { backgroundColor: 'primary.main' },
+              '&.MuiLinearProgress-colorPrimary': { backgroundColor: 'success.main' },
               '& .MuiLinearProgress-bar': {
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
-                backgroundColor: 'error.main'
+                backgroundColor: 'primary.main'
               }
             }}
           />
@@ -798,10 +923,21 @@ const AddLeave = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add leave' sx={{ pb: 0, pt: 2 }} />
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/employee/leave/'>
+                Leaves List
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add leave
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
-              <Grid item xs={12} sm={8} md={8} sx={{ p: 2, px: 5, mb: 5 }}>
+   
+              <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
                 <Form
                   fluid
                   ref={formRef}
@@ -815,7 +951,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                       <small>Type</small>
                       <Form.Control
                         size='sm'
-                        controlId='type'
+                        controlid='type'
                         name='type'
                         accepter={SelectPicker}
                         data={types}
@@ -827,7 +963,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                       <small>Employee</small>
                       <Form.Control
                         size='sm'
-                        controlId='employee_id'
+                        controlid='employee_id'
                         name='employee_id'
                         accepter={SelectPicker}
                         data={employeesDataSource}
@@ -839,7 +975,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                       />
                     </Grid>
 
-                    <Grid item sm={12} md={12} sx={{ mt: 6, mb: 8 }}>
+                    {selectedEmployee && <Grid item sm={12} md={12} sx={{ mt: 6, mb: 8 }}>
                       <Grid item sm={12} md={8}>
                         <RenderDate />
                         {/* </Box> */}
@@ -849,14 +985,31 @@ const AddLeave = ({ popperPlacement, id }) => {
                           </Typography>
                           <Form.Control
                             size='sm'
-                            controlId='status_reason'
+                            controlid='status_reason'
                             name='status_reason'
                             accepter={SelectPicker}
                             data={statusDs}
                             block
                             value={formValue.status_reason}
+                            onChange={e=>{changeStatus(e)}}
                           />
                         </Box>
+
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Paid value (%):
+                          </Typography>
+                          <Form.Control
+                            size='sm'
+                            type='number'
+                            name='paidValue'
+                            placeholder='Paid value '
+                            controlid='paidValue'
+                            disabled = {formValue.status_reason != 'otherLeave'}
+                            value={formValue.paidValue}
+                          />
+                        </Box>
+
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Reason :
@@ -864,8 +1017,8 @@ const AddLeave = ({ popperPlacement, id }) => {
                           <Form.Control
                             size='sm'
                             name='reason'
-                            placeholder='reason '
-                            controlId='reason'
+                            placeholder='Reason '
+                            controlid='reason'
                             value={formValue.reason}
                           />
                         </Box>
@@ -875,11 +1028,11 @@ const AddLeave = ({ popperPlacement, id }) => {
                           </Typography>
 
                           <Form.Control
-                            controlId='description'
+                            controlid='description'
                             type='text'
                             size='sm'
                             name='description'
-                            placeholder='description '
+                            placeholder='Description '
                             rows={3}
                             accepter={Textarea}
                             value={formValue.description}
@@ -890,7 +1043,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                             Resolution number :
                           </Typography>
                           <Form.Control
-                            controlId='resolution_number'
+                            controlid='resolution_number'
                             type='number'
                             size='sm'
                             name='resolution_number'
@@ -899,8 +1052,8 @@ const AddLeave = ({ popperPlacement, id }) => {
                           />
                         </Box>
                       </Grid>
-                    </Grid>
-                    <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
+                    </Grid>}
+                    {selectedEmployee &&  <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>
                           {action == 'add' && (
@@ -918,32 +1071,53 @@ const AddLeave = ({ popperPlacement, id }) => {
                           </Button>
                         </>
                       )}
-                    </Box>
+                    </Box>}
                   </Grid>
                 </Form>
               </Grid>
+
               {!selectedEmployee ? null : (
-                <Grid item xs={12} sm={3} md={3}>
-                  <div className='flex'>
+                <Grid container >
+                  <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
-                      count={+selectedEmployee.availableJustifiedLeaves}
-                      name={'Justified'}
-                      taken={+selectedEmployee.takenJustifiedLeaves}
+                      count={+selectedEmployee.availablePaidLeave}
+                      name={'Paid Leave'}
+                      taken={+selectedEmployee.takenPaidLeaves}
                     />
+                    </Grid>
+                    <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
-                      count={+selectedEmployee.availableNotJustifiedLeaves}
-                      name={'Not Justified'}
-                      taken={+selectedEmployee.takenNotJustifiedLeaves}
+                      count={+selectedEmployee.availableUnpaidLeave}
+                      name={'Unpaid Leave'}
+                      taken={+selectedEmployee.takenUnpaidLeaves}
                     />
+                    </Grid>
+                    <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
-                      count={+selectedEmployee.availableSickLeaves}
-                      name={'Sick'}
+                      count={+selectedEmployee.availableSickLeave}
+                      name={'Sick Leave'}
                       taken={+selectedEmployee.takenSickLeaves}
                     />
-                  </div>
+                    </Grid>
+                    { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
+                      <ChartCard
+                        count={+selectedEmployee.availableMaternityLeave}
+                        name={'Maternity Leave'}
+                        taken={+selectedEmployee.takenMaternityLeaves}
+                      />
+                     </Grid>}
+                     { selectedEmployee.gender == 'male' && <Grid item xs={12} sm={3} md={3}>
+                      <ChartCard
+                        count={+selectedEmployee.availableParentalLeave}
+                        name={'Parental Leave'}
+                        taken={+selectedEmployee.takenParentalLeaves}
+                      />
+                     </Grid>}
                 </Grid>
               )}
+
             </Grid>
+
             {formValue.employee_id ? (
               <DataGrid
                 autoHeight
@@ -956,6 +1130,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 onPageSizeChange={newPageSize => setPageSize(newPageSize)}
               />
             ) : null}
+
           </Card>
         </Grid>
       </Grid>
