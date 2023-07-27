@@ -268,6 +268,7 @@ const LeaveList = () => {
       headerName: 'Employee',
       renderCell: ({ row }) => {
         const { email, firstName, lastName } = row.employee_info[0]
+        
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row.employee_info[0])}
@@ -343,6 +344,7 @@ const LeaveList = () => {
       headerName: 'From Date',
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_from.split('T')
+
         return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
       }
     },
@@ -353,6 +355,7 @@ const LeaveList = () => {
       headerName: 'To Date',
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_to.split('T')
+
         return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
       }
     },

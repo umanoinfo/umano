@@ -142,10 +142,12 @@ const AddLeave = ({ popperPlacement, id }) => {
       if (val.type == 'daily') {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        
         return { ...val, leave_value: diffDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60))
+
         return { ...val, leave_value: diffDays }
       }
     })
@@ -226,9 +228,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenPaidLeaves += val.leave_value
+
         return val
       } else {
         rangePaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+
         return val
       }
     })
@@ -251,9 +255,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenUnpaidLeaves += val.leave_value
+
         return val
       } else {
         rangeUnpaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+
         return val
       }
     })
@@ -274,9 +280,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenSickLeaves += val.leave_value
+
         return val
       } else {
         rangeSick.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+
         return val
       }
     })
@@ -297,9 +305,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenMaternityLeaves += val.leave_value
+
         return val
       } else {
         rangeMaternityLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+
         return val
       }
     })
@@ -320,9 +330,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).map(val => {
       if (val.type == 'daily') {
         employee.takenParentalLeaves += val.leave_value
+
         return val
       } else {
         rangeParentalLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+
         return val
       }
     })
@@ -395,6 +407,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
+
               return
             }
           }
@@ -404,6 +417,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
+
               return
             }
           }
@@ -413,6 +427,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
+
               return
             }
           }
@@ -422,6 +437,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
+
               return
             }
           }
@@ -431,6 +447,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 delay: 3000,
                 position: 'bottom-right'
               })
+
               return
             }
           }
@@ -743,6 +760,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 disabledDate={val => {
                   let i = !days.includes(val.getDay())
                   let j = holyDays.includes(val.toDateString())
+
                   return i || j
                 }}
                 controlid='date_from'
@@ -795,6 +813,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 disabledDate={val => {
                   let i = !days.includes(val.getDay())
                   let j = holyDays.includes(val.toDateString())
+
                   return i || j
                 }}
                 controlid='date_from'
