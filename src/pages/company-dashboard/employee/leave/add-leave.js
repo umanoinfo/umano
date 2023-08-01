@@ -97,6 +97,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   const validateMmodel = Schema.Model({
     type: StringType().isRequired('This field is required.'),
+    paidValue: NumberType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
     employee_id: StringType().isRequired('This field is required.'),
     date_from: DateType().isRequired('This field is required.'),
@@ -402,7 +403,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         if (data.type == 'hourly') {
           if (data.status_reason == 'paidLeave') {
-            if (+selectedEmployee.availablePaidLeave < newHours + +selectedEmployee.takenPaidLeave) {
+            if (+selectedEmployee.availablePaidLeave < newHours + +selectedEmployee.takenPaidLeaves) {
               toast.error('Error : Your paid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
@@ -454,7 +455,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         } 
         else {
           if (data.status_reason == 'paidLeave') {
-            if (+selectedEmployee.availablePaidLeave < diffDays + +selectedEmployee.takenPaidLeave) {
+            if (+selectedEmployee.availablePaidLeave < diffDays + +selectedEmployee.takenPaidLeaves) {
               toast.error('Error : Your paid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
@@ -740,10 +741,14 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const changeStatus = e =>{
+    let paidValue = selectedEmployee.salaryFormulas_info[0][e]
+    if(e == 'otherLeave'){
+      paidValue = 0
+    }
     formValue.status_reason = e
     setFormValue({
       ...formValue,
-      paidValue:selectedEmployee.salaryFormulas_info[0][e] ,
+      paidValue:paidValue
     })
   }
 

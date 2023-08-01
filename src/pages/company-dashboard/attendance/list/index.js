@@ -58,6 +58,7 @@ import NoPermission from 'src/views/noPermission'
 import { right } from '@popperjs/core'
 import { Breadcrumbs, List, ListItem, ListItemSecondaryAction, ListItemText, useMediaQuery } from '@mui/material'
 import DialogEditAttendance from './edit-attendance-dialog'
+import DialogAddAttendance from './add-attendance-dialog'
 import { DatePicker, Input } from 'rsuite'
 
 // ** Status Obj
@@ -97,6 +98,7 @@ const AllDocumentsList = () => {
   const myRef = createRef()
 
   const [openEditDialog, setOpenEditDialog] = useState(false)
+  const [openAddDialog, setOpenAddDialog] = useState(false)
   const [SelectedEditRow, setSelectedEditRow] = useState()
 
   const [fromDate, setFromDate] = useState(new Date())
@@ -132,7 +134,7 @@ const AllDocumentsList = () => {
   }
   useEffect(() => {
     getEmployees()
-  }, [])
+  }, [open])
 
   // ----------------------- Handle ------------------------------
 
@@ -164,11 +166,13 @@ const AllDocumentsList = () => {
         selectedAttendance
       })
       .then(function (response) {
-        dispatch(fetchData({
-          fromDate: fromDate,
-          toDate: toDate,
-          employee_no: value
-        })).then(() => {
+        dispatch(
+          fetchData({
+            fromDate: fromDate,
+            toDate: toDate,
+            employee_no: value
+          })
+        ).then(() => {
           toast.success('Attendance Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
@@ -204,7 +208,6 @@ const AllDocumentsList = () => {
     }
 
     const handleRowOptionsClose = () => {
-      
       setAnchorEl(null)
     }
 
@@ -214,8 +217,8 @@ const AllDocumentsList = () => {
       handleRowOptionsClose()
     }
 
-    const handleEditClose = ()=>{
-      console.log("55555")
+    const handleEditClose = () => {
+      console.log('55555')
     }
 
     const handleRowView = () => {
@@ -402,12 +405,14 @@ const AllDocumentsList = () => {
       })
   }
 
-  const updateData= data => {
-    dispatch(fetchData({
-      fromDate: fromDate,
-      toDate: toDate,
-      employee_no: value
-    }))
+  const updateData = data => {
+    dispatch(
+      fetchData({
+        fromDate: fromDate,
+        toDate: toDate,
+        employee_no: value
+      })
+    )
   }
 
   // ------------------------------- Table columns --------------------------------------------
@@ -487,7 +492,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         var timeStart = new Date('01/01/2007 ' + row.timeIn)
         var timeEnd = new Date('01/01/2007 ' + row.timeOut)
-        
+
         return <>{((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2)}</>
       }
     },
@@ -598,6 +603,17 @@ const AllDocumentsList = () => {
                   <Button type='button' variant='contained' size='small' sx={{ mt: 2 }} onClick={() => importExcel()}>
                     Import
                   </Button>
+                  <Button
+                    type='button'
+                    variant='contained'
+                    size='small'
+                    sx={{ mt: 2, mx: 2 }}
+                    onClick={() => {
+                      setOpenAddDialog(true)
+                    }}
+                  >
+                    Add
+                  </Button>
                   <input
                     type='file'
                     ref={myRef}
@@ -656,8 +672,18 @@ const AllDocumentsList = () => {
           open={openEditDialog}
           setOpen={setOpenEditDialog}
           attendance={SelectedEditRow}
-          updateData ={updateData}
+          updateData={updateData}
           setupdate={setupdate}
+        />
+      ) : null}
+      {openAddDialog ? (
+        <DialogAddAttendance
+          open={openAddDialog}
+          setOpen={setOpenAddDialog}
+          attendance={SelectedEditRow}
+          updateData={updateData}
+          setupdate={setupdate}
+          onClose ={(e=>{ console.log("55555")})}
         />
       ) : null}
     </Grid>

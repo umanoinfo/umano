@@ -61,7 +61,13 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeLeaves',
           let: { id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$id'] } } }],
+          pipeline: [
+            { $match:  { $and: [
+              {date_from: { $gte: new Date("1/1/"+new Date().getFullYear()), $lt: new Date("1/1/"+(new Date().getFullYear()+1)) }},
+              { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
+              { $expr: { $eq: ['$employee_id', '$$id'] } }
+            ]}}
+          ],
           as: 'leaves_info'
         }
       },

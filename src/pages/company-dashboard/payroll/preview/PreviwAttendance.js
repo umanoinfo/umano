@@ -37,6 +37,9 @@ import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
 
 const AttendanceList = ({ attendances }) => {
+
+  console.log(attendances)
+
   const [pageSize, setPageSize] = useState(31)
 
   const [loading, setLoading] = useState(false)
@@ -48,7 +51,7 @@ const AttendanceList = ({ attendances }) => {
   const columns = [
     {
       flex: 0.12,
-      minWidth: 100,
+      minWidth: 200,
       field: 'date',
       headerName: 'Date',
       renderCell: ({ row }) => {
@@ -81,7 +84,7 @@ const AttendanceList = ({ attendances }) => {
       flex: 0.07,
       minWidth: 80,
       field: 'lateHours',
-      headerName: 'Late Hours',
+      headerName: 'Late (R)',
       renderCell: ({ row }) => {
         return <>{row.lateHours != 0 && <Typography sx={{ fontSize: 14, color: 'red' }}>{row.lateHours}</Typography>}</>
       }
@@ -90,7 +93,7 @@ const AttendanceList = ({ attendances }) => {
       flex: 0.07,
       minWidth: 80,
       field: 'earlyHours',
-      headerName: 'Early Hours',
+      headerName: 'Early (R)',
       renderCell: ({ row }) => {
         return (
           <>{row.earlyHours != 0 && <Typography sx={{ fontSize: 14, color: 'red' }}>{row.earlyHours}</Typography>}</>
@@ -99,9 +102,9 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 80,
+      minWidth: 150,
       field: 'earlyOverTime',
-      headerName: 'Early overtime',
+      headerName: 'Early OverTime',
       renderCell: ({ row }) => {
         return (
           <>
@@ -114,9 +117,9 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 80,
+      minWidth: 150,
       field: 'lateOverTime',
-      headerName: 'Late overtime',
+      headerName: 'Late overTime',
       renderCell: ({ row }) => {
         return (
           <>
@@ -153,7 +156,40 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 80,
+      minWidth: 200,
+      field: 'leavePayment',
+      headerName: 'leave Time',
+      renderCell: ({ row }) => {
+        return (
+          <>          
+          <>
+            {row.workingDay && row.leaveHourly && (
+              <>
+              {
+              row.leaves.map((leave)=>{
+                return (<>
+                <div>{new Date(leave.date_from).getUTCHours()}:{new Date(leave.date_from).getUTCMinutes()}-{new Date(leave.date_to).getUTCHours()}:{new Date(leave.date_to).getUTCMinutes()} {"   ,   "}</div> <br/>
+                </>)
+              })
+              }
+              </>
+            )}
+          </>
+          <>
+          {row.workingDay && row.leaveDay && (
+            <>
+              All Day
+            </>
+          )}
+        </>
+          </>
+
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 200,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -190,7 +226,7 @@ const AttendanceList = ({ attendances }) => {
               <CustomChip
                 skin='light'
                 size='small'
-                label='Leave'
+                label='leave Day'
                 color='info'
                 sx={{ mx: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
               />
@@ -199,7 +235,7 @@ const AttendanceList = ({ attendances }) => {
               <CustomChip
                 skin='light'
                 size='small'
-                label='Leave'
+                label='leave Hourly'
                 color='primary'
                 sx={{ mx: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
               />
@@ -229,6 +265,7 @@ const AttendanceList = ({ attendances }) => {
           rowsPerPageOptions={[10, 25, 50]}
           sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
           onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+          getRowHeight={() => 'auto'}
         />
       </Grid>
     </Grid>

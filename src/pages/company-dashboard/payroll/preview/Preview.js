@@ -48,9 +48,7 @@ const InvoicePreview = ({ employee, attendances, fromDate, toDate }) => {
           </Grid>
           <Grid item xl={3} md={4} xs={12}>
             <PreviewActions
-              employee={employee}
-              toggleAddPaymentDrawer={toggleAddPaymentDrawer}
-              toggleSendInvoiceDrawer={toggleSendInvoiceDrawer}
+              employee={employee} attendances={attendances} fromDate={fromDate} toDate={toDate}
             />
           </Grid>
           <Grid item xl={12} md={12} xs={12}>

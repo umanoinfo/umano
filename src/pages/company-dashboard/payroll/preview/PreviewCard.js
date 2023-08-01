@@ -55,9 +55,9 @@ const renderClient = employee => {
 }
 
 const PreviewCard = ({ data, fromDate, toDate }) => {
+
   // ** Hook
   const theme = useTheme()
-  console.log(fromDate, toDate)
   if (data) {
     return (
       <Card>
@@ -181,19 +181,10 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.salaries_info[0].lumpySalary}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
-                      {/* <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Over time Salary:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.salaries_info[0].overtimeSalary}</strong>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow> */}
                       <TableRow>
                         <MUITableCell>
                           <Typography variant='body2'>Daily Salary:</Typography>
@@ -201,6 +192,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.dailySalary}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
@@ -212,6 +204,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.hourlySalary}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
@@ -229,35 +222,19 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <Table>
                     <TableBody>
                       <TableRow>
+                      <Typography variant='body2' sx={{pt:10}}></Typography>
+                      </TableRow>
+                      <TableRow>
                         <MUITableCell>
-                          <Typography variant='body2'>OverTime:</Typography>
+                          <Typography variant='body2'>Over Time:</Typography>
                         </MUITableCell>
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.hourlySalary * data.salaryFormulas_info[0].firstOverTime}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
-                      {/* <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Second OverTime:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.hourlySalary * data.salaryFormulas_info[0].secondOverTime}</strong>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Third OverTime:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.hourlySalary * data.salaryFormulas_info[0].thirdOverTime}</strong>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow> */}
                       <TableRow>
                         <MUITableCell>
                           <Typography variant='body2'>Holiday:</Typography>
@@ -265,6 +242,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
@@ -275,6 +253,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>{data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime}</strong>
+                            <small style={{paddingLeft:5}}> AED</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
@@ -286,32 +265,34 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
             <Grid item xs={12} sm={4} sx={{ display: 'flex' }}>
               <div>
                 <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
-                  Attendance (Day):
+                Yearly Leaves ({new Date().getFullYear()}):
                 </Typography>
                 <TableContainer>
                   <Table>
                     <TableBody>
                       <TableRow>
                         <MUITableCell>
-                          <Typography variant='body2'>Justified Leaves:</Typography>
+                          <Typography variant='body2'>Paid Leaves:</Typography>
                         </MUITableCell>
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>
-                              {data.takenJustifiedLeaves}/{data.availableJustifiedLeaves}
+                              {data.takenPaidLeaves}/{data.availablePaidLeave}
                             </strong>
+                            <small style={{paddingLeft:5}}> Day</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
                       <TableRow>
                         <MUITableCell>
-                          <Typography variant='body2'>Not Justified Leaves:</Typography>
+                          <Typography variant='body2'>Unpaid Leaves:</Typography>
                         </MUITableCell>
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>
-                              {data.takenNotJustifiedLeaves}/{data.availableNotJustifiedLeaves}
+                              {data.takenUnpaidLeaves}/{data.availableUnpaidLeave}
                             </strong>
+                            <small style={{paddingLeft:5}}> Day</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
@@ -322,11 +303,38 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <MUITableCell>
                           <Typography variant='body2' px={5}>
                             <strong>
-                              {data.takenSickLeaves}/{data.availableSickLeaves}
+                              {data.takenSickLeaves}/{data.availableSickLeave}
                             </strong>
+                            <small style={{paddingLeft:5}}> Day</small>
                           </Typography>
                         </MUITableCell>
                       </TableRow>
+                      { data.gender == 'male' && <TableRow>
+                        <MUITableCell>
+                          <Typography variant='body2'>Parental Leave:</Typography>
+                        </MUITableCell>
+                        <MUITableCell>
+                          <Typography variant='body2' px={5}>
+                            <strong>
+                              {data.takenParentalLeaves}/{data.availableParentalLeave}
+                            </strong>
+                            <small style={{paddingLeft:5}}> Day</small>
+                          </Typography>
+                        </MUITableCell>
+                      </TableRow>}
+                      { data.gender == 'female' && <TableRow>
+                        <MUITableCell>
+                          <Typography variant='body2'>Maternity Leave:</Typography>
+                        </MUITableCell>
+                        <MUITableCell>
+                          <Typography variant='body2' px={5}>
+                            <strong>
+                              {data.takenMaternityLeaves}/{data.availableMaternityLeave}
+                            </strong>
+                            <small style={{paddingLeft:5}}> Day</small>
+                          </Typography>
+                        </MUITableCell>
+                      </TableRow>}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -478,6 +486,25 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </TableRow>
                 )
               })}
+              {data.leaves_info.map((leave, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>
+                      Leave <small> ({leave.type})</small> 
+                    </TableCell>
+                    <TableCell>{leave.time} hour</TableCell>
+                    <TableCell>
+                      -{ 100 - leave.paidValue}
+                      <small> %</small>
+                    </TableCell>
+                    <TableCell>
+                      { leave.type == 'hourly' && <strong> - {(((leave.time * data.hourlySalary) * (100 - leave.paidValue))/100).toFixed(3)}</strong>}
+                      { leave.type == 'daily' && <strong> - {( ((leave.days* data.dailySalary * (100 - leave.paidValue))/100).toFixed(3)) }</strong>}
+                      <small> AED</small>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -486,16 +513,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
           <Grid container>
             <Grid item xs={12} sm={7} lg={9} sx={{ order: { sm: 1, xs: 2 } }}>
               <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                <Typography
-                  variant='body2'
-                  sx={{ mr: 2, color: 'text.primary', fontWeight: 600, letterSpacing: '.25px' }}
-                >
-                  Salesperson:
-                </Typography>
-                <Typography variant='body2'>Tommy Shelby</Typography>
+                <Typography variant='body2'></Typography>
               </Box>
 
-              <Typography variant='body2'>Thanks for your business</Typography>
             </Grid>
             <Grid item xs={12} sm={5} lg={3} sx={{ mb: { sm: 0, xs: 4 }, order: { sm: 2, xs: 1 } }}>
               <CalcWrapper>
@@ -509,14 +529,15 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     Number(data.totalDeductions) +
                     Number(data.totalCompensations) -
                     Number(data.totalEmployeeDeductions) +
-                    Number(data.totalEmployeeRewards)
+                    Number(data.totalEmployeeRewards)-
+                    Number(data.totalLeave)
                   ).toFixed(3)}
                 </Typography>
               </CalcWrapper>
               <CalcWrapper>
                 <Typography variant='body2'>Tax:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                  {data.totalEmployeeDeductions}
+                  0%
                 </Typography>
               </CalcWrapper>
               <Divider
@@ -525,21 +546,24 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                  $1690
+                  {(
+                    Number(data.totalOffDayValue) +
+                    Number(data.totalholidayValue) +
+                    Number(data.salaries_info[0].lumpySalary) +
+                    Number(data.totalEarlyValue) -
+                    Number(data.totalDeductions) +
+                    Number(data.totalCompensations) -
+                    Number(data.totalEmployeeDeductions) +
+                    Number(data.totalEmployeeRewards)-
+                    Number(data.totalLeave)
+                  ).toFixed(3)}
                 </Typography>
               </CalcWrapper>
             </Grid>
           </Grid>
         </CardContent>
 
-        <Divider sx={{ mt: theme => `${theme.spacing(4.5)} !important`, mb: '0 !important' }} />
-
-        <CardContent>
-          <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-            <strong>Note:</strong> It was a pleasure working with you and your team. We hope you will keep us in mind
-            for future freelance projects. Thank You!
-          </Typography>
-        </CardContent>
+        
       </Card>
     )
   } else {

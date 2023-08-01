@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       },
       {
         $sort: {
-          created_at: -1
+          date_from: -1
         }
       }
     ])

@@ -23,6 +23,12 @@ export default async function handler(req, res) {
   const selectedEmployee = req.body.data
   const id = selectedEmployee._id
 
+  const fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0))
+  const toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999))
+
+
+
+
   // --------------------- Get ------------------------------------------
 
   const employee = await client
@@ -79,7 +85,7 @@ export default async function handler(req, res) {
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_no', '$employee_no'] } } },
             {
-              $match: { date: { $gte: new Date(selectedEmployee.fromDate), $lte: new Date(selectedEmployee.toDate) } }
+              $match: { date: { $gte: fromDate, $lte: toDate } }
             },
             { $match: { $expr: { $eq: ['$status', 'active'] } } }
           ],
@@ -111,11 +117,25 @@ export default async function handler(req, res) {
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
             {
               $match: {
-                date_from: { $gte: new Date(selectedEmployee.fromDate), $lte: new Date(selectedEmployee.toDate) }
+                date_from: { $gte: fromDate, $lte: toDate }
               }
             }
           ],
           as: 'leaves_info'
+        }
+      },
+      {
+        $lookup: {
+          from: 'employeeLeaves',
+          let: { id: { $toString: '$_id' } },
+          pipeline: [
+            { $match:  { $and: [
+              {date_from: { $gte: new Date("1/1/"+new Date().getFullYear()), $lt: new Date("1/1/"+(new Date().getFullYear()+1)) }},
+              { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
+              { $expr: { $eq: ['$employee_id', '$$id'] } }
+            ]}}
+          ],
+          as: 'all_leaves_info'
         }
       },
       {
@@ -135,7 +155,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: new Date(selectedEmployee.fromDate), $lte: new Date(selectedEmployee.toDate) } } }
+            { $match: { date: { $gte: fromDate, $lte: toDate } } }
           ],
           as: 'employee_deductions_info'
         }
@@ -146,7 +166,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: new Date(selectedEmployee.fromDate), $lte: new Date(selectedEmployee.toDate) } } }
+            { $match: { date: { $gte: fromDate, $lte: toDate } } }
           ],
           as: 'employee_rewards_info'
         }
@@ -159,8 +179,8 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  let start = new Date(selectedEmployee.fromDate)
-  let end = new Date(selectedEmployee.toDate)
+  let start = fromDate
+  let end = toDate
   let attendances = []
   let index = 0
   const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -170,7 +190,11 @@ export default async function handler(req, res) {
   })
 
   if (employee)
+
+
+
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
+
       index++
       let _in = ''
       let _out = ''
@@ -185,32 +209,34 @@ export default async function handler(req, res) {
       let holidayDay = false
       let leaveDay = false
       let leaveHourly = false
+      let leavePaidValue = 0
+      let leaves = []
       day = new Date(x).getDay()
       let workingDay = working_days.includes(weekday[day])
       let dateFormate = new Date(x).toLocaleDateString()
       holidayDay = holidays.includes(dateFormate)
+ 
 
       // ----------------------- leaves ------------------------------------
 
       employee[0].leaves_info.map(leave => {
-        if (leave.type == 'daily') {
-          let startLeave = new Date(leave.date_from)
-          let endLeave = new Date(leave.date_to)
-          for (let leaveItem = startLeave; leaveItem <= endLeave; leaveItem.setDate(leaveItem.getDate() + 1)) {
-            if (leaveItem.setHours(0, 0, 0, 0) == x.setHours(0, 0, 0, 0)) {
+       
+          var dateFrom = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
+          var dateTo = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
+          var dateCheck = x.setUTCHours(0,0,0,0) ;
+          if ( dateCheck >= dateFrom && dateCheck <= dateTo) {
+            if (leave.type == 'daily') {
               leaveDay = true
             }
+            if (leave.type == 'hourly') {
+              leaveHourly = true
+            }
+            leaves.push(leave) 
           }
-        }
-        if (leave.type == 'hourly') {
-          if (new Date(leave.date_from).setHours(0, 0, 0, 0) == x.setHours(0, 0, 0, 0)) {
-            leaveHourly = true
-          }
-        }
-
+          
         return new Date(day.date).toLocaleDateString()
       })
-
+  
       // -----------------------------------------------------------------
 
       let shift_in = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeIn.toString() + ' UTC')
@@ -227,6 +253,7 @@ export default async function handler(req, res) {
         lateFlag = true
         lateHours = ((shift_out - shift_in) / 3600000).toFixed(3)
       }
+
 
       // -------------------------------------------------------------
 
@@ -278,7 +305,8 @@ export default async function handler(req, res) {
         lateOverTimeHours: lateOverTimeHours,
         holidayDay: holidayDay,
         leaveDay: leaveDay,
-        leaveHourly: leaveHourly
+        leaveHourly: leaveHourly,
+        leaves:leaves
       })
     }
 

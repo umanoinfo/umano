@@ -436,8 +436,8 @@ const PayrollList = classNamec => {
     XLSX.writeFile(wb, 'survey-data.xlsx')
   }
 
-  const addEmployee = () => {
-    router.push('/company-dashboard/employee/add-employee')
+  const addPayroll = () => {
+    router.push('/company-dashboard/payroll/calculate')
   }
 
   const deleteEmployee = () => {
@@ -582,9 +582,9 @@ const PayrollList = classNamec => {
                 Export
               </Button>
 
-              {session && session.user.permissions.includes('AddEmployee') && (
-                <Button type='button' variant='contained' sx={{ mb: 2 }} onClick={() => addEmployee()}>
-                  Add Employee
+              {session && session.user.permissions.includes('AddPayroll') && (
+                <Button type='button' variant='contained' sx={{ mb: 2 }} onClick={() => addPayroll()}>
+                  Calculate
                 </Button>
               )}
             </Box>

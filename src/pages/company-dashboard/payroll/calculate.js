@@ -221,16 +221,229 @@ const AllDocumentsList = () => {
   const getEmployees = () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
-      res.data.data.map(employee => {
+      let employees = res.data.data
+      employees.map(employee => {
+        if (employee.shift_info[0]) {
         arr.push({
           label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
           value: employee._id
         })
+        }
       })
       setEmployeesDataSource(arr)
+      setEmployeesFullInfo(employees)
+
     })
     setLoading(false)
   }
+
+  function convertToMinutes(timeString) {
+    const [hours, minutes] = timeString.split(':')
+
+    return parseInt(hours) * 60 + parseInt(minutes)
+  }
+
+
+  const calcDeffTime = val => {
+   
+    return val.map(val => {
+      if (val.type == 'daily') {
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        
+        return { ...val, leave_value: diffDays }
+      } else {
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
+        const diffDays = Math.ceil(diffTime / (1000 * 60))
+
+        return { ...val, leave_value: diffDays }
+      }
+    })
+  }
+
+  function calculateIntersectionValue(timeRanges1, timeRanges2) {
+
+    let totalIntersection = 0
+
+    for (let i = 0; i < timeRanges1.length; i++) {
+      const range1 = timeRanges1[i]
+      const start1 = convertToMinutes(range1.start)
+      const end1 = convertToMinutes(range1.end)
+
+      for (let j = 0; j < timeRanges2.length; j++) {
+        const range2 = timeRanges2[j]
+        const start2 = convertToMinutes(range2.start)
+        const end2 = convertToMinutes(range2.end)
+
+        const start = Math.max(start1, start2)
+        const end = Math.min(end1, end2)
+
+        const intersection = Math.max(0, end - start)
+        totalIntersection += intersection
+      }
+    }
+
+    return totalIntersection
+  }
+
+    const calcTakenLeaves = employee => {
+      employee = {
+        ...employee,
+        takenPaidLeaves: 0,
+        takenUnpaidLeaves: 0,
+        takenSickLeaves: 0,
+        takenMaternityLeaves: 0,
+        takenParentalLeaves: 0,
+        takenOthers: 0
+      }
+      const leaves = employee.all_leaves_info
+      
+      const range1 = employee.shift_info[0].times.map(time => {
+        return { start: time.timeIn, end: time.timeOut }
+      })
+  
+  
+      const rangePaidLeave = []
+      const rangeUnpaidLeave = []
+      const rangeSick = []
+      const rangeMaternityLeave = []
+      const rangeParentalLeave = []
+      const rangeOthers = []
+  
+      // Paid Leave
+  
+      const paidLeave = calcDeffTime(
+        leaves.filter(val => {
+          return val.status_reason == 'paidLeave'
+        })
+      ).map(val => {
+        if (val.type == 'daily') {
+          employee.takenPaidLeaves += val.leave_value
+  
+          return val
+        } else {
+          rangePaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+  
+          return val
+        }
+      })
+  
+      let totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+  
+      employee.takenPaidLeaves += +(
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave)) / totalMinutes
+      ).toFixed(2)
+  
+      // Unpaid Leave
+  
+      const unpaidLeave = calcDeffTime(
+        leaves.filter(val => {
+          return val.status_reason == 'unpaidLeave'
+        })
+      ).map(val => {
+        if (val.type == 'daily') {
+          employee.takenUnpaidLeaves += val.leave_value
+  
+          return val
+        } else {
+          rangeUnpaidLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+  
+          return val
+        }
+      })
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+      employee.takenUnpaidLeaves += +(
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave)) / totalMinutes
+      ).toFixed(2)
+  
+      // Sick Leave
+  
+      const sickLeave = calcDeffTime(
+        leaves.filter(val => {
+          return val.status_reason == 'sickLeave'
+        })
+      ).map(val => {
+        if (val.type == 'daily') {
+          employee.takenSickLeaves += val.leave_value
+  
+          return val
+        } else {
+          rangeSick.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+  
+          return val
+        }
+      })
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+      employee.takenSickLeaves += +(
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangeSick)) / totalMinutes
+      ).toFixed(2)
+  
+      // Maternity Leave
+  
+      const maternityLeave = calcDeffTime(
+        leaves.filter(val => {
+          return val.status_reason == 'maternityLeave'
+        })
+      ).map(val => {
+        if (val.type == 'daily') {
+          employee.takenMaternityLeaves += val.leave_value
+  
+          return val
+        } else {
+          rangeMaternityLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+  
+          return val
+        }
+      })
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+      employee.takenMaternityLeaves += +(
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave)) / totalMinutes
+      ).toFixed(2)
+  
+      // Parental Leave
+  
+      const parentalLeave = calcDeffTime(
+        leaves.filter(val => {
+          return val.status_reason == 'parentalLeave'
+        })
+      ).map(val => {
+        if (val.type == 'daily') {
+          employee.takenParentalLeaves += val.leave_value
+  
+          return val
+        } else {
+          rangeParentalLeave.push({ start: val.date_from.substring(11, 16), end: val.date_to.substring(11, 16) })
+  
+          return val
+        }
+      })
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+      employee.takenParentalLeaves += +(
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave)) / totalMinutes
+      ).toFixed(2)
+  
+      console.log(employee)
+
+      return employee
+  
+     
+    }
+
 
   const calculate = e => {
     let data = {}
@@ -242,6 +455,12 @@ const AllDocumentsList = () => {
 
       employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
+      //   ----------------------- Assume Leave -------------------------------
+
+      console.log(employee)
+      employee = calcTakenLeaves(employee)
+      console.log(employee)
+      
       //   ----------------------- Assume hourly Salary -------------------------------
 
       employee.hourlySalary = (
@@ -253,7 +472,6 @@ const AllDocumentsList = () => {
         ).toFixed(2)
       ).toFixed(2)
 
-      //   ----------------------- Assume Early & Late Hours -------------------------------
 
       let totalEarlyHours = 0
       let totalLateHours = 0
@@ -264,11 +482,13 @@ const AllDocumentsList = () => {
       let totalEmployeeDeductions = 0
       let totalEmployeeRewards = 0
       let totalWorkingDaysCount = 0
+      let totalLeave = 0
+
+     //   ----------------------- Assume Early & Late Hours -------------------------------
 
       res.data.attendances.map(att => {
         if (att._in) {
           totalWorkingDaysCount++
-          console.log(totalWorkingDaysCount)
         }
         totalEarlyHours = totalEarlyHours + Number(att.earlyHours)
         totalLateHours = totalLateHours + Number(att.lateHours)
@@ -297,10 +517,10 @@ const AllDocumentsList = () => {
       employee.totalEarlyHours = totalEarlyHours
       employee.totalLateHours = totalLateHours
       employee.totalEarlyValue =
-        Number(employee.totalEarlyHours + employee.totalLateHours) *
+        (Number(employee.totalEarlyHours + employee.totalLateHours) *
         Number(employee.salaryFormulas_info[0].notJustifiedAbsenceHoure) *
         Number(employee.hourlySalary) *
-        -1
+        -1).toFixed(3)
 
       //   -------------------------- Assume Compensations -------------------------------------
 
@@ -369,11 +589,38 @@ const AllDocumentsList = () => {
         employee.totalEmployeeRewards = totalEmployeeRewards
       }
 
+        //   -------------------------- Assume Leaves -------------------------------------
+
+        if (employee.leaves_info) {
+          let totalWorkingDaysCount = 0
+
+          let shift_out = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC')
+          let shift_in = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')
+
+          employee.leaves_info.map(leave => {
+          if(leave.type == "daily")
+          {
+            let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
+            let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
+            let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
+            leave.time = (((shift_out - shift_in)*days) / 3600000).toFixed(2)
+            leave.days = days
+            totalLeave = totalLeave + Number(((days*employee.dailySalary * (100 - leave.paidValue))/100).toFixed(3))
+          }
+          if(leave.type == "hourly")
+            {
+              leave.time = ((new Date(leave.date_to) - new Date(leave.date_from)) / 3600000).toFixed(2)
+              totalLeave = totalLeave + Number((((leave.time*employee.hourlySalary) * (100 - leave.paidValue))/100).toFixed(3))
+            }
+          })
+
+          console.log(totalLeave)
+          employee.totalLeave = (totalLeave)
+      }
+
       setSelectedEmployee(employee)
       setAttendances(res.data.attendances)
     })
-
-    console.log(e, fromDate, toDate)
   }
 
   const handleClose = () => {
@@ -756,8 +1003,11 @@ const AllDocumentsList = () => {
             <Link underline='hover' color='inherit' href='/'>
               Home
             </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/payroll/'>
+              Payroll List
+            </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              d List
+              Calculate
             </Typography>
           </Breadcrumbs>
           <Divider sx={{ pb: 0, mb: 0 }} />
@@ -770,7 +1020,6 @@ const AllDocumentsList = () => {
                   onChange={e => {
                     setFromDate(e)
                   }}
-                  size='sm'
                 />
               </FormControl>
             </Grid>
@@ -778,7 +1027,7 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date To</small>
                 <DatePicker
-                  size='sm'
+
                   value={new Date(toDate)}
                   onChange={e => {
                     setToDate(e)
@@ -791,7 +1040,6 @@ const AllDocumentsList = () => {
                 <small>Employee</small>
                 <SelectPicker
                   name='employee_id'
-                  size='sm'
                   data={employeesDataSource}
                   block
                   onChange={e => {
@@ -799,6 +1047,18 @@ const AllDocumentsList = () => {
                   }}
                 />
               </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <Button
+              sx={{ mt: 6 }}
+              size='sm'
+              variant='contained'
+              onClick={() => {
+                calculate(selectedEmployee._id)
+              }}
+            >
+              Calculate
+            </Button>
             </Grid>
           </Grid>
 
