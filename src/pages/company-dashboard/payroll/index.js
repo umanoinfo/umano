@@ -127,8 +127,6 @@ const PayrollList = classNamec => {
     dispatch(
       fetchData({
         no,
-        month,
-        year,
         q: value
       })
     ).then(setLoading(false))
@@ -305,95 +303,12 @@ const PayrollList = classNamec => {
       field: 'employee',
       headerName: 'Employee',
       renderCell: ({ row }) => {
-        const { email, firstName, lastName } = row
-
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-                {firstName} {lastName}
+                {row.name}
               </Typography>
-              <Typography noWrap variant='caption'>
-                {email}
-              </Typography>
-            </Box>
           </Box>
-        )
-      }
-    },
-    {
-      flex: 0.08,
-      field: 'salary',
-      minWidth: 100,
-      headerName: 'Salary',
-      renderCell: ({ row }) => {
-        return (
-          <>
-            {row.created_at && (
-              <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                <CustomChip
-                  skin='light'
-                  size='small'
-                  label={row.salaryFormulas_info[0].type}
-                  color='primary'
-                  sx={{ height: 20, fontWeight: 500, fontSize: '0.75rem' }}
-                />
-              </Typography>
-            )}
-          </>
-        )
-      }
-    },
-    {
-      flex: 0.12,
-      field: 'lumpySalary',
-      minWidth: 100,
-      headerName: 'Lumpy Salary',
-      renderCell: ({ row }) => {
-        return (
-          <>
-            {row.created_at && (
-              <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                {row.salaries_info[0].lumpySalary} AED
-              </Typography>
-            )}
-          </>
-        )
-      }
-    },
-
-    {
-      flex: 0.12,
-      field: 'overtimeSalary',
-      minWidth: 100,
-      headerName: 'Overtime Salary',
-      renderCell: ({ row }) => {
-        return (
-          <>
-            {row.created_at && (
-              <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                {row.salaries_info[0].overtimeSalary} AED
-              </Typography>
-            )}
-          </>
-        )
-      }
-    },
-    {
-      flex: 0.12,
-      field: 'days',
-      minWidth: 100,
-      headerName: 'days',
-      renderCell: ({ row }) => {
-        return (
-          <>
-            {row.created_at && (
-              <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                {row.attendances_info.length}
-              </Typography>
-            )}
-          </>
         )
       }
     },
@@ -527,47 +442,6 @@ const PayrollList = classNamec => {
                   placeholder='Search Employee'
                   onChange={e => handleFilter(e.target.value)}
                 />
-              </FormControl>
-              <FormControl size='small'>
-                <InputLabel id='month-select'>Select Month</InputLabel>
-                <Select
-                  fullWidth
-                  value={month}
-                  id='select-month'
-                  label='Select Month'
-                  labelId='status-month'
-                  sx={{ mr: 3, mx: 1, width: 150 }}
-                  onChange={handleMonthChange}
-                  inputProps={{ placeholder: 'Select Month' }}
-                >
-                  <MenuItem value='1'>January</MenuItem>
-                  <MenuItem value='2'>February</MenuItem>
-                  <MenuItem value='3'>March</MenuItem>
-                  <MenuItem value='4'>April</MenuItem>
-                  <MenuItem value='5'>May</MenuItem>
-                  <MenuItem value='6'>June</MenuItem>
-                  <MenuItem value='7'>July</MenuItem>
-                  <MenuItem value='8'>August</MenuItem>
-                  <MenuItem value='9'>September</MenuItem>
-                  <MenuItem value='10'>October</MenuItem>
-                  <MenuItem value='11'>November</MenuItem>
-                  <MenuItem value='12'>December</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size='small'>
-                <InputLabel id='year-select'>Select Year</InputLabel>
-                <Select
-                  fullWidth
-                  value={year}
-                  id='select-year'
-                  label='Select Year'
-                  labelId='status-year'
-                  sx={{ mr: 3, mx: 1, width: 100 }}
-                  onChange={handleyearChange}
-                  inputProps={{ placeholder: 'Select Year' }}
-                >
-                  <MenuItem value='2023'>2023</MenuItem>
-                </Select>
               </FormControl>
             </Box>
 

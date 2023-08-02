@@ -25,6 +25,8 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
 
     let data = {}
     data.employee_id = employee._id
+    data.fromDate = employee.fromDate
+    data.toDate = employee.toDate
     data.dailySalary = employee.dailySalary
     data.employeeType = employee.employeeType
     data.email = employee.email
@@ -38,6 +40,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalDeductions = employee.totalDeductions
     data.totalEarlyHours = employee.totalEarlyHours
     data.totalEarlyValue = employee.totalEarlyValue
+    data.lumpySalary = employee.salaries_info[0].lumpySalary
     data.totalEmployeeDeductions = employee.totalEmployeeDeductions
     data.totalEmployeeRewards = employee.totalEmployeeRewards
     data.totalLateHours = employee.totalLateHours
@@ -47,18 +50,25 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalWorkingDaysCount = employee.totalWorkingDaysCount
     data.totalholidayHours = employee.totalholidayHours
     data.totalholidayValue = employee.totalholidayValue
-    data.fromDate = employee.fromDate
-    data.toDate = employee.toDate
+    data.total  = 
+    Number(employee.totalOffDayValue) +
+      Number(employee.totalholidayValue) +
+        Number(employee.salaries_info[0].lumpySalary) +
+          Number(employee.totalEarlyValue) -
+            Number(employee.totalDeductions) +
+              Number(employee.totalCompensations) -
+                Number(employee.totalEmployeeDeductions) +
+                  Number(employee.totalEmployeeRewards) -
+                    Number(employee.totalLeave)
 
     axios.post('/api/payroll/add-payroll', data).then((res)=>{
-      router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
+      // router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
       toast.success('Payroll (' + res.data.data.name + ') Inserted Successfully.', {
         delay: 3000,
         position: 'bottom-right'
       })
       setLoading(false)
     })
-
   }
 
   if (loading) return <Loading header='Please Wait' description="Payroll Inserting"></Loading>

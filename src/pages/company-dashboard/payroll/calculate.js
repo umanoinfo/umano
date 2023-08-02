@@ -211,7 +211,6 @@ const AllDocumentsList = () => {
       1 -
       (totalMinutes - calculateIntersectionValue(range1, rangeSick)) / totalMinutes
     ).toFixed(2)
-    console.log(employee)
 
     return employee
   }
@@ -437,11 +436,8 @@ const AllDocumentsList = () => {
         (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave)) / totalMinutes
       ).toFixed(2)
   
-      console.log(employee)
-
       return employee
   
-     
     }
 
 
@@ -457,10 +453,8 @@ const AllDocumentsList = () => {
 
       //   ----------------------- Assume Leave -------------------------------
 
-      console.log(employee)
       employee = calcTakenLeaves(employee)
-      console.log(employee)
-      
+
       //   ----------------------- Assume hourly Salary -------------------------------
 
       employee.hourlySalary = (
@@ -614,7 +608,6 @@ const AllDocumentsList = () => {
             }
           })
 
-          console.log(totalLeave)
           employee.totalLeave = (totalLeave)
       }
 
