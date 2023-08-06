@@ -166,7 +166,7 @@ const AllDocumentsList = () => {
     data._id = e
     data.fromDate = fromDate
     data.toDate = toDate
-    axios.post('/api/payroll/byEmployee', { data }).then(res => {
+    axios.post('/api/end-of-service/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
 
       employee.lumpySalary = employee.salaries_info[0].lumpySalary //  Daily Salary
@@ -214,7 +214,7 @@ const AllDocumentsList = () => {
       employee.lessThanFiveDays = lessThanFiveDays
       employee.moreThanFiveDays = moreThanFiveDays
       employee.lessThanFiveValue = Number(lessThanFiveValue).toFixed(2)
-      employee.moreThanFiveValue =Number(moreThanFiveValue).toFixed(2)
+      employee.moreThanFiveValue = Number(moreThanFiveValue).toFixed(2)
       employee.endOfServeceTotalValue = (Number(moreThanFiveValue) + Number(lessThanFiveValue)).toFixed(2)
       setSelectedEmployee(employee)
     })

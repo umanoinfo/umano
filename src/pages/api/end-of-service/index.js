@@ -8,12 +8,6 @@ export default async function handler(req, res) {
   if (!req.query.no) {
     req.query.no = ''
   }
-  if (!req.query.month) {
-    req.query.month = ''
-  }
-  if (!req.query.year) {
-    req.query.year = ''
-  }
 
   const client = await connectToDatabase()
 
@@ -27,9 +21,9 @@ export default async function handler(req, res) {
 
   // --------------------- Get ------------------------------------------
 
-  const payrolls = await client
+  const endOfServices = await client
     .db()
-    .collection('payrolls')
+    .collection('endOfServices')
     .aggregate([
       {
         $match: {
@@ -49,5 +43,5 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  res.status(200).json({ success: true, data: payrolls })
+  res.status(200).json({ success: true, data: endOfServices })
 }
