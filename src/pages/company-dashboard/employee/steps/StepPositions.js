@@ -176,6 +176,8 @@ const Steppositions = ({ handleNext, employee }) => {
       value: type.value
     }))
 
+    positionChangeEndTypes.push({label: 'On Position',value: 'onPosition' })
+
     setPositionChangeEndTypes(positionChangeEndTypes)
     setEndChangeType(positionChangeEndTypes[0].value)
   }

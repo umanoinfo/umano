@@ -207,8 +207,12 @@ export default async function handler(req, res) {
       icon: 'mdi:money',
       children: [
         {
-          title: 'List',
+          title: 'Payroll List',
           path: '/company-dashboard/payroll/'
+        },
+        {
+          title: 'End of service',
+          path: '/company-dashboard/payroll/endOfService/'
         },
         {
           title: 'Salary Formula',

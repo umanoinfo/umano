@@ -36,34 +36,22 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.mobilePhone = employee.mobilePhone
     data.company_id = employee.company_id
     data.joiningDate = employee.joiningDate
-    data.totalCompensations = employee.totalCompensations
-    data.totalDeductions = employee.totalDeductions
-    data.totalEarlyHours = employee.totalEarlyHours
-    data.totalEarlyValue = employee.totalEarlyValue
-    data.lumpySalary = employee.salaries_info[0].lumpySalary
-    data.totalEmployeeDeductions = employee.totalEmployeeDeductions
-    data.totalEmployeeRewards = employee.totalEmployeeRewards
-    data.totalLateHours = employee.totalLateHours
-    data.totalLeave = employee.totalLeave
-    data.totalOffDayHours = employee.totalOffDayHours
-    data.totalOffDayValue = employee.totalOffDayValue
-    data.totalWorkingDaysCount = employee.totalWorkingDaysCount
-    data.totalholidayHours = employee.totalholidayHours
-    data.totalholidayValue = employee.totalholidayValue
-    data.total  = 
-    Number(employee.totalOffDayValue) +
-      Number(employee.totalholidayValue) +
-        Number(employee.salaries_info[0].lumpySalary) +
-          Number(employee.totalEarlyValue) -
-            Number(employee.totalDeductions) +
-              Number(employee.totalCompensations) -
-                Number(employee.totalEmployeeDeductions) +
-                  Number(employee.totalEmployeeRewards) -
-                    Number(employee.totalLeave)
 
-    axios.post('/api/payroll/add-payroll', data).then((res)=>{
-      router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
-      toast.success('Payroll (' + res.data.data.name + ') Inserted Successfully.', {
+    data.lessThanFiveDays = employee.lessThanFiveDays
+    data.lessThanFiveValue = employee.lessThanFiveValue
+    data.moreThanFiveDays = employee.moreThanFiveDays
+    data.moreThanFiveValue = employee.moreThanFiveValue
+    data.lumpySalary = employee.salaries_info[0].lumpySalary
+    data.allDays = employee.allDays
+    data.actualDays = employee.actualDays
+    data.actualYears = employee.actualYears
+    data.endOfServeceTotalValue = employee.endOfServeceTotalValue
+
+
+
+    axios.post('/api/end-of-service/add-end-of-service', data).then((res)=>{
+      router.push('/company-dashboard/endOfService/slip/'+res.data.data._id)
+      toast.success('End of service gratuity (' + res.data.data.name + ') Inserted Successfully.', {
         delay: 3000,
         position: 'bottom-right'
       })
@@ -71,7 +59,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     })
   }
 
-  if (loading) return <Loading header='Please Wait' description="Payroll Inserting"></Loading>
+  if (loading) return <Loading header='Please Wait' description="End of service gratuity Inserting"></Loading>
 
   return (
     <Card>

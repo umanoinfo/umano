@@ -401,7 +401,7 @@ const PayrollList = classNamec => {
   }
 
   const addPayroll = () => {
-    router.push('/company-dashboard/payroll/calculate')
+    router.push('/company-dashboard/payroll/endOfService/calculate')
   }
 
   const deleteEmployee = () => {
