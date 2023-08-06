@@ -22,9 +22,9 @@ export default async function handler(req, res) {
 
   // ---------------------- Insert -----------------------------
 
-  const payroll = await client
+  const endOfService = await client
     .db()
-    .collection('payrolls')
+    .collection('endOfServices')
     .aggregate([
       {
         $match: {
@@ -36,6 +36,6 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  res.status(200).json({ success: true, data: payroll })
+  res.status(200).json({ success: true, data: endOfService })
 
 }

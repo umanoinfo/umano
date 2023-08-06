@@ -15,19 +15,19 @@ export default async function handler(req, res) {
 
   // ---------------- Delete --------------------
 
-  const payroll = req.body.selectedPayroll
-  const id = payroll._id
-  delete payroll._id
+  const endOfService = req.body.selectedEndOfService
+  const id = endOfService._id
+  delete endOfService._id
 
-  const selectedPayroll = await client
+  const selectedEndOfService = await client
     .db()
-    .collection('payrolls')
+    .collection('endOfServices')
     .findOne({ _id: ObjectId(id) })
 
-  if (selectedPayroll && selectedPayroll.deleted_at) {
-    const deletePayroll = await client
+  if (selectedEndOfService && selectedEndOfService.deleted_at) {
+    const deleteEndOfService = await client
       .db()
-      .collection('payrolls')
+      .collection('endOfServices')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: '' } }, { upsert: false })
 
     // ---------------- logBook ----------------
@@ -35,16 +35,16 @@ export default async function handler(req, res) {
     let log = {
       user_id: myUser._id,
       company_id: myUser.company_id,
-      Module: 'Payroll',
+      Module: 'End Of Services',
       Action: 'Restore',
-      Description: 'Restore payroll (' + selectedPayroll.name + ')',
+      Description: 'Restore end of services (' + selectedEndOfService.name + ')',
       created_at: new Date()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
-    const deletePayroll = await client
+    const deleteEndOfService = await client
       .db()
-      .collection('payrolls')
+      .collection('endOfServices')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
 
     // ---------------- logBook ----------------
@@ -52,13 +52,13 @@ export default async function handler(req, res) {
     let log = {
       user_id: myUser._id,
       company_id: myUser.company_id,
-      Module: 'Payroll',
+      Module: 'End Of Services',
       Action: 'Delete',
-      Description: 'Delete payroll (' + selectedPayroll.name + ')',
+      Description: 'Delete end of services (' + selectedEndOfService.name + ')',
       created_at: new Date()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
 
-  res.status(201).json({ success: true, data: selectedPayroll })
+  res.status(201).json({ success: true, data: selectedEndOfService })
 }
