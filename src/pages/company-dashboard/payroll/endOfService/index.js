@@ -48,7 +48,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { EmployeesTypes } from 'src/local-db'
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/payroll'
+import { fetchData } from 'src/store/apps/endOfService'
 
 // ** Third Party Components
 import axios from 'axios'
@@ -119,7 +119,7 @@ const PayrollList = classNamec => {
   // ** Hooks
 
   const dispatch = useDispatch()
-  const store = useSelector(state => state.payroll)
+  const store = useSelector(state => state.endOfService)
 
   const router = useRouter()
 
@@ -130,7 +130,7 @@ const PayrollList = classNamec => {
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, no, year, month, value])
+  }, [dispatch, no, value])
 
   const handleClose = () => {
     setOpen(false)
@@ -211,7 +211,7 @@ const PayrollList = classNamec => {
     }
 
     const handleRowView = () => {
-      router.push('/company-dashboard/payroll/slip/' + row._id)
+      router.push('/company-dashboard/payroll/endOfService/slip/' + row._id)
       handleRowOptionsClose()
     }
 
@@ -355,7 +355,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.total ? row.total : 0}<small> EAD</small>
+              {row.endOfServeceTotalValue ? row.endOfServeceTotalValue : 0}<small> EAD</small>
             </Typography>
           </Box>
         )
@@ -446,7 +446,7 @@ const PayrollList = classNamec => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Payroll List
+              End Of Service List
             </Typography>
           </Breadcrumbs>
           <Divider />

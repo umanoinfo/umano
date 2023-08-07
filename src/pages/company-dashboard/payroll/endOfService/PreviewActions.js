@@ -14,13 +14,11 @@ import Loading from 'src/views/loading'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 
-const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
-
-  const [loading , setLoading] = useState(false)
+const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const save = ()=>{
-
+  const save = () => {
     setLoading(true)
 
     let data = {}
@@ -32,7 +30,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.email = employee.email
     data.idNo = employee.idNo
     data.employeePositions_info = employee.employeePositions_info
-    data.name = employee.firstName + "" + employee.firstName
+    data.name = employee.firstName + '' + employee.firstName
     data.mobilePhone = employee.mobilePhone
     data.company_id = employee.company_id
     data.joiningDate = employee.joiningDate
@@ -47,10 +45,8 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.actualYears = employee.actualYears
     data.endOfServeceTotalValue = employee.endOfServeceTotalValue
 
-
-
-    axios.post('/api/end-of-service/add-end-of-service', data).then((res)=>{
-      router.push('/company-dashboard/endOfService/slip/'+res.data.data._id)
+    axios.post('/api/end-of-service/add-end-of-service', data).then(res => {
+      router.push('/company-dashboard/payroll/endOfService/slip/' + res.data.data._id)
       toast.success('End of service gratuity (' + res.data.data.name + ') Inserted Successfully.', {
         delay: 3000,
         position: 'bottom-right'
@@ -59,7 +55,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     })
   }
 
-  if (loading) return <Loading header='Please Wait' description="End of service gratuity Inserting"></Loading>
+  if (loading) return <Loading header='Please Wait' description='End of service gratuity Inserting'></Loading>
 
   return (
     <Card>
@@ -72,7 +68,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
           onClick={togglesaveSendInvoiceDrawer}
           startIcon={<Icon icon='mdi:send-outline' />}
         >
-          Save 
+          Save
         </Button> */}
         <Button fullWidth sx={{ mb: 3.5 }} color='success' onClick={save} variant='contained'>
           Save

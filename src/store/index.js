@@ -31,6 +31,7 @@ import employeeReward from 'src/store/apps/employeeReward'
 import attendance from 'src/store/apps/attendance'
 import employeeLeave from 'src/store/apps/employeeLeave'
 import payroll from 'src/store/apps/payroll'
+import endOfService from 'src/store/apps/endOfService'
 import file from 'src/store/apps/file'
 
 export const store = configureStore({
@@ -64,6 +65,7 @@ export const store = configureStore({
     attendance,
     employeeLeave,
     payroll,
-    file
+    file,
+    endOfService
   }
 })
