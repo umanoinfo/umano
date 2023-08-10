@@ -177,7 +177,6 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
           "Content-Type": "application/json",
         },
       }).then(res=>res.json()).then(data=>{
-        console.log(data);
         if(data.success)
         {
             signIn("credentials",{email:user.email,password:newPassword}).then(()=>{

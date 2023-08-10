@@ -167,7 +167,7 @@ const CompaniesList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData({
+       fetchData({
         type,
         companyStatus,
         q: value
@@ -515,7 +515,8 @@ const CompaniesList = () => {
             </Box>
           </Box>
           {/* -------------------------- Table -------------------------------------- */}
-          <DataGrid
+
+          {!loading && store.data && <DataGrid
             autoHeight
             rows={store.data}
             columns={columns}
@@ -524,7 +525,10 @@ const CompaniesList = () => {
             rowsPerPageOptions={[10, 25, 50]}
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+          />}
+
+          {loading && <span style={{paddingLeft: '10px' , fontStyle:'italic'}}> Please Wait .... </span>}
+
         </Card>
       </Grid>
 

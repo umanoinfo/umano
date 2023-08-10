@@ -69,7 +69,6 @@ const Home = () => {
     }).then((data)=>{
       setLoading(false)
       setData(data.data.data)
-      console.log(data.data.data)
     })
   }
 

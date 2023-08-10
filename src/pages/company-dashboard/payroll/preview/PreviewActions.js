@@ -50,6 +50,11 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalWorkingDaysCount = employee.totalWorkingDaysCount
     data.totalholidayHours = employee.totalholidayHours
     data.totalholidayValue = employee.totalholidayValue
+    data.totalLateOverTimeValue = employee.totalLateOverTimeValue
+    data.totalEarlyOverTimeValue = employee.totalEarlyOverTimeValue
+    data.totalEarlyOverTimeHours = employee.totalEarlyOverTimeHours
+    data.totalLateOverTimeHours = employee.totalLateOverTimeHours
+
     data.total  = 
     Number(employee.totalOffDayValue) +
       Number(employee.totalholidayValue) +
@@ -59,7 +64,9 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
               Number(employee.totalCompensations) -
                 Number(employee.totalEmployeeDeductions) +
                   Number(employee.totalEmployeeRewards) -
-                    Number(employee.totalLeave)
+                    Number(employee.totalLeave)+
+                      Number(employee.totalLateOverTimeValue)+
+                        Number(employee.totalEarlyOverTimeValue)
 
     axios.post('/api/payroll/add-payroll', data).then((res)=>{
       router.push('/company-dashboard/payroll/slip/'+res.data.data._id)

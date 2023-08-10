@@ -52,7 +52,6 @@ const EmployeeTimeLine = ({ id }) => {
       setEmployeeTimeline(response.data.data[0])
       setTimeline(response.data.timeline)
       setIsLoading(false)
-      console.log(response.data.timeline)
     })
   }
 

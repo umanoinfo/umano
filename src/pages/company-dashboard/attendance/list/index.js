@@ -218,7 +218,7 @@ const AllDocumentsList = () => {
     }
 
     const handleEditClose = () => {
-      console.log('55555')
+  
     }
 
     const handleRowView = () => {

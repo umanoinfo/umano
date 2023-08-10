@@ -113,21 +113,17 @@ const EditLeave = ({ popperPlacement, id }) => {
 
           val.date_from = new Date(val.date_from)
           val.date_to = new Date(response.data.data[0].date_to)
-          console.log(employees ,"--------------", id)
 
           let employee = employees.find(emp => emp._id == response.data.data[0].employee_id)
-          console.log(employee)
           setSelectedEmployee({ ...employee })
 
           setFormValue({ ...val })
 
-          console.log(employee , selectedEmployee)
           val = employee.leaves_info.map(e => {
             e.id = e._id
 
             return e
           })
-          console.log(val)
           setLeavesDataSource(val)
 
         })

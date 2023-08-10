@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     toDate = new Date(req.query.toDate).setHours(23, 59, 59, 999)
   }
 
-  console.log(req.query.employee_no)
 
   // -------------------- Token --------------------------------------------------
 

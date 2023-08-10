@@ -18,9 +18,9 @@ const VerticalNavItems = props => {
     const TagName = resolveNavItemComponent(item)
 
     return (
-      <>
-        <TagName {...props} key={index} item={item} />{' '}
-      </>
+
+        <TagName {...props} key={index} item={item} />
+
     )
   })
 

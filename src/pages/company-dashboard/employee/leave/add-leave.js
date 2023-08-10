@@ -686,14 +686,12 @@ const AddLeave = ({ popperPlacement, id }) => {
 
 
   const fillTable = id => {
-    console.log(employeesFullInfo)
     let val = employeesFullInfo.find(val => val._id == id)
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id
-
+      
       return e
-
     })
     setLeavesDataSource(val)
   }

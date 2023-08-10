@@ -34,7 +34,7 @@ const CompanyViewSubscriptions = ({ id }) => {
   const [loading, setLoading] = useState(true)
 
   const handleEditRowOptions = (row) => {
-    console.log(row)
+
   }
 
   const columns = [

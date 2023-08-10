@@ -35,15 +35,7 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
   let new_date_out = attendance.date.split('T')
   new_date_out[1] = attendance.timeOut
 
-  console.log(new_date_in[1] , new_date_out[1] )
 
-  // new_date = new_date.toString()
-
-  // console.log(attendance.timeIn)
-  // let arr = [attendance.timeIn.split(':')]
-
-  // let time_in = new Date(new_date).setHours(arr[0])
-  // console.log(time_in)
 
   const statusData = [{ label: 'active', value: 'active' }]
 

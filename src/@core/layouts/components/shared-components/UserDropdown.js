@@ -55,8 +55,6 @@ const UserDropdown = props => {
 
   const { data: session, status } = useSession()
 
-  console.log(session.user)
-
   const styles = {
     py: 2,
     px: 4,

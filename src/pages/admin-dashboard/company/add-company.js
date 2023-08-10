@@ -218,7 +218,6 @@ const DialogAddUser = ({ popperPlacement }) => {
   }
 
   const handleStateChange = (event, newValue) => {
-    console.log(newValue)
     setState(newValue)
   }
 

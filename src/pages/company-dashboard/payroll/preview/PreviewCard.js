@@ -367,6 +367,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <small> AED</small>
                 </TableCell>
               </TableRow>
+
               <TableRow>
                 <TableCell>Early and late Hours</TableCell>
                 <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
@@ -379,6 +380,20 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <small> AED</small>
                 </TableCell>
               </TableRow>
+
+              <TableRow>
+                <TableCell>Early and late OverTime Hours</TableCell>
+                <TableCell>{data.totalEarlyOverTimeHours + data.totalLateOverTimeHours}</TableCell>
+                <TableCell>
+                  {data.salaryFormulas_info[0].firstOverTime * data.hourlySalary * -1}
+                  <small> AED</small>
+                </TableCell>
+                <TableCell>
+                  <strong>{(Number(data.totalLateOverTimeValue) + Number(data.totalEarlyOverTimeValue)).toFixed(3)}</strong>
+                  <small> AED</small>
+                </TableCell>
+              </TableRow>
+
               <TableRow>
                 <TableCell>Holiday Hours</TableCell>
                 <TableCell>{data.totalholidayHours}</TableCell>
@@ -391,6 +406,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <small> AED</small>
                 </TableCell>
               </TableRow>
+
               <TableRow>
                 <TableCell>Off Day Hours</TableCell>
                 <TableCell>{data.totalOffDayHours}</TableCell>
@@ -468,6 +484,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </TableRow>
                 )
               })}
+
               {data.employee_rewards_info.map((reward, index) => {
                 return (
                   <TableRow key={index}>
@@ -486,6 +503,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </TableRow>
                 )
               })}
+
               {data.leaves_info.map((leave, index) => {
                 return (
                   <TableRow key={index}>
@@ -530,7 +548,9 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     Number(data.totalCompensations) -
                     Number(data.totalEmployeeDeductions) +
                     Number(data.totalEmployeeRewards)-
-                    Number(data.totalLeave)
+                    Number(data.totalLeave)+
+                    Number(data.totalLateOverTimeValue)+
+                    Number(data.totalEarlyOverTimeValue)
                   ).toFixed(3)}
                 </Typography>
               </CalcWrapper>

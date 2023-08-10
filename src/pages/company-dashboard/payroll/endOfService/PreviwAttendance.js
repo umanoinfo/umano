@@ -38,8 +38,6 @@ import NoPermission from 'src/views/noPermission'
 
 const AttendanceList = ({ attendances }) => {
 
-  console.log(attendances)
-
   const [pageSize, setPageSize] = useState(31)
 
   const [loading, setLoading] = useState(false)

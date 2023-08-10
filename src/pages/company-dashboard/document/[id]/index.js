@@ -188,8 +188,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
       }
     })
     setSelectedFiles(files)
-    console.log(e)
-    console.log(selectData)
   }
 
   const removeFile = e => {}

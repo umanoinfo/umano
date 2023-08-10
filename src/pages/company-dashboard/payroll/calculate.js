@@ -469,6 +469,8 @@ const AllDocumentsList = () => {
 
       let totalEarlyHours = 0
       let totalLateHours = 0
+      let totalEarlyOverTimeHours = 0
+      let totalLateOverTimeHours = 0
       let totalholidayHours = 0
       let totalOffDayHours = 0
       let totalCompensations = 0
@@ -477,6 +479,31 @@ const AllDocumentsList = () => {
       let totalEmployeeRewards = 0
       let totalWorkingDaysCount = 0
       let totalLeave = 0
+
+    //   ------------------------ Assume Early & Late OverTime Hours -------------------------------
+
+      res.data.attendances.map(att => {
+
+        totalEarlyOverTimeHours = totalEarlyOverTimeHours + Number(att.earlyOverTimeHours)
+        totalLateOverTimeHours = totalLateOverTimeHours + Number(att.lateOverTimeHours)
+
+      })
+
+      employee.totalEarlyOverTimeHours = totalEarlyOverTimeHours
+      employee.totalLateOverTimeHours = totalLateOverTimeHours
+
+      employee.totalEarlyOverTimeValue = (
+        +totalEarlyOverTimeHours *
+        +employee.hourlySalary *
+        +employee.salaryFormulas_info[0].firstOverTime
+      ).toFixed(3)
+
+      employee.totalLateOverTimeValue = (
+        +totalLateOverTimeHours *
+        +employee.hourlySalary *
+        +employee.salaryFormulas_info[0].firstOverTime
+      ).toFixed(3)
+
 
      //   ----------------------- Assume Early & Late Hours -------------------------------
 
@@ -493,6 +520,7 @@ const AllDocumentsList = () => {
           totalOffDayHours = totalOffDayHours + Number(att.totalHours)
         }
       })
+
       employee.totalWorkingDaysCount = totalWorkingDaysCount
       employee.totalholidayHours = totalholidayHours
       employee.totalholidayValue = (
@@ -516,7 +544,7 @@ const AllDocumentsList = () => {
         Number(employee.hourlySalary) *
         -1).toFixed(3)
 
-      //   -------------------------- Assume Compensations -------------------------------------
+      //   -------------------------- Assume Compensations -----------------------------------------
 
       if (employee.compensations_array) {
         employee.compensations_array.map(comp => {
@@ -538,7 +566,7 @@ const AllDocumentsList = () => {
         employee.totalCompensations = totalCompensations
       }
 
-      //   -------------------------- Assume Deduction -------------------------------------
+      //   -------------------------- Assume Deduction ----------------------------------------------
 
       if (employee.deductions_array) {
         employee.deductions_array.map(deduction => {
@@ -572,7 +600,7 @@ const AllDocumentsList = () => {
         employee.totalEmployeeDeductions = totalEmployeeDeductions
       }
 
-      //   -------------------------- Assume Employee Rewards -------------------------------------
+      //   -------------------------- Assume Employee Rewards ----------------------------------------
 
       if (employee.employee_rewards_info) {
         employee.employee_rewards_info.map(reward => {
@@ -583,7 +611,7 @@ const AllDocumentsList = () => {
         employee.totalEmployeeRewards = totalEmployeeRewards
       }
 
-        //   -------------------------- Assume Leaves -------------------------------------
+      //   --------------------------- Assume Leaves -------------------------------------------------
 
         if (employee.leaves_info) {
           let totalWorkingDaysCount = 0
@@ -610,6 +638,9 @@ const AllDocumentsList = () => {
 
           employee.totalLeave = (totalLeave)
       }
+
+      //   --------------------------- Assume OverTime -------------------------------------------------
+
 
       setSelectedEmployee(employee)
       setAttendances(res.data.attendances)
