@@ -77,13 +77,13 @@ const Home = () => {
   return (
     <>
 
-    1111
+    {/* 1111 */}
 
-        {/* <ApexChartWrapper> */}
+        <ApexChartWrapper>
           <Grid container spacing={6} className='match-height'>
-            {/* <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4}>
               <CrmAward />
-            </Grid> */}
+            </Grid>
             <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
                 stats={data.employees_count}
@@ -93,7 +93,7 @@ const Home = () => {
                 icon={<Icon icon='mdi-account-box-outline' />}
               />}
             </Grid>
-            {/* <Grid item xs={6} sm={3} md={2}>
+            <Grid item xs={6} sm={3} md={2}>
               {data && <CardStatisticsVertical
                 stats={data.users_count}
                 color='warning'
@@ -101,35 +101,35 @@ const Home = () => {
                 chipText='Last Six Month'
                 icon={<Icon icon='mdi-account' />}
               />}
-            </Grid> */}
-            {/* <Grid item xs={6} sm={3} md={2}>
+            </Grid>
+            <Grid item xs={6} sm={3} md={2}>
               {data && <CardStatisticsVertical
                 stats={data.documents_count}
                 color='success'
                 title='Documents'
                 icon={<Icon icon='mdi-file-outline' />}
               />}
-            </Grid> */}
-            {/* <Grid item xs={6} sm={3} md={2}>
+            </Grid>
+            <Grid item xs={6} sm={3} md={2}>
               { data && <CrmTotalGrowth 
                 expiaryDocuments_count = {data.expiaryDocuments_count}   
                 documents_count ={data.documents_count}
               />}
-            </Grid> */}
+            </Grid>
 
-            {/* <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={12}>
               <CrmProjectTimeline />
-            </Grid> */}
+            </Grid> 
 
-            {/* <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={8}>
               <CrmTable data={data.documentsExpired} />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <CrmMeetingSchedule birthdays={data.birthdays}/>
-            </Grid> */}
+            </Grid>
         
           </Grid>
-        {/* </ApexChartWrapper> */}
+        </ApexChartWrapper>
     </>
   )
 

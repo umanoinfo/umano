@@ -117,7 +117,7 @@ const CrmAward = () => {
         <StyledGrid1 item xs={12} md={9} lg={9}>
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
-              {session.user.company_info[0].name}
+              {/* {session.user.company_info[0].name} */}
             </Typography>
             
          
