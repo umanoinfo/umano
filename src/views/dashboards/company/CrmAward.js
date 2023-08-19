@@ -117,7 +117,7 @@ const CrmAward = () => {
         <StyledGrid1 item xs={12} md={9} lg={9}>
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
-              {/* {session.user.company_info[0].name} */}
+              {session.user && session.user.company_info[0] && session.user.company_info[0].name}
             </Typography>
             
          
@@ -132,7 +132,7 @@ const CrmAward = () => {
         </StyledGrid1>
         <StyledGrid2 item xs={12} md={3} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />
+            {session.user && session.user.company_info[0] && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
           </CardContent>
         </StyledGrid2>
       </Grid>
