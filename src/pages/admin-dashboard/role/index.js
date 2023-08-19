@@ -276,19 +276,9 @@ const RolesComponent = () => {
                     }}
                   >
                     <Grid container sx={{ height: '100%' }}>
-                      <Grid item xs={5}>
-                        <Box sx={{ height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                          <img
-                            width={65}
-                            height={130}
-                            alt='add-role'
-                            src='/images/pages/add-new-role-illustration.png'
-                          />
-                        </Box>
-                      </Grid>
-                      <Grid item xs={7}>
+                      <Grid item xs={12}>
                         <CardContent>
-                          <Box sx={{ textAlign: 'right' }}>
+                          <Box sx={{ textAlign: 'center' }}>
                             <Button
                               variant='contained'
                               sx={{ mb: 2.5, whiteSpace: 'nowrap' }}

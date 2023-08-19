@@ -340,7 +340,8 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.lumpySalary ? row.lumpySalary : 0}<small> EAD</small>
+              {row.lumpySalary ? row.lumpySalary : 0}
+              <small> EAD</small>
             </Typography>
           </Box>
         )
@@ -355,7 +356,8 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.total ? row.total : 0}<small> EAD</small>
+              {row.total ? row.total : 0}
+              <small> EAD</small>
             </Typography>
           </Box>
         )
@@ -397,7 +399,7 @@ const PayrollList = classNamec => {
     })
     const ws = XLSX.utils.json_to_sheet(ex)
     XLSX.utils.book_append_sheet(wb, ws, 'Comments')
-    XLSX.writeFile(wb, 'survey-data.xlsx')
+    XLSX.writeFile(wb, 'payroll.xlsx')
   }
 
   const addPayroll = () => {

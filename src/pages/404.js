@@ -46,7 +46,7 @@ const Error404 = () => {
           </Typography>
           <Typography variant='body2'>We couldn&prime;t find the page you are looking for.</Typography>
         </BoxWrapper>
-        <Img alt='error-illustration' src='/images/pages/404.png' />
+        <Img alt='error-illustration' src='/images/pages/auth-v2-login-illustration-bordered-light.png' />
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
           Back to Home
         </Button>

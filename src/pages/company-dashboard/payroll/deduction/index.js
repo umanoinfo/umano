@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 
+import * as XLSX from 'xlsx'
+
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -113,6 +115,31 @@ const DeductionsList = () => {
   const handleFilter = useCallback(val => {
     setValue(val)
   }, [])
+
+  const handleExcelExport = () => {
+    const wb = XLSX.utils.book_new()
+    let ex = [...store.data]
+
+    ex = ex.map(val => {
+      let c = { ...val }
+      delete c['company_id']
+      delete c['country_info']
+      delete c['firstName']
+      delete c['lastName']
+      delete c['updated_at']
+      delete c['sourceOfHire']
+      delete c['logo']
+      delete c['_id']
+
+      delete c['positions_info']
+
+      return c
+    })
+    console.log(ex)
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.book_append_sheet(wb, ws, 'Comments')
+    XLSX.writeFile(wb, 'deductions.xlsx')
+  }
 
   const handleStatusChange = useCallback(e => {
     setDeductionStatus(e.target.value)
@@ -266,7 +293,7 @@ const DeductionsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-             {row.fixedValue>0 ? row.fixedValue: '-' } 
+            {row.fixedValue > 0 ? row.fixedValue : '-'}
           </Typography>
         )
       }
@@ -279,7 +306,7 @@ const DeductionsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.percentageValue>0 ? row.percentageValue +'%': '-' } 
+            {row.percentageValue > 0 ? row.percentageValue + '%' : '-'}
           </Typography>
         )
       }
@@ -425,6 +452,7 @@ const DeductionsList = () => {
                 color='secondary'
                 variant='outlined'
                 startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+                onClick={handleExcelExport}
               >
                 Export
               </Button>
