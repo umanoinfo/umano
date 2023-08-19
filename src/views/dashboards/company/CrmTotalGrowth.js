@@ -72,7 +72,7 @@ const CrmTotalGrowth = ( props) => {
             {expiaryDocuments_count} from {documents_count}
           </Typography>
         </Box>
-        {/* <ReactApexcharts type='donut' height={135} options={options} series={[ Number(documents_count - expiaryDocuments_count ) , Number(expiaryDocuments_count )]} /> */}
+        <ReactApexcharts type='donut' height={135} options={options} series={[ Number(documents_count - expiaryDocuments_count ) , Number(expiaryDocuments_count )]} />
       </CardContent>
     </Card>
   )
