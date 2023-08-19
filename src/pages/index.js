@@ -78,7 +78,7 @@ const Home = () => {
   
   return (
     <>
-        <ApexChartWrapper>
+        {/* <ApexChartWrapper> */}
           <Grid container spacing={6} className='match-height'>
             <Grid item xs={12} md={4}>
               <CrmAward />
@@ -119,16 +119,16 @@ const Home = () => {
             {/* <Grid item xs={12} md={12}>
               <CrmProjectTimeline />
             </Grid> */}
-            
-            <Grid item xs={12} md={8}>
+
+            {/* <Grid item xs={12} md={8}>
               <CrmTable data={data.documentsExpired} />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <CrmMeetingSchedule birthdays={data.birthdays}/>
-            </Grid>
+            </Grid> */}
         
           </Grid>
-        </ApexChartWrapper>
+        {/* </ApexChartWrapper> */}
     </>
   )
 
