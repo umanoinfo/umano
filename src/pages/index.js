@@ -52,7 +52,9 @@ const Home = () => {
   const [data , setData]=useState()
 
   useEffect(() => {
+
     getDashboard()
+
     // if (auth.user && auth.user.role) {
     //   const homeRoute = getHomeRoute(auth.user.role)
 
@@ -78,7 +80,9 @@ const Home = () => {
   
   return (
     <>
+    
     1111
+
         {/* <ApexChartWrapper> */}
           {/* <Grid container spacing={6} className='match-height'> */}
             {/* <Grid item xs={12} md={4}>
