@@ -53,12 +53,12 @@ const Home = () => {
 
   useEffect(() => {
     getDashboard()
-    if (auth.user && auth.user.role) {
-      const homeRoute = getHomeRoute(auth.user.role)
+    // if (auth.user && auth.user.role) {
+    //   const homeRoute = getHomeRoute(auth.user.role)
 
-      // Redirect user to Home URL
-      router.replace(homeRoute)
-    }
+    //   // Redirect user to Home URL
+    //   router.replace(homeRoute)
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -78,11 +78,12 @@ const Home = () => {
   
   return (
     <>
+    1111
         {/* <ApexChartWrapper> */}
-          <Grid container spacing={6} className='match-height'>
-            <Grid item xs={12} md={4}>
+          {/* <Grid container spacing={6} className='match-height'> */}
+            {/* <Grid item xs={12} md={4}>
               <CrmAward />
-            </Grid>
+            </Grid> */}
             {/* <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
                 stats={data.employees_count}
@@ -127,7 +128,7 @@ const Home = () => {
               <CrmMeetingSchedule birthdays={data.birthdays}/>
             </Grid> */}
         
-          </Grid>
+          {/* </Grid> */}
         {/* </ApexChartWrapper> */}
     </>
   )
