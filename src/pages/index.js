@@ -84,7 +84,7 @@ const Home = () => {
             {/* <Grid item xs={12} md={4}>
               <CrmAward />
             </Grid> */}
-            {/* <Grid item xs={6} sm={3} md={2}>
+            <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
                 stats={data.employees_count}
                 color='primary'
@@ -92,7 +92,7 @@ const Home = () => {
                 chipText='Last 4 Month'
                 icon={<Icon icon='mdi-account-box-outline' />}
               />}
-            </Grid> */}
+            </Grid>
             {/* <Grid item xs={6} sm={3} md={2}>
               {data && <CardStatisticsVertical
                 stats={data.users_count}
