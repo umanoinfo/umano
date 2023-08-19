@@ -80,15 +80,15 @@ const Home = () => {
   
   return (
     <>
-    
+
     1111
 
         {/* <ApexChartWrapper> */}
-          {/* <Grid container spacing={6} className='match-height'> */}
-            {/* <Grid item xs={12} md={4}>
+          <Grid container spacing={6} className='match-height'>
+            <Grid item xs={12} md={4}>
               <CrmAward />
-            </Grid> */}
-            {/* <Grid item xs={6} sm={3} md={2}>
+            </Grid>
+            <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
                 stats={data.employees_count}
                 color='primary'
@@ -119,7 +119,7 @@ const Home = () => {
                 expiaryDocuments_count = {data.expiaryDocuments_count}   
                 documents_count ={data.documents_count}
               />}
-            </Grid> */}
+            </Grid>
 
             {/* <Grid item xs={12} md={12}>
               <CrmProjectTimeline />
@@ -132,7 +132,7 @@ const Home = () => {
               <CrmMeetingSchedule birthdays={data.birthdays}/>
             </Grid> */}
         
-          {/* </Grid> */}
+          </Grid>
         {/* </ApexChartWrapper> */}
     </>
   )
