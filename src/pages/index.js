@@ -81,9 +81,9 @@ const Home = () => {
 
         {/* <ApexChartWrapper> */}
           <Grid container spacing={6} className='match-height'>
-            <Grid item xs={12} md={4}>
+            {/* <Grid item xs={12} md={4}>
               <CrmAward />
-            </Grid>
+            </Grid> */}
             {/* <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
                 stats={data.employees_count}
