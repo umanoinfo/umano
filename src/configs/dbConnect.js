@@ -8,7 +8,7 @@ export async function connectToDatabase() {
     // 'mongodb://localhost:27017/hr?retryWrites=true&w=majority'
 
     // 1
-    
+
   )
   setTimeout(() => {
     client.close()
