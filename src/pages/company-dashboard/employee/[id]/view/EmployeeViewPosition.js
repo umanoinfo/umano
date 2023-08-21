@@ -45,6 +45,7 @@ const EmployeeViewPosition = ({ id, employee }) => {
     {
       flex: 0.3,
       minWidth: 100,
+      resizable: true ,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => <Typography variant='body2'>{row.positionTitle}</Typography>

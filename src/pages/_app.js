@@ -55,6 +55,8 @@ import '../../styles/ChartNode.css'
 
 import { SessionProvider } from 'next-auth/react'
 
+import 'rsuite/dist/rsuite.min.css';
+
 const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
@@ -86,9 +88,9 @@ const App = props => {
   return (
     <SessionProvider session={session}>
 
-      <Provider store={store}>
+      <Provider store={store} >
 
-        <CacheProvider value={emotionCache}>
+        <CacheProvider value={emotionCache} >
 
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>

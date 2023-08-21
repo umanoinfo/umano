@@ -66,10 +66,10 @@ const CrmTotalGrowth = ( props) => {
       <CardContent>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant='h6' sx={{ mr: 1.5 }}>
-            Documents Expired
+            Expired documents 
           </Typography>
           <Typography variant='subtitle2' sx={{ color: 'primary.main' }}>
-            {expiaryDocuments_count} from {documents_count}
+            {expiaryDocuments_count} of {documents_count}
           </Typography>
         </Box>
         <ReactApexcharts type='donut' height={135} options={options} series={[ Number(documents_count - expiaryDocuments_count ) , Number(expiaryDocuments_count )]} />

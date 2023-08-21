@@ -223,7 +223,7 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { row.document_info[0].title}
+              { row.document_info[0] && row.document_info[0].title}
             </div>
           </Box>
         )
@@ -239,7 +239,7 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {row.document_info[0].type.map((t, index) => {
+              {row.document_info[0] && row.document_info[0].type.map((t, index) => {
                 return (
                   <CustomChip
                     key={index}
@@ -264,7 +264,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
          <>
-         { new Date(row.document_info[0].created_at).toLocaleString()}
+         { row.document_info[0] && new Date(row.document_info[0].created_at).toLocaleString()}
          </>
         )
       }

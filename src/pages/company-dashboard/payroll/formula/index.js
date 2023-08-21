@@ -232,12 +232,12 @@ const FormulaList = () => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          {session && session.user && session.user.permissions.includes('ViewPayrollFormula') && (
+          {/* {session && session.user && session.user.permissions.includes('ViewPayrollFormula') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
-          )}
+          )} */}
 
           {session && session.user && session.user.permissions.includes('EditPayrollFormula') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>

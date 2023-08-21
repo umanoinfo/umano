@@ -214,12 +214,12 @@ const DepartmentList = ({ apiData }) => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          {session && session.user && session.user.permissions.includes('ViewDepartment') && (
+          {/* {session && session.user && session.user.permissions.includes('ViewDepartment') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
-          )}
+          )} */}
           {session && session.user && session.user.permissions.includes('EditDepartment') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -274,6 +274,7 @@ const DepartmentList = ({ apiData }) => {
         return (
           <>
             {row.parent_info[0] && <Box sx={{ display: 'flex', alignItems: 'center' }}>{row.parent_info[0].name}</Box>}
+            {!row.parent_info[0] && <Box sx={{ display: 'flex', alignItems: 'center' }}>-</Box>}
           </>
         )
       }
@@ -292,7 +293,7 @@ const DepartmentList = ({ apiData }) => {
             { row.user_info[0] && (
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography noWrap variant='caption' sx={{ color: 'text.primary' }}>
-                  {row.user_info[0].name}
+                  {row.user_info[0].firstName +' '+row.user_info[0].lastName}
                 </Typography>
                 <Typography noWrap variant='caption'>
                   {row.user_info[0].email}
@@ -419,7 +420,7 @@ const DepartmentList = ({ apiData }) => {
                 size='small'
                 value={value}
                 sx={{ mr: 6, mb: 2 }}
-                placeholder='Search User'
+                placeholder='Search Department'
                 onChange={e => handleFilter(e.target.value)}
               />
 

@@ -117,12 +117,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/company-user')
+    const res = await fetch('/api/company-employee')
     const { data } = await res.json()
 
-    const users = data.map(user => ({
-      label: user.name + '  (' + user.email + ')',
-      value: user._id
+    const users = data.map(employee => ({
+      label: employee.firstName +' '+ employee.lastName +'  (' + employee.email + ')',
+      value: employee._id
     }))
     setUsersDataSource(users)
     setIsLoading(false)
@@ -267,7 +267,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     <Grid item sm={12} xs={12} mt={2}>
                       <Form.Group controlId='description'>
                         <small>Department/Section Description</small>
-                        <Form.Control rows={3}  accepter={Textarea} size='lg' name='description' placeholder='Department Description' />
+                        <Form.Control size='lg' checkAsync name='description' placeholder='Description' />
                       </Form.Group>
                     </Grid>
                   </Grid>

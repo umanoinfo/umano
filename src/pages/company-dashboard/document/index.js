@@ -284,7 +284,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.title}
+            <Link href={{ pathname: '/company-dashboard/document/'+row._id }}>{row.title}</Link>
           </Typography>
         )
       }

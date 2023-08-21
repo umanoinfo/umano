@@ -20,6 +20,8 @@ import axios from 'axios'
 
 import { Form, Schema, SelectPicker, DatePicker, Toggle, CheckPicker, Input, Divider } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
+
+
 import React from 'react';
 
 // ** Icon Imports
@@ -29,7 +31,8 @@ import Icon from 'src/@core/components/icon'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { useDispatch } from 'react-redux'
 import { updateEvent } from 'src/store/apps/calendar'
-import { LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import {  LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
 
 const capitalize = string => string && string[0].toUpperCase() + string.slice(1)
 const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
@@ -421,11 +424,14 @@ const AddEventSidebar = props => {
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={3}>
+                <Grid container spacing={3} >
                   <Grid item sm={12} xs={12} mt={2}>
+       
+
                     <Form.Group>
                       <small>Start Date</small>
                       <DatePicker
+                     
                         size='md'
                         format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
                         onChange={e => {
@@ -438,6 +444,7 @@ const AddEventSidebar = props => {
                     </Form.Group>
                   </Grid>
                 </Grid>
+                
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
                     <Form.Group>
@@ -487,9 +494,11 @@ const AddEventSidebar = props => {
                       value={values.users}
                       size='md'
                       name='users'
+                      color= 'red'
                       data={usersDataSource}
                       block
                     />
+
                   </Grid>
                 </Grid>
 
@@ -501,6 +510,7 @@ const AddEventSidebar = props => {
                         setValues({ ...values, allDay: !values.allDay })
                       }}
                       value={values.allDay}
+                      color="red"
                       sx={{ px: 2 }}
                     />
                     <small style={{ paddingLeft: 10 }}>All day</small>

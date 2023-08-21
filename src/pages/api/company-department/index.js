@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       },
       {
         $lookup: {
-          from: 'users',
+          from: 'employees',
           let: { user_id: { $toObjectId: '$user_id' } },
           pipeline: [{ $addFields: { user_id: '$_id' } }, { $match: { $expr: { $eq: ['$user_id', '$$user_id'] } } }],
           as: 'user_info'

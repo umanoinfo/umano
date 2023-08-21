@@ -129,17 +129,7 @@ const EmployeeViewSalary = ({ employee }) => {
                       day
                     </Typography>
                   </Box>
-                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                      Sick :
-                    </Typography>
-                    {employee.salary_formula_info[0] && employee.salary_formula_info[0].sickAbsenceDay && (
-                      <Typography sx={{ fontWeight: 500 }}>{employee.salary_formula_info[0].sickAbsenceDay}</Typography>
-                    )}
-                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                      day
-                    </Typography>
-                  </Box>
+     
                 </Grid>
                 <Grid item sm={12} md={6}>
                   <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
@@ -163,19 +153,6 @@ const EmployeeViewSalary = ({ employee }) => {
                     {employee.salary_formula_info[0] && employee.salary_formula_info[0].notJustifiedAbsenceHoure && (
                       <Typography sx={{ fontWeight: 500 }}>
                         {employee.salary_formula_info[0].notJustifiedAbsenceHoure}
-                      </Typography>
-                    )}
-                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                      houre
-                    </Typography>
-                  </Box>
-                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                      Sick :
-                    </Typography>
-                    {employee.salary_formula_info[0] && employee.salary_formula_info[0].sickAbsenceHoure && (
-                      <Typography sx={{ fontWeight: 500 }}>
-                        {employee.salary_formula_info[0].sickAbsenceHoure}
                       </Typography>
                     )}
                     <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>

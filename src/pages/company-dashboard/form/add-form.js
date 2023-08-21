@@ -214,7 +214,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // -------------------------------- Routes -----------------------------------------------
 
   const close = () => {
-    router.push('/company-dashboard/department')
+    router.push('/company-dashboard/form')
   }
 
   const addToFiles = e => {
@@ -356,7 +356,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             color='warning'
                             variant='contained'
                             sx={{ mr: 3 }}
-                            onClick={() => setForm(false)}
+                            onClick={() => close()}
                           >
                             Close
                           </Button>

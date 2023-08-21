@@ -3,6 +3,7 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  
   const client = await connectToDatabase()
 
   // ---------------------------- Token -------------------------------------

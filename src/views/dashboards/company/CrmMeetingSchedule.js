@@ -62,7 +62,7 @@ const CrmMeetingSchedule = ( {birthdays}) => {
   return (
     <Card>
       <CardHeader
-        title='Eevents'
+        title="Event's"
       />
       <CardContent>
         {birthdays.map((item, index) => {

@@ -372,6 +372,7 @@ const Steppositions = ({ handleNext, employee }) => {
     {
       flex: 0.2,
       minWidth: 100,
+      resizable: true,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => <Typography variant='body2'>{row.department_info[0].name} / {row.positionTitle}</Typography>

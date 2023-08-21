@@ -228,7 +228,7 @@ const UserList = ({ apiData }) => {
       activationLink(row)
     }
 
-    const handleDelete = (row) => {
+    const handleDelete = () => {
       setSelectedUser(row)
       setOpen(true)
     }
