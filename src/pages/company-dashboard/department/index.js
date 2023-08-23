@@ -274,7 +274,7 @@ const DepartmentList = ({ apiData }) => {
         return (
           <>
             {row.parent_info[0] && <Box sx={{ display: 'flex', alignItems: 'center' }}>{row.parent_info[0].name}</Box>}
-            {!row.parent_info[0] && <Box sx={{ display: 'flex', alignItems: 'center' }}>-</Box>}
+            {!row.parent && <Box sx={{ display: 'flex', alignItems: 'center' }}>Main</Box>}
           </>
         )
       }

@@ -19,6 +19,11 @@ export default async function handler(req, res) {
 
   const departmen = req.body.data
   const id = departmen._id
+
+  if(departmen.parent == ""){
+    departmen.parent =null
+  }
+
   delete departmen._id
 
   if (!departmen.name) {

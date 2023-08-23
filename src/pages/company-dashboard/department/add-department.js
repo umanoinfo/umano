@@ -135,14 +135,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
 
-    const parents = data.map(departmen => ({
+    let containMain = false ;
+    
+    const parents = []
+    data.map(departmen => {
+      parents.push({
       label: departmen.name,
       value: departmen._id
-    }))
+    })
+    if(!departmen.parent){containMain = true}
+  })
+
+    if(!containMain )
     parents.push({
       label: 'Main',
       value: ''
     })
+    
     setParentsDataSource(parents)
     setIsLoading(false)
   }

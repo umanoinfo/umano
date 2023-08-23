@@ -118,12 +118,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/company-user')
+    const res = await fetch('/api/company-employee')
     const { data } = await res.json()
 
-    const users = data.map(user => ({
-      label: user.name + '  (' + user.email + ')',
-      value: user._id
+    const users = data.map(employee => ({
+      label: employee.firstName +' '+ employee.lastName +'  (' + employee.email + ')',
+      value: employee._id
     }))
     setUsersDataSource(users)
     setIsLoading(false)
@@ -135,8 +135,20 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/' + id)
     const { data } = await res.json()
+    
     setFormValue(data[0])
     setNewParent(data[0].parent)
+
+    let parents = parentsDataSource
+
+    if(!data[0].parent )
+    parents.push({
+      label: 'Main',
+      value: ''
+    })
+    
+    setParentsDataSource(parents)
+
     if (!data[0].parent) {
       setNewParent('')
     }
@@ -146,6 +158,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setIsLoading(false)
   }
 
+
+
+
   // ----------------------------- Get Parents ----------------------------------
 
   const getParents = async () => {
@@ -153,14 +168,25 @@ const AddDepartment = ({ popperPlacement, id }) => {
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
 
-    const parents = data.map(departmen => ({
+    let containMain = false ;
+    
+    const parents = []
+    data.map(departmen => {
+      if(departmen._id != id)
+      {parents.push({
       label: departmen.name,
       value: departmen._id
-    }))
+    })}
+
+    if(!departmen.parent && formValue.parent ){containMain = true}
+  })
+
+    if(!containMain )
     parents.push({
       label: 'Main',
       value: ''
     })
+    
     setParentsDataSource(parents)
     setIsLoading(false)
   }
@@ -194,6 +220,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         }
         data.user_id = userID
         data.updated_at = new Date()
+        console.log(data)
         axios
           .post('/api/company-department/edit-department', {
             data
@@ -231,7 +258,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Department' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
+            <CardHeader title='Edit Department' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
             <CardContent></CardContent>
             <Divider />
             <Grid container>
@@ -246,18 +273,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 >
                   <Grid container spacing={3}>
                     <Grid item sm={8} xs={12} mt={2}>
-                      <small>Core Department</small>
-                      <SelectPicker
-                        size='lg'
-                        name='parent '
-                        onChange={e => {
-                          changeParent(e)
-                        }}
-                        value={newParent}
-                        data={parentsDataSource}
-                        block
-                      />
-                    </Grid>
+                      <small>Core Department</small> 
+                        <SelectPicker
+                          size='lg'
+                          name='parent '
+                          onChange={e => {
+                            changeParent(e)
+                          }}
+                          value={newParent}
+                          data={parentsDataSource}
+                          block
+                        />
+                        
+                    </Grid> 
                   </Grid>
 
                   <Grid container spacing={3}>
