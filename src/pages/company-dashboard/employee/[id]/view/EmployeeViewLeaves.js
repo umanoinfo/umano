@@ -60,15 +60,55 @@ const EmployeeViewLeaves = ({ employee }) => {
       flex: 0.1,
       minWidth: 100,
       field: 'dateFrom',
-      headerName: 'Date From',
-      renderCell: ({ row }) => <Typography variant='body2'>{new Date(row.date_from).toLocaleString()}</Typography>
+      headerName: 'Start date',
+      renderCell: ({ row }) => {
+        const [date, time, ...r] = row.date_from.split('T')
+        
+        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
+      }
+
     },
     {
       flex: 0.1,
       minWidth: 100,
       field: 'dateTo',
-      headerName: 'Date To',
-      renderCell: ({ row }) => <Typography variant='body2'>{new Date(row.date_to).toLocaleString()}</Typography>
+      headerName: 'End date',
+      renderCell: ({ row }) => {
+        const [date, time, ...r] = row.date_to.split('T')
+
+        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}  </span>} </>
+      }
+    },
+    {
+      flex: 0.05,
+      minWidth: 50,
+      field: 'days',
+      headerName: 'Days',
+      renderCell: ({ row }) => {
+        const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
+        const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
+
+        return <> 
+          <span>{ row.type == 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)}</span>
+          <span>{ row.type != 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1}</span>
+        </>
+      }
+    },
+    {
+      flex: 0.05,
+      minWidth: 50,
+      field: 'hours',
+      headerName: 'Hours',
+      renderCell: ({ row }) => {
+        const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
+        const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
+
+        return <>
+        { row.type == 'hourly' && <span>
+        {Math.round(( (((new Date(row.date_to) - new Date(row.date_from))/1000/60/60/24)+1) - (((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1))*24*60)/60}
+        </span>}
+        </>
+      }
     },
     {
       flex: 0.05,

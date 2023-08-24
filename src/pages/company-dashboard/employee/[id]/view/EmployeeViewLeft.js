@@ -10,7 +10,7 @@ import Dialog from '@mui/material/Dialog'
 import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
 import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
+import Icon from 'src/@core/components/icon'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
@@ -24,6 +24,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const roleColors = {
   admin: 'error',
@@ -55,12 +57,25 @@ const Sub = styled('sub')({
 })
 
 const EmployeeViewLeft = ({ id, employee }) => {
+
+  const router = useRouter()
+
+
+  const newArray = employee?.employeePositions_info.filter((pos)=>{
+    return(pos.endChangeType == "onPosition")
+  })
+
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee')
+  }
+
   if (employee) {
     return (
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
             <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              
               {employee.logo && employee.logo.length ? (
                 <CustomAvatar
                   src={employee.logo}
@@ -79,28 +94,21 @@ const EmployeeViewLeft = ({ id, employee }) => {
                 </CustomAvatar>
               )}
               <Typography variant='h6' sx={{ mb: 2 }}>
-                {employee.firstName + ' ' + employee.lastName}
+                {employee.firstName + ' ' + employee.lastName} 
               </Typography>
+              
               {employee.gender && <Typography sx={{ mb: 2 }}>{employee.gender}</Typography>}
 
-              <CustomChip
-                skin='light'
-                size='small'
-                label={employee.dateOfBirth}
-                color={roleColors[employee.dateOfBirth]}
-                sx={{
-                  height: 20,
-                  fontWeight: 600,
-                  borderRadius: '5px',
-                  fontSize: '0.875rem',
-                  textTransform: 'capitalize',
-                  '& .MuiChip-label': { mt: -0.25 }
-                }}
-              />
+            {newArray.map((pos , index)=>{
+
+              return (<span key={index}><CustomChip skin='light' label={pos.positionTitle} /></span>)
+
+            })}
+             
             </CardContent>
 
             <CardContent>
-              <Typography variant='h6'>Details</Typography>
+              <Typography variant='h6'>Details <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
               <Box sx={{ pt: 2, pb: 1 }}>
                 {employee.firstName && (
@@ -108,7 +116,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                       Employee name:
                     </Typography>
-                    <Typography variant='body2'>{employee.firstName + ' ' + employee.lastName}</Typography>
+                    <Typography variant='body2'>{employee.firstName + ' ' + employee.lastName} </Typography>
                   </Box>
                 )}
                 {employee.email && (
@@ -127,6 +135,15 @@ const EmployeeViewLeft = ({ id, employee }) => {
                     <Typography variant='body2'>{employee.idNo}</Typography>
                   </Box>
                 )}
+                {employee.dateOfBirth && (
+                  <Box sx={{ display: 'flex', mb: 2.7 }}>
+                    <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                    Date Of Birth:
+                    </Typography>
+                    <Typography variant='body2'>{new Date(employee.dateOfBirth).toDateString()}</Typography>
+                  </Box>
+                )}
+                
                 {employee.country_info[0] && (
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
@@ -217,7 +234,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
       </Grid>
     )
   } else {
-    return null
+    <span>222222</span>
   }
 }
 

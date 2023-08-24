@@ -190,9 +190,6 @@ export default async function handler(req, res) {
   })
 
   if (employee)
-
-
-
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
 
       index++
@@ -310,5 +307,6 @@ export default async function handler(req, res) {
       })
     }
 
+    
   res.status(200).json({ success: true, data: employee, attendances: attendances })
 }

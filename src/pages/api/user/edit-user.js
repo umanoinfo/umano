@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   // -------------------------- Edit --------------------------------------
 
   const user = req.body.data
+  user.email = user.email.toLowerCase();
   const id = user._id
   delete user._id
   user.permissions = []

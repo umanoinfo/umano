@@ -9,7 +9,7 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import { Divider, InputAdornment } from '@mui/material'
+import { Breadcrumbs, Divider, InputAdornment, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
@@ -29,6 +29,7 @@ import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
 import Loading from 'src/views/loading'
 import React from 'react'
+import Link from 'next/link'
 
 const { StringType } = Schema.Types
 
@@ -42,7 +43,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [type, setType] = useState('')
   const router = useRouter()
   const inputFile = useRef(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [selectedDepartment, setSelectedDepartment] = useState()
   const [parentsDataSource, setParentsDataSource] = useState([])
@@ -73,19 +74,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
-    dispatch(
-      fetchData({
-        parent,
-        departmentStatus,
-        q: value
-      })
-    )
-      .then(getDepartment)
+    getDepartment()
       .then(() => {
         getUsers()
         getParents()
       })
-  }, [dispatch, parent, departmentStatus, value])
+  }, [])
 
   // ---------------------- async Check Department Name -----------------------------------------
 
@@ -247,7 +241,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Department is updating'></Loading>
+  if (isLoading) return <Loading header='Please Wait' description=''></Loading>
 
   if (session && session.user && !session.user.permissions.includes('EditDepartment'))
     return <NoPermission header='No Permission' description='No permission to edit department'></NoPermission>
@@ -258,8 +252,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Edit Department' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
-            <CardContent></CardContent>
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
+              Departments List
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              Edit Department
+            </Typography>
+          </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={7} md={7} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -299,9 +302,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} mt={2}>
-                      <Form.Group name='description'>
+                      <Form.Group controlId='description'>
                         <small>Department/Section Description</small>
-                        <Form.Control rows={3}  accepter={Textarea} size='lg' name='description' placeholder='Department Description' />
+                        <Form.Control size='lg'  name='description' placeholder='Description' />
                       </Form.Group>
                     </Grid>
                   </Grid>
@@ -339,7 +342,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
+                  <Box sx={{mt:2, mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 6 }}>
                     {!loading && (
                       <>

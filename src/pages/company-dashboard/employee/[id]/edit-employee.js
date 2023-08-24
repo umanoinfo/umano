@@ -836,12 +836,14 @@ const EditEmployee = ({ popperPlacement, id }) => {
     return getStepContent(activeStep)
   }
 
+  if (isLoading) return <Loading header='Please Wait' description='Employee is loading'></Loading>
+
   if (session && session.user && !session.user.permissions.includes('EditEmployee'))
     return <NoPermission header='No Permission' description='No permission to edit employee'></NoPermission>
 
   return (
     <>
-      <Grid container>
+      {!isLoading && <Grid container>
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
@@ -885,7 +887,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
             {isLoading && <Loading header='Please Wait'></Loading>}
           </Card>
         </Grid>
-      </Grid>
+      </Grid>}
     </>
   )
 }

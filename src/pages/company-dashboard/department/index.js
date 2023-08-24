@@ -152,7 +152,7 @@ const DepartmentList = ({ apiData }) => {
         departmentStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( console.log(store) ,  setLoading(false))
   }, [dispatch, type, departmentStatus, value])
 
   const handleClose = () => {
@@ -375,7 +375,7 @@ const DepartmentList = ({ apiData }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Department is inseting'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Department is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDepartment'))
     return <NoPermission header='No Permission' description='No permission to view departments'></NoPermission>
@@ -434,7 +434,7 @@ const DepartmentList = ({ apiData }) => {
 
           {/* ------------------------------- Table --------------------------------- */}
 
-          {store.data && (
+          {store.data.length > 0 && (
             <DataGrid
               autoHeight
               rows={store.data}

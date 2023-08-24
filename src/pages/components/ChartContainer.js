@@ -304,6 +304,7 @@ const ChartContainer = forwardRef(
           onMouseMove={pan && panning ? panHandler : undefined}
         >
           <ul>
+            
             <ChartNode
               datasource={attachRel(ds, '00')}
               NodeTemplate={NodeTemplate}
@@ -318,6 +319,7 @@ const ChartContainer = forwardRef(
         <a className='oc-download-btn hidden' ref={downloadButton} href={dataURL} download={download}>
           &nbsp;
         </a>
+    
         <div className={`oc-mask ${exporting ? '' : 'hidden'}`}>
           <i className='oci oci-spinner spinner'></i>
         </div>

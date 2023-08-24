@@ -11,19 +11,12 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
   response.data.data.map((e, index) => {
     e.index = index + 1
     e.id = e._id
+    e.employeeName = e.firstName+" "+e.lastName
   })
 
-  return response.data
+
+  return response.data 
 })
-
-// export const getEmployee = createAsyncThunk('appEmployee/getEmployee', async (id, { getState, dispatch }) => {
-//   const response = await axios.delete('/apps/invoice/delete', {
-//     data: id
-//   })
-//   await dispatch(fetchData(getState().invoice.params))
-
-//   return response.data
-// })
 
 export const deleteInvoice = createAsyncThunk('appInvoice/deleteData', async (id, { getState, dispatch }) => {
   const response = await axios.delete('/apps/invoice/delete', {

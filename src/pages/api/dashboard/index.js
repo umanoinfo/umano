@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
   const employees = await client
     .db()
-    .collection('documents')
+    .collection('employees')
     .aggregate([
       {
         $match: {

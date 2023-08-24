@@ -44,7 +44,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [type, setType] = useState('')
   const router = useRouter()
   const inputFile = useRef(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [parentsDataSource, setParentsDataSource] = useState([])
   
@@ -74,22 +74,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
-
-    toast.success('Department  Inserted Successfully.', {
-      delay: 3000,
-      position: 'bottom-right'
-    })
-
-
-    dispatch(
-      fetchData({
-        parent,
-        departmentStatus,
-        q: value
-      })
-    ).then(getParents)
-    getUsers()
-  }, [dispatch, parent, departmentStatus, value])
+    getParents().then(getUsers())
+    
+  }, [])
 
   // ---------------------- async Check Department Name -----------------------------------------
 
@@ -110,13 +97,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------ validate Mmodel ------------------------------------
 
   const validateMmodel = Schema.Model({
+    parent: StringType().isRequired('This field is required.'),
     name: StringType().isRequired('This field is required.')
   })
 
   // ------------------------------ Get Users ------------------------------------
 
   const getUsers = async () => {
-    setIsLoading(true)
     const res = await fetch('/api/company-employee')
     const { data } = await res.json()
 
@@ -153,7 +140,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
     })
     
     setParentsDataSource(parents)
-    setIsLoading(false)
   }
 
   // -------------------------------- Changes -----------------------------------------------
@@ -212,7 +198,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Departments are loading'></Loading>
+  if (isLoading) return <Loading header='Please Wait' description=''></Loading>
 
   if (session && session.user && !session.user.permissions.includes('AddDepartment'))
     return <NoPermission header='No Permission' description='No permission to add department'></NoPermission>

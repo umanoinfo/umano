@@ -5,6 +5,7 @@ import { hashPassword } from 'src/configs/auth'
 export default async function handler(req, res) {
   const user = req.body.data
   const id = user._id
+  user.email = user.email.toLowerCase();
   delete user._id
   user.permissions = []
 

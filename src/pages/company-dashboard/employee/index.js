@@ -113,6 +113,7 @@ const EmployeeList = classNamec => {
   const [loading, setLoading] = useState(true)
 
   const [selectedEmployee, setSelectedEmployee] = useState()
+  const [departments, setDepartments] = useState()
 
   const { data: session, status } = useSession()
 
@@ -130,8 +131,16 @@ const EmployeeList = classNamec => {
         employeeType,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( getDepartments() , setLoading(false))
   }, [dispatch, type, employeeType, value])
+
+
+  
+  const getDepartments = async () => {
+    axios.get('/api/company-department/all-company-departments', {}).then(function (response) {
+      setDepartments(response.data.data)
+    })
+  }
 
   const handleClose = () => {
     setOpen(false)
@@ -221,6 +230,9 @@ const EmployeeList = classNamec => {
       handleRowOptionsClose()
     }
 
+
+
+
     const handleRowTimeLine = () => {
       router.push('/company-dashboard/employee/' + row._id + '/employeeTimeLine')
       handleRowOptionsClose()
@@ -282,6 +294,10 @@ const EmployeeList = classNamec => {
 
   // ----------------------------- Columns --------------------------------------------
 
+  const goToView = (_id) => {
+    router.push('/company-dashboard/employee/' + _id + '/view/positions')
+  }
+  
   const columns = [
     {
       flex: 0.02,
@@ -298,23 +314,70 @@ const EmployeeList = classNamec => {
     },
     {
       flex: 0.1,
-      minWidth: 150,
-      field: 'employee',
+      minWidth: 280,
+      field: 'employeeName',
       headerName: 'Employee',
       renderCell: ({ row }) => {
-        const { email, firstName, lastName } = row
-
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-                {firstName} {lastName}
+                <a href="#" onClick={(e)=>goToView(row._id)}>{row.firstName} {row.lastName}</a>
               </Typography>
-              <Typography noWrap variant='caption'>
-                {email}
-              </Typography>
+
             </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.02,
+      minWidth: 200,
+      field: 'email',
+      headerName: 'Email',
+      renderCell: ({ row }) => {
+        return (
+          <Typography noWrap variant='caption'>
+          {row.email}
+        </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.12,
+      field: 'department',
+      minWidth: 140,
+      headerName: 'Department',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
+            {row.positions_info.map((position, index) => {
+              const departmentFind = departments?.find(department => department._id == position.department_id);
+
+              return (
+                <span key={index}>{departmentFind?.name}</span>
+              )
+            })}
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.12,
+      field: 'manager',
+      minWidth: 100,
+      headerName: 'Manager',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
+            {row.positions_info.map((position, index) => {
+              const departmentFind = departments?.find(department => department._id == position.department_id);
+              
+              return (
+                <span key={index}>{departmentFind?.user_info[0].firstName} {departmentFind?.user_info[0].lastName}</span>
+              )
+            })}
           </Box>
         )
       }
@@ -322,7 +385,7 @@ const EmployeeList = classNamec => {
     {
       flex: 0.12,
       field: 'positions',
-      minWidth: 100,
+      minWidth: 120,
       headerName: 'Positions',
       renderCell: ({ row }) => {
         return (
@@ -346,24 +409,22 @@ const EmployeeList = classNamec => {
     },
     {
       flex: 0.09,
-      minWidth: 100,
-      field: 'created_at',
-      headerName: 'Created at',
+      minWidth: 120,
+      field: 'joiningDate',
+      headerName: 'joining Date',
       renderCell: ({ row }) => {
         return (
           <>
-            {row.created_at && (
-              <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                {new Date(row.created_at).toISOString().substring(0, 10)}
-              </Typography>
-            )}
+            {row.joiningDate && 
+                <span>{new Date(row.joiningDate).toISOString().substring(0, 10)}</span>
+            }
           </>
         )
       }
     },
     {
       flex: 0.08,
-      minWidth: 60,
+      minWidth: 120,
       field: 'employeeType',
       headerName: 'Employee Type',
       renderCell: ({ row }) => {
@@ -456,7 +517,7 @@ const EmployeeList = classNamec => {
 
   //   --------------------------- View ----------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Employee are loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Employees are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployee')) {
     return <NoPermission header='No Permission' description='No permission to View Employees'></NoPermission>

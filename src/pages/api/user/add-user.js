@@ -27,6 +27,7 @@ export default async function handler(req, res) {
     return
   }
 
+  user.email = user.email.toLowerCase();
   const creatingUser = await client.db().collection('users').findOne({ email: user.email })
   if (creatingUser) {
     res.status(402).json({ success: false, message: 'There is user has same email' })

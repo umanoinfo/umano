@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   const hashedPassword = await hashPassword(user.password)
   user.password = hashedPassword
 
-
+  user.email = user.email.toLowerCase();
   
   const newUser = await client.db().collection('users').insertOne(user)
   const insertedUser = await client.db().collection('users').findOne({ _id: newUser.insertedId })
