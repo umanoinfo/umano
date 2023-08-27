@@ -208,12 +208,12 @@ const ShiftList = () => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          {session && session.user && session.user.permissions.includes('ViewAttendanceShift') && (
+          {/* {session && session.user && session.user.permissions.includes('ViewAttendanceShift') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
-          )}
+          )} */}
           {session && session.user && session.user.permissions.includes('EditAttendanceShift') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -315,7 +315,7 @@ const ShiftList = () => {
 
     {
       flex: 0.07,
-      minWidth: 45,
+      minWidth: 120,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {

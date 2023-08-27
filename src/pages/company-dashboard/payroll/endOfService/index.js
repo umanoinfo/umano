@@ -192,6 +192,11 @@ const PayrollList = classNamec => {
     setMonth(e.target.value)
   }, [])
 
+  const goToView = (row) => {
+    router.push('/company-dashboard/payroll/endOfService/slip/' + row._id)
+    handleRowOptionsClose()
+  }
+
   // ------------------------ Row Options -----------------------------------------
 
   const RowOptions = ({ row }) => {
@@ -281,7 +286,7 @@ const PayrollList = classNamec => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.idNo}
+           <a href="#"  onClick={()=>goToView(row)}>{row.idNo}</a> 
           </Typography>
         )
       }

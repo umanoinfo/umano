@@ -263,7 +263,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.15,
-      minWidth: 150,
+      minWidth: 250,
       field: 'employee',
       headerName: 'Employee',
       renderCell: ({ row }) => {
@@ -339,7 +339,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.11,
-      minWidth: 120,
+      minWidth: 160,
       field: 'from',
       headerName: 'Date From',
       renderCell: ({ row }) => {
@@ -350,7 +350,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.11,
-      minWidth: 120,
+      minWidth: 160,
       field: 'to',
       headerName: 'Date To',
       renderCell: ({ row }) => {
@@ -361,7 +361,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.05,
-      minWidth: 50,
+      minWidth: 80,
       field: 'days',
       headerName: 'Days',
       renderCell: ({ row }) => {
@@ -376,7 +376,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.05,
-      minWidth: 50,
+      minWidth: 80,
       field: 'hours',
       headerName: 'Hours',
       renderCell: ({ row }) => {
@@ -392,7 +392,7 @@ const LeaveList = () => {
     },
     {
       flex: 0.07,
-      minWidth: 45,
+      minWidth: 100,
       field: 'paidValue',
       headerName: 'Paid Value',
       renderCell: ({ row }) => {

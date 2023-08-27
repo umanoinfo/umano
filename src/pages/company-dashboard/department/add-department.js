@@ -97,7 +97,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------ validate Mmodel ------------------------------------
 
   const validateMmodel = Schema.Model({
-    parent: StringType().isRequired('This field is required.'),
     name: StringType().isRequired('This field is required.')
   })
 
@@ -121,7 +120,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
-
     let containMain = false ;
     
     const parents = []
@@ -139,6 +137,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
       value: ''
     })
     
+    
+    console.log(parents)
+
     setParentsDataSource(parents)
   }
 
@@ -161,6 +162,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // -------------------------------- handle Submit -----------------------------------------------
 
   const handleSubmit = () => {
+    console.log(formValue , parent)
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = {}
@@ -172,6 +174,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.status = newStatus
         data.user_id = userID
         data.created_at = new Date()
+        console.log(data)
+
         axios
           .post('/api/company-department/add-department', {
             data

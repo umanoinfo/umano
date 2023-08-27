@@ -192,6 +192,10 @@ const PayrollList = classNamec => {
     setMonth(e.target.value)
   }, [])
 
+  const goToView = (row) => {
+    router.push('/company-dashboard/payroll/slip/' + row._id)
+  }
+
   // ------------------------ Row Options -----------------------------------------
 
   const RowOptions = ({ row }) => {
@@ -280,15 +284,15 @@ const PayrollList = classNamec => {
       headerName: 'No.',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.idNo}
+          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
+          <a href="#"  onClick={()=>goToView(row)}>{row.idNo}</a> 
           </Typography>
         )
       }
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 250,
       field: 'employee',
       headerName: 'Employee',
       renderCell: ({ row }) => {

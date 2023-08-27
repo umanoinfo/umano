@@ -243,7 +243,7 @@ const DeductionsList = () => {
     },
     {
       flex: 0.15,
-      minWidth: 150,
+      minWidth: 250,
       field: 'employee',
       headerName: 'Employee',
       renderCell: ({ row }) => {

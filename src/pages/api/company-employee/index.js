@@ -59,6 +59,22 @@ export default async function handler(req, res) {
         }
       },
       {
+        $lookup: {
+          from: 'shifts',
+          let: { shift_id: { $toObjectId: '$shift_id' } },
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } }],
+          as: 'shift_info'
+        }
+      },
+      {
+        $lookup: {
+          from: 'employeeLeaves',
+          let: { employee_id: { $toString: '$_id' } },
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          as: 'leaves_info'
+        }
+      },
+      {
         $sort: {
           created_at: -1
         }

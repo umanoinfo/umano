@@ -384,7 +384,7 @@ const EditLeave = ({ popperPlacement, id }) => {
       let employees = res.data.data
       employees = employees.map((employee , index) => {
    
-        if (employee.shift_info[0]) {
+        if (employee?.shift_info[0]) {
           arr.push({
             label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
             value: employee._id
