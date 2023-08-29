@@ -355,6 +355,7 @@ const EmployeeList = classNamec => {
             <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
               {row.positions_info.map((position, index) => {
                 const departmentFind = departments?.find(department => department._id == position.department_id);
+                
                 return (
                   <span key={index} style={{marginRight : '10px' }}>{departmentFind?.name}</span>
                 )
@@ -375,6 +376,7 @@ const EmployeeList = classNamec => {
             <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'150px' , display:'inline-block'}}>
             {row.positions_info.map((position, index) => {
               const departmentFind = departments?.find(department => department._id == position.department_id);
+              
               return (
                   <span key={index} style={{marginRight : '20px' }}>{departmentFind?.user_info[0].firstName} {departmentFind?.user_info[0].lastName}</span>
               )
@@ -394,6 +396,7 @@ const EmployeeList = classNamec => {
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
             <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
               {row.positions_info.map((e, index) => {
+
                 return (
                   <CustomChip
                     key={index}
