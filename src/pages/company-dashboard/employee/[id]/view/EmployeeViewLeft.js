@@ -97,12 +97,12 @@ const EmployeeViewLeft = ({ id, employee }) => {
                 {employee.firstName + ' ' + employee.lastName} 
               </Typography>
               
-              {employee.gender && <Typography sx={{ mb: 2 }}>{employee.gender}</Typography>}
+              
 
             {newArray.map((pos , index)=>{
-
-              return (<span key={index}><CustomChip skin='light' label={pos.positionTitle} /></span>)
-
+              if(pos.endChangeType == "onPosition"){
+                  return (<span key={index} style={{margin:'5px'}}><CustomChip skin='light' label={pos.positionTitle} /></span>)
+              }
             })}
              
             </CardContent>
@@ -143,7 +143,14 @@ const EmployeeViewLeft = ({ id, employee }) => {
                     <Typography variant='body2'>{new Date(employee.dateOfBirth).toDateString()}</Typography>
                   </Box>
                 )}
-                
+                {employee.gender && (
+                  <Box sx={{ display: 'flex', mb: 2.7 }}>
+                    <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                    Gender:
+                    </Typography>
+                    <Typography variant='body2'>{new Date(employee.gender).toDateString()}</Typography>
+                  </Box>
+                )}                
                 {employee.country_info[0] && (
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>

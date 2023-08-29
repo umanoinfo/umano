@@ -28,6 +28,6 @@ button[disabled] {
 button:hover,
 button:focus,
 button:active {
-  color: #fff;
-  background-color: #05445e;
+  color: #05445e;
+  background-color: #8f9da3;
 }

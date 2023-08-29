@@ -50,7 +50,10 @@ export default async function handler(req, res) {
                 $and: [
                   { $expr: { $eq: ['$employee', '$$id'] } },
                   { company_id: myUser.company_id },
-                  { endChangeDate: { $exists: false } }
+                  { $or:[
+                    { endChangeDate: { $exists: false } },
+                    { endChangeDate: null },
+                  ] }
                 ]
               }
             }
@@ -72,6 +75,14 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
           as: 'leaves_info'
+        }
+      },
+      {
+        $lookup: {
+          from: 'salaryFormula',
+          let: { salary_formula_id: { $toObjectId: '$salary_formula_id' } },
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$salary_formula_id'] } } }],
+          as: 'salaryFormulas_info'
         }
       },
       {

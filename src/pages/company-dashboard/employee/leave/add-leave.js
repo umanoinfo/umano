@@ -373,9 +373,41 @@ const AddLeave = ({ popperPlacement, id }) => {
     setLoading(false)
   }
 
+  const [daysDuration , setDaysDeurtion] = useState(0)
+
+  const assumeDurationFrom = (date_from)=>{
+    let data = { ...formValue }
+    if(data.type != 'hourly'){
+      const diffTime = Math.abs(formValue.date_to  - date_from)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setDaysDeurtion(diffDays)
+    }
+    if(data.type == 'hourly'){
+      const diffTime = (  new Date().setHours(formValue.date_to.getHours(), formValue.date_to.getMinutes(), 0)  -  new Date().setHours(date_from.getHours(), date_from.getMinutes(), 0))
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 )*10)/10
+      setDaysDeurtion(diffDays)
+    }
+
+  }
+
+  const assumeDurationTo = (date_to)=>{
+    let data = { ...formValue }
+    if(data.type != 'hourly'){
+      const diffTime = Math.abs(date_to  - formValue.date_from)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setDaysDeurtion(diffDays)
+    }
+    if(data.type == 'hourly'){
+      const diffTime = (  new Date().setHours(date_to.getHours(), date_to.getMinutes(), 0)  -  new Date().setHours(formValue.date_from.getHours(), formValue.date_from.getMinutes(), 0))
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 )*10)/10
+      setDaysDeurtion(diffDays)
+    }
+  }
+
   // ------------------------------- Submit --------------------------------------
 
   const handleSubmit = () => {
+
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...formValue }
@@ -398,6 +430,16 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         const diffTime = Math.abs(data.date_to - data.date_from)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+     
+        if (data.date_to < data.date_from) {
+    
+            toast.error('Error : (To Date) must be greater than (From Date)  !', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+            return
+        }
 
         const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange)) / totalMinutes).toFixed(2)
 
@@ -506,37 +548,35 @@ const AddLeave = ({ popperPlacement, id }) => {
           }
         }
 
-        setLoading(true)
+        // setLoading(true)
         setLoadingDescription('leaves is inserting')
 
         let newData = { ...data_request }
         newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
         newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
-        axios
-          .post('/api/employee-leave/add-leave', {
-            data: newData
-          })
-          .then(function (response) {
-            router.push('/company-dashboard/employee/leave')
-            toast.success('leave (' + data.title + ') Inserted Successfully.', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
-            setLoading(false)
-          })
-          .catch(function (error) {
-            toast.error('Error : ' + error.response.data.message + ' !', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
-            setLoading(false)
-          })
+
+        // axios
+        //   .post('/api/employee-leave/add-leave', {
+        //     data: newData
+        //   })
+        //   .then(function (response) {
+        //     router.push('/company-dashboard/employee/leave')
+        //     toast.success('leave (' + data.title + ') Inserted Successfully.', {
+        //       delay: 3000,
+        //       position: 'bottom-right'
+        //     })
+        //     setLoading(false)
+        //   })
+        //   .catch(function (error) {
+        //     toast.error('Error : ' + error.response.data.message + ' !', {
+        //       delay: 3000,
+        //       position: 'bottom-right'
+        //     })
+        //     setLoading(false)
+        //   })
+
       }
     })
-  }
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue)
   }
 
   // -------------------------------- Routes -----------------------------------------------
@@ -733,7 +773,7 @@ const AddLeave = ({ popperPlacement, id }) => {
       resolution_number: 0,
       description: '',
       status_reason: 'paidLeave',
-      paidValue:employee.salaryFormulas_info[0].paidLeave ,
+      paidValue:employee?.salaryFormulas_info[0]?.paidLeave ,
       reason: ''
     })
   }
@@ -771,6 +811,8 @@ const AddLeave = ({ popperPlacement, id }) => {
                 name='date_from'
                 accepter={DatePicker}
                 value={formValue.date_from}
+                onSelect={(e) =>assumeDurationFrom(e)}
+                oneTap
               />
             </div>
           </Box>
@@ -792,16 +834,17 @@ const AddLeave = ({ popperPlacement, id }) => {
                 name='date_to'
                 accepter={DatePicker}
                 value={formValue.date_to}
+                onSelect={(e) =>assumeDurationTo(e)}
+                oneTap
               />
             </div>
-            {/* <Form.Control
-              controlid='date_to'
-              format=' HH:mm'
-              name='date_to'
-              accepter={DatePicker}
-              value={formValue.date_to}
-            /> */}
           </Box>
+          <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
+            <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+              {daysDuration  && <> Duration : <> <strong>{daysDuration}</strong> Day</></>}
+            </Typography>
+          </Box>
+
         </>
       )
     } else {
@@ -823,6 +866,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 format='yyyy-MM-dd '
                 name='date_from'
                 size='small'
+                oneTap
                 accepter={DatePicker}
                 value={formValue.date_from}
                 onChange={e => {
@@ -840,6 +884,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 name='date_from'
                 accepter={DatePicker}
                 value={formValue.date_from}
+                onSelect={(e) =>assumeDurationFrom(e)}
               />
             </div>
           </Box>
@@ -860,6 +905,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 format=' yyyy-MM-dd'
                 name='date_to'
                 size='small'
+                oneTap
                 accepter={DatePicker}
                 value={formValue.date_to}
                 disabled
@@ -874,9 +920,16 @@ const AddLeave = ({ popperPlacement, id }) => {
                 size='small'
                 accepter={DatePicker}
                 value={formValue.date_to}
+                onSelect={(e) =>assumeDurationTo(e)}
               />
             </div>
           </Box>
+          <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
+            <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+              {daysDuration  && <> Duration : <> <strong>{daysDuration}</strong> Hour</></>}
+            </Typography>
+          </Box>
+
         </>
       )
     }
@@ -1062,7 +1115,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Resolution number :
+                            Form number :
                           </Typography>
                           <Form.Control
                             controlid='resolution_number'

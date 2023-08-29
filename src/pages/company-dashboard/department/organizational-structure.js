@@ -167,48 +167,19 @@ const DepartmentList = ({ apiData }) => {
 
   const orgchart = useRef()
 
-  const ds = {
-    id: 'n1',
-    name: 'Lao Lao',
-    title: 'general manager',
-    children: [
-      { id: 'n2', name: 'Bo Miao', title: 'department manager' },
-      { id: 'n552', name: 'Bo Miao', title: 'مدير مقسم' },
-      {
-        id: 'n3',
-        name: 'Su Miao',
-        title: 'department manager',
-        children: [
-          { id: 'n4', name: 'Tie Hua', title: 'senior engineer' },
-          {
-            id: 'n5',
-            name: 'Hei Hei',
-            title: 'senior engineer',
-            children: [
-              { id: 'n6', name: 'Dan Dan', title: 'engineer' },
-              { id: 'n7', name: 'Xiang Xiang', title: 'engineer' }
-            ]
-          },
-          { id: 'n8', name: 'Pang Pang', title: 'senior engineer' }
-        ]
-      },
-      { id: 'n9', name: 'Hong Miao', title: 'department manager' },
-      {
-        id: 'n10',
-        name: 'Chun Miao',
-        title: 'department manager',
-        children: [{ id: 'n11', name: 'Yue Yue', title: 'senior engineer' }]
-      }
-    ]
-  }
+
 
   const drawChart = data => {
     const dr = []
     for (let x = 0; x < data.length; x++) {
       if (!data[x].parent) {
         const department = {}
+        console.log(data[x])
         department.id = data[x]._id
         department.name = data[x].name
+        department.description = data[x].description
+        department.mng = data[x].user_info[0]?.firstName +" "+ data[x].user_info[0]?.lastName
+        department.logo = data[x].user_info[0]?.logo 
         department.title = data[x].name
         if (data[x].children_info) {
           const chile = []
@@ -217,6 +188,9 @@ const DepartmentList = ({ apiData }) => {
             department1.id = dep._id
             department1.name = dep.name
             department1.title = dep.name
+            department1.description = dep.description
+            department1.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
+            department1.logo = dep.user_info[0]?.logo 
             department1.children_info = dep.children_info
             chile.push(department1)
             if (department1.children_info) {
@@ -226,6 +200,9 @@ const DepartmentList = ({ apiData }) => {
                 department2.id = dep._id
                 department2.name = dep.name
                 department2.title = dep.name
+                department2.description = dep.description
+                department2.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
+                department2.logo = dep.user_info[0]?.logo 
                 department2.children_info = dep.children_info
                 chile2.push(department2)
                 if (department2.children_info) {
@@ -235,6 +212,9 @@ const DepartmentList = ({ apiData }) => {
                     department3.id = dep3._id
                     department3.name = dep3.name
                     department3.title = dep3.name
+                    department3.description = dep3.description
+                    department3.mng = dep3.user_info[0]?.firstName +" "+ dep3.user_info[0]?.lastName
+                    department3.logo = dep3.user_info[0]?.logo 
                     department3.children_info = dep3.children_info
                     chile3.push(department3)
                     const chile4 = []
@@ -244,6 +224,9 @@ const DepartmentList = ({ apiData }) => {
                         department4.id = dep4._id
                         department4.name = dep4.name
                         department4.title = dep4.name
+                        department4.description = dep4.description
+                        department4.mng = dep4.user_info[0]?.firstName +" "+ dep4.user_info[0]?.lastName
+                        department4.logo = dep4.user_info[0]?.logo 
                         department4.children_info = dep4.children_info
                         chile4.push(department4)
                         const chile5 = []
@@ -253,6 +236,9 @@ const DepartmentList = ({ apiData }) => {
                             department5.id = dep5._id
                             department5.name = dep5.name
                             department5.title = dep5.name
+                            department5.description = dep5.description
+                            department5.mng = dep5.user_info[0]?.firstName +" "+ dep5.user_info[0]?.lastName
+                            department5.logo = dep5.user_info[0]?.logo 
                             department5.children_info = dep5.children_info
                             chile5.push(department5)
                           }
@@ -279,6 +265,9 @@ const DepartmentList = ({ apiData }) => {
         id: department.id,
         name: department.name,
         title: department.name,
+        logo: department.logo,
+        mng: department.mng,
+        description : department.description,
         children: department.children
       }
     })

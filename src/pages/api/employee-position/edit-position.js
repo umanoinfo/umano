@@ -31,6 +31,11 @@ export default async function handler(req, res) {
     return
   }
 
+  if (employeeposition.endChangeType == 'onPosition') {
+    employeeposition.endChangeDate = null
+  }
+
+
   const updatePosition = await client
     .db()
     .collection('employeePositions')

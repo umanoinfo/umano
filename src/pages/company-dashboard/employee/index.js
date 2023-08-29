@@ -352,13 +352,14 @@ const EmployeeList = classNamec => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
-            {row.positions_info.map((position, index) => {
-              const departmentFind = departments?.find(department => department._id == position.department_id);
-
-              return (
-                <span key={index}>{departmentFind?.name}</span>
-              )
-            })}
+            <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
+              {row.positions_info.map((position, index) => {
+                const departmentFind = departments?.find(department => department._id == position.department_id);
+                return (
+                  <span key={index} style={{marginRight : '10px' }}>{departmentFind?.name}</span>
+                )
+              })}
+            </div>
           </Box>
         )
       }
@@ -366,18 +367,19 @@ const EmployeeList = classNamec => {
     {
       flex: 0.12,
       field: 'manager',
-      minWidth: 100,
+      minWidth: 200,
       headerName: 'Manager',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
+            <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'150px' , display:'inline-block'}}>
             {row.positions_info.map((position, index) => {
               const departmentFind = departments?.find(department => department._id == position.department_id);
-              
               return (
-                <span key={index}>{departmentFind?.user_info[0].firstName} {departmentFind?.user_info[0].lastName}</span>
+                  <span key={index} style={{marginRight : '20px' }}>{departmentFind?.user_info[0].firstName} {departmentFind?.user_info[0].lastName}</span>
               )
             })}
+            </div>
           </Box>
         )
       }
@@ -390,19 +392,20 @@ const EmployeeList = classNamec => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
-            {/* <Icon icon={userTypeObj[row.type].icon} fontSize={20} /> */}
-            {row.positions_info.map((e, index) => {
-              return (
-                <CustomChip
-                  key={index}
-                  skin='light'
-                  size='small'
-                  label={e.positionTitle}
-                  color={employeeTypeObj[row.positionTitle]}
-                  sx={{ mr: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
-                />
-              )
-            })}
+            <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
+              {row.positions_info.map((e, index) => {
+                return (
+                  <CustomChip
+                    key={index}
+                    skin='light'
+                    size='small'
+                    label={e.positionTitle}
+                    color={employeeTypeObj[row.positionTitle]}
+                    sx={{ mr: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+                  />
+                )
+              })}
+            </div>
           </Box>
         )
       }
@@ -446,7 +449,7 @@ const EmployeeList = classNamec => {
     },
     {
       flex: 0.08,
-      minWidth: 10,
+      minWidth: 50,
       sortable: false,
       field: 'actions',
       headerName: '',

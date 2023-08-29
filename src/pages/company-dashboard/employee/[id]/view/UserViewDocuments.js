@@ -15,16 +15,25 @@ import ListItemText from '@mui/material/ListItemText'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useRouter } from 'next/router'
 
 const UserViewOverview = ({ employee }) => {
   const open_file = fileName => {
     window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeDocument/' + fileName, '_blank')
   }
 
+  const router = useRouter()
+  
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=1')
+  }
+
   return (
     <>
       {employee && employee.documents_info && (
         <Grid xs={12} md={12} lg={12} sx={{ px: 1, mt: 2 }}>
+        <Typography variant='h6' style={{padding:'10px'}} >Documents <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+
           {employee.documents_info.map((doc, index) => {
             return (
               <Card key={index} xs={12} md={12} lg={12} sx={{ mb: 1 }}>

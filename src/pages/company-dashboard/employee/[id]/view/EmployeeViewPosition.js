@@ -9,12 +9,18 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { fetchData } from 'src/store/apps/employeePosition'
 import { DataGrid } from '@mui/x-data-grid'
+import Icon from 'src/@core/components/icon'
 
 const EmployeeViewPosition = ({ id, employee }) => {
   if (employee) {
     employee.employeePositions_info.map((e, index) => {
       e.id = index + 1
     })
+  }
+
+
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=2')
   }
 
   const router = useRouter()
@@ -29,6 +35,7 @@ const EmployeeViewPosition = ({ id, employee }) => {
   const dispatch = useDispatch()
   const [pageSize, setPageSize] = useState(7)
   const store = useSelector(state => state.employeePosition)
+
 
   const columns = [
     {
@@ -68,7 +75,9 @@ const EmployeeViewPosition = ({ id, employee }) => {
 
   return (
     <Card>
-      <CardHeader title='Positions' />
+
+      <Typography variant='h6' style={{padding:'10px'}} >Positions <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+
       <Divider sx={{ m: '0 !important' }} />
 
       {employee && employee.employeePositions_info && (

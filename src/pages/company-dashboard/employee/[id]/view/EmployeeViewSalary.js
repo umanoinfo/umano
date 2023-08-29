@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { DataGrid } from '@mui/x-data-grid'
+import Icon from 'src/@core/components/icon'
 
 const EmployeeViewSalary = ({ employee }) => {
   const [pageSize, setPageSize] = useState(10)
@@ -50,9 +51,17 @@ const EmployeeViewSalary = ({ employee }) => {
     }
   ]
 
+  const router = useRouter()
+
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=5')
+  }
+
   return (
     <Card>
-      <CardHeader title='Salaries' />
+
+      <Typography variant='h6' style={{padding:'10px'}} >Salaries<small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+
       <Divider sx={{ m: '0 !important' }} />
 
       {employee && (

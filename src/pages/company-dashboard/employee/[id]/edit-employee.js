@@ -74,7 +74,7 @@ const styles = {
 
 const CustomInput = ({ ...props }) => <Input {...props} style={styles} />
 
-const EditEmployee = ({ popperPlacement, id }) => {
+const EditEmployee = ({ popperPlacement, id , tab}) => {
   // ** States
   const [loading, setLoading] = useState(false)
   const [type, setType] = useState('')
@@ -185,6 +185,10 @@ const EditEmployee = ({ popperPlacement, id }) => {
     setMaritalStatus(data[0].maritalStatus)
     setNewLogo(data[0].logo)
     setGender(data[0].gender)
+
+    console.log(tab)
+    if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
+
     setIsLoading(false)
   }
 
@@ -698,7 +702,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
   }
 
   // ** States
-  const [activeStep, setActiveStep] = useState(0)
+  const [activeStep, setActiveStep] = useState()
 
   // Handle Stepper
   const handleNext = () => {
@@ -833,7 +837,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
   }))
 
   const renderContent = () => {
-    return getStepContent(activeStep)
+    if(!isLoading )return getStepContent(activeStep)
   }
 
   if (isLoading) return <Loading header='Please Wait' description='Employee is loading'></Loading>
@@ -883,7 +887,7 @@ const EditEmployee = ({ popperPlacement, id }) => {
 
             <Divider sx={{ m: '0 !important' }} />
 
-            {!isLoading && <CardContent>{renderContent()}</CardContent>}
+            {!isLoading && <CardContent>{renderContent(tab)}</CardContent>}
             {isLoading && <Loading header='Please Wait'></Loading>}
           </Card>
         </Grid>
@@ -892,8 +896,8 @@ const EditEmployee = ({ popperPlacement, id }) => {
   )
 }
 
-EditEmployee.getInitialProps = async ({ query: { id } }) => {
-  return { id: id }
+EditEmployee.getInitialProps = async ({ query: { id , tab } }) => {
+  return { id: id  , tab:tab}
 }
 
 export default EditEmployee

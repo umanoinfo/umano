@@ -97,6 +97,7 @@ const Img = styled('img')(({ theme }) => ({
 }))
 
 const Steppositions = ({ handleNext, employee }) => {
+
   const [emiratesID, setEmiratesID] = useState()
   const inputFrontEmiratesFile = useRef(null)
   const inputBackEmiratesFile = useRef(null)
@@ -134,6 +135,8 @@ const Steppositions = ({ handleNext, employee }) => {
 
   const inputFile = useRef(null)
 
+  
+
   // ----------------------- bulid -------------------------------------------
 
   useEffect(() => {
@@ -147,6 +150,7 @@ const Steppositions = ({ handleNext, employee }) => {
           q: value
         })
       ).then(setLoading(false))
+      setEndChangeType('onPosition')
     }
   }, [dispatch, employeeId, userStatus, value])
 
@@ -191,6 +195,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        setLoading(true)
         let data = {formValue}
         data.positionTitle = formValue.positionTitle
         data.startChangeType = startChangeType
@@ -203,6 +208,7 @@ const Steppositions = ({ handleNext, employee }) => {
         } else {
           delete data.endChangeDate
         }
+        
         if (action == 'add') {
           data.created_at = new Date()
           axios
@@ -211,7 +217,7 @@ const Steppositions = ({ handleNext, employee }) => {
             })
             .then(function (response) {
               dispatch(fetchData({ employeeId: employee._id })).then(() => {
-                toast.success('position (' + data.positionTitle + ') Inserted Successfully.', {
+                toast.success('Position (' + data.positionTitle + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
                 })
@@ -446,17 +452,26 @@ const Steppositions = ({ handleNext, employee }) => {
 
   return (
     <Grid spacing={6}>
-      <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
 
       <Grid item xs={12} lg={12}>
         <Grid container spacing={1}>
           {/* --------------------------- Emirates  View ------------------------------------ */}
 
-          <Grid xs={12} md={7} lg={7} sx={{ px: 1, mt: 2 }}>
-            <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
-              Add Employee Position
-            </Button>
-            <Card xs={12} md={12} lg={12}>
+          <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
+
+              <Box 
+               sx={{
+                  mb: 2.5,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
+                <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+                Add Employee Position
+                </Button>
+              </Box>
               <DataGrid
                 autoHeight
                 rows={store.data}
@@ -466,7 +481,7 @@ const Steppositions = ({ handleNext, employee }) => {
                 rowsPerPageOptions={[7, 10, 25, 50]}
                 onPageSizeChange={newPageSize => setPageSize(newPageSize)}
               />
-            </Card>
+
           </Grid>
 
           {/* --------------------------- Passport  ------------------------------------ */}
@@ -497,7 +512,7 @@ const Steppositions = ({ handleNext, employee }) => {
                       <Grid item sm={12} xs={12} mt={2}>
                         <small>Department</small>
                         <SelectPicker
-                          size='lg'
+                          size='sm'
                           name='department'
                           onChange={e => {
                             setDepartment(e)
@@ -512,7 +527,7 @@ const Steppositions = ({ handleNext, employee }) => {
                       <small>Position Title</small>
                       <Form.Control
                         controlId='positionTitle'
-                        size='lg'
+                        size='sm'
                         name='positionTitle'
                         placeholder='position Title'
                       />
@@ -520,9 +535,9 @@ const Steppositions = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Reason</small>
+                        <small>Start Reason</small>
                         <SelectPicker
-                          size='lg'
+                          size='sm'
                           name='startChangeType'
                           onChange={e => {
                             setStartChangeType(e)
@@ -535,7 +550,7 @@ const Steppositions = ({ handleNext, employee }) => {
                       <Grid item sm={6} xs={12} mt={2}>
                         <small>Date of Start</small>
                         <Form.Control
-                          size='lg'
+                          size='sm'
                           oneTap
                           accepter={DatePicker}
                           name='startChangeDate'
@@ -550,10 +565,10 @@ const Steppositions = ({ handleNext, employee }) => {
 
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
-                        <small>Reason</small>
+                        <small>End Reason</small>
                         <SelectPicker
-                          size='lg'
-                          name='startChangeType'
+                          size='sm'
+                          name='endChangeType'
                           onChange={e => {
                             setEndChangeType(e)
                           }}
@@ -566,7 +581,7 @@ const Steppositions = ({ handleNext, employee }) => {
                         <Grid item sm={6} xs={12} mt={2}>
                           <small>Date of End</small>
                           <Form.Control
-                            size='lg'
+                            size='sm'
                             oneTap
                             accepter={DatePicker}
                             name='endChangeDate'

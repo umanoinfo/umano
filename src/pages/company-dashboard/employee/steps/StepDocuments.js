@@ -377,16 +377,27 @@ const StepDocuments = ({ handleNext, employee }) => {
   
   return (
     <>
-      <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Documents</Typography>
       <Grid spacing={6}>
         <Grid item xs={12} lg={12}>
           <Grid container spacing={1}>
             {/* --------------------------- Emirates  View ------------------------------------ */}
 
-            <Grid xs={12} md={7} lg={7} sx={{ px: 1, mt: 2 }}>
-              <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
-                Add Employee Document
-              </Button>
+            <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
+
+              <Box 
+               sx={{
+                  mb: 2.5,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Documents</Typography>
+                <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+                  Add Employee Document
+                </Button>
+              </Box>
+
               <Card xs={12} md={12} lg={12}>
                 <DataGrid
                   autoHeight

@@ -261,7 +261,7 @@ const AllDocumentsList = () => {
   const columns = [
     {
       flex: 0.02,
-      minWidth: 25,
+      minWidth: 40,
       field: '#',
       headerName: '#',
       renderCell: ({ row }) => {
@@ -274,7 +274,7 @@ const AllDocumentsList = () => {
     },
     {
       flex: 0.17,
-      minWidth: 100,
+      minWidth: 200,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -302,7 +302,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.25,
       field: 'type',
-      minWidth: 100,
+      minWidth: 400,
       headerName: 'Tags',
       renderCell: ({ row }) => {
         return (
@@ -311,7 +311,15 @@ const AllDocumentsList = () => {
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.type.map((t, index) => {
                 return (
-                  <CustomChip onClick={() =>handleClick(t) } key = {index} color='primary' skin='light' size='small' sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }} label={t} />
+                  <CustomChip
+                    onClick={() =>handleClick(t) }
+                    key={index}
+                    color='primary'
+                    skin='light'
+                    size='small'
+                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                    label={t}
+                  />
                 )
               })}
             </div>
@@ -321,7 +329,7 @@ const AllDocumentsList = () => {
     },
     {
       flex: 0.11,
-      minWidth: 120,
+      minWidth: 180,
       field: 'end',
       headerName: 'Expiry date',
       renderCell: ({ row }) => {
@@ -349,7 +357,7 @@ const AllDocumentsList = () => {
     },
     {
       flex: 0.07,
-      minWidth: 45,
+      minWidth: 100,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -448,6 +456,7 @@ const AllDocumentsList = () => {
           {/* -------------------------- Table -------------------------------------- */}
           <DataGrid
             autoHeight
+            rowHeight={85}
             rows={store.data}
             columns={columns}
             pageSize={pageSize}

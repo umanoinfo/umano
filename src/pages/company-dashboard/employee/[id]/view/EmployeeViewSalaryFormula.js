@@ -9,6 +9,8 @@ import { Tab } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import CustomChip from 'src/@core/components/mui/chip'
+import Icon from 'src/@core/components/icon'
+import { useRouter } from 'next/router'
 
 const EmployeeViewSalary = ({ employee }) => {
   const [tabValue, setTabValue] = useState('Over Time')
@@ -17,9 +19,16 @@ const EmployeeViewSalary = ({ employee }) => {
     setTabValue(newValue)
   }
 
+  const router = useRouter()
+
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=4')
+  }
+
   return (
     <Card>
-      <CardHeader title='Salaries' />
+      <Typography variant='h6' style={{padding:'10px'}} >Salary Formula <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+
       <Divider sx={{ m: '0 !important' }} />
 
       {employee && employee.salary_formula_info[0] && (

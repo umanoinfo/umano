@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { dragNodeService, selectNodeService } from './service'
+import { Avatar, Box, Card, CardActions, CardContent, Typography } from '@mui/material'
 
 const propTypes = {
   datasource: PropTypes.object,
@@ -229,10 +230,34 @@ const ChartNode = ({
         {NodeTemplate ? (
           <NodeTemplate nodeData={datasource} />
         ) : (
-          <>
-            <div className='oc-heading'>{datasource.name}</div>
-            <div className='oc-content'>{datasource.title}</div>
-          </>
+
+          <Card sx={{ border: 0, boxShadow: 0, color: 'common.white', backgroundColor: '#189ab4' }}>
+          <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
+            <Typography
+              variant='h6'
+              sx={{ display: 'flex', mr: 2.75, alignItems: 'center', color: 'common.white', '& svg': { mr: 2.5 } }}
+            >
+              {datasource.name}
+            </Typography>
+            <Typography variant='body2' sx={{ mb: 3, color: '#D8D8D8' }}>
+              {datasource.description}
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+                <Avatar alt={datasource.logo} src={datasource.logo} sx={{ width: 34, height: 34, mr: 2.75 , borderStyle:'solid' , borderWidth:'1px' , borderColor:'#808080'}} />
+                <Typography variant='body2' sx={{ color: 'common.white' }}>
+                  {datasource.mng}
+                </Typography>
+              </Box>
+
+            </Box>
+          </CardContent>
+        </Card>
+
+          // <>
+          //   <div className='oc-heading'>{datasource.name}</div>
+          //   <div className='oc-content'>{datasource.title}</div>
+          // </>
         )}
         {collapsible && datasource.relationship && datasource.relationship.charAt(0) === '1' && (
           <i

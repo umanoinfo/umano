@@ -9,16 +9,23 @@ import { Tab } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import CustomChip from 'src/@core/components/mui/chip'
+import { useRouter } from 'next/router'
+import IconifyIcon from 'src/@core/components/icon'
 
 const EmployeeViewAttendance = ({ employee }) => {
   const [tabValue, setTabValue] = useState('Over Time')
-  if (employee) {
-    console.log(employee.shift_info[0])
+
+  const router = useRouter()
+  
+  const handleEditRowOptions = () => {
+    router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=3')
   }
 
   return (
     <Card>
-      <CardHeader title='Attendance' />
+
+      <Typography variant='h6' style={{padding:'10px'}} >Attendance <small><a href="#" onClick={handleEditRowOptions} ><IconifyIcon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+
       <Divider sx={{ m: '0 !important' }} />
 
       {employee && employee.shift_info[0] && (

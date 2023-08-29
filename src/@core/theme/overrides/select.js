@@ -8,7 +8,7 @@ const select = theme => {
             minWidth: '1.5rem !important'
           },
           '&.Mui-disabled ~ .MuiOutlinedInput-notchedOutline': {
-            borderColor: `rgba(${theme.palette.customColors.main}, 0.22)`
+            borderColor: `rgba(${theme.palette.customColors.main}, 0.22)` 
           }
         }
       }
