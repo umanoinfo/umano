@@ -194,7 +194,6 @@ const PayrollList = classNamec => {
 
   const goToView = (row) => {
     router.push('/company-dashboard/payroll/endOfService/slip/' + row._id)
-    handleRowOptionsClose()
   }
 
   // ------------------------ Row Options -----------------------------------------

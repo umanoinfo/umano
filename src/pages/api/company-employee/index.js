@@ -50,6 +50,7 @@ export default async function handler(req, res) {
                 $and: [
                   { $expr: { $eq: ['$employee', '$$id'] } },
                   { company_id: myUser.company_id },
+                  { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }]},
                   { $or:[
                     { endChangeDate: { $exists: false } },
                     { endChangeDate: null },
@@ -93,6 +94,33 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+    const departments = await client
+    .db()
+    .collection('departments')
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            { company_id: myUser.company_id },
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: 'employees',
+          let: { user_id: { $toObjectId: '$user_id' } },
+          pipeline: [{ $addFields: { user_id: '$_id' } }, { $match: { $expr: { $eq: ['$user_id', '$$user_id'] } } }],
+          as: 'user_info'
+        }
+      },
+      {
+        $sort: {
+          created_at: -1
+        }
+      }
+    ])
+    .toArray()
 
-  res.status(200).json({ success: true, data: employees})
+
+  res.status(200).json({ success: true, data: employees , departmemts:departments})
 }

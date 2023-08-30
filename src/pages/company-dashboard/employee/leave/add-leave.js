@@ -549,32 +549,32 @@ const AddLeave = ({ popperPlacement, id }) => {
           }
         }
 
-        // setLoading(true)
+        setLoading(true)
         setLoadingDescription('leaves is inserting')
 
         let newData = { ...data_request }
         newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
         newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
 
-        // axios
-        //   .post('/api/employee-leave/add-leave', {
-        //     data: newData
-        //   })
-        //   .then(function (response) {
-        //     router.push('/company-dashboard/employee/leave')
-        //     toast.success('leave (' + data.title + ') Inserted Successfully.', {
-        //       delay: 3000,
-        //       position: 'bottom-right'
-        //     })
-        //     setLoading(false)
-        //   })
-        //   .catch(function (error) {
-        //     toast.error('Error : ' + error.response.data.message + ' !', {
-        //       delay: 3000,
-        //       position: 'bottom-right'
-        //     })
-        //     setLoading(false)
-        //   })
+        axios
+          .post('/api/employee-leave/add-leave', {
+            data: newData
+          })
+          .then(function (response) {
+            router.push('/company-dashboard/employee/leave')
+            toast.success('leave (' + data.title + ') Inserted Successfully.', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+            setLoading(false)
+          })
+          .catch(function (error) {
+            toast.error('Error : ' + error.response.data.message + ' !', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+            setLoading(false)
+          })
 
       }
     })

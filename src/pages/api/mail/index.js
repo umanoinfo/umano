@@ -35,8 +35,11 @@ export default async function handler(req, res) {
           $and: [
             { company_id: myUser.company_id },
             { user_id: myUser._id },
-
-            { subject: { $regex: req.query.q } },
+            {$or:[
+              {subject: { $regex: req.query.q } },
+              {user: { $regex: req.query.q } },
+              {toUser: { $regex: req.query.q } }
+            ]} ,
             { status: { $regex: req.query.mailStatus } },
             { type: { $regex: req.query.mailType } },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

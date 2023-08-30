@@ -138,14 +138,26 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                    
                   </TableHead>
                   <TableBody>
+                  <TableRow>
+                      <MUITableCell>
+                        <Typography variant='body2'>Joining Date :</Typography>
+                      </MUITableCell>
+                      {data.joiningDate && (
+                        <MUITableCell>
+                          <Typography variant='body2'>
+                            <strong>{new Date(data.joiningDate).toLocaleDateString()}</strong> 
+                          </Typography>
+                        </MUITableCell>
+                      )}
+                    </TableRow>
                     <TableRow>
                       <MUITableCell>
-                        <Typography variant='body2'>Form :</Typography>
+                        <Typography variant='body2'>Duration :</Typography>
                       </MUITableCell>
                       {fromDate && (
                         <MUITableCell>
                           <Typography variant='body2'>
-                            From {new Date(fromDate).toLocaleDateString()} to {new Date(toDate).toLocaleDateString()}
+                             {new Date(fromDate).toLocaleDateString()} to {new Date(toDate).toLocaleDateString()}
                           </Typography>
                         </MUITableCell>
                       )}

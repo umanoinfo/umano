@@ -177,7 +177,6 @@ const DepartmentList = ({ apiData }) => {
         console.log(data[x])
         department.id = data[x]._id
         department.name = data[x].name
-        department.description = data[x].description
         department.mng = data[x].user_info[0]?.firstName +" "+ data[x].user_info[0]?.lastName
         department.logo = data[x].user_info[0]?.logo 
         department.title = data[x].name
@@ -188,7 +187,6 @@ const DepartmentList = ({ apiData }) => {
             department1.id = dep._id
             department1.name = dep.name
             department1.title = dep.name
-            department1.description = dep.description
             department1.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
             department1.logo = dep.user_info[0]?.logo 
             department1.children_info = dep.children_info
@@ -200,7 +198,6 @@ const DepartmentList = ({ apiData }) => {
                 department2.id = dep._id
                 department2.name = dep.name
                 department2.title = dep.name
-                department2.description = dep.description
                 department2.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
                 department2.logo = dep.user_info[0]?.logo 
                 department2.children_info = dep.children_info
@@ -212,7 +209,6 @@ const DepartmentList = ({ apiData }) => {
                     department3.id = dep3._id
                     department3.name = dep3.name
                     department3.title = dep3.name
-                    department3.description = dep3.description
                     department3.mng = dep3.user_info[0]?.firstName +" "+ dep3.user_info[0]?.lastName
                     department3.logo = dep3.user_info[0]?.logo 
                     department3.children_info = dep3.children_info
@@ -224,7 +220,6 @@ const DepartmentList = ({ apiData }) => {
                         department4.id = dep4._id
                         department4.name = dep4.name
                         department4.title = dep4.name
-                        department4.description = dep4.description
                         department4.mng = dep4.user_info[0]?.firstName +" "+ dep4.user_info[0]?.lastName
                         department4.logo = dep4.user_info[0]?.logo 
                         department4.children_info = dep4.children_info
@@ -236,7 +231,6 @@ const DepartmentList = ({ apiData }) => {
                             department5.id = dep5._id
                             department5.name = dep5.name
                             department5.title = dep5.name
-                            department5.description = dep5.description
                             department5.mng = dep5.user_info[0]?.firstName +" "+ dep5.user_info[0]?.lastName
                             department5.logo = dep5.user_info[0]?.logo 
                             department5.children_info = dep5.children_info
@@ -267,7 +261,6 @@ const DepartmentList = ({ apiData }) => {
         title: department.name,
         logo: department.logo,
         mng: department.mng,
-        description : department.description,
         children: department.children
       }
     })

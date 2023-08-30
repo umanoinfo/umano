@@ -20,7 +20,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
-import CardContent from '@mui/material/CardContent'
+import CustomBadge from 'src/@core/components/mui/badge'
 import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -30,7 +30,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
-
+import { Popover} from 'rsuite';
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -60,7 +60,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NoPermission from 'src/views/noPermission'
 import Loading from 'src/views/loading'
-import { Breadcrumbs } from '@mui/material'
+import { Badge, Breadcrumbs } from '@mui/material'
 
 // ** Vars
 const userTypeObj = {
@@ -111,7 +111,7 @@ const EmployeeList = classNamec => {
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
-
+  const [departmentFind, setDepartmentFind] = useState([])
   const [selectedEmployee, setSelectedEmployee] = useState()
   const [departments, setDepartments] = useState()
 
@@ -346,43 +346,37 @@ const EmployeeList = classNamec => {
     },
     {
       flex: 0.12,
-      field: 'department',
+      field: 'departments',
       minWidth: 140,
       headerName: 'Department',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
-            <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
-              {row.positions_info.map((position, index) => {
-                const departmentFind = departments?.find(department => department._id == position.department_id);
-                
-                return (
-                  <span key={index} style={{marginRight : '10px' }}>{departmentFind?.name}</span>
-                )
-              })}
-            </div>
-          </Box>
+            { row.departments.length > 1 && <CustomBadge onClick={(e)=>{console.log(row)}}  badgeContent={row.departments.length - 1 +'+'} skin='light' color='primary' size='small' sx={{ marginTop:'11px'}}>
+              {row.departments[0]}
+            </CustomBadge>}
+            { row.departments.length <= 1 && 
+              <span>{row.departments[0]}</span> 
+            }
+        </Box>
         )
       }
     },
     {
       flex: 0.12,
-      field: 'manager',
-      minWidth: 200,
+      field: 'managers',
+      minWidth: 240,
       headerName: 'Manager',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
-            <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'150px' , display:'inline-block'}}>
-            {row.positions_info.map((position, index) => {
-              const departmentFind = departments?.find(department => department._id == position.department_id);
-              
-              return (
-                  <span key={index} style={{marginRight : '20px' }}>{departmentFind?.user_info[0].firstName} {departmentFind?.user_info[0].lastName}</span>
-              )
-            })}
-            </div>
-          </Box>
+            { row.managers.length > 1 && <CustomBadge onClick={(e)=>{console.log(row)}}  badgeContent={row.managers.length - 1 +'+'} skin='light' color='primary' size='small' sx={{ marginTop:'11px'}}>
+              {row.managers[0]}
+            </CustomBadge>}
+            { row.managers.length <= 1 && 
+              <span>{row.managers[0]}</span> 
+            }
+        </Box>
         )
       }
     },
@@ -395,19 +389,24 @@ const EmployeeList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
             <div style={{overflow: 'hidden' , whiteSpace:'nowrap' , textOverflow:'ellipsis' , width:'140px' , display:'inline-block'}}>
-              {row.positions_info.map((e, index) => {
-
-                return (
-                  <CustomChip
-                    key={index}
-                    skin='light'
-                    size='small'
-                    label={e.positionTitle}
-                    color={employeeTypeObj[row.positionTitle]}
-                    sx={{ mr: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
-                  />
-                )
-              })}
+              { row.positions_info.length > 1 && <CustomBadge onClick={(e)=>{console.log(row)}}  badgeContent={row.positions_info.length - 1 +'+'} skin='light' color='primary' size='small' sx={{ marginTop:'11px'}}>
+                <CustomChip
+                      skin='light'
+                      size='small'
+                      label={row.positions_info[0]?.positionTitle}
+                      color={employeeTypeObj[row.positionTitle]}
+                      sx={{ mr: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+                    />
+              </CustomBadge>}
+              { row.positions_info.length <= 1 && 
+                <CustomChip
+                      skin='light'
+                      size='small'
+                      label={row.positions_info[0]?.positionTitle}
+                      color={employeeTypeObj[row.positionTitle]}
+                      sx={{ mr: 1, textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+                    />
+              }
             </div>
           </Box>
         )
@@ -442,7 +441,7 @@ const EmployeeList = classNamec => {
                 skin='light'
                 size='small'
                 label={row.employeeType}
-                color={employeeTypeObj[row.employeeType]}
+                color={employeeTypeObj['active']}
                 sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
               />
             )}

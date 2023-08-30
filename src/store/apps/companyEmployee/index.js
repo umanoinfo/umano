@@ -8,7 +8,21 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
   const response = await axios.get('/api/company-employee/', {
     params
   })
+
+  
+  console.log(response.data)
+
   response.data.data.map((e, index) => {
+    e.departments = []
+    e.managers = []
+    e.positions_info.map((position, index) => {
+      response.data.departmemts.map((departmemt)=>{
+        if(departmemt._id == position.department_id){
+          e.departments.push(departmemt.name)
+          e.managers.push(departmemt.user_info[0].firstName +" " + departmemt.user_info[0].lastName)
+        }
+      })
+    })
     e.index = index + 1
     e.id = e._id
     e.employeeName = e.firstName+" "+e.lastName

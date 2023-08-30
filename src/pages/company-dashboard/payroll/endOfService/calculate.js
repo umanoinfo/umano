@@ -647,7 +647,7 @@ const AllDocumentsList = () => {
             </Grid>
             <Grid item sm={2} xs={12}>
               <Button
-              sx={{ mt: 6 }}
+              sx={{ mt: 8 }}
               size='sm'
               variant='contained'
               onClick={() => {
