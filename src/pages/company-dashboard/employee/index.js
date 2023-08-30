@@ -30,8 +30,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
-import { Popover} from 'rsuite';
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Store Imports
