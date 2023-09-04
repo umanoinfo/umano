@@ -79,7 +79,7 @@ const dayColor = days => {
 const ShiftList = () => {
   // ** State
   const [ShiftType, setShiftType] = useState()
-  const [ShiftStates, setShiftStates] = useState('')
+  const [shiftStatus, setShiftStatus] = useState('')
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
@@ -97,11 +97,11 @@ const ShiftList = () => {
     dispatch(
       fetchData({
         ShiftType,
-        ShiftStates,
+        shiftStatus,
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, ShiftType, ShiftStates, value])
+  }, [dispatch, ShiftType, shiftStatus, value])
 
   // ----------------------- Handle ------------------------------
 
@@ -114,7 +114,7 @@ const ShiftList = () => {
   }, [])
 
   const handleStatusChange = useCallback(e => {
-    setShiftStates(e.target.value)
+    setShiftStatus(e.target.value)
   }, [])
 
   const handleTypeChange = useCallback(e => {
@@ -366,7 +366,7 @@ const ShiftList = () => {
                 <InputLabel id='status-select'>Select Status</InputLabel>
                 <Select
                   fullWidth
-                  value={ShiftStates}
+                  value={shiftStatus}
                   id='select-status'
                   label='Select Status'
                   labelId='status-select'
@@ -375,31 +375,11 @@ const ShiftList = () => {
                 >
                   <MenuItem value=''>All Status</MenuItem>
                   <MenuItem value='active'>Active</MenuItem>
-                  <MenuItem value='pending'>Pending</MenuItem>
+                  <MenuItem value='hidden'>Hidden</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item sm={2} xs={6}>
-              <FormControl fullWidth size='small'>
-                <InputLabel id='status-select'>Select Type</InputLabel>
-                <Select
-                  fullWidth
-                  value={ShiftType}
-                  id='select-type'
-                  label='Select Type'
-                  labelId='type-select'
-                  onChange={handleTypeChange}
-                  inputProps={{ placeholder: 'Select Type' }}
-                >
-                  <MenuItem value=''>All Type</MenuItem>
-                  {ShiftType &&
-                    ShiftType.map((type , index) => {
-
-                      return <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
-                    })}
-                </Select>
-              </FormControl>
-            </Grid>
+       
             <Grid item sm={3} xs={12}>
               <FormControl fullWidth size='small'>
                 <TextField
@@ -412,7 +392,7 @@ const ShiftList = () => {
                 />
               </FormControl>
             </Grid>
-
+            <Grid item sm={2} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
               <Button
                 sx={{ mr: 4, mb: 2 }}

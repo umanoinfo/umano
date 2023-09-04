@@ -30,7 +30,7 @@ export default async function handler(req, res) {
           $and: [
             { company_id: myUser.company_id },
             { title: { $regex: req.query.q } },
-            { status: { $regex: req.query.shiftStatus } },
+            { status: { $regex: req.query.shiftStatus , '$options' : 'm'  } },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]
         }

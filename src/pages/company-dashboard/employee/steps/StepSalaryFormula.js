@@ -81,7 +81,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
         data
       })
       .then(e => {
-        getEmployee().then(() => {
+        getEmployee(4).then(() => {
           toast.success('Salary Formula Updated Successfully.', {
             delay: 3000,
             position: 'bottom-right'

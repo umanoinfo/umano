@@ -385,7 +385,12 @@ const AddEventSidebar = props => {
           </Box>
           <Box className='sidebar-body' style={{ overflowY: 'auto' }} sx={{ p: theme => theme.spacing(5, 6) }}>
             <DatePickerWrapper>
-              <Form fluid ref={formRef} onCheck={setFormError} model={validateMmodel} formValue={values}>
+              <Form fluid 
+              ref={formRef} 
+              onCheck={setFormError} 
+              model={validateMmodel} 
+              formValue={values}>
+
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
                     <Form.Group>

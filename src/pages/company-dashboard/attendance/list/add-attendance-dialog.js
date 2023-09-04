@@ -178,7 +178,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                     <Form.Group>
                       <small>Time in</small>
                       <DatePicker
-                        format='HH:mm:SS'
+                        format='HH:mm'
                         size='md'
                         onChange={e => {
                           setTimeIn(e)
@@ -195,7 +195,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                     <Form.Group>
                       <small>Time out</small>
                       <DatePicker
-                        format='HH:mm:SS'
+                        format='HH:mm'
                         size='md'
                         onChange={e => {
                           setTimeOut(e)

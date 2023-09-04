@@ -174,12 +174,12 @@ const DepartmentList = ({ apiData }) => {
     for (let x = 0; x < data.length; x++) {
       if (!data[x].parent) {
         const department = {}
-        console.log(data[x])
         department.id = data[x]._id
         department.name = data[x].name
         department.mng = data[x].user_info[0]?.firstName +" "+ data[x].user_info[0]?.lastName
         department.logo = data[x].user_info[0]?.logo 
         department.title = data[x].name
+        department.employeesCount = data[x].employeesCount
         if (data[x].children_info) {
           const chile = []
           for (let dep of data[x].children_info) {
@@ -190,6 +190,7 @@ const DepartmentList = ({ apiData }) => {
             department1.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
             department1.logo = dep.user_info[0]?.logo 
             department1.children_info = dep.children_info
+            department1.employeesCount = dep.employeesCount
             chile.push(department1)
             if (department1.children_info) {
               const chile2 = []
@@ -201,6 +202,7 @@ const DepartmentList = ({ apiData }) => {
                 department2.mng = dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName
                 department2.logo = dep.user_info[0]?.logo 
                 department2.children_info = dep.children_info
+                department2.employeesCount = dep.employeesCount
                 chile2.push(department2)
                 if (department2.children_info) {
                   const chile3 = []
@@ -212,6 +214,7 @@ const DepartmentList = ({ apiData }) => {
                     department3.mng = dep3.user_info[0]?.firstName +" "+ dep3.user_info[0]?.lastName
                     department3.logo = dep3.user_info[0]?.logo 
                     department3.children_info = dep3.children_info
+                    department3.employeesCount = dep3.employeesCount
                     chile3.push(department3)
                     const chile4 = []
                     if (department3.children_info) {
@@ -223,6 +226,7 @@ const DepartmentList = ({ apiData }) => {
                         department4.mng = dep4.user_info[0]?.firstName +" "+ dep4.user_info[0]?.lastName
                         department4.logo = dep4.user_info[0]?.logo 
                         department4.children_info = dep4.children_info
+                        department4.employeesCount = dep4.employeesCount
                         chile4.push(department4)
                         const chile5 = []
                         if (department4.children_info) {
@@ -234,6 +238,7 @@ const DepartmentList = ({ apiData }) => {
                             department5.mng = dep5.user_info[0]?.firstName +" "+ dep5.user_info[0]?.lastName
                             department5.logo = dep5.user_info[0]?.logo 
                             department5.children_info = dep5.children_info
+                            department5.employeesCount = dep5.employeesCount
                             chile5.push(department5)
                           }
                           department4.children = chile5

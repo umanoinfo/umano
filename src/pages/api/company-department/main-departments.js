@@ -76,5 +76,37 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+
+    const employees = await client
+    .db()
+    .collection('employeePositions')
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            { endChangeType: 'onPosition' },
+            { company_id: myUser.company_id },
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+          ]
+        }
+      },
+      {
+        $sort: {
+          created_at: -1
+        }
+      }
+    ])
+    .toArray()
+
+    departments.map((department)=>{
+      let  employeesCount = 0
+      employees.map((employee)=>{
+        if(employee.department_id == department._id){
+          employeesCount ++
+        }
+      })
+      department.employeesCount = employeesCount
+    })
+
   res.status(200).json({ success: true, data: departments })
 }

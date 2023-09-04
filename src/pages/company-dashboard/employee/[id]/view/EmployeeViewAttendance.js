@@ -35,29 +35,29 @@ const EmployeeViewAttendance = ({ employee }) => {
             {employee.shift_info[0].times[0].timeIn && (
               <Box sx={{ p: 2, mb: 1, display: 'flex', alignItems: 'center' }}>
                 <Grid container spacing={1}>
-                  <Grid item sm={12} md={1.7}>
+                  <Grid item sm={12} md={3}>
                     <small>Time in</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0].timeIn}</Typography>
                   </Grid>
-                  <Grid item sm={12} md={1.7}>
+                  <Grid item sm={12} md={3}>
                     <small>Time out</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0].timeOut}</Typography>
                   </Grid>
 
-                  <Grid item sm={12} md={1.7}>
+                  <Grid item sm={12} md={3}>
                     <small>Available late</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>
                       {employee.shift_info[0].times[0].availableLate}
                     </Typography>
                   </Grid>
-                  <Grid item sm={12} md={1.7}>
+                  <Grid item sm={12} md={3}>
                     <small>Available early</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>
                       {employee.shift_info[0].times[0].availableEarly}
                     </Typography>
                   </Grid>
 
-                  <Grid item sm={12} md={1.7}>
+                  {/* <Grid item sm={12} md={1.7}>
                     <small>1st overtime</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0]['1st']}</Typography>
                   </Grid>
@@ -68,7 +68,7 @@ const EmployeeViewAttendance = ({ employee }) => {
                   <Grid item sm={12} md={1.7}>
                     <small>3rd overtime</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0]['3rd']}</Typography>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Box>
             )}

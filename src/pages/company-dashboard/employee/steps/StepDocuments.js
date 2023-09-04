@@ -17,6 +17,7 @@ import { styled } from '@mui/material/styles'
 import {
   Card,
   CardActions,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -52,7 +53,9 @@ const StepDocuments = ({ handleNext, employee }) => {
   const [action, setAction] = useState('add')
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openFileDialog , setOpenFileDialog] = useState(false)
   const [selectedDocument, setSelectedDocument] = useState()
+ 
 
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
@@ -62,8 +65,12 @@ const StepDocuments = ({ handleNext, employee }) => {
   const store = useSelector(state => state.employeeDocument)
   const inputFile = useRef(null)
 
+  const [tempFile, setTempFile] = useState()
+  const newinputFile = useRef(null)
+
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
+  const [selectedFile, setSelectedFile] = useState()
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
 
@@ -129,6 +136,7 @@ const StepDocuments = ({ handleNext, employee }) => {
           delete data.expiryDate
         }
         if (action == 'add') {
+          data.file = tempFile
           data.created_at = new Date()
           axios
             .post('/api/employee-document/add-document', {
@@ -182,6 +190,8 @@ const StepDocuments = ({ handleNext, employee }) => {
   }
 
   const handleAdd = () => {
+    setSelectedDocument(null)
+    setSelectedDocument({})
     setFormValue({})
     setAction('add')
     setForm(true)
@@ -191,6 +201,43 @@ const StepDocuments = ({ handleNext, employee }) => {
     setSelectedDocument(e)
     setOpen(true)
   }
+
+  const handleDeleteFile = e => {
+    setOpenFileDialog(true)
+  }
+
+const deleteFile =()=>{
+
+  setLoading(true)
+
+  let data = {...formValue}
+    delete data.file
+    data._id = selectedDocument._id
+    data.updated_at = new Date()
+    axios
+      .post('/api/employee-document/delete-documentFile', {
+        data
+      })
+      .then(function (response) {
+        dispatch(fetchData({ employeeId: employee._id })).then(() => {
+          toast.success('Document (' + data.documentTitle + ') deleted file successfully.', {
+            delay: 3000,
+            position: 'bottom-right'
+          })
+          setForm(false)
+          setOpenFileDialog(false)
+          setLoading(false)
+        })
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response.data.message + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+        setLoading(false)
+      })
+      
+}
 
   const deleteDocument = () => {
     setLoading(true)
@@ -257,6 +304,7 @@ const StepDocuments = ({ handleNext, employee }) => {
               })
               setForm(false)
               setLoading(false)
+              setFileLoading(false)
             })
           })
           .catch(function (error) {
@@ -276,9 +324,38 @@ const StepDocuments = ({ handleNext, employee }) => {
       })
   }
 
+  const uploadNewFile = async event => {
+    setFileLoading(true)
+    const file = event.target.files[0]
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('id', selectedDocument._id)
+    formData.append('type', 'employeeDocument')
+    let data = {}
+    data.id = selectedDocument._id
+    data.formData = formData
+    axios
+      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .then(response => {
+        setTempFile(response.data)
+        console.log(selectedDocument)
+        setFileLoading(false)
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+        setFileLoading(false)
+      })
+  }
+
   const openUploadFile = row => {
-    setSelectedDocument(row)
     inputFile.current.click()
+  }
+
+  const openNewUploadFile = row => {
+    newinputFile.current.click()
   }
   
   // ------------------------------- handle Edit --------------------------------------
@@ -287,6 +364,8 @@ const StepDocuments = ({ handleNext, employee }) => {
     setFormValue({})
     setSelectedDocument(e)
     setFormValue(e)
+    setTempFile(null)
+    e.file ? setSelectedFile(e.file) : setSelectedFile(null)
     if (e.expiryDate) {
       setExpiryDateFlag(false)
       setExpiryDate(new Date(e.expiryDate).toISOString().substring(0, 10))
@@ -322,18 +401,11 @@ const StepDocuments = ({ handleNext, employee }) => {
     },
     {
       flex: 0.15,
-      minWidth: 130,
+      minWidth: 160,
       field: 'action',
       headerName: '',
       renderCell: ({ row }) => (
         <span>
-          {fileLoading && (
-            <span style={{ alignItems: 'center' }}>
-              <Loader size='xs' />
-            </span>
-          )}
-
-          {!fileLoading && (
             <>
               <IconButton
                 size='small'
@@ -356,16 +428,7 @@ const StepDocuments = ({ handleNext, employee }) => {
                   <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
                 </IconButton>
               )}
-              <IconButton
-                size='small'
-                onClick={e => {
-                  openUploadFile(row)
-                }}
-              >
-                <Icon icon='mdi:upload-outline' fontSize={18} />
-              </IconButton>
             </>
-          )}
         </span>
       )
     }
@@ -393,7 +456,7 @@ const StepDocuments = ({ handleNext, employee }) => {
                   justifyContent: 'space-between'
                 }}>
                 <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Documents</Typography>
-                <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+                <Button variant='outlined' size='small' onClick={(e)=> {handleAdd()}} sx={{ px: 2, mt: 2, mb: 2 }}>
                   Add Employee Document
                 </Button>
               </Box>
@@ -460,7 +523,6 @@ const StepDocuments = ({ handleNext, employee }) => {
                           controlId='documentDescription'
                           size='sm'
                           type='text'
-                          accepter={Textarea}
                           rows={3}
                           name='documentDescription'
                           placeholder='Document Description'
@@ -500,6 +562,20 @@ const StepDocuments = ({ handleNext, employee }) => {
                             </Form.Control>
                           </Typography>
                         </Grid>
+
+                        <Grid item sm={12} xs={12} mt={-4} mb={10}>
+                          <Typography sx={{ pt: 6 }}>
+                            File :
+                            {tempFile && action=="add" && !fileLoading &&(<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
+                            {tempFile && action=="add" && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedDocument?.file && !fileLoading && (<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(selectedFile)} >{selectedFile}</a></span>)}
+                            {selectedDocument?.file && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedDocument && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
+                            {!fileLoading && action=="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openNewUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
+                            {fileLoading && <small style={{paddingLeft:'20px' , fontStyle:'italic' , color:'blue'}}>Uploading ...</small>}
+                          </Typography>
+                        </Grid>
+
                       </Grid>
 
                       <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 3 }}>
@@ -544,6 +620,17 @@ const StepDocuments = ({ handleNext, employee }) => {
               name='file'
             />
 
+              <input
+              id='newfile'
+              ref={newinputFile}
+              hidden
+              type='file'
+              onChange={e => {
+                uploadNewFile(e)
+              }}
+              name='file'
+            />
+
             {/* -------------------------- Clinician  ------------------------------------- */}
 
             <Dialog
@@ -569,6 +656,34 @@ const StepDocuments = ({ handleNext, employee }) => {
                 <Button onClick={() => setOpen(false)}>No</Button>
               </DialogActions>
             </Dialog>
+
+
+            <Dialog
+              open={openFileDialog}
+              disableEscapeKeyDown
+              aria-labelledby='alert-dialog-title'
+              aria-describedby='alert-dialog-description'
+              onClose={(event, reason) => {
+                if (reason !== 'backdropClick') {
+                  handleClose()
+                }
+              }}
+            >
+              <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
+              <DialogContent>
+                <DialogContentText id='alert-dialog-description'>
+                  Are you sure , you want to delete file{' '}
+                  <span className='bold'>{selectedFile && selectedFile}</span>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions className='dialog-actions-dense'>
+                <Button onClick={deleteFile}>Yes</Button>
+                <Button onClick={() => setOpenFileDialog(false)}>No</Button>
+              </DialogActions>
+            </Dialog>
+
+
+
           </Grid>
         </Grid>
       </Grid>

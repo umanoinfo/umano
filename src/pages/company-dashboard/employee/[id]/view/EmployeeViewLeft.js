@@ -148,7 +148,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                     Gender:
                     </Typography>
-                    <Typography variant='body2'>{new Date(employee.gender).toDateString()}</Typography>
+                    <Typography variant='body2'>{employee.gender}</Typography>
                   </Box>
                 )}                
                 {employee.country_info[0] && (

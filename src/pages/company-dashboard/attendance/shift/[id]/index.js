@@ -9,14 +9,14 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 import Icon from 'src/@core/components/icon'
-import { Divider, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Typography } from '@mui/material'
 
 import CustomChip from 'src/@core/components/mui/chip'
 
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema } from 'rsuite'
+import { Form, Schema, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -26,6 +26,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
+import Link from 'next/link'
 
 const { StringType } = Schema.Types
 
@@ -41,7 +42,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formError, setFormError] = useState({})
   const [Errors, setErrors] = useState([])
 
-  const editorRef = useRef()
+  const [statusDataSource, setStatusTypesDataSource] = useState([
+    { label: 'Active', value: 'active' },
+    { label: 'Hidden', value: 'hidden' },
+  ])
+
+  const [newStatus, setNewStatus] = useState('active')
 
   // ------------------------- form
 
@@ -64,6 +70,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const getShift = () => {
     axios.get('/api/shift/' + id, {}).then(res => {
       setFormValue(res.data.data[0])
+      setNewStatus(res.data.data[0].status)
     })
   }
 
@@ -231,7 +238,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Edit Shift' sx={{ pb: 0, pt: 2 }} />
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+            <Link underline='hover' color='inherit' href='/'>
+              Home
+            </Link>
+            <Link underline='hover' color='inherit' href='/company-dashboard/attendance/shift/'>
+            Shifts List
+            </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+            Edit Shift
+            </Typography>
+          </Breadcrumbs>
+
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -335,90 +353,25 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 placeholder='Available Early'
                               />
                             </Grid>
-
-                            {/* <Grid item sm={12} md={1.33}>
-                              <small>1st overtime</small>
-                              <Form.Control
-                                sx={{
-                                  '& input[type="time"]::-webkit-calendar-picker-indicator': {
-                                    filter:
-                                      'invert(78%) sepia(66%) saturate(6558%) hue-rotate(84deg) brightness(27%) contrast(16%)',
-                                    paddingRight: '888px'
-                                  }
-                                }}
-                                value={val['1st']}
-                                onChange={e => {
-                                  changeValue(index, e, '1st')
-                                }}
-                                size='sm'
-                                type='time'
-                                name='1st'
-                                placeholder='1st Overtime'
-                              />
-                            </Grid> */}
-
-                            {/* <Grid item sm={12} md={1.33}>
-                              <small>2nd overtime</small>
-                              <Form.Control
-                                sx={{
-                                  '& input[type="time"]::-webkit-calendar-picker-indicator': {
-                                    filter:
-                                      'invert(78%) sepia(66%) saturate(6558%) hue-rotate(84deg) brightness(27%) contrast(16%)',
-                                    paddingRight: '888px'
-                                  }
-                                }}
-                                value={val['2nd']}
-                                onChange={e => {
-                                  changeValue(index, e, '2nd')
-                                }}
-                                size='sm'
-                                type='time'
-                                name='2nd'
-                                placeholder='2nd Overtime'
-                                disabled={!val['1st']}
-                              />
-                            </Grid> */}
-
-                            {/* <Grid item sm={12} md={1.33}>
-                              <small>3rd overtime</small>
-                              <Form.Control
-                                sx={{
-                                  '& input[type="time"]::-webkit-calendar-picker-indicator': {
-                                    filter:
-                                      'invert(78%) sepia(66%) saturate(6558%) hue-rotate(84deg) brightness(27%) contrast(16%)',
-                                    paddingRight: '888px'
-                                  }
-                                }}
-                                value={val['3rd']}
-                                onChange={e => {
-                                  changeValue(index, e, '3rd')
-                                }}
-                                size='sm'
-                                type='time'
-                                name='3rd'
-                                placeholder='3rd Overtime'
-                                disabled={!val['2nd']}
-                              />
-                            </Grid> */}
-
-                            {/* <Grid item sm={12} md={1.33}>
-                              <IconButton
-                                aria-label='capture screenshot'
-                                onClick={() => {
-                                  remove(index)
-                                }}
-                                color='error'
-                                sx={{ pt: 7 }}
-                              >
-                                <Icon icon='fluent:delete-28-regular' fontSize={18} />
-                              </IconButton>
-                              <IconButton aria-label='capture screenshot' onClick={add} color='success' sx={{ pt: 7 }}>
-                                <Icon icon='gridicons:add-outline' fontSize={20} />
-                              </IconButton>
-                            </Grid> */}
                           </Grid>
+                          
                         </Box>
                       ))}
+
+                    </Grid>
+                    <Grid item sm={2} xs={12} mt={2}>
+                      <small>Select status</small>
+                      <Form.Control
+                        size='sm'
+                        name='status'
+                        onChange={e => {
+                          setNewStatus(e)
+                        }}
+                        value={newStatus}
+                        data={statusDataSource}
+                        accepter={SelectPicker}
+                        block
+                      />
                     </Grid>
                     <div style={{ marginTop: '10px', marginBottom: '10px', width: '100%' }}>
                       {Errors.map((err, index1) => {

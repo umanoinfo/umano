@@ -219,7 +219,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
         data
       })
       .then(e => {
-        getEmployee().then(() => {
+        getEmployee(3).then(() => {
           toast.success('Shift Updated Successfully.', {
             delay: 3000,
             position: 'bottom-right'
@@ -284,18 +284,18 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes.availableEarly}</Typography>
                         </Grid>
 
-                        <Grid item sm={12} md={1.7}>
+                        {/* <Grid item sm={12} md={1.7}>
                           <small>1st overtime</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes['1st']}</Typography>
-                        </Grid>
-                        <Grid item sm={12} md={1.7}>
+                        </Grid> */}
+                        {/* <Grid item sm={12} md={1.7}>
                           <small>2nd overtime</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes['2nd']}</Typography>
-                        </Grid>
-                        <Grid item sm={12} md={1.7}>
+                        </Grid> */}
+                        {/* <Grid item sm={12} md={1.7}>
                           <small>3rd overtime</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes['3rd']}</Typography>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </Box>
                   )}

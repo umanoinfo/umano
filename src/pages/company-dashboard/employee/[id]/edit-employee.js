@@ -114,6 +114,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
   const { data: session, setSession } = useSession()
+  
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   const companyStatus = ''
@@ -171,9 +172,9 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   // ------------------------ Get Employee -----------------------------------
 
-  const getEmployee = async () => {
+  const getEmployee = async (tab) => {
     setIsLoading(true)
-    const res = await fetch('/api/company-employee/' + id)
+    const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
     setSelectedEmployee(data[0])
     setFormValue(data[0])
@@ -183,10 +184,10 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setSourceOfHire(data[0].sourceOfHire)
     setEmployeeType(data[0].employeeType)
     setMaritalStatus(data[0].maritalStatus)
+    setAddress(data[0].address)
     setNewLogo(data[0].logo)
     setGender(data[0].gender)
 
-    console.log(tab)
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
 
     setIsLoading(false)
@@ -522,14 +523,16 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                     <Form.Group>
                       <small>Address</small>
                       <Form.Control
-                        size='sm'
-                        controlId='address'
-                        accepter={Textarea}
-                        rows={5}
-                        name='address'
-                        placeholder='Address'
+                         size='sm'
+                         controlId='address'
+                         rows={5}
+                         name='address'
+                         placeholder='Address'
                       />
+
                     </Form.Group>
+
+
                   </Grid>
                   <Grid item sm={12} md={4} xs={12} mt={2}>
                   <FormControl fullWidth sx={{ alignItems: 'center', mb: 6, height: '100%' }}>

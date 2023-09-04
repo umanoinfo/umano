@@ -31,7 +31,6 @@ export default async function handler(req, res) {
   shift.company_id = myUser.company_id
   shift.user_id = myUser._id
   shift.created_at = new Date()
-  shift.status = 'active'
 
   const newShift = await client.db().collection('shifts').insertOne(shift)
   const insertedShift = await client.db().collection('shifts').findOne({ _id: newShift.insertedId })

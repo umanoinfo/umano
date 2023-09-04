@@ -22,6 +22,7 @@ import { styled } from '@mui/material/styles'
 import {
   Card,
   CardActions,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -127,6 +128,10 @@ const Steppositions = ({ handleNext, employee }) => {
   const store = useSelector(state => state.employeePosition)
   const departmentStore = useSelector(state => state.companyDepartment)
   const [department, setDepartment] = useState()
+  const [openFileDialog , setOpenFileDialog] = useState(false)
+
+  const [tempFile, setTempFile] = useState()
+  const newinputFile = useRef(null)
 
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
@@ -210,6 +215,7 @@ const Steppositions = ({ handleNext, employee }) => {
         }
         
         if (action == 'add') {
+          data.file = tempFile
           data.created_at = new Date()
           axios
             .post('/api/employee-position/add-position', {
@@ -263,6 +269,8 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const handleAdd = () => {
+    setSelectedPosition(null)
+    setSelectedPosition({})
     setFormValue({})
     setAction('add')
     setForm(true)
@@ -302,6 +310,7 @@ const Steppositions = ({ handleNext, employee }) => {
     const file = event.target.files[0]
     let formData = new FormData()
     formData.append('file', file)
+    console.log(selectedPosition)
     formData.append('id', selectedPosition._id)
     formData.append('type', 'employeePosition')
     let data = {}
@@ -348,6 +357,36 @@ const Steppositions = ({ handleNext, employee }) => {
             })
   }
 
+  const uploadNewFile = async event => {
+    setFileLoading(true)
+    const file = event.target.files[0]
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('id', selectedPosition?._id)
+    formData.append('type', 'employeePosition')
+    let data = {}
+    data.id = selectedPosition._id
+    data.formData = formData
+    axios
+      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .then(response => {
+        setTempFile(response.data)
+        setFileLoading(false)
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+        setFileLoading(false)
+      })
+  }
+
+
+  const openNewUploadFile = row => {
+    newinputFile.current.click()
+  }
+
   const open_file = fileName => {
     window.open('https://robin-sass.pioneers.network/assets/testFiles/employeePosition/' + fileName, '_blank')
   }
@@ -357,6 +396,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const handleEdit = e => {
     setFormValue({})
     setSelectedPosition(e)
+    console.log(e)
     setFormValue(e)
     setDepartment(e.department_id)
     setEndChangeType(e.endChangeType)
@@ -370,14 +410,50 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const openUploadFile = row => {
-    setSelectedPosition(row)
     inputFile.current.click()
+  }
+
+  const handleDeleteFile = e => {
+    setOpenFileDialog(true)
+  }
+
+  const deleteFile =()=>{
+
+    setLoading(true)
+  
+    let data = {...formValue}
+      delete data.file
+      data._id = selectedPosition._id
+      data.updated_at = new Date()
+      axios
+        .post('/api/employee-position/delete-positionFile', {
+          data
+        })
+        .then(function (response) {
+          dispatch(fetchData({ employeeId: employee._id })).then(() => {
+            toast.success('Position (' + data.positionTitle + ') deleted file successfully.', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+            setForm(false)
+            setOpenFileDialog(false)
+            setLoading(false)
+          })
+        })
+        .catch(function (error) {
+          toast.error('Error : ' + error.response.data.message + ' !', {
+            delay: 3000,
+            position: 'bottom-right'
+          })
+          setLoading(false)
+        })
+        
   }
 
   const columns = [
     {
-      flex: 0.2,
-      minWidth: 100,
+      flex: 0.25,
+      minWidth: 220,
       resizable: true,
       field: 'title',
       headerName: 'Title',
@@ -398,19 +474,14 @@ const Steppositions = ({ handleNext, employee }) => {
       renderCell: ({ row }) => <Typography variant='body2'>{row.endChangeDate}</Typography>
     },
     {
-      flex: 0.2,
-      minWidth: 100,
+      flex: 0.15,
+      minWidth: 120,
       field: 'action',
       headerName: '',
       renderCell: ({ row }) => (
         <>
-          {fileLoading && (
-            <span style={{ alignItems: 'center' }}>
-              <Loader size='xs' />
-            </span>
-          )}
-          {!fileLoading && (<span>
-                <IconButton
+          <span>
+            <IconButton
             size='small'
             onClick={e => {
               handleEdit(row)
@@ -431,16 +502,7 @@ const Steppositions = ({ handleNext, employee }) => {
                   <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
                 </IconButton>
               )}
-          <IconButton
-            size='small'
-            onClick={e => {
-              openUploadFile(row)
-            }}
-          >
-            <Icon icon='mdi:upload-outline' fontSize={18} />
-          </IconButton>
-          </span>)}
-      
+          </span>
         </>
       )
     }
@@ -491,12 +553,12 @@ const Steppositions = ({ handleNext, employee }) => {
               <Card xs={12} md={12} lg={12} sx={{ px: 1, pb: 8 }}>
                 {action == 'add' && (
                   <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
-                    Add New Position
+                    Add New Position 
                   </Typography>
                 )}
                 {action == 'edit' && (
                   <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
-                    Edit Position
+                    Edit Position 
                   </Typography>
                 )}
                 <Form
@@ -593,6 +655,21 @@ const Steppositions = ({ handleNext, employee }) => {
                           />
                         </Grid>
                       )}
+
+                      
+                    </Grid>
+
+                    <Grid item sm={12} xs={12} mt={4} mb={10}>
+                          <Typography sx={{ pt: 6 }}>
+                            File :
+                            {tempFile && action=="add" && !fileLoading &&(<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
+                            {tempFile && action=="add" && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedPosition?.file && !fileLoading && (<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(selectedPosition?.file)} >{selectedPosition?.file}</a></span>)}
+                            {selectedPosition?.file && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedPosition && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
+                            {!fileLoading && action=="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openNewUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
+                            {fileLoading && <small style={{paddingLeft:'20px' , fontStyle:'italic' , color:'blue'}}>Uploading ...</small>}
+                          </Typography>
                     </Grid>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 3 }}>
@@ -637,6 +714,17 @@ const Steppositions = ({ handleNext, employee }) => {
               name='file'
             />
 
+              <input
+              id='newfile'
+              ref={newinputFile}
+              hidden
+              type='file'
+              onChange={e => {
+                uploadNewFile(e)
+              }}
+              name='file'
+            />
+
           {/* -------------------------- Clinician  ------------------------------------- */}
           <Dialog
             open={open}
@@ -661,6 +749,31 @@ const Steppositions = ({ handleNext, employee }) => {
               <Button onClick={() => setOpen(false)}>No</Button>
             </DialogActions>
           </Dialog>
+
+          <Dialog
+              open={openFileDialog}
+              disableEscapeKeyDown
+              aria-labelledby='alert-dialog-title'
+              aria-describedby='alert-dialog-description'
+              onClose={(event, reason) => {
+                if (reason !== 'backdropClick') {
+                  handleClose()
+                }
+              }}
+            >
+              <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
+              <DialogContent>
+                <DialogContentText id='alert-dialog-description'>
+                  Are you sure , you want to delete file{' '}
+                  <span className='bold'>{selectedPosition?.file && selectedPosition?.file}</span>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions className='dialog-actions-dense'>
+                <Button onClick={deleteFile}>Yes</Button>
+                <Button onClick={() => setOpenFileDialog(false)}>No</Button>
+              </DialogActions>
+            </Dialog>
+
         </Grid>
       </Grid>
     </Grid>

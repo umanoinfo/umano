@@ -235,13 +235,14 @@ const ChartNode = ({
           <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
             <Typography
               variant='h6'
-              sx={{ display: 'flex', mr: 2.75, alignItems: 'center', color: 'common.white', '& svg': { mr: 2.5 } }}
+              sx={{ display: 'flex', mr: 2.75, alignItems: '', color: 'common.white', '& svg': { mr: 2.5 } }}
             >
               {datasource.name}
+          
             </Typography>
-            <Typography variant='body2' sx={{ mb: 3, color: '#D8D8D8' }}>
-              {datasource.description}
-            </Typography>
+           <Typography  sx={{ color: '#D8D8D8' }}>
+             <small>{datasource.employeesCount} Employees</small> 
+              </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
                 <Avatar alt={datasource.logo} src={datasource.logo} sx={{ width: 34, height: 34, mr: 2.75 , borderStyle:'solid' , borderWidth:'1px' , borderColor:'#808080'}} />

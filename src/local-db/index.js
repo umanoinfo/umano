@@ -4,18 +4,25 @@ export const companiesTypes = [
 ]
 
 export const EmployeesTypes = [
-  { title: 'Type1', value: 'type1' },
-  { title: 'Type2', value: 'type2' }
+  { title: 'Full-time', value: 'fullTime' },
+  { title: 'Part-time', value: 'partTime' },
+  { title: 'Temporary work', value: 'temporaryWork' },
+  { title: 'Flexible working', value: 'flexibleWorking' },
+  { title: 'Remote work', value: 'remoteWork' },
+  { title: 'Job sharing', value: 'jobSharing' }
 ]
 
 export const MaritalStatus = [
-  { title: 'status1', value: 'status1' },
-  { title: 'status2', value: 'status2' }
+  { title: 'Single', value: 'Single' },
+  { title: 'Married', value: 'Married' },
+  { title: 'Divorced', value: 'Divorced' }
 ]
 
 export const SourceOfHire = [
-  { title: 'Source1', value: 'Source1' },
-  { title: 'Source2', value: 'Source2' }
+  { title: 'Jobs social media', value: 'jobsSocialMedia' },
+  { title: 'Job search websites', value: 'jobSearchWebsites' },
+  { title: 'Company career website', value: 'companyCareerWebsite' },
+  { title: 'Employee referrals', value: 'employeeReferrals' }
 ]
 
 export const HealthInsuranceTypes = [
@@ -24,6 +31,7 @@ export const HealthInsuranceTypes = [
 ]
 
 export const PositionChangeStartTypes = [
+  { title: 'New Employee', value: 'New Employee' },
   { title: 'Temporary Delegate', value: 'Temporary Delegate' },
   { title: 'Promotion', value: 'Promotion' },
   { title: 'Permanent Transfer', value: 'Permanent Transfer' },
@@ -161,7 +169,7 @@ export const GetSourceOfHire = string => {
     return e.value == string
   })
 
-  return selected[0].title
+  return selected[0]?.title
 }
 
 export const GetEmployeesType = string => {
@@ -169,7 +177,7 @@ export const GetEmployeesType = string => {
     return e.value == string
   })
 
-  return selected[0].title
+  return selected[0]?.title
 }
 
 export const GetMaritalStatus = string => {
@@ -177,5 +185,5 @@ export const GetMaritalStatus = string => {
     return e.value == string
   })
 
-  return selected[0].title
+  return selected[0]?.title
 }

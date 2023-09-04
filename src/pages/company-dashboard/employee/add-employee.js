@@ -528,7 +528,6 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <Form.Control
                           size='sm'
                           controlId='address'
-                          accepter={Textarea}
                           rows={5}
                           name='address'
                           placeholder='Address'
@@ -887,7 +886,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   }))
 
   const renderContent = () => {
-    console.log(activeStep , selectedEmployee)
+   
     if(selectedEmployee){
       return getStepContent(activeStep)
     }
