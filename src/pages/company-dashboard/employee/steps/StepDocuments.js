@@ -125,6 +125,7 @@ const StepDocuments = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        setLoading(true)
         let data = {...formValue}
         data.documentTitle = formValue.documentTitle
         data.documentNo = formValue.documentNo
