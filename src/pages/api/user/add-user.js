@@ -19,6 +19,7 @@ export default async function handler(req, res) {
   // --------------------------- Change Password ---------------------------------
 
   const user = req.body.data
+  user.company_info = []
   if (!user.email || !user.password || !user.name || !user.type || !user.email.includes('@')) {
     res.status(422).json({
       message: 'Invalid input'

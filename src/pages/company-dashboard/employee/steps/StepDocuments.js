@@ -7,9 +7,8 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import LinearProgress from '@mui/material/LinearProgress'
+
 import { Checkbox, DatePicker, Form, Input, Loader, Schema, SelectPicker } from 'rsuite'
 
 // ** Custom Components Imports
@@ -603,6 +602,7 @@ const deleteFile =()=>{
                             </Button>
                           </>
                         )}
+                        {loading &&<LinearProgress />}
                       </Box>
                     </Grid>
                   </Form>

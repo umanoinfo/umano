@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
-import { hashPassword } from 'src/configs/auth'
 import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
@@ -10,17 +9,20 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminChangePassword')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminVisitCompany')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // --------------------------- Change Password ---------------------------------
 
-  const user = req.body.user
-  const hashedPassword = await hashPassword(req.body.user.password)
-  user.password = hashedPassword
-  const id = req.body.user._id
+  const company = req.body.selectedCompany
+
+  console.log(company)
+  const user = myUser
+  user.company_id = company._id
+  const id = myUser._id
   delete user._id
+  user.company_info = [company]
 
   try {
     const client = await connectToDatabase()
@@ -41,8 +43,8 @@ export default async function handler(req, res) {
       user_id: myUser._id,
       company_id: myUser.company_id,
       Module: 'User',
-      Action: 'Change Password',
-      Description: 'Change password (' + updatedUser.name + ')',
+      Action: 'Change company',
+      Description: 'Change company (' + updatedUser.name + ') to company '+ company.name ,
       created_at: new Date()
     }
 

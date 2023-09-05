@@ -29,6 +29,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  LinearProgress,
   ListItemSecondaryAction,
   Paper
 } from '@mui/material'
@@ -696,6 +697,7 @@ const Steppositions = ({ handleNext, employee }) => {
                           </Button>
                         </>
                       )}
+                      {loading &&<LinearProgress />}
                     </Box>
                   </Grid>
                 </Form>

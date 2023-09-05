@@ -120,6 +120,7 @@ const CompaniesList = () => {
   const [pageSize, setPageSize] = useState(10)
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openVisit , setOpenVisit] =useState(false)
   const [loading, setLoading] = useState(true)
 
   const [selectedCompany, setSelectedCompany] = useState()
@@ -179,6 +180,7 @@ const CompaniesList = () => {
 
   const handleClose = () => {
     setOpen(false)
+    setOpenVisit(false)
   }
 
   const handleFilter = useCallback(val => {
@@ -222,6 +224,34 @@ const CompaniesList = () => {
       })
   }
 
+
+    // -------------------------- Visit --------------------------------
+
+    const visitCompany = () => {
+      axios
+        .post('/api/user/change-company', {
+          selectedCompany
+        })
+        .then(function (response) {
+          dispatch(fetchData({})).then(() => {
+            toast.success('User (' + selectedCompany.name + ') Changed Successfully.', {
+              delay: 3000,
+              position: 'bottom-right'
+            })
+            setOpenVisit(false)
+            router.replace("/login")
+          })
+        })
+        .catch(function (error) {
+          setOpenVisit(false)
+          toast.error('Error : ' + error.response.data.message + ' !', {
+            delay: 1000,
+            position: 'bottom-right'
+          })
+          setLoading(false)
+        })
+    }
+
   // -------------------------------------------------------------------------
 
   const RowOptions = ({ row }) => {
@@ -255,6 +285,11 @@ const CompaniesList = () => {
       setOpen(true)
     }
 
+    const handleVisit = () => {
+      setSelectedCompany(row)
+      setOpenVisit(true)
+    }
+
     // ------------------------------ Table Definition ---------------------------------
 
     return (
@@ -281,6 +316,12 @@ const CompaniesList = () => {
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
+            </MenuItem>
+          )}
+            {session && session.user && session.user.permissions.includes('AdminVisitCompany') && (
+            <MenuItem onClick={handleVisit} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='material-symbols:beach-access-outline' fontSize={20} />
+              Visit
             </MenuItem>
           )}
           {session && session.user && session.user.permissions.includes('AdminEditCompany') && (
@@ -557,6 +598,31 @@ const CompaniesList = () => {
           <Button onClick={handleClose}>No</Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={openVisit}
+        disableEscapeKeyDown
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleClose()
+          }
+        }}
+      >
+        <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure , you want to visit company{' '}
+            <span className='bold'>{selectedCompany && selectedCompany.name}</span>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={visitCompany}>Yes</Button>
+          <Button onClick={handleClose}>No</Button>
+        </DialogActions>
+      </Dialog>
+
     </Grid>
   )
 }
