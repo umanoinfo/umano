@@ -10,7 +10,7 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
   })
 
   
-  console.log(response.data)
+  console.log("------->",response.data)
 
   response.data.data.map((e, index) => {
     e.departments = []
@@ -19,7 +19,7 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
       response.data.departmemts.map((departmemt)=>{
         if(departmemt._id == position.department_id){
           e.departments.push(departmemt.name)
-          e.managers.push(departmemt.user_info[0].firstName +" " + departmemt.user_info[0].lastName)
+          e.managers.push(departmemt.user_info[0]?.firstName +" " + departmemt.user_info[0]?.lastName)
         }
       })
     })

@@ -129,7 +129,7 @@ const EmployeeList = classNamec => {
         employeeType,
         q: value
       })
-    ).then( getDepartments() , setLoading(false))
+    ).then( console.log(store.data), getDepartments() , setLoading(false))
   }, [dispatch, type, employeeType, value])
 
 
