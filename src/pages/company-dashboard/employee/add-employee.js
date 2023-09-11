@@ -119,6 +119,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [gender, setGender] = useState('male')
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
+  const [maxId, setMaxId] = useState({})
+  const [companyEmployeeID, setCompanyEmployeeID] = useState()
+  const [newEmployeeID, setNewEmployeeID] = useState()
   const formRef = useRef()
 
   const [deductionDataSource, setDeductionDataSource] = useState()
@@ -141,8 +144,28 @@ const AddEmployee = ({ popperPlacement, id }) => {
     getShifts()
     getSalaryFormula()
     getDeduction()
+    getMaxEmployeeId()
     getCompensation()
   }, [])
+
+  // ------------------------ Get MaxEmployeeId -----------------------------------
+
+    const getMaxEmployeeId = async () => {
+      setIsLoading(true)
+
+      const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
+        setMaxId(response.data?.max)
+        setCompanyEmployeeID(response.data?.companyEmployeeID)
+        if(response.data?.max){
+          const s = '00000'+((response.data?.max)+1)
+          setNewEmployeeID(s.substr(s.length-5))
+        }
+        else{
+          setNewEmployeeID('00001')
+        }
+      })
+      setIsLoading(false)
+    }
 
   // ------------------------ Get Employee -----------------------------------
 
@@ -291,7 +314,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
     lastName: StringType().isRequired('Last name is required.'),
     email: StringType().isEmail('Please enter a valid email address.').isRequired('This field is required.'),
     mobilePhone: NumberType().isRequired('Mobile phone is required.').isInteger('It can only be an integer'),
-    idNo: NumberType().isRequired('Id No. is required.')
+    
+    // idNo: NumberType().isRequired('Id No. is required.')
   })
 
   // ------------------------------ Change Event ------------------------------------
@@ -340,11 +364,13 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     <Grid item sm={12} xs={12} md={5} mt={1}>
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
-                        <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' />
+                        <InputGroup>
+                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
+                          <Form.Control disable size='sm' value={newEmployeeID} type='number' checkAsync name='idNo' placeholder='ID No.' />
+                        </InputGroup>
                       </Form.Group>
                     </Grid>
                   </Grid>
-
                   <Grid container spacing={3}>
                     <Grid item sm={12} xs={12} md={4} mt={2}>
                       <Form.Group controlId='firstName'>
@@ -724,6 +750,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         let data = {}
         setLoading(true)
         data = formValue
+        data.idNo = companyEmployeeID+newEmployeeID
         data.countryID = countryID
         data.dateOfBirth = new Date(dateOfBirth)
         data.joiningDate = new Date(joiningDate)

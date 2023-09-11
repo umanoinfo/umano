@@ -27,6 +27,10 @@ export default async function handler(req, res) {
   employee.dateOfBirth = new Date(employee.dateOfBirth)
   employee.joiningDate = new Date(employee.joiningDate)
 
+  // const myCompany = await client.db().collection('companies').findOne({ _id: ObjectId(myUser.company_id) })
+  // console.log(myCompany.employeeID)
+  // newIdNo = myCompany.employeeID.concat(employee.idNo); 
+
   const newEmployee = await client.db().collection('employees').insertOne(employee)
   const insertedEmployee = await client.db().collection('employees').findOne({ _id: newEmployee.insertedId })
 

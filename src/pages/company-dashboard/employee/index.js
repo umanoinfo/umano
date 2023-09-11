@@ -311,6 +311,19 @@ const EmployeeList = classNamec => {
       }
     },
     {
+      flex: 0.02,
+      minWidth: 150,
+      field: 'idNo',
+      headerName: 'Id No.',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.idNo}
+          </Typography>
+        )
+      }
+    },
+    {
       flex: 0.1,
       minWidth: 280,
       field: 'employeeName',

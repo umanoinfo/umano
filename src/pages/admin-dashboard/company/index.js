@@ -362,7 +362,7 @@ const CompaniesList = () => {
       headerName: 'Company',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography  noWrap sx={{ textTransform: 'capitalize' }}>
             {row.name}
           </Typography>
         )
@@ -408,7 +408,7 @@ const CompaniesList = () => {
     },
     {
       flex: 0.11,
-      minWidth: 120,
+      minWidth: 200,
       field: 'end',
       headerName: 'End Subscription',
       renderCell: ({ row }) => {
@@ -558,6 +558,7 @@ const CompaniesList = () => {
           {/* -------------------------- Table -------------------------------------- */}
 
           {!loading && store.data && <DataGrid
+          rowHeight={35}
             autoHeight
             rows={store.data}
             columns={columns}

@@ -24,6 +24,8 @@ export default async function handler(req, res) {
     return
   }
 
+  console.log(company)
+  
   const newCompany = await client.db().collection('companies').insertOne(company)
   const insertedCompany = await client.db().collection('companies').findOne({ _id: newCompany.insertedId })
 

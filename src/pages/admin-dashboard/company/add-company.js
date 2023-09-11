@@ -164,7 +164,6 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.type = type.value
     data.state = state.name
     data.country_id = country._id
-    console.log(country)
     data.start_at = new Date(start_at).toISOString().substring(0, 10)
     data.end_at = new Date(end_at).toISOString().substring(0, 10)
     data.user_id = userID
@@ -368,6 +367,26 @@ const DialogAddUser = ({ popperPlacement }) => {
                       )}
                     />
                   </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  <Controller
+                      name='employeeID'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <TextField
+                          pattern = "[A-Za-z]"
+                          type='text'
+                          size='small'
+                          value={value}
+                          label='Employee ID'
+                          onChange={onChange}
+                          placeholder='Employee ID'
+                        />
+                      )}
+                    />
+                  </FormControl>
+                  
                   <FormControl fullWidth sx={{ mb: 3 }}>
                     <Controller
                       name='address'

@@ -399,6 +399,14 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                   <Grid container spacing={3} mt={1}>
                     <Grid item sm={12} xs={12}>
                       <Form.Group>
+                        <small>Employee ID</small>
+                        <Form.Control rows={2} name='employeeID' />
+                      </Form.Group>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={3} mt={1}>
+                    <Grid item sm={12} xs={12}>
+                      <Form.Group>
                         <small>Address</small>
                         <Form.Control rows={2} name='address' />
                       </Form.Group>
