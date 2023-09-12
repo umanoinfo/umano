@@ -31,17 +31,17 @@ export default async function handler(req, res) {
   if (myUser && myUser.type == 'admin') {
     options.push({ sectionTitle: 'Admin Dashboard' })
   }
-  if (myUser && myUser.permissions.includes('AdminViewCompany')) {
+  if (myUser && myUser.permissions.includes('AdminViewCompany') && myUser.type == 'admin') {
     options.push({ title: 'Companies', icon: 'mdi:google-circles-extended', path: '/admin-dashboard/company' })
   }
-  if (myUser && myUser.permissions.includes('AdminViewUser')) {
+  if (myUser && myUser.permissions.includes('AdminViewUser') && myUser.type == 'admin') {
     options.push({
       title: 'Users',
       icon: 'mdi:account-outline',
       path: '/admin-dashboard/user'
     })
   }
-  if (myUser && (myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
+  if (myUser &&  myUser.type == 'admin' &&(myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
     options.push({
       title: 'Roles & Permissions',
       icon: 'mdi:shield-outline',

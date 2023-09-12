@@ -21,12 +21,16 @@ export const nextAuthOptions = (req, res) => {
           password: { label: 'Password', type: 'password' }
         },
         async authorize(credentials) {
+
           client = await connectToDatabase()
           let usersCollection = client.db().collection('users')
 
-          const user = await usersCollection.findOne({
-            email: credentials.email
-          })
+          const user = await usersCollection.findOne(
+            {$and:[
+              { email: credentials.email } ,   
+              { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
+            ]}
+          )
 
           if (!user) {
             throw new Error('No user found!')
@@ -57,8 +61,13 @@ export const nextAuthOptions = (req, res) => {
 
       async session({ session, token, user }) {
         if (!session.user || !session.user._id) {
+
           const client = await connectToDatabase()
-          const newUser = await client.db().collection('users').findOne({ email: token.email })
+          
+          const newUser = await client.db().collection('users').findOne({$and:[
+            { email: token.email } ,   
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
+          ]} )
           session.user = newUser
         }
 

@@ -248,7 +248,7 @@ export default async function handler(req, res) {
 
       if ((!_in.toString() || !_out.toString()) && !leaveDay && !holidayDay && workingDay) {
         lateFlag = true
-        lateHours = ((shift_out - shift_in) / 3600000).toFixed(3)
+        lateHours = ((shift_out - shift_in) / 3600000).toFixed(2)
       }
 
 
@@ -259,16 +259,20 @@ export default async function handler(req, res) {
           _in = att.timeIn
           _out = att.timeOut
           earlyFlag = false
+          earlyHours =0
           lateFlag = false
+          lateHours = 0
           totalHours = (
             (new Date('1/1/2023 ' + _out.toString() + ' UTC') - new Date('1/1/2023 ' + _in.toString() + ' UTC')) /
             3600000
-          ).toFixed(3)
+          ).toFixed(2)
 
+          
           if (new Date('1/1/2023 ' + _in.toString() + ' UTC') > availableLate) {
             lateFlag = true
             lateHours = ((new Date('1/1/2023 ' + _in.toString() + ' UTC') - shift_in) / 3600000).toFixed(3)
           }
+
           if (new Date('1/1/2023 ' + _out.toString() + ' UTC') < availableEarly) {
             earlyFlag = true
             earlyHours = ((shift_out - new Date('1/1/2023 ' + _out.toString() + ' UTC')) / 3600000).toFixed(3)

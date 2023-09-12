@@ -1,22 +1,22 @@
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { getToken } from 'next-auth/jwt'
+import { ObjectId } from 'mongodb'
 
 export default async function handler(req, res) {
   const client = await connectToDatabase()
 
-  let fromDate = new Date().setHours(0, 0, 0, 0)
-  let toDate = new Date().setHours(23, 59, 59, 999)
+  let fromDate = new Date().setUTCHours(0, 0, 0, 0)
+  let toDate = new Date().setUTCHours(23, 59, 59, 999)
 
   if (!req.query.employee_no) {
     req.query.employee_no = ''
   }
   if (req.query.fromDate) {
-    fromDate = new Date(req.query.fromDate).setHours(0, 0, 0, 0)
+    fromDate = new Date(req.query.fromDate).setUTCHours(0, 0, 0, 0)
   }
   if (req.query.toDate) {
-    toDate = new Date(req.query.toDate).setHours(23, 59, 59, 999)
+    toDate = new Date(req.query.toDate).setUTCHours(23, 59, 59, 999)
   }
-
 
   // -------------------- Token --------------------------------------------------
 
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             { employee_no_str: { $regex: req.query.employee_no  }},
             {
               date: {
-                $gt: new Date(fromDate),
+                $gte: new Date(fromDate),
                 $lte: new Date(toDate)
               }
             },

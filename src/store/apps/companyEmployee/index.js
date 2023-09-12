@@ -9,8 +9,7 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
     params
   })
 
-  
-  console.log("------->",response.data)
+
 
   response.data.data.map((e, index) => {
     e.departments = []

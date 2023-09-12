@@ -59,11 +59,31 @@ const Sub = styled('sub')({
 const EmployeeViewLeft = ({ id, employee }) => {
 
   const router = useRouter()
+  const [grossSalary , setGrossSalary]=useState(0)
 
+  useEffect(()=>{
+    assumegrossSalary()
+  },[])
 
   const newArray = employee?.employeePositions_info.filter((pos)=>{
     return(pos.endChangeType == "onPosition")
   })
+
+  const assumegrossSalary = ()=>{
+   
+    const lumpySalary = employee?.salaries_info[0]?.lumpySalary | 0
+    let deductions = 0
+    let compensations = 0
+    employee?.deductions_array?.map((ded)=>{
+      deductions +=  Number(ded.fixedValue)
+      deductions += ((Number(ded.percentageValue) *lumpySalary)/100)
+    })
+    employee?.compensations_array?.map((con)=>{
+      compensations +=  Number(con.fixedValue)
+      compensations += ((Number(con.percentageValue) *lumpySalary)/100)
+    })
+    setGrossSalary  (lumpySalary - deductions + compensations)
+  } ;
 
   const handleEditRowOptions = () => {
     router.push('/company-dashboard/employee/' + employee._id + '/edit-employee')
@@ -150,7 +170,23 @@ const EmployeeViewLeft = ({ id, employee }) => {
                     </Typography>
                     <Typography variant='body2'>{employee.gender}</Typography>
                   </Box>
-                )}                
+                )}  
+                {grossSalary > 0 && (
+                  <Box sx={{ display: 'flex', mb: 2.7 }}>
+                    <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                      lumpy salary:
+                    </Typography>
+                    <Typography variant='body2'>{employee?.salaries_info[0]?.lumpySalary} AED</Typography>
+                  </Box>
+                )}   
+                {grossSalary > 0 && (
+                  <Box sx={{ display: 'flex', mb: 2.7 }}>
+                    <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                      Gross salary:
+                    </Typography>
+                    <Typography variant='body2'>{grossSalary} AED</Typography>
+                  </Box>
+                )}              
                 {employee.country_info[0] && (
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>

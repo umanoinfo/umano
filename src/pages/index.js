@@ -51,13 +51,9 @@ const Home = () => {
 
     getDashboard()
 
-    // if (auth.user && auth.user.role) {
-    //   const homeRoute = getHomeRoute(auth.user.role)
+    let num = 1000.010;
+    console.log(num.toLocaleString("en-US"))
 
-    //   // Redirect user to Home URL
-    //   router.replace(homeRoute)
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getDashboard = ()=>{

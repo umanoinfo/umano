@@ -483,10 +483,8 @@ const AllDocumentsList = () => {
     //   ------------------------ Assume Early & Late OverTime Hours -------------------------------
 
       res.data.attendances.map(att => {
-
         totalEarlyOverTimeHours = totalEarlyOverTimeHours + Number(att.earlyOverTimeHours)
         totalLateOverTimeHours = totalLateOverTimeHours + Number(att.lateOverTimeHours)
-
       })
 
       employee.totalEarlyOverTimeHours = totalEarlyOverTimeHours
@@ -496,13 +494,13 @@ const AllDocumentsList = () => {
         +totalEarlyOverTimeHours *
         +employee.hourlySalary *
         +employee.salaryFormulas_info[0].firstOverTime
-      ).toFixed(3)
+      ).toFixed(2)
 
       employee.totalLateOverTimeValue = (
         +totalLateOverTimeHours *
         +employee.hourlySalary *
         +employee.salaryFormulas_info[0].firstOverTime
-      ).toFixed(3)
+      ).toFixed(2)
 
 
      //   ----------------------- Assume Early & Late Hours -------------------------------
@@ -527,14 +525,14 @@ const AllDocumentsList = () => {
         +totalholidayHours *
         +employee.hourlySalary *
         +employee.salaryFormulas_info[0].holidayOverTime
-      ).toFixed(3)
+      ).toFixed(2)
 
       employee.totalOffDayHours = totalOffDayHours
       employee.totalOffDayValue = (
         +totalOffDayHours *
         +employee.hourlySalary *
         +employee.salaryFormulas_info[0].weekendOverTime
-      ).toFixed(3)
+      ).toFixed(2)
 
       employee.totalEarlyHours = totalEarlyHours
       employee.totalLateHours = totalLateHours
@@ -542,7 +540,7 @@ const AllDocumentsList = () => {
         (Number(employee.totalEarlyHours + employee.totalLateHours) *
         Number(employee.salaryFormulas_info[0].notJustifiedAbsenceHoure) *
         Number(employee.hourlySalary) *
-        -1).toFixed(3)
+        -1).toFixed(2)
 
       //   -------------------------- Assume Compensations -----------------------------------------
 
@@ -1074,7 +1072,7 @@ const AllDocumentsList = () => {
             </Grid>
             <Grid item sm={2} xs={12}>
               <Button
-              sx={{ mt: 6 }}
+              sx={{ mt: 8 }}
               size='sm'
               variant='contained'
               onClick={() => {
@@ -1088,7 +1086,7 @@ const AllDocumentsList = () => {
 
           <Divider />
 
-          {/* -------------------------- Table -------------------------------------- */}
+          {/* -------------------------- Table ----------------------------------- */}
 
           <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
         </Card>
