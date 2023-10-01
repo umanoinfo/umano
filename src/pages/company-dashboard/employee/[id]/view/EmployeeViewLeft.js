@@ -282,13 +282,3 @@ const EmployeeViewLeft = ({ id, employee }) => {
 }
 
 export default EmployeeViewLeft
-
-
-
-
-// mongodb+srv://umanoinfo00:<password>@umano.ngqka2d.mongodb.net/
-
-
-// @umanosing.6seqopc.mongodb.net
-
-// mongodb+srv://umanoinfo00:B4l0jIYvEdtOzNDE@umanosing.6seqopc.mongodb.net
