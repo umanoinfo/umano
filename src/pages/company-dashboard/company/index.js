@@ -112,7 +112,7 @@ const renderClient = row => {
   }
 }
 
-const UserList = ({ apiData }) => {
+const UserList = () => {
   // ** State
   const [type, setType] = useState('')
   const [plan, setPlan] = useState('')
@@ -556,15 +556,6 @@ const UserList = ({ apiData }) => {
   )
 }
 
-export const getStaticProps = async () => {
-  const res = await axios.get('/cards/statistics')
-  const apiData = res.data
 
-  return {
-    props: {
-      apiData
-    }
-  }
-}
 
 export default UserList

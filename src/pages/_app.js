@@ -13,7 +13,7 @@ import NProgress from 'nprogress'
 import { defaultACLObj } from 'src/configs/acl'
 
 // ** Fake-DB Import /// _app 1.32 First load
-import 'src/@fake-db'
+// import 'src/@fake-db'
 
 
 // ** Component Imports
@@ -38,7 +38,9 @@ import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsCo
 // import 'prismjs/components/prism-tsx'
 
 // ** React Perfect Scrollbar Style
-// import 'react-perfect-scrollbar/dist/css/styles.css'
+
+import 'react-perfect-scrollbar/dist/css/styles.css'
+
 // import 'src/iconify-bundle/icons-bundle-react'
 
 import { SessionProvider } from 'next-auth/react'
@@ -46,8 +48,10 @@ import { SessionProvider } from 'next-auth/react'
 // ** Global css styles
 // import '../../styles/globals.css'
 // import 'rsuite/dist/rsuite.min.css';
-// import '../../styles/ChartContainer.css'
-// import '../../styles/ChartNode.css'
+
+import '../../styles/ChartContainer.css'
+import '../../styles/ChartNode.css'
+
 // import '../../styles/export-chart.css'
 
 // const clientSideEmotionCache = createEmotionCache()
