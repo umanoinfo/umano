@@ -4,6 +4,13 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 // !Do not remove this Layout import
 import Layout from 'src/@core/layouts/Layout'
 
+// ** Styled Components
+import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
+
+
+// ** Third Party Import
+import { Toaster } from 'react-hot-toast'
+
 import VerticalAppBarContent from './components/vertical/AppBarContent'
 
 // ** Hook Import
@@ -75,6 +82,9 @@ const UserLayout = ({ children, contentHeightFixed }) => {
       })}
     >
       {children}
+      <ReactHotToast>
+        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+      </ReactHotToast>
     </Layout>
   )
 }

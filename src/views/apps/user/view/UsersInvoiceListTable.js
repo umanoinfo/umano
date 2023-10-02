@@ -126,7 +126,9 @@ const columns = [
             },
             {
               text: 'Edit',
-              href: `/apps/invoice/edit/${row.id}`,
+              
+              // href: `/apps/invoice/edit/${row.id}`,
+
               icon: <Icon icon='mdi:pencil-outline' fontSize={20} />
             },
             {

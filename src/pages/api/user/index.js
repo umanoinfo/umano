@@ -8,6 +8,9 @@ export default async function handler(req, res) {
   // ---------------------------- Token -------------------------------------
 
   const token = await getToken({ req })
+
+  console.log(token.user)
+  
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminViewUser')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
@@ -46,7 +49,7 @@ export default async function handler(req, res) {
           let: { company_id: { $toObjectId: '$company_id' } },
           pipeline: [
             { $addFields: { company_id: '$_id' } },
-            { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } }
+            { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } },
           ],
           as: 'company_info'
         }
@@ -55,7 +58,7 @@ export default async function handler(req, res) {
         $sort: {
           created_at: -1
         }
-      }
+      },
     ])
     .toArray()
   res.status(200).json({ success: true, data: users })

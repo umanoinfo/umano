@@ -8,59 +8,52 @@ import { Provider } from 'react-redux'
 // ** Loader Import
 import NProgress from 'nprogress'
 
-// ** Emotion Imports
-import { CacheProvider } from '@emotion/react'
-
 // ** Config Imports
-import 'src/configs/i18n'
+//import 'src/configs/i18n' /// _app 1.32 First load
 import { defaultACLObj } from 'src/configs/acl'
-import themeConfig from 'src/configs/themeConfig'
 
-// ** Fake-DB Import
+// ** Fake-DB Import /// _app 1.32 First load
 import 'src/@fake-db'
 
-// ** Third Party Import
-import { Toaster } from 'react-hot-toast'
 
 // ** Component Imports
 import UserLayout from 'src/layouts/UserLayout'
 import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
-import WindowWrapper from 'src/@core/components/window-wrapper'
+
+// import WindowWrapper from 'src/@core/components/window-wrapper'
 
 // ** Contexts
 import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
 
-// ** Styled Components
-import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
+
 
 // ** Utils Imports
-import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
+// import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
 
-// ** Prismjs Styles
-import 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
-import 'prismjs/components/prism-jsx'
-import 'prismjs/components/prism-tsx'
+// // ** Prismjs Styles /// _app 1.32 First load
+// import 'prismjs'
+// import 'prismjs/themes/prism-tomorrow.css'
+// import 'prismjs/components/prism-jsx'
+// import 'prismjs/components/prism-tsx'
 
 // ** React Perfect Scrollbar Style
-import 'react-perfect-scrollbar/dist/css/styles.css'
-import 'src/iconify-bundle/icons-bundle-react'
-
-// ** Global css styles
-import '../../styles/globals.css'
-import '../../styles/export-chart.css'
-import '../../styles/ChartContainer.css'
-import '../../styles/ChartNode.css'
+// import 'react-perfect-scrollbar/dist/css/styles.css'
+// import 'src/iconify-bundle/icons-bundle-react'
 
 import { SessionProvider } from 'next-auth/react'
 
-import 'rsuite/dist/rsuite.min.css';
+// ** Global css styles
+// import '../../styles/globals.css'
+// import 'rsuite/dist/rsuite.min.css';
+// import '../../styles/ChartContainer.css'
+// import '../../styles/ChartNode.css'
+// import '../../styles/export-chart.css'
 
-const clientSideEmotionCache = createEmotionCache()
+// const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
-if (themeConfig.routingLoader) {
+
   Router.events.on('routeChangeStart', () => {
     NProgress.start()
   })
@@ -70,11 +63,10 @@ if (themeConfig.routingLoader) {
   Router.events.on('routeChangeComplete', () => {
     NProgress.done()
   })
-}
 
 // ** Configure JSS & ClassName
 const App = props => {
-  const { session, Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const { session, Component,  pageProps } = props
 
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
@@ -90,27 +82,26 @@ const App = props => {
 
       <Provider store={store} >
 
-        <CacheProvider value={emotionCache} >
+        {/* <CacheProvider value={emotionCache} > */}
 
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
               {({ settings }) => {
                 return (
                   <ThemeComponent settings={settings}>
-                    <WindowWrapper>
+                    {/* <WindowWrapper> */}
                       <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
                         {getLayout(<Component {...pageProps} />)}
                       </AclGuard>
-                    </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
+                    {/* </WindowWrapper> */}
+
                   </ThemeComponent>
                 )
               }}
             </SettingsConsumer>
           </SettingsProvider>
-        </CacheProvider>
+
+        {/* </CacheProvider> */}
       </Provider>
     </SessionProvider>
   )
