@@ -174,8 +174,6 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-   
-
     let data = {}
     data.employees_count = employees.length ;
     data.users_count = users.length ;
@@ -191,6 +189,7 @@ export default async function handler(req, res) {
       docTemp.version = doc.version
       docTemp.type = doc.type
       docTemp.expiryDate = doc.expiryDate
+      docTemp.notifyBefore = doc.notifyBefore
       documentsExpired.push(docTemp)
     })
     expiary30EmployeeDocuments.map((doc , index)=>{
@@ -201,6 +200,7 @@ export default async function handler(req, res) {
       docTemp.version = doc.documentNo
       docTemp.type = [doc.employee_info[0].firstName +' '+doc.employee_info[0].lastName] 
       docTemp.expiryDate = doc.expiryDate
+      docTemp.notifyBefore = doc.notifyBefore
       documentsExpired.push(docTemp)
     })
 

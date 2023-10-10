@@ -26,12 +26,23 @@ export default async function handler(req, res) {
     
     return
   }
+
+  if(!document.notifyBefore){
+    document.notifyBefore = 30
+  }
+  document.notifyBeforeDays = document.notifyBefore
+  var date = new Date(document.expiryDate);
+  date.setDate(date.getDate() - document.notifyBefore); 
+
+  document.notifyBefore = date
   document.company_id = myUser.company_id
   document.expiryDate = new Date(document.expiryDate)
   const newDocument = await client.db().collection('documents').insertOne(document)
   const insertedDocument = await client.db().collection('documents').findOne({ _id: newDocument.insertedId })
 
   // ---------------------- Add Event --------------------------------------
+
+
 
   if (!insertedDocument.expiryDateFlag) {
     let event = {}

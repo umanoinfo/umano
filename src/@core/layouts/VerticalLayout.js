@@ -118,16 +118,15 @@ const VerticalLayout = props => {
         <>
           <Box className='content-center'>
             <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-              <Typography variant='h1' sx={{ mb: 2.5 }}>
-                401
-              </Typography>
-              <Typography variant='h5' sx={{ mb: 2.5, fontSize: '1.5rem !important' }}>
-                You are not authorized! 🔐
-              </Typography>
-              <Typography variant='body2'>You don&prime;t have permission to access this page. Go Home!</Typography>
 
-              <Img alt='error-illustration' src='/images/pages/401.png' />
-              <Button href='/login' variant='contained' sx={{ px: 5.5 }}>
+            <Img sx={{mt:40 , mb: 2.5, fontSize: '1.5rem !important' }} alt='error-illustration' src='/images/pages/401.png' />
+
+              <Typography variant='h5' sx={{mt:10 , mb: 2.5, fontSize: '1rem !important' }}>
+                You are not authorized! 
+              </Typography>
+
+              
+              <Button href='/login' variant='contained' sx={{ mt:10 , px: 5.5 }}>
                 Back to login
               </Button>
             </Box>

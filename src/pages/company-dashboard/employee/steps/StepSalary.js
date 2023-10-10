@@ -369,7 +369,7 @@ const StepSalary = ({ handleNext, employee }) => {
       headerName: 'Basic Salary',
       renderCell: ({ row }) => (
       <>
-        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{(Number(row.lumpySalary)).toFixed(2)}</Typography>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{Number((Number(row.lumpySalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
         <CustomChip
             skin='light'
             size='small'
@@ -388,7 +388,7 @@ const StepSalary = ({ handleNext, employee }) => {
       headerName: 'Overtime Salary',
       renderCell: ({ row }) => ( 
       <>
-        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{(Number(row.overtimeSalary)).toFixed(2)}</Typography>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{Number((Number(row.overtimeSalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
           <CustomChip
             skin='light'
             size='small'

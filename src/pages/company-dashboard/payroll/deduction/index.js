@@ -293,7 +293,7 @@ const DeductionsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.fixedValue > 0 ? row.fixedValue : '-'}
+            {row.fixedValue > 0 ? Number(row.fixedValue).toLocaleString("en-US") : '-'}
           </Typography>
         )
       }

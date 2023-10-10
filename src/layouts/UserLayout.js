@@ -39,11 +39,12 @@ const UserLayout = ({ children, contentHeightFixed }) => {
   }, [])
 
   const getOptions = () => {
-
-      axios.get('/api/menuOptions', {}).then(res => {
-      setMenuOptions(res.data.data)
-    })
-    
+    try{
+        axios.get('/api/menuOptions', {}).then(res => {
+          setMenuOptions(res.data.data)
+        })
+    }
+    catch(ex){}
   }
 
   return (

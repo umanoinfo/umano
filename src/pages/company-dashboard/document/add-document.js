@@ -149,6 +149,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.approvedDate = approvedDate
         data.preparedBy = formValue.preparedBy
         data.approvedBy = formValue.approvedBy
+        data.notifyBefore = formValue.notifyBefore
         data.status = 'active'
         data.expiryDateFlag = expiryDateFlag
         if (!expiryDateFlag) {
@@ -350,64 +351,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </Typography>
                       </Grid>
                     </Grid>
-                    {/* <Grid container spacing={3} sx={{ mt: 0.1 }}>
-                      <Grid item sm={4} xs={4}>
+                    {!expiryDateFlag && (<Grid container spacing={3}>
+                      <Grid item sm={6} xs={12} mt={2}>
                         <div className='flex d-flex row-flex'>
-                          <small>Prepared Date</small>
-                          <Form.Control
+                          <small>Notify before <span>(Days)</span></small>
+                          <div className='flex d-flex row-flex'>
+                            <Form.Control
+                            controlId='notifyBefore'
                             size='sm'
-                            oneTap
-                            accepter={DatePicker}
-                            name='preparedDate'
-                            onChange={e => {
-                              setPreparedDate(e.toISOString().substring(0, 10))
-                            }}
-                            value={new Date(preparedDate)}
-                            block
-                          />
+                            type='number'
+                            name='notifyBefore'
+                            placeholder='Notify before'
+                          /> 
+                          </div>
+                            
                         </div>
                       </Grid>
-                      <Grid item sm={8} md={8}>
-                        <small>Prepared By</small>
-                        <Form.Control
-                          controlId='preparedBy'
-                          size='sm'
-                          type='text'
-                          name='preparedBy'
-                          placeholder='Prepared By'
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={3} sx={{ mt: 0.1 }}>
-                      <Grid item sm={4} xs={4}>
-                        <div className='flex d-flex row-flex'>
-                          <small>Approved Date</small>
-                          <Form.Control
-                            size='sm'
-                            oneTap
-                            accepter={DatePicker}
-                            name='approvedDate'
-                            onChange={e => {
-                              setApprovedDate(e.toISOString().substring(0, 10))
-                            }}
-                            value={new Date(approvedDate)}
-                            style={{ zIndex: '0 !important' }}
-                            block
-                          />
-                        </div>
-                      </Grid>
-                      <Grid item sm={8} md={8}>
-                        <small>Approved By</small>
-                        <Form.Control
-                          controlId='approvedBy'
-                          size='sm'
-                          type='text'
-                          name='approvedBy'
-                          placeholder='Approved By'
-                        />
-                      </Grid>
-                    </Grid> */}
-
+                    </Grid> )}
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>

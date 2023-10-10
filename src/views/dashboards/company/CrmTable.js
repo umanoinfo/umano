@@ -67,7 +67,7 @@ const renderUserAvatar = row => {
 const columns = [
   {
     flex: 0.06,
-    minWidth: 100,
+    minWidth: 200,
     field: 'expiryDate',
     headerName: 'Expiry Date',
     renderCell: ({ row }) => {
@@ -102,8 +102,6 @@ const columns = [
     renderCell: ({ row }) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* {row.icon} */}
-          {roleObj[row.icon].icon}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
               {row.title}
@@ -120,19 +118,6 @@ const columns = [
     headerName: 'Version',
     renderCell: ({ row }) => <Typography variant='body2'>{row.version}</Typography>
   },
-  
-  // {
-  //   flex: 0.2,
-  //   minWidth: 130,
-  //   field: 'role',
-  //   headerName: 'Role',
-  //   renderCell: ({ row }) => (
-  //     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-  //       {roleObj[row.role].icon}
-  //       <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{row.role}</Typography>
-  //     </Box>
-  //   )
-  // },
   {
     flex: 0.15,
     minWidth: 110,

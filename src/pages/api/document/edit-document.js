@@ -25,6 +25,13 @@ export default async function handler(req, res) {
     return
   }
 
+  if(!document.notifyBefore){
+    document.notifyBefore = 30
+  }
+  document.notifyBeforeDays = document.notifyBefore
+  var date = new Date(document.expiryDate);
+  date.setDate(date.getDate() - document.notifyBefore); 
+  document.notifyBefore = date
   const id = document._id
   delete document._id
   document.expiryDate = new Date(document.expiryDate)

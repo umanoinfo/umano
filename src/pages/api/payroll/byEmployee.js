@@ -64,8 +64,9 @@ export default async function handler(req, res) {
           from: 'employeeSalaries',
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
-            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $sort: { startChangeDate: 1 } }
+            
+            { $match: {$and:[{ $expr: { $eq: ['$employee_id', '$$employee_id'] } }]} },
+            { $sort: { startChangeDate: -1 } }
           ],
           as: 'salaries_info'
         }
