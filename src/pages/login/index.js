@@ -119,7 +119,7 @@ const LoginPage = () => {
     setLoading(true)
     const { email, password } = data
     signIn('credentials', {
-      email: email,
+      email: email.toLowerCase(),
       password: password,
       callbackUrl: '/'
     })
