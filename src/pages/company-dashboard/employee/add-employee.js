@@ -153,17 +153,18 @@ const AddEmployee = ({ popperPlacement, id }) => {
     const getMaxEmployeeId = async () => {
       setIsLoading(true)
 
-      const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
-        setMaxId(response.data?.max)
-        setCompanyEmployeeID(response.data?.companyEmployeeID)
-        if(response.data?.max){
-          const s = '00000'+((response.data?.max)+1)
-          setNewEmployeeID(s.substr(s.length-5))
-        }
-        else{
-          setNewEmployeeID('00001')
-        }
-      })
+      // const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
+      //   setMaxId(response.data?.max)
+      //   setCompanyEmployeeID(response.data?.companyEmployeeID)
+      //   if(response.data?.max){
+      //     const s = '00000'+((response.data?.max)+1)
+      //     setNewEmployeeID(s.substr(s.length-5))
+      //   }
+      //   else{
+      //     setNewEmployeeID('00001')
+      //   }
+      // })
+      setNewEmployeeID()
       setIsLoading(false)
     }
 

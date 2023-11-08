@@ -11,6 +11,7 @@ nextjs-portal {
   display: none;
 }
 
+
 code {
   font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
@@ -30,7 +31,7 @@ code[class*='language-'] {
 .rs-picker-menu.rs-picker-check-menu,
 .rs-picker-menu.rs-picker-select-menu,
 .rs-picker-menu {
-  z-index: 1300 !important;
+  z-index: 2500 !important;
 }
 
 /* ---------------------- sun ------------------------- */
@@ -346,7 +347,7 @@ code[class*='language-'] {
   background-color: #fff;
   opacity: 0.7;
   filter: alpha(opacity=70);
-  z-index: 2147483647;
+  z-index: 100;
 }
 .sun-editor .se-loading-box .se-loading-effect {
   position: absolute;
@@ -368,7 +369,7 @@ code[class*='language-'] {
   height: 1px;
   cursor: text;
   border-top: 1px solid #3288ff;
-  z-index: 7;
+  z-index: 7000;
 }
 .sun-editor .se-line-breaker > button.se-btn {
   position: relative;
@@ -398,7 +399,7 @@ code[class*='language-'] {
   opacity: 0.6;
   border-radius: 4px;
   cursor: pointer;
-  z-index: 7;
+  z-index: 7000;
 }
 .sun-editor .se-line-breaker-component:hover {
   opacity: 0.9;
@@ -454,7 +455,7 @@ code[class*='language-'] {
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
 }
 .sun-editor .se-toolbar.se-toolbar-balloon {
-  z-index: 2147483647;
+  z-index: 100;
   width: auto;
 }
 .sun-editor .se-toolbar.se-toolbar-sticky {
@@ -994,7 +995,7 @@ code[class*='language-'] {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2147483647;
+  z-index: 100;
 }
 .sun-editor .se-resizing-bar .se-navigation {
   flex: auto;
@@ -1034,7 +1035,7 @@ code[class*='language-'] {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2147483647;
+  z-index: 100;
 }
 .sun-editor .se-dialog button,
 .sun-editor .se-dialog input,
@@ -1627,7 +1628,7 @@ code[class*='language-'] {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2147483647;
+  z-index: 100;
 }
 .sun-editor .se-file-browser button,
 .sun-editor .se-file-browser input,
@@ -1817,7 +1818,7 @@ code[class*='language-'] {
   position: absolute;
   top: 0;
   display: none;
-  z-index: 7;
+  z-index: 7000;
   width: 100%;
   height: auto;
   word-break: break-all;

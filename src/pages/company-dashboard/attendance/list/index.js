@@ -678,6 +678,7 @@ const AllDocumentsList = () => {
       ) : null}
       {openAddDialog ? (
         <DialogAddAttendance
+          sx={{zIndex: -1}}
           open={openAddDialog}
           setOpen={setOpenAddDialog}
           attendance={SelectedEditRow}

@@ -318,6 +318,43 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               </Typography>
                             </Box>
                           )}
+                            <Box sx={{ display: 'flex', mb: 2.7 }}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Issue Date:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {new Date(selectedDocument.issueDate).toISOString().substring(0, 10)}
+                              </Typography>
+                            </Box>
+                              <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
+                                <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+                              </Typography>
+
+                            <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Nmae:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {selectedDocument.renewing_name}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2.7 , mt:1}}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Phone:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {selectedDocument.renewing_phone}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2.7 , mt:1}}>
+                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                Email:
+                              </Typography>
+                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                {selectedDocument.renewing_email}
+                              </Typography>
+                            </Box>
+                         
                         </Box>
                         <div>
                           <Accordion>

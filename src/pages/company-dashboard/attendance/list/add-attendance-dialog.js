@@ -141,9 +141,11 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                 </Form.Group>
               </div>
             </Grid> */}
-              <Grid item xs={6} mb={3}>
+              <Grid item xs={6} mb={3} sx={{zIndex: 200}}>
+              
                 <small>Employee</small>
                 <Form.Control
+                  sx={{zIndex: 200}}
                   size='sm'
                   controlId='employee_id'
                   name='employee_id'

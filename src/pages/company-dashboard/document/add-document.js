@@ -96,6 +96,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
+  const [issueDate, setIssueDate] = useState(new Date().toISOString().substring(0, 10))
   const [preparedDate, setPreparedDate] = useState(new Date().toISOString().substring(0, 10))
   const [preparedBy, setPreparedBy] = useState()
   const [approvedDate, setApprovedDate] = useState(new Date().toISOString().substring(0, 10))
@@ -150,7 +151,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.preparedBy = formValue.preparedBy
         data.approvedBy = formValue.approvedBy
         data.notifyBefore = formValue.notifyBefore
+        data.renewing_name = formValue.renewing_name
+        data.renewing_phone = formValue.renewing_phone
+        data.renewing_email = formValue.renewing_email
         data.status = 'active'
+        data.issueDate = issueDate
         data.expiryDateFlag = expiryDateFlag
         if (!expiryDateFlag) {
           data.expiryDate = expiryDate
@@ -311,10 +316,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         />
                       </Grid>
                     </Grid>
-
                     <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Description</small>
                       <Form.Control rows={2} name='description' controlId='description'  />
+                    </Grid>
+                    <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                      <small>Issue date</small>
+                        <Form.Control
+                              size='sm'
+                              oneTap
+                              accepter={DatePicker}
+                              name='issueDate'
+                              onChange={e => {
+                                setIssueDate(e.toISOString().substring(0, 10))
+                              }}
+                              value={new Date(issueDate)}
+                              block
+                            />
                     </Grid>
                     <Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
@@ -351,6 +369,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </Typography>
                       </Grid>
                     </Grid>
+                    
+
                     {!expiryDateFlag && (<Grid container spacing={3}>
                       <Grid item sm={6} xs={12} mt={2}>
                         <div className='flex d-flex row-flex'>
@@ -368,6 +388,50 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </div>
                       </Grid>
                     </Grid> )}
+
+
+                    <Grid container spacing={3}>
+
+
+                      <Grid item sm={12} xs={12} mt={5}>
+                      <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+
+                        <div className='flex d-flex row-flex'>
+                          <small>Name</small>
+                          <Form.Control
+                          controlId='renewing_name'
+                          size='sm'
+                          type='text'
+                          name='renewing_name'
+                          placeholder='Name'
+                        />
+                          <Grid container sm={12} md={12}>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Phone</small>
+                              <Form.Control
+                              controlId='renewing_phone'
+                              size='sm'
+                              type='number'
+                              name='renewing_phone'
+                              placeholder='Phone'
+                            />
+                            </Grid>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Email</small>
+                              <Form.Control
+                              controlId='renewing_email'
+                              size='sm'
+                              type='text'
+                              name='renewing_email'
+                              placeholder='Email'
+                            />
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </Grid>
+              
+                    </Grid>
+
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>
