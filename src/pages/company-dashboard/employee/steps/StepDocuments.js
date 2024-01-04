@@ -191,8 +191,7 @@ const StepDocuments = ({ handleNext, employee }) => {
 
   const handleAdd = () => {
     setSelectedDocument(null)
-    setSelectedDocument({})
-    setFormValue({})
+    setFormValue({'documentTitle':'' , 'documentNo':'' , 'documentDescription':''})
     setAction('add')
     setForm(true)
   }
@@ -512,7 +511,7 @@ const deleteFile =()=>{
                         <Form.Control
                           controlId='documentNo'
                           size='sm'
-                          type='number'
+                          type='text'
                           name='documentNo'
                           placeholder='Document No.'
                         />
