@@ -146,6 +146,7 @@ const DepartmentList = ({ apiData }) => {
   }
 
   useEffect(() => {
+    console.log('q,q' , value ) 
     dispatch(
       fetchDepartmentData({
         type,

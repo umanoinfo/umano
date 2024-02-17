@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       {
         $match: {
           $and: [
-            { name: { $regex: req.query.q } },
+            { name: { $regex: req.query.q , '$options' : 'i' } },
             { company_id: myUser.company_id },
           ]
         }

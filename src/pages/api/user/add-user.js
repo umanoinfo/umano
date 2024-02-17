@@ -21,10 +21,9 @@ export default async function handler(req, res) {
   const user = req.body.data
   user.company_info = []
   if (!user.email || !user.password || !user.name || !user.type || !user.email.includes('@')) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
-    })
-    return
+    });
   }
 
   const users = await client

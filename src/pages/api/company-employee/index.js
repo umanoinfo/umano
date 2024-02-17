@@ -31,8 +31,8 @@ export default async function handler(req, res) {
     .aggregate([
       {
         $match: {
-          $and: [
-            { $or: [{ firstName: { $regex: req.query.q } }, { lastName: { $regex: req.query.q } }] },
+          $and: [ 
+            { $or: [{ firstName: { $regex: req.query.q, '$options' : 'i'  } }, { lastName: { $regex: req.query.q , '$options' : 'i'  } }] },
             { employeeType: { $regex: req.query.employeeType } },
             { company_id: myUser.company_id },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

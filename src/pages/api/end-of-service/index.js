@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       {
         $match: {
           $and: [
-            { name: { $regex: req.query.q }  },
+            { name: { $regex: req.query.q , '$options' : 'i' }  },
             { idNo: { $regex: req.query.no } },
             { company_id: myUser.company_id },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

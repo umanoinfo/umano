@@ -36,9 +36,9 @@ export default async function handler(req, res) {
             { company_id: myUser.company_id },
             { user_id: myUser._id },
             {$or:[
-              {subject: { $regex: req.query.q } },
-              {user: { $regex: req.query.q } },
-              {toUser: { $regex: req.query.q } }
+              {subject: { $regex: req.query.q , '$options' : 'i' } },
+              {user: { $regex: req.query.q , '$options' : 'i' } },
+              {toUser: { $regex: req.query.q , '$options' : 'i' } }
             ]} ,
             { status: { $regex: req.query.mailStatus } },
             { type: { $regex: req.query.mailType } },
