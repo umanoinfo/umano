@@ -490,10 +490,12 @@ const AllDocumentsList = () => {
       field: 'time',
       headerName: 'Time',
       renderCell: ({ row }) => {
-        var timeStart = new Date('01/01/2007 ' + row.timeIn)
-        var timeEnd = new Date('01/01/2007 ' + row.timeOut)
+        // Logic in store
+        // var timeStart = new Date('01/01/2007 ' + row.timeIn)
+        // var timeEnd = new Date('01/01/2007 ' + row.timeOut)
 
-        return <>{((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2)}</>
+        // return <>{((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2)}</>
+        return <>{ row.time } </>
       }
     },
 

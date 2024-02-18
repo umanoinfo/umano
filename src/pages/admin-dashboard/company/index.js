@@ -358,7 +358,7 @@ const CompaniesList = () => {
     {
       flex: 0.12,
       minWidth: 100,
-      field: 'company_id',
+      field: 'name',
       headerName: 'Company',
       renderCell: ({ row }) => {
         return (
@@ -385,7 +385,7 @@ const CompaniesList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'user',
+      field: 'manager',
       headerName: 'Manager',
       renderCell: ({ row }) => {
         const { user_info } = row
@@ -409,7 +409,7 @@ const CompaniesList = () => {
     {
       flex: 0.11,
       minWidth: 200,
-      field: 'end',
+      field: 'end_at',
       headerName: 'End Subscription',
       renderCell: ({ row }) => {
         return (

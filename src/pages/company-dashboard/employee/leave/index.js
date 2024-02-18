@@ -264,7 +264,7 @@ const LeaveList = () => {
     {
       flex: 0.15,
       minWidth: 250,
-      field: 'employee',
+      field: 'employeeName',
       headerName: 'Employee',
       renderCell: ({ row }) => {
         const { email, firstName, lastName } = row.employee_info[0]
@@ -340,7 +340,7 @@ const LeaveList = () => {
     {
       flex: 0.11,
       minWidth: 160,
-      field: 'from',
+      field: 'date_from',
       headerName: 'Date From',
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_from.split('T')
@@ -351,7 +351,7 @@ const LeaveList = () => {
     {
       flex: 0.11,
       minWidth: 160,
-      field: 'to',
+      field: 'date_to',
       headerName: 'Date To',
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_to.split('T')
@@ -365,12 +365,14 @@ const LeaveList = () => {
       field: 'days',
       headerName: 'Days',
       renderCell: ({ row }) => {
-        const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
-        const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
+        {/* Logic in redux store */}
+        // const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
+        // const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
 
         return <> 
-          <span>{ row.type == 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)}</span>
-          <span>{ row.type != 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1}</span>
+          {/* <span>{ row.type == 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)}</span>
+          <span>{ row.type != 'hourly' && ((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1}</span> */}
+          <span> {row.days} </span>
         </>
       }
     },
@@ -380,12 +382,14 @@ const LeaveList = () => {
       field: 'hours',
       headerName: 'Hours',
       renderCell: ({ row }) => {
-        const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
-        const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
+        {/* Logic in redux store */}
+        // const [dateFrom, timeFrom, ...rFrom] = row.date_from.split('T')
+        // const [dateTo, timeTo, ...rTo] = row.date_to.split('T')
 
         return <>
         { row.type == 'hourly' && <span>
-        {Math.round(( (((new Date(row.date_to) - new Date(row.date_from))/1000/60/60/24)+1) - (((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1))*24*60)/60}
+        {/* {Math.round(( (((new Date(row.date_to) - new Date(row.date_from))/1000/60/60/24)+1) - (((new Date(dateTo) - new Date(dateFrom))/1000/60/60/24)+1))*24*60)/60} */}
+          {row.hours}
         </span>}
         </>
       }

@@ -41,14 +41,14 @@ const CompanyViewSubscriptions = ({ id }) => {
     {
       flex: 0.15,
       minWidth: 100,
-      field: 'Start at',
+      field: 'start_at',
       headerName: 'Start at',
       renderCell: ({ row }) => <Typography variant='body2'>{row.start_at}</Typography>
     },
     {
       flex: 0.15,
       minWidth: 100,
-      field: 'End at',
+      field: 'end_at',
       headerName: 'End at',
       renderCell: ({ row }) => <Typography variant='body2'>{row.end_at}</Typography>
     },
@@ -72,7 +72,7 @@ const CompanyViewSubscriptions = ({ id }) => {
     {
       flex: 0.15,
       minWidth: 100,
-      field: 'hours',
+      field: 'availableUsers',
       headerName: 'Users',
       renderCell: ({ row }) => (
         <Typography variant='body2' align='center'>
@@ -132,7 +132,8 @@ const CompanyViewSubscriptions = ({ id }) => {
       e.daysToNow =
         Math.floor((new Date() - new Date(e.start_at)) / 1000 / 24 / 3600) != 0
           ? Math.floor((new Date() - new Date(e.start_at)) / 1000 / 24 / 3600)
-          : 1
+          : 1;
+      e.progressValue = (e.daysToNow / e.subscriptionDays) * 100 ; 
     })
     setSubscriptionsDataSource(data)
     setIsLoading(false)

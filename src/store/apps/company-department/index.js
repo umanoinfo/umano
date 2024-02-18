@@ -11,6 +11,7 @@ export const fetchDepartmentData = createAsyncThunk('appRoles/fetchData', async 
   response.data.data.map((e, index) => {
     e.index = index + 1
     e.id = e._id
+    e.manager = e.user_info[0].firstName + ' ' + e.user_info[0].middleName + ' ' + e.user_info[0].lastName ; 
   })
 
   return response.data

@@ -304,6 +304,7 @@ const AllDocumentsList = () => {
       field: 'type',
       minWidth: 400,
       headerName: 'Tags',
+      sortable:false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
@@ -330,7 +331,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.11,
       minWidth: 180,
-      field: 'end',
+      field: 'expiryDate',
       headerName: 'Expiry date',
       renderCell: ({ row }) => {
         return (

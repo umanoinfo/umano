@@ -45,9 +45,11 @@ const UserViewOverview = ({ id }) => {
     setIsLoading(true)
     const res = await fetch('/api/user/' + id + '/byCompany')
     const { data } = await res.json()
+    
     let x = 1
     data.map(e => {
-      e.id = x
+      e.id = x;
+      
       x++
       if (!e.roles_info) {
         e.roles_info = []

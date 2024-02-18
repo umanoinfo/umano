@@ -293,7 +293,7 @@ const PayrollList = classNamec => {
     {
       flex: 0.2,
       minWidth: 150,
-      field: 'employee',
+      field: 'name',
       headerName: 'Employee',
       renderCell: ({ row }) => {
         return (
@@ -308,7 +308,7 @@ const PayrollList = classNamec => {
     {
       flex: 0.2,
       minWidth: 150,
-      field: 'From',
+      field: 'fromDate',
       headerName: 'From',
       renderCell: ({ row }) => {
         return (
@@ -323,7 +323,7 @@ const PayrollList = classNamec => {
     {
       flex: 0.2,
       minWidth: 150,
-      field: 'To',
+      field: 'toDate',
       headerName: 'To',
       renderCell: ({ row }) => {
         return (
@@ -338,7 +338,7 @@ const PayrollList = classNamec => {
     {
       flex: 0.2,
       minWidth: 150,
-      field: 'Basic Salary',
+      field: 'lumpySalary',
       headerName: 'Basic Salary',
       renderCell: ({ row }) => {
         return (
@@ -353,7 +353,7 @@ const PayrollList = classNamec => {
     {
       flex: 0.2,
       minWidth: 150,
-      field: 'total',
+      field: 'endOfServeceTotalValue',
       headerName: 'Total',
       renderCell: ({ row }) => {
         return (

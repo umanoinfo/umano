@@ -140,23 +140,26 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                   <Form.Control size='md' value={''} name='user name' placeholder='user name' disabled />
                 </Form.Group>
               </div>
-            </Grid> */}
-              <Grid item xs={6} mb={3} sx={{zIndex: 200}}>
+              */
+             }
               
-                <small>Employee</small>
-                <Form.Control
-                  sx={{zIndex: 200}}
-                  size='sm'
-                  controlId='employee_id'
-                  name='employee_id'
-                  accepter={SelectPicker}
-                  data={dataSource}
-                  block
-                  value={employee}
-                  onSelect={setEmployee}
-                />
-              </Grid>
-
+              <Grid container mb={3} style={{ position: 'relative', zIndex: 201 }}>
+                <Grid item xs={6} mb={3} style={{ position: 'relative', zIndex: 200 }}>
+              
+                  <small>Employee</small>
+                  <Form.Control
+                    sx={{zIndex: 200}}
+                    size='sm'
+                    controlId='employee_id'
+                    name='employee_id'
+                    accepter={SelectPicker}
+                    data={dataSource}
+                    block
+                    value={employee}
+                    onSelect={setEmployee}
+                  />
+                </Grid>
+              </Grid> 
               <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
                   <div>
