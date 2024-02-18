@@ -123,6 +123,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [companyEmployeeID, setCompanyEmployeeID] = useState()
   const [newEmployeeID, setNewEmployeeID] = useState()
   const formRef = useRef()
+  const idNoRef = useRef() ;
 
   const [deductionDataSource, setDeductionDataSource] = useState()
   const [compensationDataSource, setCompensationDataSource] = useState()
@@ -153,18 +154,21 @@ const AddEmployee = ({ popperPlacement, id }) => {
     const getMaxEmployeeId = async () => {
       setIsLoading(true)
 
-      // const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
-      //   setMaxId(response.data?.max)
-      //   setCompanyEmployeeID(response.data?.companyEmployeeID)
-      //   if(response.data?.max){
-      //     const s = '00000'+((response.data?.max)+1)
-      //     setNewEmployeeID(s.substr(s.length-5))
-      //   }
-      //   else{
-      //     setNewEmployeeID('00001')
-      //   }
-      // })
-      setNewEmployeeID()
+      const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
+        setMaxId(response.data?.max)
+        
+        setCompanyEmployeeID(response.data?.companyEmployeeID)
+        if(response.data?.max){
+          const s =  ((response.data?.max)+1)
+          setNewEmployeeID(s)
+        }
+        else{
+          setNewEmployeeID(1)
+        }
+      })
+
+      // setNewEmployeeID()
+
       setIsLoading(false)
     }
 
@@ -367,7 +371,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <small>ID No.</small>
                         <InputGroup>
                           {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
-                          <Form.Control disable size='sm' value={newEmployeeID} type='number' checkAsync name='idNo' placeholder='ID No.' />
+                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
+                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
                         </InputGroup>
                       </Form.Group>
                     </Grid>
@@ -778,6 +783,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
             })
           })
           .catch(function (error) {
+            console.log('error' , error);;
             toast.error('Error : ' + error.response.data.message + ' !', {
               delay: 3000,
               position: 'bottom-right'

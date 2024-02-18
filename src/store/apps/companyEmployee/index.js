@@ -24,7 +24,7 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
     })
     e.index = index + 1
     e.id = e._id
-    e.employeeName = e.firstName+" "+e.lastName
+    e.employeeName = e.firstName+" "+ e.middleName + " " +e.lastName
   })
 
 
