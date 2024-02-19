@@ -1038,6 +1038,7 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date From</small>
                 <DatePicker
+                  oneTap
                   value={new Date(fromDate)}
                   onChange={e => {
                     setFromDate(e)
@@ -1049,9 +1050,10 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date To</small>
                 <DatePicker
-
+                  oneTap
                   value={new Date(toDate)}
                   onChange={e => {
+                    
                     setToDate(e)
                   }}
                 />
