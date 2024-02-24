@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -133,6 +133,34 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   const value = ''
   const type1 = ''
 
+  // ----------------------------- Get Company ----------------------------------
+
+  const getCompany = useCallback(
+    () => {
+      setLoading(true)
+      axios
+        .get('/api/company/' + id, {})
+        .then(function (response) {
+          setFormValue(response.data.data[0])
+          setType(response.data.data[0].type)
+          setNewLogo(response.data.data[0].logo)
+          setUserID(response.data.data[0].user_id)
+          setCountryID(response.data.data[0].country_id)
+          setNewType(response.data.data[0].type)
+          setNewStatus(response.data.data[0].status)
+          setDial(response.data.data[0].country_info[0].dial)
+          setAddress(response.data.data[0].country_info[0].address)
+          setEnd_at(response.data.data[0].end_at)
+          setLoading(false)
+        })
+        .catch(function (error) {
+          setLoading(false)
+        })
+    }
+    ,
+    [id]
+  )
+
   useEffect(() => {
     dispatch(
       fetchData({
@@ -142,7 +170,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       })
     )
     getUsers().then(getCountries()).then(getCompany())
-  }, [dispatch, type, companyStatus, value])
+  }, [dispatch, type, companyStatus, value , getCompany ])
 
   function asyncCheckUsername(name) {
     return new Promise(resolve => {
@@ -187,27 +215,6 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     setIsLoading(false)
   }
 
-  const getCompany = () => {
-    setLoading(true)
-    axios
-      .get('/api/company/' + id, {})
-      .then(function (response) {
-        setFormValue(response.data.data[0])
-        setType(response.data.data[0].type)
-        setNewLogo(response.data.data[0].logo)
-        setUserID(response.data.data[0].user_id)
-        setCountryID(response.data.data[0].country_id)
-        setNewType(response.data.data[0].type)
-        setNewStatus(response.data.data[0].status)
-        setDial(response.data.data[0].country_info[0].dial)
-        setAddress(response.data.data[0].country_info[0].address)
-        setEnd_at(response.data.data[0].end_at)
-        setLoading(false)
-      })
-      .catch(function (error) {
-        setLoading(false)
-      })
-  }
 
   // ----------------------------- Get Countries ----------------------------------
 

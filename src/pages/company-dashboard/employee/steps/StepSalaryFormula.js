@@ -33,6 +33,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     if (employee) {
       getOptions()
     }
+       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ----------------------------- Get Options ----------------------------------

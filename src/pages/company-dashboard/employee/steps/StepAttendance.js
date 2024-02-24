@@ -162,7 +162,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
     } else {
         getOptions()
     }
-
+       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

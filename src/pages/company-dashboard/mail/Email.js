@@ -79,7 +79,7 @@ const EmailAppLayout = ({ folder, label }) => {
         q: query
       })
     ).then()
-  }, [mailStatus, MailType, query])
+  }, [mailStatus, MailType, query,dispatch])
 
   // useEffect(() => {
   //   // @ts-ignore

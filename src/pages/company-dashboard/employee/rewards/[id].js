@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef, useEffect, forwardRef } from 'react'
+import { useState, useRef, useEffect, forwardRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -56,9 +56,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(() => {
-    getEmployees(), getreward()
-  }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
 
@@ -72,7 +69,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = () => {
+  const getEmployees = useCallback( () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -84,9 +81,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setEmployeesDataSource(arr)
     })
     setLoading(false)
-  }
+  }, [] ) ;
 
-  const getreward = () => {
+  const getreward = useCallback( () => {
     setLoading(true)
     axios
       .get('/api/employee-reward/' + id, {})
@@ -100,7 +97,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }
+  } , [id] );
+
+  useEffect(() => {
+    getEmployees(), getreward()
+  }, [getreward, getEmployees])
+
 
   // ------------------------------- Submit --------------------------------------
 

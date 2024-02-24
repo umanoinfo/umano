@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -166,17 +166,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
     { label: 'Blocked', value: 'blocked' }
   ])
 
-  useEffect(() => {
-    getForm()
-  }, [])
 
-  const getForm = () => {
+
+  const getForm = useCallback( () => {
     axios.get('/api/form/' + id, {}).then(res => {
       setSelectedForm(res.data.data[0])
       setFormValue(res.data.data[0])
       setContent(res.data.data[0].content)
     })
-  }
+  } , [id] ) ;
+  
+  useEffect(() => {
+    getForm()
+  }, [getForm])
 
   const editorRef = useRef()
 

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -75,13 +75,9 @@ const UserViewLeft = ({ id }) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState()
 
-  useEffect(() => {
-    getUser()
-  }, [])
+   // ------------------------------ Get User ------------------------------------------------
 
-  // ------------------------------ Get User ------------------------------------------------
-
-  const getUser = () => {
+   const getUser = useCallback( () => {
     setLoading(true)
     axios
       .get('/api/user/' + id, {})
@@ -92,7 +88,13 @@ const UserViewLeft = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }
+  }, [id ]);
+
+  useEffect(() => {
+    getUser()
+  }, [getUser])
+
+ 
 
   if (user) {
     return (

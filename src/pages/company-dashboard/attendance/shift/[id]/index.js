@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, useEffect, useRef } from 'react'
+import { useState, SyntheticEvent, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -63,16 +63,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const [formValue, setFormValue] = useState({ title: '', times: [{ ...default_value }] })
 
-  useEffect(() => {
-    getShift()
-  }, [])
-
-  const getShift = () => {
+  const getShift = useCallback( () => {
     axios.get('/api/shift/' + id, {}).then(res => {
       setFormValue(res.data.data[0])
       setNewStatus(res.data.data[0].status)
     })
-  }
+  },[id])
+
+  useEffect(() => {
+    getShift()
+  }, [getShift])
+
+  
 
   // ------------------------------ validate Mmodel ------------------------------------
 

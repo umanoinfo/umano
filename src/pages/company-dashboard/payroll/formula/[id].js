@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -69,7 +69,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  const getFormula = () => {
+  const getFormula =  useCallback( () => {
     setLoading(true)
     axios
       .get('/api/salary-formula/' + id, {})
@@ -80,10 +80,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }
+  } , [id] ); 
   useEffect(() => {
     getFormula()
-  }, [])
+  }, [getFormula])
 
   // ------------------------------ validate Mmodel ------------------------------------
 

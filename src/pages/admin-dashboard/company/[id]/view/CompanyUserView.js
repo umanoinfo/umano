@@ -8,7 +8,7 @@ import CustomChip from 'src/@core/components/mui/chip'
 
 // ** Demo Component Imports
 import { DataGrid } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import LinearProgress from '@mui/material/LinearProgress'
 
 // ** Utils Import
@@ -35,29 +35,32 @@ const UserViewOverview = ({ id }) => {
   const [pageSize, setPageSize] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    getUsers()
-  }, [])
-
   // ------------------------------ Get Users ------------------------------------
 
-  const getUsers = async () => {
-    setIsLoading(true)
-    const res = await fetch('/api/user/' + id + '/byCompany')
-    const { data } = await res.json()
-    
-    let x = 1
-    data.map(e => {
-      e.id = x;
-      
-      x++
-      if (!e.roles_info) {
-        e.roles_info = []
-      }
-    })
-    setUsersDataSource(data)
-    setIsLoading(false)
-  }
+  const getUsers = useCallback( 
+      async () => {
+        setIsLoading(true)
+        const res = await fetch('/api/user/' + id + '/byCompany')
+        const { data } = await res.json()
+        
+        let x = 1
+        data.map(e => {
+          e.id = x;
+          
+          x++
+          if (!e.roles_info) {
+            e.roles_info = []
+          }
+        })
+        setUsersDataSource(data)
+        setIsLoading(false)
+      } 
+  , [id]) ;
+
+  useEffect(() => {
+    getUsers()
+  }, [getUsers])
+
 
   const columns = [
     {

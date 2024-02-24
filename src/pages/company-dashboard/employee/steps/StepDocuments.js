@@ -107,7 +107,7 @@ const StepDocuments = ({ handleNext, employee }) => {
     }
 
 
-  }, [dispatch, employeeId, userStatus, value])
+  }, [dispatch, employeeId, userStatus, value,employee])
 
 
 

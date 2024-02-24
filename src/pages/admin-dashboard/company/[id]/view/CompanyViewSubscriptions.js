@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import TableContainer from '@mui/material/TableContainer'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Box, FormControlLabel, Grid, LinearProgress, Tooltip } from '@mui/material'
 import Link from 'src/@core/theme/overrides/link'
@@ -112,14 +112,10 @@ const CompanyViewSubscriptions = ({ id }) => {
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(7)
   const [data, setData] = useState([])
-  
-  useEffect(() => {
-    getSubscriptions()
-  }, [])
-  
-  // ------------------------------ Get Users ------------------------------------
+ 
+   // ------------------------------ Get Users ------------------------------------
 
-  const getSubscriptions = async () => {
+   const getSubscriptions = useCallback( async () => {
     setIsLoading(true)
     const res = await fetch('/api/subscription/' + id + '/byCompany')
     const { data } = await res.json()
@@ -138,7 +134,14 @@ const CompanyViewSubscriptions = ({ id }) => {
     setSubscriptionsDataSource(data)
     setIsLoading(false)
   }
+  , [id]);
 
+
+  useEffect(() => {
+    getSubscriptions()
+  }, [getSubscriptions])
+  
+ 
   const addSubscription = () => {
     router.push('/admin-dashboard/company/' + id + '/add-subscription')
   }

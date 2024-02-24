@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -52,19 +52,21 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(() => {
-    getDeduction()
-  }, [])
+   // ------------------------ Get Employee -----------------------------------
 
-  // ------------------------ Get Employee -----------------------------------
-
-  const getDeduction = async () => {
+   const getDeduction = useCallback( async () => {
     setLoading(true)
     const res = await fetch('/api/deduction/' + id)
     const { data } = await res.json()
     setFormValue(data[0])
     setLoading(false)
-  }
+  } , [id] ) ;
+
+  useEffect(() => {
+    getDeduction()
+  }, [getDeduction])
+
+ 
 
   // ------------------------------ validate Mmodel ------------------------------------
 

@@ -114,7 +114,7 @@ const AddEventSidebar = props => {
       setValues({ ...values, ...val })
       defaultUpdateState = val
     }
-  }, [UpdateEvent])
+  }, [UpdateEvent , values])
 
   const handleDeleteEvent = () => {
     axios

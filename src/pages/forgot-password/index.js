@@ -161,6 +161,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
           }
         });
     }
+       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -258,7 +259,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
               {/* --------------------------------- Logo --------------------------------------------- */}
               
               <Box sx={{ px: 1}}>
-                <img src='/images/apple-touch-icon.png' width='32px' />
+                <img alt='umano' src='/images/apple-touch-icon.png' width='32px' />
               </Box>
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
                 {themeConfig.templateName}

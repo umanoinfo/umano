@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef, useEffect, forwardRef } from 'react'
+import { useState, useRef, useEffect, forwardRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -58,9 +58,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(() => {
-    getEmployees(), getDeduction()
-  }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
 
@@ -88,7 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setLoading(false)
   }
 
-  const getDeduction = () => {
+  const getDeduction =  useCallback( () => {
     setLoading(true)
     axios
       .get('/api/employee-deduction/' + id, {})
@@ -102,7 +99,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }
+  },[id]);
+
+  useEffect(() => {
+    getEmployees(), getDeduction()
+  }, [getDeduction])
 
   // ------------------------------- Submit --------------------------------------
 

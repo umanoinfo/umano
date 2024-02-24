@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 import Image from 'next/image'
 
@@ -98,10 +98,17 @@ const ViewFormRequest = ({ popperPlacement, id }) => {
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
 
+  const getForm = useCallback( () => {
+    axios.get('/api/request/' + id, {}).then(res => {
+      setSelectedForm(res.data.data[0])
+      setLoading(false)
+    })
+  } , [id] ) ;
+
   useEffect(() => {
     // getEmployees(),
     getForm()
-  }, [])
+  }, [getForm])
 
   // const getEmployees = () => {
   //   axios.get('/api/company-employee', {}).then(res => {
@@ -117,12 +124,7 @@ const ViewFormRequest = ({ popperPlacement, id }) => {
   //   setLoading(false)
   // }
 
-  const getForm = () => {
-    axios.get('/api/request/' + id, {}).then(res => {
-      setSelectedForm(res.data.data[0])
-      setLoading(false)
-    })
-  }
+
 
   const printRef = useRef(null)
 

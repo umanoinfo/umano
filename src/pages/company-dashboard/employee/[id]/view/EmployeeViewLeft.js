@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -61,16 +61,13 @@ const EmployeeViewLeft = ({ id, employee }) => {
   const router = useRouter()
   const [grossSalary , setGrossSalary]=useState(0)
 
-  useEffect(()=>{
-    assumegrossSalary()
-  },[])
-
+  
   const newArray = employee?.employeePositions_info.filter((pos)=>{
     return(pos.endChangeType == "onPosition")
   })
-
-  const assumegrossSalary = ()=>{
-   
+  
+  const assumegrossSalary = useCallback( ()=>{
+    
     const lumpySalary = employee?.salaries_info[0]?.lumpySalary | 0
     let deductions = 0
     let compensations = 0
@@ -83,7 +80,11 @@ const EmployeeViewLeft = ({ id, employee }) => {
       compensations += ((Number(con.percentageValue) *lumpySalary)/100)
     })
     setGrossSalary  (lumpySalary - deductions + compensations)
-  } ;
+  } , [employee] ) ;
+
+  useEffect(()=>{
+    assumegrossSalary()
+  },[assumegrossSalary])
 
   const handleEditRowOptions = () => {
     router.push('/company-dashboard/employee/' + employee._id + '/edit-employee')

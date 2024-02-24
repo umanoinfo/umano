@@ -7,17 +7,14 @@ import EmployeeViewLeft from './EmployeeViewLeft'
 import UserViewRight from './UserViewRight'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const DialogAddUser = ({ tab, id }) => {
   const [isLoading, setIsLoading] = useState()
   const [employee, setEmployee] = useState()
 
-  useEffect(() => {
-    getEmployee('')
-  }, [])
-
-  const getEmployee = () => {
+  
+  const getEmployee = useCallback( () => {
     let data = { id: id }
     setIsLoading(true)
 
@@ -30,7 +27,11 @@ const DialogAddUser = ({ tab, id }) => {
       .catch(function (error) {
         setIsLoading(false)
       })
-  }
+    }, [id] ) ;
+
+  useEffect(() => {
+      getEmployee('')
+  }, [getEmployee])
 
   return (
     <>

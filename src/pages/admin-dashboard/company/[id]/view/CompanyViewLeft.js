@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -73,24 +73,26 @@ const UserViewLeft = ({ id }) => {
   const [loading, setLoading] = useState(true)
   const [company, setCompany] = useState()
 
-  useEffect(() => {
-    getCompany()
-  }, [])
-
   // ------------------------------ Get Company ------------------------------------------------
 
-  const getCompany = () => {
-    setLoading(true)
-    axios
-      .get('/api/company/' + id, {})
-      .then(function (response) {
-        setCompany(response.data.data[0])
-        setLoading(false)
-      })
-      .catch(function (error) {
-        setLoading(false)
-      })
-  }
+ const getCompany = useCallback(() => {
+  setLoading(true)
+  axios
+    .get('/api/company/' + id, {})
+    .then(function (response) {
+      setCompany(response.data.data[0])
+      setLoading(false)
+    })
+    .catch(function (error) {
+      setLoading(false)
+    })
+  } , [id]) ;
+
+  useEffect(() => {
+    getCompany()
+  }, [getCompany])
+
+ 
 
   if (company) {
     return (

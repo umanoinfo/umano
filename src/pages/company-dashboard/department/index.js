@@ -153,8 +153,8 @@ const DepartmentList = ({ apiData }) => {
         departmentStatus,
         q: value
       })
-    ).then( console.log(store) ,  setLoading(false))
-  }, [dispatch, type, departmentStatus, value])
+    ).then( setLoading(false))
+  }, [dispatch, type, departmentStatus, value  ])
 
   const handleClose = () => {
     setOpen(false)

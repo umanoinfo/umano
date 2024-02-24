@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -120,9 +120,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
 
-  useEffect(() => {
-    getDocument()
-  }, [])
 
   // ** Day Color
 
@@ -138,7 +135,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  const getDocument = () => {
+  const getDocument = useCallback( () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       setSelectedDocument(response.data.data[0])
@@ -152,7 +149,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setSelectedFiles(files)
       setLoading(false)
     })
-  }
+  } , [id] );
+
+  
+  useEffect(() => {
+    getDocument()
+  }, [getDocument])
 
   // -----------------------------------------------------------
 
