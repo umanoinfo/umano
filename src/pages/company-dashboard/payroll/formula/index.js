@@ -310,7 +310,7 @@ const FormulaList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'end',
+      field: 'created_at',
       headerName: 'Created at',
       renderCell: ({ row }) => {
         return <>{new Date(row.created_at).toISOString().substring(0, 10)}</>

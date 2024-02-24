@@ -41,7 +41,7 @@ export default async function handler(req, res) {
               $and: [
                 { company_id: myUser.company_id },
                 { user_id: myUser._id },
-                { title: { $regex: req.query.q } },
+                { title: { $regex: req.query.q, '$options' : 'i'  } },
                 { status: { $regex: req.query.eventStatus } },
                 { type: { $in: req.query.eventType } },
                 { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
               $and: [
                 { company_id: myUser.company_id },
                 { users: { $elemMatch: { $eq: myUser._id.toString() } } },
-                { title: { $regex: req.query.q } },
+                { title: { $regex: req.query.q, '$options' : 'i'  } },
                 { status: { $regex: req.query.eventStatus } },
                 { type: { $in: req.query.eventType } },
                 { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

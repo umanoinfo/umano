@@ -244,7 +244,7 @@ const DeductionsList = () => {
     {
       flex: 0.15,
       minWidth: 250,
-      field: 'employee',
+      field: 'employeeName',
       headerName: 'Employee',
       renderCell: ({ row }) => {
         const { email, firstName, lastName } = row.employee_info[0]
@@ -307,7 +307,7 @@ const DeductionsList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'end',
+      field: 'date',
       headerName: 'Date',
       renderCell: ({ row }) => {
         return <>{new Date(row.date).toISOString().substring(0, 10)}</>

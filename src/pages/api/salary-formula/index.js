@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           $and: [
             { company_id: myUser.company_id },
 
-            { title: { $regex: req.query.q } },
+            { title: { $regex: req.query.q , '$options' : 'i' } },
             { type: { $regex: req.query.type } },
             { status: { $regex: req.query.formulaStatus } },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

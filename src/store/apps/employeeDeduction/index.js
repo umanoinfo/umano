@@ -11,6 +11,7 @@ export const fetchData = createAsyncThunk('appEmployeeDeduction/fetchData', asyn
   response.data.data.map((e, index) => {
     e.id = e._id
     e.index = index + 1
+    e.employeeName = e.employee_info[0].firstName + ' ' + e.employee_info[0].middleName + ' ' + e.employee_info[0].lastName ;
   })
 
   return response.data

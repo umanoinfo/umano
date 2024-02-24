@@ -331,7 +331,7 @@ const UserList = () => {
     {
       flex: 0.15,
       minWidth: 150,
-      field: 'user',
+      field: 'name',
       headerName: 'User',
       renderCell: ({ row }) => {
         const { email, name } = row
@@ -354,7 +354,7 @@ const UserList = () => {
     {
       flex: 0.12,
       minWidth: 100,
-      field: 'company_id',
+      field: 'company_name',
       headerName: 'Company',
       renderCell: ({ row }) => {
         return (

@@ -26,6 +26,10 @@ export default async function handler(req, res) {
   employee.company_id = myUser.company_id
   employee.dateOfBirth = new Date(employee.dateOfBirth)
   employee.joiningDate = new Date(employee.joiningDate)
+  const existsEmployee = await client.db().collection('employees').findOne({idNo: employee.idNo , company_id: myUser.company_id });
+  if(existsEmployee){
+    return res.status(400).json({success:false , message: 'ID NO must be unique'});
+  }
 
   // const myCompany = await client.db().collection('companies').findOne({ _id: ObjectId(myUser.company_id) })
   // console.log(myCompany.employeeID)

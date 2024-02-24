@@ -229,6 +229,7 @@ const AllDocumentsList = () => {
         })
         }
       })
+      console.log(arr);
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
 
@@ -448,7 +449,7 @@ const AllDocumentsList = () => {
     data.toDate = toDate
     axios.post('/api/payroll/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
-
+      console.log(res.data) ;
       employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
       //   ----------------------- Assume Leave -------------------------------
@@ -1038,6 +1039,7 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date From</small>
                 <DatePicker
+                  oneTap
                   value={new Date(fromDate)}
                   onChange={e => {
                     setFromDate(e)
@@ -1049,9 +1051,10 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date To</small>
                 <DatePicker
-
+                  oneTap
                   value={new Date(toDate)}
                   onChange={e => {
+                    
                     setToDate(e)
                   }}
                 />

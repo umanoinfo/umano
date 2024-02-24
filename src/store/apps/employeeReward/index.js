@@ -11,6 +11,7 @@ export const fetchData = createAsyncThunk('appEmployeeReward/fetchData', async p
   response.data.data.map((e, index) => {
     e.index = index + 1
     e.id = e._id
+    e.employeeName = e.employee_info[0].firstName + ' ' + e.employee_info[0].middleName + ' ' + e.employee_info[0].lastName ; 
   })
 
   return response.data

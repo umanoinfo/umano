@@ -11,6 +11,8 @@ export const fetchData = createAsyncThunk('appCompanies/fetchData', async params
   response.data.data.map((e, index) => {
     e.index = index + 1
     e.id = e._id
+    e.manager = e.user_info[0].name ;
+    
   })
 
   return response.data

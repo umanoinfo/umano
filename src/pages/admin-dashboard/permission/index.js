@@ -97,7 +97,7 @@ const PermissionsTable = () => {
     },
     {
       flex: 0.25,
-      field: 'name',
+      field: 'title',
       minWidth: 140,
       headerName: 'Name',
       renderCell: ({ row }) => <Typography>{row.title}</Typography>

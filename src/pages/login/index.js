@@ -1,5 +1,7 @@
 // ** React Imports
 import { useState } from 'react'
+import { useRouter } from 'next/router'
+import toast , { Toaster } from 'react-hot-toast'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -93,6 +95,8 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading , setLoading ]= useState(false)
 
+  const router = useRouter();
+
   // ** Hooks
 
   const theme = useTheme()
@@ -115,14 +119,33 @@ const LoginPage = () => {
 
   //----------------- SignIn ------------------------------
 
-  const onSubmit = data => {
+  const onSubmit = async (data) => {
+  
+    
     setLoading(true)
     const { email, password } = data
-    signIn('credentials', {
-      email: email.toLowerCase(),
-      password: password,
-      callbackUrl: '/'
+    
+    let res = await signIn('credentials', {
+          email: email.toLowerCase(),
+          password: password,
+          redirect:false
     })
+     
+    if(res?.status == 200 ){
+          router.push('/');
+    }
+    else {
+       toast.error('Error : ' + res.error + ' !', {
+          delay: 1000,
+          position: 'bottom-right'
+        });
+  
+    }
+    
+    
+    
+    
+    setLoading(false);
   }
 
   // -----------------------------------------------------
@@ -269,6 +292,7 @@ const LoginPage = () => {
             </form>
           </BoxWrapper>
         </Box>
+        <Toaster/>
       </RightWrapper>
     </Box>
   )

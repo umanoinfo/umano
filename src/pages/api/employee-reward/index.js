@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       {
         $match: {
           $and: [
-            { reason: { $regex: req.query.q } },
+            { reason: { $regex: req.query.q , '$options' : 'i' } },
             { type: { $regex: req.query.rewardType } },
             { status: { $regex: req.query.rewardStatus } },
             { company_id: myUser.company_id },

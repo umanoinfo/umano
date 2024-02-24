@@ -146,6 +146,7 @@ const DepartmentList = ({ apiData }) => {
   }
 
   useEffect(() => {
+    // console.log('q,q' , value ) 
     dispatch(
       fetchDepartmentData({
         type,
@@ -254,7 +255,7 @@ const DepartmentList = ({ apiData }) => {
     {
       flex: 0.12,
       minWidth: 100,
-      field: 'department',
+      field: 'name',
       headerName: 'Department',
       renderCell: ({ row }) => {
         return (
@@ -283,7 +284,7 @@ const DepartmentList = ({ apiData }) => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'user',
+      field: 'manager',
       headerName: 'Manager',
       renderCell: ({ row }) => {
         const { user_info } = row

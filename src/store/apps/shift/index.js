@@ -11,6 +11,10 @@ export const fetchData = createAsyncThunk('appShift/fetchData', async params => 
   response.data.data.map((e, index) => {
     e.index = index + 1
     e.id = e._id
+    e.timeIn = e.times[0].timeIn ;
+    e.timeOut = e.times[0].timeOut ;
+    e.maxTimeIn = e.times[0].availableLate ;
+    e.maxTimeOut = e.times[0].availableEarly;
   })
 
   return response.data

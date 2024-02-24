@@ -360,6 +360,7 @@ const EmployeeList = classNamec => {
       field: 'departments',
       minWidth: 140,
       headerName: 'Department',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
@@ -378,6 +379,7 @@ const EmployeeList = classNamec => {
       field: 'managers',
       minWidth: 240,
       headerName: 'Manager',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
@@ -396,6 +398,7 @@ const EmployeeList = classNamec => {
       field: 'positions',
       minWidth: 120,
       headerName: 'Positions',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>

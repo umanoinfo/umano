@@ -370,7 +370,7 @@ const UserList = () => {
     {
       flex: 0.15,
       minWidth: 150,
-      field: 'user',
+      field: 'name',
       headerName: 'User',
       renderCell: ({ row }) => {
         const { email, name } = row
@@ -423,6 +423,7 @@ const UserList = () => {
       flex: 0.13,
       minWidth: 60,
       field: 'roles',
+      sortable: false,
       headerName: 'Roles',
       renderCell: ({ row }) => {
         return row.roles_info.map((e, index) => {

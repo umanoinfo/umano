@@ -5,7 +5,6 @@ import Loading from 'src/views/loading'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -13,7 +12,9 @@ import Typography from '@mui/material/Typography'
 import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { TimePicker } from '@mui/x-date-pickers'
+import { Grid, TextField, Select, MenuItem, InputLabel, FormControl} from '@mui/material'
 import toast from 'react-hot-toast'
 
 import axios from 'axios'
@@ -21,9 +22,12 @@ import axios from 'axios'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-import { Form, SelectPicker, DatePicker } from 'rsuite'
+import { Form, SelectPicker  } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import de from 'date-fns/locale/de'; 
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -41,6 +45,9 @@ const DialogAddAttendance = ({ open, setOpen }) => {
   const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+  };
   useEffect(() => {
     getEmployees()
   }, [])
@@ -83,6 +90,11 @@ const DialogAddAttendance = ({ open, setOpen }) => {
       status: 'active',
       employee_no: employee
     }
+    
+    console.log(new_data) ; 
+
+    
+
     setLoading(true)
     axios
       .post('/api/attendance/add-attendance', {
@@ -131,32 +143,25 @@ const DialogAddAttendance = ({ open, setOpen }) => {
               Add Attendance Information
             </Typography>
           </Box>
-          <Form>
-            <Grid container mb={3}>
-              {/* <Grid item>
-              <div>
-                <Form.Group>
-                  <small>Employee Name</small>
-                  <Form.Control size='md' value={''} name='user name' placeholder='user name' disabled />
-                </Form.Group>
-              </div>
-            </Grid> */}
-              <Grid item xs={6} mb={3} sx={{zIndex: 200}}>
+          {/* <Form>
+            <Grid container mb={3}>    
+              <Grid container mb={3} style={{ position: 'relative', zIndex: 201 }}>
+                <Grid item xs={6} mb={3} style={{ position: 'relative', zIndex: 200 }}>
               
-                <small>Employee</small>
-                <Form.Control
-                  sx={{zIndex: 200}}
-                  size='sm'
-                  controlId='employee_id'
-                  name='employee_id'
-                  accepter={SelectPicker}
-                  data={dataSource}
-                  block
-                  value={employee}
-                  onSelect={setEmployee}
-                />
-              </Grid>
-
+                  <small>Employee</small>
+                  <Form.Control
+                    sx={{zIndex: 200}}
+                    size='sm'
+                    controlId='employee_id'
+                    name='employee_id'
+                    accepter={SelectPicker}
+                    data={dataSource}
+                    block
+                    value={employee}
+                    onSelect={setEmployee}
+                  />
+                </Grid>
+              </Grid> 
               <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
                   <div>
@@ -211,7 +216,64 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                 </Grid>
               </Grid>
             </Grid>
-          </Form>
+          </Form> */}
+          <Grid container mb={3}> 
+              <Grid container mb={3} >
+                <Grid item xs={6} mb={3} >
+                  <FormControl fullWidth>
+                    <InputLabel>Employee</InputLabel>
+                    <Select
+                      value={employee}
+                      onChange={e => setEmployee(e.target.value)}
+                    >
+                        {dataSource.map(option => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item sm={6} xs={12}>
+                  
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                    <DatePicker
+                      label="Date"
+                      value={date}
+                      onChange={handleDateChange}
+                    />
+                  </LocalizationProvider>
+                    
+                </Grid>
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                      <TimePicker
+                        label="Time in"
+                        type="time"
+                        value={timeIn }
+                        onChange={e => setTimeIn(e)}
+                        fullWidth
+                      />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                    <TimePicker
+                      label="Time out"
+                      type="time"
+                      value={timeOut }
+                      onChange={e => setTimeOut(e) }
+                      fullWidth
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                
+              </Grid>
+
+          </Grid>
+
         </DialogContent>
       )}
       <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'start' }}>

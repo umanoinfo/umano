@@ -345,7 +345,7 @@ const PayrollList = classNamec => {
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
               {row.lumpySalary.toLocaleString("en-US") ? Number(row.lumpySalary).toLocaleString("en-US") : 0}
-              <small> EAD</small>
+              <small> AED </small>
             </Typography>
           </Box>
         )
@@ -361,7 +361,7 @@ const PayrollList = classNamec => {
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
               {row.total.toLocaleString("en-US") ? row.total.toLocaleString("en-US") : 0}
-              <small> EAD</small>
+              <small> AED </small>
             </Typography>
           </Box>
         )

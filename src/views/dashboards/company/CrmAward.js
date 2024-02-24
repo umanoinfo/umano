@@ -99,8 +99,9 @@ const Img = styled('img')(({ theme }) => ({
 
 const CrmAward = () => {
 
-  const { data: session, status } = useSession()
-  
+  const { data: session, status } = useSession();
+  console.log('session' , session.user);
+
   const days = [
     'Sunday',
     'Monday' ,
@@ -109,7 +110,7 @@ const CrmAward = () => {
     'Thursday' ,
     'Friday' ,
     'Saturday' 
-     ]
+     ];
 
   return (
     <Card>
@@ -117,7 +118,7 @@ const CrmAward = () => {
         <StyledGrid1 item xs={12} md={9} lg={9}>
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
-              {session.user && session.user.company_info[0] && session.user.company_info[0].name}
+              {session && session.user && session.user?.company_info &&  session.user.company_info[0] && session.user.company_info[0].name}
             </Typography>
             
          

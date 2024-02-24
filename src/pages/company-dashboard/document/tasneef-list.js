@@ -303,6 +303,7 @@ const AllDocumentsList = () => {
       flex: 0.25,
       field: 'type',
       minWidth: 400,
+      sortable:false,
       headerName: 'Tags',
       renderCell: ({ row }) => {
         return (
@@ -330,7 +331,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.11,
       minWidth: 180,
-      field: 'end',
+      field: 'expiryDate',
       headerName: 'Expiry date',
       renderCell: ({ row }) => {
         return (
