@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     res.status(401).json({ success: false, message: 'Not Auth' })
   }
   
-  const employeesCountInCompany = await client.db().collection('employees').countDocuments({company_id: myUser.company_id}) ; 
+  let employeesCountInCompany = await client.db().collection('employees').countDocuments({company_id: myUser.company_id}) ; 
   employeesCountInCompany++ ; 
   
 

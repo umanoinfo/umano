@@ -229,6 +229,7 @@ const AllDocumentsList = () => {
         })
         }
       })
+      console.log(arr);
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
 
@@ -448,7 +449,7 @@ const AllDocumentsList = () => {
     data.toDate = toDate
     axios.post('/api/payroll/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
-
+      console.log(res.data) ;
       employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
       //   ----------------------- Assume Leave -------------------------------
