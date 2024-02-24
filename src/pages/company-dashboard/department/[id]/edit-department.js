@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -73,13 +73,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const value = ''
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
-  useEffect(() => {
-    getDepartment()
-      .then(() => {
-        getUsers()
-        getParents()
-      })
-  }, [])
 
   // ---------------------- async Check Department Name -----------------------------------------
 
@@ -125,7 +118,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Department ----------------------------------
 
-  const getDepartment = async () => {
+  const getDepartment = useCallback( async () => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/' + id)
     const { data } = await res.json()
@@ -150,14 +143,15 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setNewStatus(data[0].status)
     setSelectedDepartment(data)
     setIsLoading(false)
-  }
-
+    },
+    [id , parentsDataSource]
+  )
 
 
 
   // ----------------------------- Get Parents ----------------------------------
 
-  const getParents = async () => {
+  const getParents = useCallback( async () => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
@@ -183,7 +177,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
     
     setParentsDataSource(parents)
     setIsLoading(false)
-  }
+  } , [id , formValue.parent ]) 
+
+  useEffect(() => {
+    getDepartment()
+      .then(() => {
+        getUsers()
+        getParents()
+      })
+  }, [getDepartment , getParents ])
+
 
   // -------------------------------- Changes -----------------------------------------------
 

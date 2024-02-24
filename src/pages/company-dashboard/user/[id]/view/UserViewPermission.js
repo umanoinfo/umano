@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import TableContainer from '@mui/material/TableContainer'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { FormControlLabel } from '@mui/material'
 import Link from 'src/@core/theme/overrides/link'
@@ -26,12 +26,7 @@ const UserViewPermission = ({ id }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    getPermissionGroup()
-    getUser()
-  }, [])
-
-  const getUser = () => {
+  const getUser = useCallback( () => {
     setLoading(true)
     axios
       .get('/api/company-user/' + id, {})
@@ -42,16 +37,23 @@ const UserViewPermission = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }
+  } , [id] ) ;
 
-  const getPermissionGroup = () => {
+  const getPermissionGroup = useCallback( () => {
     axios
       .get('/api/permission/company-premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
       })
       .catch(function (error) {})
-  }
+  }, [] ) ;
+
+  useEffect(() => {
+    getPermissionGroup()
+    getUser()
+  }, [getUser ,getPermissionGroup])
+
+
 
   const routeToEditUser = () => {
     router.push('/company-dashboard/user/' + id + '/edit-user')

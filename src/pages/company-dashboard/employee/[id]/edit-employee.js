@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -121,14 +121,6 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const value = ''
   const type1 = ''
 
-  useEffect(() => {
-    getCountries()
-    getShifts()
-    getEmployee()
-    getSalaryFormula()
-    getDeduction()
-    getCompensation()
-  }, [])
 
   // ------------------------ Get Shifts -----------------------------------
 
@@ -172,7 +164,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   // ------------------------ Get Employee -----------------------------------
 
-  const getEmployee = async (tab) => {
+  const getEmployee = useCallback( async (tab) => {
     setIsLoading(true)
     const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
@@ -191,7 +183,17 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
 
     setIsLoading(false)
-  }
+  },[id])
+
+  useEffect(() => {
+    getCountries()
+    getShifts()
+    getEmployee()
+    getSalaryFormula()
+    getDeduction()
+    getCompensation()
+  }, [getEmployee])
+
 
   // ----------------------------- Change Country ----------------------------------
 

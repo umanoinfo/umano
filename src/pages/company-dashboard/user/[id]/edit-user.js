@@ -83,10 +83,27 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
+  const getUser = useCallback( () => {
+    setLoading(true)
+    axios
+      .get('/api/company-user/' + id, {})
+      .then(function (response) {
+        setStatus(response.data.data[0].status)
+        setType(response.data.data[0].type)
+        setRoles(response.data.data[0].roles)
+        reset(response.data.data[0])
+        setLoading(false)
+      })
+      .catch(function (error) {
+        // setLoading(false)
+      })
+  } , [id , reset ]) ;
+
+
   useEffect(() => {
     getUser()
     getRoles()
-  }, [])
+  }, [getUser])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 
@@ -128,21 +145,7 @@ const DialogAddUser = ({ id }) => {
     resolver: yupResolver(schema)
   })
 
-  const getUser = () => {
-    setLoading(true)
-    axios
-      .get('/api/company-user/' + id, {})
-      .then(function (response) {
-        setStatus(response.data.data[0].status)
-        setType(response.data.data[0].type)
-        setRoles(response.data.data[0].roles)
-        reset(response.data.data[0])
-        setLoading(false)
-      })
-      .catch(function (error) {
-        // setLoading(false)
-      })
-  }
+
 
   const onSubmit = data => {
     setLoading(true)

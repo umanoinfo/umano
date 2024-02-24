@@ -158,7 +158,7 @@ const Steppositions = ({ handleNext, employee }) => {
       ).then(setLoading(false))
       setEndChangeType('onPosition')
     }
-  }, [dispatch, employeeId, userStatus, value])
+  }, [dispatch, employeeId, userStatus, value , employee ])
 
   // ----------------------------- Get Options ----------------------------------
 

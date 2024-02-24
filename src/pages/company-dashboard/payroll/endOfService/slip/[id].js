@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
@@ -20,16 +20,18 @@ const Slip = ({ id }) => {
   const [loading, setLoading] = useState(true)
   const [payroll, setPayroll] = useState()
 
-  useEffect(() => {
-    getPayroll()
-  }, [])
 
-  const getPayroll = () => {
+
+  const getPayroll = useCallback ( () => {
     axios.get('/api/end-of-service/' + id, {}).then(res => {
       setPayroll(res.data.data[0])
       setLoading(false)
     })
-  }
+  }, [id] ) ;
+
+  useEffect(() => {
+    getPayroll()
+  }, [getPayroll])
 
   async function saveCapture() {
     const elemente = printRef.current

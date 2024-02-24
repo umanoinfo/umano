@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect } from 'react'
+import { useState, forwardRef, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -87,52 +87,8 @@ const DialogAddUser = ({ id }) => {
 
   const { data: session, status } = useSession()
 
-  useEffect(() => {
-    getUser()
-    getRoles()
-  }, [])
-
-  const [checked, setChecked] = useState(['wifi', 'location'])
-
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-    setChecked(newChecked)
-  }
-
-  const getRoles = () => {
-    setLoading(true)
-    axios
-      .get('/api/role/', {})
-      .then(function (response) {
-        setAllRoles(response.data.data)
-        setLoading(false)
-      })
-      .catch(function (error) {
-        setLoading(false)
-      })
-  }
-
-  const dispatch = useDispatch()
-
-  const {
-    reset,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues,
-    mode: 'onChange',
-    resolver: yupResolver(schema)
-  })
-
-  const getUser = () => {
+  
+  const getUser = useCallback(  () => {
     setLoading(true)
     axios
       .get('/api/user/' + id, {})
@@ -146,7 +102,54 @@ const DialogAddUser = ({ id }) => {
       .catch(function (error) {
         // setLoading(false)
       })
+  } , [id , reset ]) ;
+
+  const getRoles = useCallback(() => {
+    setLoading(true)
+    axios
+      .get('/api/role/', {})
+      .then(function (response) {
+        setAllRoles(response.data.data)
+        setLoading(false)
+      })
+      .catch(function (error) {
+        setLoading(false)
+      })
+    }
+  , []) 
+
+
+  useEffect(() => {
+    getUser()
+    getRoles()
+  }, [getUser , getRoles])
+
+  const [checked, setChecked] = useState(['wifi', 'location'])
+
+  const handleToggle = value => () => {
+    const currentIndex = checked.indexOf(value)
+    const newChecked = [...checked]
+    if (currentIndex === -1) {
+      newChecked.push(value)
+    } else {
+      newChecked.splice(currentIndex, 1)
+    }
+    setChecked(newChecked)
   }
+  
+  const dispatch = useDispatch()
+
+  const {
+    reset,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema)
+  })
 
   const onSubmit = data => {
     setLoading(true)

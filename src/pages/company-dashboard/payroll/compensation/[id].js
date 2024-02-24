@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -52,19 +52,21 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(() => {
-    getCompensation()
-  }, [])
 
   // ------------------------ Get Employee -----------------------------------
 
-  const getCompensation = async () => {
+  const getCompensation = useCallback( async () => {
     setLoading(true)
     const res = await fetch('/api/compensation/' + id)
     const { data } = await res.json()
     setFormValue(data[0])
     setLoading(false)
-  }
+  } ,[ id] ) ;
+
+  useEffect(() => {
+    getCompensation()
+  }, [getCompensation])
+
 
   // ------------------------------ validate Mmodel ------------------------------------
 

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect } from 'react'
+import { useState, forwardRef, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -59,11 +59,7 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
-  useEffect(() => {
-    getUser()
-  }, [])
-
-  const getUser = () => {
+  const getUser = useCallback( () => {
     setLoading(true)
     axios
       .get('/api/user/' + id, {})
@@ -74,7 +70,13 @@ const DialogAddUser = ({ id }) => {
       .catch(function (error) {
         // setLoading(false)
       })
-  }
+  }, [id] ) ;
+
+  useEffect(() => {
+    getUser()
+  }, [getUser])
+
+  
 
   const save = data => {
     if (!password || password.length < 6) {

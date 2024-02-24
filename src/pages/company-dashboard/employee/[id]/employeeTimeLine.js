@@ -14,7 +14,7 @@ import MuiTimeline from '@mui/lab/Timeline'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Card, Grid } from '@mui/material'
 import EmployeeViewLeft from './view/EmployeeViewLeft'
@@ -41,11 +41,9 @@ const EmployeeTimeLine = ({ id }) => {
   const [employeeTimeline, setEmployeeTimeline] = useState()
   const [timeline, setTimeline] = useState()
 
-  useEffect(() => {
-    getTimeline()
-  }, [])
 
-  const getTimeline = () => {
+
+  const getTimeline = useCallback( () => {
     let data = { id: id }
     setIsLoading(true)
     axios.post('/api/company-employee/timeline/', { data }).then(response => {
@@ -53,7 +51,11 @@ const EmployeeTimeLine = ({ id }) => {
       setTimeline(response.data.timeline)
       setIsLoading(false)
     })
-  }
+  }, [id ]) ;
+
+  useEffect(() => {
+    getTimeline()
+  }, [getTimeline])
 
   // if (employee) {
   //   employee.employeePositions_info.map((e, index) => {

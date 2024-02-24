@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -87,6 +87,44 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   const value = ''
   const type1 = ''
 
+  // ------------------------------ Get Company ------------------------------------
+
+  const getCompany = useCallback(
+    () => {
+      setLoading(true)
+      axios
+        .get('/api/company/' + id, {})
+        .then(function (response) {
+
+          console.log(response.data.data[0].state)
+          setFormValue(response.data.data[0])
+          setType(response.data.data[0].type)
+          setNewLogo(response.data.data[0].logo)
+          setUserID(response.data.data[0].user_id)
+          setCountryID(response.data.data[0].country_id)
+          setNewType(response.data.data[0].type)
+          setNewStatus(response.data.data[0].status)
+          setDial(response.data.data[0].country_info[0].dial)
+          setEnd_at(response.data.data[0].end_at)
+          setNewState(response.data.data[0].state)
+
+          const index = allCountries.findIndex(i => i._id == response.data.data[0].country_id)
+
+          const statesDS = allCountries[index].states.map(state => ({
+            label: state.name,
+            value: state.name
+          }))
+          setStates(statesDS)
+          setLoading(false)
+
+        })
+        .catch(function (error) {
+          setLoading(false)
+        })
+    },
+    [id,allCountries]
+  );
+
   useEffect(() => {
     dispatch(
       fetchData({
@@ -96,7 +134,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       })
     )
     getUsers().then(getCountries()).then(getCompany())
-  }, [dispatch, type, companyStatus, value])
+  }, [dispatch, type, companyStatus, value , getCompany , getCountries ])
 
   function asyncCheckUsername(name) {
     return new Promise(resolve => {
@@ -137,49 +175,16 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     setLoading(false)
   }
 
-  // ------------------------------ Get Company ------------------------------------
-
-  const getCompany = () => {
-    setLoading(true)
-    axios
-      .get('/api/company/' + id, {})
-      .then(function (response) {
-
-        console.log(response.data.data[0].state)
-        setFormValue(response.data.data[0])
-        setType(response.data.data[0].type)
-        setNewLogo(response.data.data[0].logo)
-        setUserID(response.data.data[0].user_id)
-        setCountryID(response.data.data[0].country_id)
-        setNewType(response.data.data[0].type)
-        setNewStatus(response.data.data[0].status)
-        setDial(response.data.data[0].country_info[0].dial)
-        setEnd_at(response.data.data[0].end_at)
-        setNewState(response.data.data[0].state)
-
-        const index = allCountries.findIndex(i => i._id == response.data.data[0].country_id)
-
-        const statesDS = allCountries[index].states.map(state => ({
-          label: state.name,
-          value: state.name
-        }))
-        setStates(statesDS)
-        setLoading(false)
-
-      })
-      .catch(function (error) {
-        setLoading(false)
-      })
-  }
+  
 
   const types = companiesTypes.map(type => ({
     label: type.title,
     value: type.value
   }))
 
-    // ----------------------------- Get Countries ----------------------------------
+  // ----------------------------- Get Countries ----------------------------------
 
-    const getCountries = async () => {
+  const getCountries = useCallback(async () => {
 
       const countriesDataSource = countries.map(country => ({
         label: country.name,
@@ -188,7 +193,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       setAllCountries(countries)
       setCountriesDataSource(countriesDataSource)
       setCompanyTypesDataSource(types)
-    }
+  }, [types])  ;
 
   // ---------------------------- upload Image---------------------------------------
 

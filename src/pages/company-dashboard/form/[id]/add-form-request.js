@@ -172,10 +172,12 @@ const AddFormRequest = ({ popperPlacement, id }) => {
 
   useEffect(() => {
     getEmployees(), getForm()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     change_content()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEmployee])
 
   const getEmployees = () => {

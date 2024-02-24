@@ -114,7 +114,7 @@ const VerticalNavHeader = props => {
       ) : (
         <StyledLink href='/'>
           <Box sx={{ px: 2}}>
-            <img src='/images/apple-touch-icon.png' width='30px' />
+            <img alt="umano" src='/images/apple-touch-icon.png' width='30px' />
           </Box>
           
           <HeaderTitle variant='h6' sx={{ px: 4, color: '#05445e', ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>

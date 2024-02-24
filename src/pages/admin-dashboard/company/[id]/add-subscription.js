@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -51,6 +51,7 @@ import { useRouter } from 'next/router'
 // ** Data
 import { companiesTypes } from 'src/local-db'
 
+
 const DialogAddUser = ({ id }) => {
   // ** States
 
@@ -68,24 +69,28 @@ const DialogAddUser = ({ id }) => {
   const dispatch = useDispatch()
   const formRef = useRef()
 
-  useEffect(() => {
-    getCompany()
-  }, [])
-
   // ---------------------- Get Company ------------------------------------
-
-  const getCompany = () => {
+  const getCompany = useCallback( () => {
     setLoading(true)
     axios
-      .get('/api/company/' + id, {})
-      .then(function (response) {
-        setCompany(response.data.data[0])
-        setLoading(false)
-      })
-      .catch(function (error) {
-        setLoading(false)
-      })
-  }
+        .get('/api/company/' + id, {})
+        .then(function (response) {
+          setCompany(response.data.data[0])
+          setLoading(false)
+        })
+        .catch(function (error) {
+          setLoading(false)
+        })
+    }
+  ,[id]);
+
+  useEffect(() => {
+    
+    getCompany()
+  }, [getCompany])
+
+  
+  
 
   // ---------------------- Submit ------------------------------------
 

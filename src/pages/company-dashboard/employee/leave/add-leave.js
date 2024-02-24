@@ -91,6 +91,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   useEffect(() => {
     getEmployees(), getMyCompany()
+       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------

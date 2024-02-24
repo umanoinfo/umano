@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, forwardRef, useEffect, useRef } from 'react'
+import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -81,13 +81,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
     router.push('/company-dashboard/document')
   }
 
-  useEffect(() => {
-    getDocument()
-  }, [])
+
 
   // ------------------------------ Get Document ------------------------------------
 
-  const getDocument = () => {
+  const getDocument = useCallback( () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       if (response.data.data[0]) {
@@ -102,7 +100,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
               _id: file._id,
               name: file.name,
               fileKey: index,
-              url: 'https://robin-sass.pioneers.network/assets/testFiles/document/' + file.url,
+
+              // url: 'https://robin-sass.pioneers.network/assets/testFiles/document/' + file.url,
+              
               created_at: new Date(file.created_at).toISOString().substring(0, 10)
             })
           }
@@ -113,7 +113,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
       setLoading(false)
     })
-  }
+  }, [id]);
+  
+  useEffect(() => {
+    getDocument()
+  }, [getDocument])
 
   // ------------------------------ validate Mmodel ------------------------------------
 

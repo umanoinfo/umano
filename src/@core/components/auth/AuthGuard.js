@@ -19,7 +19,7 @@ const AuthGuard = props => {
       }
     },
 
-    [router.route]
+    [router.route , router.isReady]
   )
 
 
