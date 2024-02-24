@@ -6,7 +6,7 @@ export async function connectToDatabase() {
     'mongodb+srv://umanoinfo00:B4l0jIYvEdtOzNDE@umanosing.6seqopc.mongodb.net/UmanoDB?retryWrites=true&w=majority'
 
     // 'mongodb+srv://localhost/'
-    // 'mongodb://127.0.0.1:27017/umano?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.4'
+    // 'mongodb://127.0.0.1:27017/hr?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.4'
     
 
   )
