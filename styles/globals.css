@@ -789,7 +789,7 @@ code[class*='language-'] {
 }
 .sun-editor .se-selector-table .se-table-size-picker {
   position: absolute !important;
-  z-index: 3;
+  z-index: 800 !important;
   font-size: 18px;
   width: 10em;
   height: 10em;
