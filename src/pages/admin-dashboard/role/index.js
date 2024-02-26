@@ -53,6 +53,7 @@ const RolesComponent = () => {
   const { data: session, status } = useSession()
 
   useEffect(() => {
+    setLoading(true);
     getPermissionGroup()
     dispatch(
       fetchData({
@@ -206,6 +207,7 @@ const RolesComponent = () => {
         })
         setLoading(false)
       })
+      setOpen(false);
   }
 
   // -------------------------- Render Cards -------------------------------------------------
@@ -285,6 +287,7 @@ const RolesComponent = () => {
                               onClick={() => {
                                 handleClickOpen()
                                 setDialogTitle('Add')
+                                
                               }}
                             >
                               Add Role

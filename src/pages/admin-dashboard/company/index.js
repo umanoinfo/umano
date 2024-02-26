@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, useCallback, forwardRef } from 'react'
+import { useState, useEffect, useCallback, forwardRef, useRef } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -122,7 +122,7 @@ const CompaniesList = () => {
   const [open, setOpen] = useState(false)
   const [openVisit , setOpenVisit] =useState(false)
   const [loading, setLoading] = useState(true)
-
+  const [searchValue , setSearchValue]= useState('');
   const [selectedCompany, setSelectedCompany] = useState()
 
   const [editUserOpen, setEditUserOpen] = useState(false)
@@ -167,14 +167,17 @@ const CompaniesList = () => {
   }
 
   useEffect(() => {
+   
+    setLoading(true);
     dispatch(
        fetchData({
         type,
         companyStatus,
-        q: value
+        q: searchValue
       })
-    ).then(setLoading(false))
-  }, [dispatch, type, companyStatus, value])
+    ).then(setLoading(false) )
+
+  }, [dispatch, type, companyStatus, searchValue])
 
   // ----------------------- Handle ------------------------------
 
@@ -202,6 +205,7 @@ const CompaniesList = () => {
   // -------------------------- Delete --------------------------------
 
   const deleteCompany = () => {
+    setLoading(true);
     axios
       .post('/api/company/delete-company', {
         selectedCompany
@@ -212,7 +216,8 @@ const CompaniesList = () => {
             delay: 1000,
             position: 'bottom-right'
           })
-          setOpen(false)
+          setOpen(false);
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -228,6 +233,7 @@ const CompaniesList = () => {
     // -------------------------- Visit --------------------------------
 
     const visitCompany = () => {
+      setLoading(true) ;
       axios
         .post('/api/user/change-company', {
           selectedCompany
@@ -238,6 +244,7 @@ const CompaniesList = () => {
               delay: 3000,
               position: 'bottom-right'
             })
+            setLoading(false) ;
             setOpenVisit(false)
             router.replace("/login")
           })
@@ -377,7 +384,7 @@ const CompaniesList = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Icon fontSize={20} />
-            {row.type}
+            {row.type == 'healthCenter' ? 'Health Center' : 'Clinic'}
           </Box>
         )
       }
@@ -459,7 +466,7 @@ const CompaniesList = () => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Companies is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Companies are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('AdminViewCompany'))
     return <NoPermission header='No Permission' description='No permission to view companies'></NoPermission>
@@ -546,7 +553,11 @@ const CompaniesList = () => {
                 sx={{ mr: 6, mb: 2 }}
                 placeholder='Search Company'
                 onChange={e => handleFilter(e.target.value)}
+                
               />
+              <Button sx={{ mb:3 }} style={{marginRight:'10px'}} type='button' onClick={()=> setSearchValue(value)} >
+                Search
+              </Button>
 
               {session && session.user && session.user.permissions.includes('AdminAddCompany') && (
                 <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addCompany()}>
@@ -558,7 +569,7 @@ const CompaniesList = () => {
           {/* -------------------------- Table -------------------------------------- */}
 
           {!loading && store.data && <DataGrid
-          rowHeight={35}
+            rowHeight={40}
             autoHeight
             rows={store.data}
             columns={columns}

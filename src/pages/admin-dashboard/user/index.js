@@ -118,6 +118,7 @@ const UserList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type,

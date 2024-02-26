@@ -198,7 +198,7 @@ const PermissionsTable = () => {
         })
         setLoading(false)
       })
-    setEditDialogOpen(false)
+    setAddDialogOpen(false)
   }
 
   // -------------------------- Delete Permission ----------------------------------------
@@ -212,6 +212,7 @@ const PermissionsTable = () => {
   }
 
   const deletePernission = () => {
+    setLoading(true)
     axios
       .post('/api/permission/delete-permission', {
         deleteValue: deleteValue,
@@ -223,6 +224,7 @@ const PermissionsTable = () => {
             delay: 3000,
             position: 'bottom-right'
           })
+          setLoading(false)
           setDeleteDialogOpen(false)
         })
       })
@@ -232,7 +234,9 @@ const PermissionsTable = () => {
           position: 'bottom-right'
         })
         setLoading(false)
+        
       })
+      
   }
 
   // -------------------------- Edit Permission ----------------------------------------

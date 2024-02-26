@@ -290,7 +290,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
           })
           .catch(function (error) {
             toast.error('Error : ' + error.response.data.message + ' !', {
-              delay: 3000,
+              delay: 20000,
               position: 'bottom-right'
             })
             setLoading(false)

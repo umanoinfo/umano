@@ -85,7 +85,9 @@ const schema = yup.object().shape({
   name: yup
     .string()
     .min(3, obj => showErrors('Name', obj.value.length, obj.min))
-    .required()
+    .required(),
+    
+  // manager: yup.string().required(),
 })
 
 const defaultValues = {}
@@ -379,9 +381,9 @@ const DialogAddUser = ({ popperPlacement }) => {
                           type='text'
                           size='small'
                           value={value}
-                          label='Employee ID'
+                          label='Employees ID Prefix'
                           onChange={onChange}
-                          placeholder='Employee ID'
+                          placeholder='Employees ID Prefix'
                         />
                       )}
                     />
@@ -406,12 +408,12 @@ const DialogAddUser = ({ popperPlacement }) => {
                         />
                       )}
                     />
-                    {errors.address && (
+                    {/* {errors.address && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.address.message}</FormHelperText>
-                    )}
+                    )} */}
                   </FormControl>
 
-                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }} >
                     <Autocomplete
                       size='small'
                       options={usersDataSource}
@@ -421,9 +423,9 @@ const DialogAddUser = ({ popperPlacement }) => {
                       getOptionLabel={option => option.email}
                       renderInput={params => <TextField {...params} label='Manager' error={Boolean(errors.manager)} />}
                     />
-                    {/* {errors.manager && (
+                    {errors.manager && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
-                    )} */}
+                    )}
                   </FormControl>
 
                   {/* <Grid container spacing={1}>

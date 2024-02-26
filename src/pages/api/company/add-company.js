@@ -23,8 +23,11 @@ export default async function handler(req, res) {
     
     return
   }
-
-  console.log(company)
+  const manager = await client.db().collection('users').findOne({type:'manager' , _id: ObjectId(company.user_id) , company_id:{ $exists: true } },) ;
+  if(manager){
+    return res.status(422).json({success: false, message: 'User is already a manager of a company'});
+  }
+  
   
   const newCompany = await client.db().collection('companies').insertOne(company)
   const insertedCompany = await client.db().collection('companies').findOne({ _id: newCompany.insertedId })
