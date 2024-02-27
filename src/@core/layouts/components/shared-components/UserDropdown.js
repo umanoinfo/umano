@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useSession } from 'next-auth/react'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -54,6 +55,18 @@ const UserDropdown = props => {
   }
 
   const { data: session, status } = useSession()
+  const [roles , setRoles ] = useState("");
+
+  useEffect( ()=>{
+    console.log('hi' , session) ;
+    if(session?.user?.roles_info){
+      let roles = session.user.roles_info.map((role)=>{
+        return role.title ;
+      });
+      setRoles(roles.toString());
+    }
+    
+  }, [session]) ;
 
   const styles = {
     py: 2,
@@ -120,6 +133,9 @@ const UserDropdown = props => {
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
                 {session.user.email}
               </Typography>
+              <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                type: {session.user.type}
+              </Typography>
             </Box>
           </Box>
         </Box>
@@ -159,6 +175,20 @@ const UserDropdown = props => {
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
             Change Password
+          </Box>
+        </MenuItem>
+        <Divider />
+        <MenuItem sx={{ p: 0 }} >
+          <Box sx={styles}  >
+            <Icon icon='mdi-security-network' />
+             {session.user.type}
+          </Box>
+        </MenuItem>
+        <Divider />
+        <MenuItem sx={{ p: 0 }} >
+          <Box sx={styles}  >
+            <Icon icon='mdi-account' />
+             {roles}
           </Box>
         </MenuItem>
         <Divider />
