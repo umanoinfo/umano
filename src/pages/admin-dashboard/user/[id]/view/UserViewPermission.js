@@ -27,9 +27,9 @@ const UserViewPermission = ({ id }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(async () => {
-    await getPermissionGroup()
-    await getUser()
+  useEffect( () => {
+    getPermissionGroup()
+    getUser()
   }, [])
 
   const getUser = async () => {
@@ -69,7 +69,8 @@ const UserViewPermission = ({ id }) => {
     router.push('/admin-dashboard/user/' + id + '/edit-user')
   }
   if(loading){
-    return  <Loading header='Please Wait' description='Permissions are loading'/>;
+    return  <Loading header='Please Wait' description='Permissions are
+     loading'/>;
   }
 
   return (
