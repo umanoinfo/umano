@@ -23,6 +23,7 @@ import UsersProjectListTable from 'src/views/apps/user/view/UsersProjectListTabl
 import { DataGrid } from '@mui/x-data-grid'
 import IconButton from '@mui/material/IconButton'
 import Icon from 'src/@core/components/icon'
+import Loading from 'src/views/loading'
 
 const CompanyViewSubscriptions = ({ id }) => {
   const router = useRouter()
@@ -164,7 +165,10 @@ const CompanyViewSubscriptions = ({ id }) => {
           </Typography>
         </Box>
       </CardContent>
-      <DataGrid
+      {
+        isLoading ?
+        <Loading header='Please Wait' description='Subscriptions are loading'/> :
+        <DataGrid
         autoHeight
         rows={subscriptionsDataSource}
         columns={columns}
@@ -173,6 +177,8 @@ const CompanyViewSubscriptions = ({ id }) => {
         rowsPerPageOptions={[7, 10, 25, 50]}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
       />
+      }
+     
     </Card>
   )
 }

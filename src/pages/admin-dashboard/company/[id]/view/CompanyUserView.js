@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
+import Loading from 'src/views/loading'
 
 // ** Demo Component Imports
 import { DataGrid } from '@mui/x-data-grid'
@@ -119,15 +120,20 @@ const UserViewOverview = ({ id }) => {
           <Typography variant='body2' sx={{ mr: 2 }}></Typography>
         </Box>
       </CardContent>
-      <DataGrid
-        autoHeight
-        rows={usersDataSource}
-        columns={columns}
-        pageSize={pageSize}
-        disableSelectionOnClick
-        rowsPerPageOptions={[7, 10, 25, 50]}
-        onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-      />
+      {
+        isLoading ? 
+        <Loading header='Please Wait' description='Users are loading'/>
+        :
+        <DataGrid
+          autoHeight
+          rows={usersDataSource}
+          columns={columns}
+          pageSize={pageSize}
+          disableSelectionOnClick
+          rowsPerPageOptions={[7, 10, 25, 50]}
+          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+        /> 
+      }
     </Card>
   )
 }

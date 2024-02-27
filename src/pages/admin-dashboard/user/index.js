@@ -238,9 +238,9 @@ const UserList = () => {
 
 
   const activationLink = (row) => {
-    console.log(row)
+    
     setLoading(true);
-    const { email } = row
+    const { email } = row;
     fetch("/api/reset-password/request/", {
       method: "POST",
       body: JSON.stringify({ email: email }),
@@ -249,12 +249,28 @@ const UserList = () => {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        let data = await res.json();
+        if(res.status != 200 ){
+          throw Error(data.message);
+        }
+
+        return data;
+       })
       .then((data) => {
-        toast(data.message , {
+        console.log(data.message) ;
+        toast.success(data.message.toString() , {
           delay: 5000,
+          position:'bottom-right'
         })
         setLoading(false);
+      }).catch((err)=>{
+        console.log(err) ;
+        toast.error(err.toString() , {
+          delay: 5000 , 
+          position:'bottom-right' 
+        });
+        setLoading(false) ;
       });
   };
 

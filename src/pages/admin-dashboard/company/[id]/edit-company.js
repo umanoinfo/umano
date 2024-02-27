@@ -305,7 +305,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Companies is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Company is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('AdminAddCompany'))
     return <NoPermission header='No Permission' description='No permission to add companies'></NoPermission>
