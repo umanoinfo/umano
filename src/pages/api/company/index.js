@@ -38,7 +38,8 @@ export default async function handler(req, res) {
             { type: { $regex: req.query.type } },
             { status: { $regex: req.query.companyStatus } },
             { name: { $regex: req.query.q, '$options' : 'i' } },
-            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+
+            // { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]
         }
       },

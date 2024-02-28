@@ -3,6 +3,10 @@
   margin: 10px;
   border: 1px solid #aaa;
 }
+.line-through{
+  text-decoration: line-through;
+}
+
 
 /* button {
   box-sizing: border-box;
