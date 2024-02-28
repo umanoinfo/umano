@@ -39,6 +39,18 @@ export const nextAuthOptions = (req, res) => {
           if (!isValid) {
             throw new Error('Password invalid!')
           }
+          if(user?.company_id){
+            let company = await client.db().collection('companies').findOne({_id: user.company_id } );
+
+            // if company is (pending or blocked)
+            if(company.status != 'active' ) {
+              throw new Error('Your company is blocked !') ;
+            }
+          }
+          else{
+            // if user doesn't belong to any company
+            throw new Error('No user found!');
+          }
 
           return user
         }
