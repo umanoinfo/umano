@@ -118,7 +118,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Department ----------------------------------
 
-  const getDepartment = useCallback( async () => {
+  const getDepartment =   async () => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/' + id)
     const { data } = await res.json()
@@ -143,15 +143,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setNewStatus(data[0].status)
     setSelectedDepartment(data)
     setIsLoading(false)
-    },
-    [id , parentsDataSource]
-  )
-
+    } 
 
 
   // ----------------------------- Get Parents ----------------------------------
 
-  const getParents = useCallback( async () => {
+  const getParents =  async () => {
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
@@ -177,7 +174,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     
     setParentsDataSource(parents)
     setIsLoading(false)
-  } , [id , formValue.parent ]) 
+  }  
 
   useEffect(() => {
     getDepartment()
@@ -185,7 +182,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         getUsers()
         getParents()
       })
-  }, [getDepartment , getParents ])
+  }, [    ])
 
 
   // -------------------------------- Changes -----------------------------------------------

@@ -289,7 +289,7 @@ const DepartmentList = ({ apiData }) => {
     setFileextension(event.target.value)
   }
 
-  const getMainDepartment = useCallback( () => {
+  const getMainDepartment =  () => {
     axios.get('/api/company-department/main-departments', {}).then(function (response) {
       setMainDepartments(response.data.data)
       response.data.data.map(department => {
@@ -306,7 +306,7 @@ const DepartmentList = ({ apiData }) => {
       })
       drawChart(response.data.data)
     })
-  }, []) ;
+  }  ;
 
   useEffect(() => {
     getMainDepartment()

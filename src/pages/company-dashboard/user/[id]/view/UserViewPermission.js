@@ -26,7 +26,7 @@ const UserViewPermission = ({ id }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const getUser = useCallback( () => {
+  const getUser =  () => {
     setLoading(true)
     axios
       .get('/api/company-user/' + id, {})
@@ -37,21 +37,21 @@ const UserViewPermission = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  } , [id] ) ;
+  }   ;
 
-  const getPermissionGroup = useCallback( () => {
+  const getPermissionGroup =   () => {
     axios
       .get('/api/permission/company-premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
       })
       .catch(function (error) {})
-  }, [] ) ;
+  } ;
 
   useEffect(() => {
     getPermissionGroup()
     getUser()
-  }, [getUser ,getPermissionGroup])
+  }, [   ])
 
 
 

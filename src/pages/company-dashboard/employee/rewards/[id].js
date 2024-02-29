@@ -69,7 +69,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = useCallback( () => {
+  const getEmployees = () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -81,9 +81,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setEmployeesDataSource(arr)
     })
     setLoading(false)
-  }, [] ) ;
+  }  ;
 
-  const getreward = useCallback( () => {
+  const getreward =  () => {
     setLoading(true)
     axios
       .get('/api/employee-reward/' + id, {})
@@ -97,11 +97,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  } , [id] );
+  } ;
 
   useEffect(() => {
     getEmployees(), getreward()
-  }, [getreward, getEmployees])
+  }, [  ])
 
 
   // ------------------------------- Submit --------------------------------------

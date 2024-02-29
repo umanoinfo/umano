@@ -164,7 +164,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   // ------------------------ Get Employee -----------------------------------
 
-  const getEmployee = useCallback( async (tab) => {
+  const getEmployee = async (tab) => {
     setIsLoading(true)
     const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
@@ -183,7 +183,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
 
     setIsLoading(false)
-  },[id])
+  } 
 
   useEffect(() => {
     getCountries()
@@ -192,7 +192,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     getSalaryFormula()
     getDeduction()
     getCompensation()
-  }, [getEmployee])
+  }, [ ])
 
 
   // ----------------------------- Change Country ----------------------------------

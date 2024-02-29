@@ -83,7 +83,7 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
-  const getUser = useCallback( () => {
+  const getUser =   () => {
     setLoading(true)
     axios
       .get('/api/company-user/' + id, {})
@@ -97,13 +97,13 @@ const DialogAddUser = ({ id }) => {
       .catch(function (error) {
         // setLoading(false)
       })
-  } , [id , reset ]) ;
+  }   ;
 
 
   useEffect(() => {
     getUser()
     getRoles()
-  }, [getUser])
+  }, [ ])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 

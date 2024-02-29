@@ -66,7 +66,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
     return(pos.endChangeType == "onPosition")
   })
   
-  const assumegrossSalary = useCallback( ()=>{
+  const assumegrossSalary =  ()=>{
     
     const lumpySalary = employee?.salaries_info[0]?.lumpySalary | 0
     let deductions = 0
@@ -80,11 +80,11 @@ const EmployeeViewLeft = ({ id, employee }) => {
       compensations += ((Number(con.percentageValue) *lumpySalary)/100)
     })
     setGrossSalary  (lumpySalary - deductions + compensations)
-  } , [employee] ) ;
+  }  ;
 
   useEffect(()=>{
     assumegrossSalary()
-  },[assumegrossSalary])
+  },[ ])
 
   const handleEditRowOptions = () => {
     router.push('/company-dashboard/employee/' + employee._id + '/edit-employee')

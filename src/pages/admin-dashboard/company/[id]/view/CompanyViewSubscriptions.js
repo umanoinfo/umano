@@ -116,7 +116,7 @@ const CompanyViewSubscriptions = ({ id }) => {
  
    // ------------------------------ Get Users ------------------------------------
 
-   const getSubscriptions = useCallback( async () => {
+   const getSubscriptions =   async () => {
     setIsLoading(true)
     const res = await fetch('/api/subscription/' + id + '/byCompany')
     const { data } = await res.json()
@@ -135,12 +135,12 @@ const CompanyViewSubscriptions = ({ id }) => {
     setSubscriptionsDataSource(data)
     setIsLoading(false)
   }
-  , [id]);
+   
 
 
   useEffect(() => {
     getSubscriptions()
-  }, [getSubscriptions])
+  }, [ ])
   
  
   const addSubscription = () => {

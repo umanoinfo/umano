@@ -14,7 +14,7 @@ const DialogAddUser = ({ tab, id }) => {
   const [employee, setEmployee] = useState()
 
   
-  const getEmployee = useCallback( () => {
+  const getEmployee =   () => {
     let data = { id: id }
     setIsLoading(true)
 
@@ -27,11 +27,11 @@ const DialogAddUser = ({ tab, id }) => {
       .catch(function (error) {
         setIsLoading(false)
       })
-    }, [id] ) ;
+    }  ;
 
   useEffect(() => {
       getEmployee('')
-  }, [getEmployee])
+  }, [ ])
 
   return (
     <>

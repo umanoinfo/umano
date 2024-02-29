@@ -85,7 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ Get Document ------------------------------------
 
-  const getDocument = useCallback( () => {
+  const getDocument = () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       if (response.data.data[0]) {
@@ -113,11 +113,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
       setLoading(false)
     })
-  }, [id]);
+  } ;
   
   useEffect(() => {
     getDocument()
-  }, [getDocument])
+  }, [ ])
 
   // ------------------------------ validate Mmodel ------------------------------------
 

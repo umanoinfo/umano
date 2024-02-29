@@ -76,7 +76,7 @@ const UserViewLeft = ({ id }) => {
   const [user, setUser] = useState()
 
 
-  const getUser = useCallback( () => {
+  const getUser =  () => {
     setLoading(true)
     axios
       .get('/api/company-user/' + id, {})
@@ -87,11 +87,11 @@ const UserViewLeft = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }, [id] );
+  } ;
 
   useEffect(() => {
     getUser()
-  }, [getUser])
+  }, [ ])
 
   // ------------------------------ Get User ------------------------------------------------
 

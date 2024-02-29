@@ -135,7 +135,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  const getDocument = useCallback( () => {
+  const getDocument =  () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       setSelectedDocument(response.data.data[0])
@@ -149,12 +149,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setSelectedFiles(files)
       setLoading(false)
     })
-  } , [id] );
+  }  ;
 
   
   useEffect(() => {
     getDocument()
-  }, [getDocument])
+  }, [ ])
 
   // -----------------------------------------------------------
 

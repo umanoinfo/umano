@@ -98,17 +98,17 @@ const ViewFormRequest = ({ popperPlacement, id }) => {
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
 
-  const getForm = useCallback( () => {
+  const getForm = () => {
     axios.get('/api/request/' + id, {}).then(res => {
       setSelectedForm(res.data.data[0])
       setLoading(false)
     })
-  } , [id] ) ;
+  }  ;
 
   useEffect(() => {
     // getEmployees(),
     getForm()
-  }, [getForm])
+  }, [ ])
 
   // const getEmployees = () => {
   //   axios.get('/api/company-employee', {}).then(res => {

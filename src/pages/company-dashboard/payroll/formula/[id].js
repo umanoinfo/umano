@@ -69,7 +69,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  const getFormula =  useCallback( () => {
+  const getFormula =    () => {
     setLoading(true)
     axios
       .get('/api/salary-formula/' + id, {})
@@ -80,10 +80,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  } , [id] ); 
+  }  ; 
   useEffect(() => {
     getFormula()
-  }, [getFormula])
+  }, [ ])
 
   // ------------------------------ validate Mmodel ------------------------------------
 
