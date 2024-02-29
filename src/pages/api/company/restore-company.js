@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   // ------------------------------- Restore -------------------------------------
 
   const { id  } = req.body
-  console.log(id) ;
+  
   if (!id) {
     res.status(422).json({
       success: false,
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(id) }, { $set: company }, { upsert: false })
 
-    console.log(newCompany) ;
+    
 
   // -------------------------- logBook ---------------------------
 
@@ -49,5 +49,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(200).json({ success: true, data: company })
+  res.status(200).json({ success: true, message: 'sucess' })
 }

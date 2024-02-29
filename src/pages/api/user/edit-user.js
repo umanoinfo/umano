@@ -60,6 +60,7 @@ export default async function handler(req, res) {
       Description: 'Edit user (' + user.name + ')',
       created_at: new Date()
     }
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
 
     res.status(200).json({ success: true, data: updatedUser })
   } catch (error) {
