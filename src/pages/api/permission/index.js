@@ -21,11 +21,11 @@ export default async function handler(req, res) {
     .db()
     .collection('permissions')
     .aggregate([
-      {
-        $match: {
-          $and: [{ $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }]
-        }
-      },
+      // {
+      //   $match: {
+      //     $and: [{ $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }]
+      //   }
+      // },
       {
         $sort: {
           group: -1

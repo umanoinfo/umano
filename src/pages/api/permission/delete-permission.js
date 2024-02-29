@@ -24,27 +24,32 @@ export default async function handler(req, res) {
     .collection('permissions')
     .findOne({ _id: ObjectId(id) })
 
-  if (user.deleted_at) {
-    const deletPermissions = await client
-      .db()
-      .collection('permissions')
-      .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: '' } }, { upsert: false })
-  } else {
-    const deletPermissions = await client
-      .db()
-      .collection('permissions')
-      .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
-  }
-
   // ---------------- logBook ----------------
 
   let log = {
     user_id: req.body.user._id,
     Module: 'Permission',
-    Action: 'Delete',
-    Description: 'Delete Permission (' + selectedPermission.title + ') from group (' + selectedPermission.group + ')',
     created_at: new Date()
   }
+
+  if (user?.deleted_at) {
+    const deletPermissions = await client
+      .db()
+      .collection('permissions')
+      .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: null } }, { upsert: false })
+
+    log.Action= 'Restore';
+    log.Description =  'Restore Permission (' + selectedPermission.title + ') from group (' + selectedPermission.group + ')';
+  } else {
+    const deletPermissions = await client
+      .db()
+      .collection('permissions')
+      .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
+    log.Action = 'Delete';
+    log.Description =  'Delete Permission (' + selectedPermission.title + ') from group (' + selectedPermission.group + ')';
+  }
+
+
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
   res.status(200).json({ success: true, data: selectedPermission })
