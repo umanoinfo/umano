@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     .collection('users')
     .findOne({ _id: ObjectId(id) })
 
-  if (user.deleted_at) {
+  if (user?.deleted_at) {
     const deletUser = await client
       .db()
       .collection('users')

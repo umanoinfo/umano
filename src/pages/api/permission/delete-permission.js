@@ -45,6 +45,9 @@ export default async function handler(req, res) {
       .db()
       .collection('permissions')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
+      
+    // const users = await client.db().collection('users').find({permissions: {}})
+    
     log.Action = 'Delete';
     log.Description =  'Delete Permission (' + selectedPermission.title + ') from group (' + selectedPermission.group + ')';
   }

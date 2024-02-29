@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   // -------------------------------- Restore ---------------------------------------
 
-  if (company.deleted_at) {
+  if (company?.deleted_at) {
     const deletCompany = await client
       .db()
       .collection('companies')

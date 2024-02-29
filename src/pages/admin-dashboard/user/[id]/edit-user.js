@@ -104,7 +104,7 @@ const DialogAddUser = ({ id }) => {
       })
   } , [id , reset ]) ;
 
-  const getRoles = useCallback(() => {
+  const getRoles = () => {
     setLoading(true)
     axios
       .get('/api/role/', {})
@@ -116,13 +116,13 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
     }
-  , []) 
+
 
 
   useEffect(() => {
     getUser()
     getRoles()
-  }, [getUser , getRoles])
+  }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 

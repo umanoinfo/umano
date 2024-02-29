@@ -89,7 +89,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ------------------------------ Get Company ------------------------------------
 
-  const getCompany = useCallback(
+  const getCompany =
     () => {
       setLoading(true)
       axios
@@ -121,9 +121,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         .catch(function (error) {
           setLoading(false)
         })
-    },
-    [id,allCountries]
-  );
+    }
 
   useEffect(() => {
     dispatch(
@@ -134,7 +132,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       })
     )
     getUsers().then(getCountries()).then(getCompany())
-  }, [dispatch, type, companyStatus, value , getCompany , getCountries ])
+  }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {
     return new Promise(resolve => {
@@ -184,7 +182,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Countries ----------------------------------
 
-  const getCountries = useCallback(async () => {
+  const getCountries =   () => {
 
       const countriesDataSource = countries.map(country => ({
         label: country.name,
@@ -193,7 +191,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       setAllCountries(countries)
       setCountriesDataSource(countriesDataSource)
       setCompanyTypesDataSource(types)
-  }, [types])  ;
+  } 
 
   // ---------------------------- upload Image---------------------------------------
 

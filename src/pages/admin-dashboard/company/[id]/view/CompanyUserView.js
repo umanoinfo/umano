@@ -38,7 +38,7 @@ const UserViewOverview = ({ id }) => {
 
   // ------------------------------ Get Users ------------------------------------
 
-  const getUsers = useCallback( 
+  const getUsers =  
       async () => {
         setIsLoading(true)
         const res = await fetch('/api/user/' + id + '/byCompany')
@@ -56,11 +56,11 @@ const UserViewOverview = ({ id }) => {
         setUsersDataSource(data)
         setIsLoading(false)
       } 
-  , [id]) ;
+  
 
   useEffect(() => {
     getUsers()
-  }, [getUsers])
+  }, [ ])
 
 
   const columns = [
