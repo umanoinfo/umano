@@ -79,8 +79,8 @@ export default async function handler(req, res) {
   const holidyEvents = await  client.db().collection('events').aggregate(
     [
       {$match: {
-        company_id: { $regex: myUser.company_id } ,
-        type: { $regex: 'Holiday' } ,
+        company_id:myUser.company_id  ,
+        type: 'Holiday'   ,
       }}
     ]).toArray()
     holidyEvents.map ( async (e)=>{
