@@ -52,7 +52,7 @@ export const nextAuthOptions = (req, res) => {
             }
             else{
               // if user doesn't belong to any company
-              throw new Error('No user found!');
+              throw new Error('Account have no active company!');
             }
           }
 

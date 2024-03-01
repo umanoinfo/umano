@@ -43,7 +43,7 @@ const Home = () => {
     getDashboard()
 
     let num = 1000.010;
-    console.log(num.toLocaleString("en-US"))
+    
 
   }, [])
 

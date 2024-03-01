@@ -61,21 +61,14 @@ const UserDropdown = props => {
 
   const getRoles = async ()=>{
     try{
-      let res ;
-      if(session?.user?.type == 'admin'){
-        res = await axios.get('/api/role');
-      }
-      else{
-        let res = await axios.get('/api/company-role/');
-      }
-      
+      let res = await axios.get('/api/role');
+      console.log(res) ;
       if(res.data.success== true ){
-        let roles = res.data?.data;
-        
+        let roles = res?.data?.data;
         roles = roles.map((role)=>{
           return role.title;
         });
-        setRoles(roles.toString()) ; 
+        setRoles(roles?.toString() ? roles.toString() : '') ; 
       }
     }
     catch(err){
