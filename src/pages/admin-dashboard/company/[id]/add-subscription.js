@@ -85,9 +85,8 @@ const DialogAddUser = ({ id }) => {
   
 
   useEffect(() => {
-    
     getCompany()
-  }, [getCompany])
+  }, [])
 
   
   
