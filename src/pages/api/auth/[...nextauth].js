@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { verifyPassword } from 'src/configs/auth'
 import cookie from 'cookie'
+import { ObjectId } from 'mongodb'
 
 export const nextAuthOptions = (req, res) => {
   let selectedUser
@@ -41,10 +42,11 @@ export const nextAuthOptions = (req, res) => {
           }
           if(user.type == 'manager'){
             if(user?.company_id){
-              let company = await client.db().collection('companies').findOne({_id: user.company_id } );
+              let company = await client.db().collection('companies').findOne({_id: ObjectId( user.company_id) } );
   
               // if company is (pending or blocked)
-              if( company.status != 'active' ) {
+              console.log('status', company?.status) ;
+              if( company?.status != 'active' ) {
                 throw new Error('Your company is blocked !') ;
               }
             }

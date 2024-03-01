@@ -20,6 +20,8 @@ import { useSession } from 'next-auth/react'
 import Icon from 'src/@core/components/icon'
 
 import { signOut } from 'next-auth/react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -57,14 +59,28 @@ const UserDropdown = props => {
   const { data: session, status } = useSession()
   const [roles , setRoles ] = useState("");
 
-  useEffect( ()=>{
-    console.log('hi' , session) ;
-    if(session?.user?.roles_info){
-      let roles = session.user.roles_info.map((role)=>{
-        return role.title ;
-      });
-      setRoles(roles.toString());
+  const getRoles = async ()=>{
+    try{
+      let res = await axios.get('/api/role/');
+      
+      
+      if(res.data.success== true ){
+        let roles = res.data?.data;
+        
+        roles = roles.map((role)=>{
+          return role.title;
+        });
+        setRoles(roles.toString()) ; 
+      }
     }
+    catch(err){
+      toast.error(err , {delay:1000 , position:'bottom-right'});
+    }
+  }
+
+  useEffect( ()=>{
+    
+      getRoles() ;
     
   }, [session]) ;
 

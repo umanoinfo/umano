@@ -130,9 +130,13 @@ const LoginPage = () => {
           password: password,
           redirect:false
     })
-     
+     console.log(res) ;
     if(res?.status == 200 ){
-          router.push('/');
+        toast.success('Success', {
+          delay:2000,
+          position:'bottom-right'
+        });
+        router.push('/');
     }
     else {
        toast.error('Error : ' + res.error + ' !', {

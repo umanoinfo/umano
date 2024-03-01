@@ -61,6 +61,7 @@ import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import { useSession } from 'next-auth/react'
 import UmanoImg from '../../../../public/images/apple-touch-icon.png'
+import Loading from 'src/views/loading'
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)(({ theme }) => ({
@@ -100,8 +101,9 @@ const Img = styled('img')(({ theme }) => ({
 
 const CrmAward = () => {
 
-  const { data: session, status } = useSession();
-  console.log('session' , session.user);
+  let { data: session, status } = useSession();
+  console.log('session' , session?.user);
+  
 
   const days = [
     'Sunday',
@@ -112,14 +114,19 @@ const CrmAward = () => {
     'Friday' ,
     'Saturday' 
      ];
+  if(!session){
+    return <Loading header="Dashboarding is loading" description={'Dashboard is loading'} ></Loading>
+
+  }
 
   return (
+  
     <Card>
       <Grid container spacing={6}>
         <StyledGrid1 item xs={12} md={9} lg={9}>
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
-              {session && session.user && session.user?.company_info &&  session.user.company_info[0] && session.user.company_info[0].name}
+              {session && session?.user && session?.user?.company_info &&  session.user.company_info[0] && session.user.company_info[0].name}
             </Typography>
             
          
@@ -134,8 +141,8 @@ const CrmAward = () => {
         </StyledGrid1>
         <StyledGrid2 item xs={12} md={3} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {session.user && session.user.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
-            {session.user && session.user.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
+            {session && session?.user && session?.user?.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
+            {session && session?.user && session?.user?.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
           </CardContent>
         </StyledGrid2>
       </Grid>
