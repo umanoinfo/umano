@@ -60,6 +60,7 @@ import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import { useSession } from 'next-auth/react'
+import UmanoImg from '../../../../public/images/apple-touch-icon.png'
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)(({ theme }) => ({
@@ -133,7 +134,8 @@ const CrmAward = () => {
         </StyledGrid1>
         <StyledGrid2 item xs={12} md={3} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {session.user && session.user.company_info[0] && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
+            {session.user && session.user.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
+            {session.user && session.user.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
           </CardContent>
         </StyledGrid2>
       </Grid>
