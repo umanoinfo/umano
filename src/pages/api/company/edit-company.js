@@ -26,15 +26,19 @@ export default async function handler(req, res) {
 
     return
   }
-  
+ 
   // when done set the (oldCompany.user_id to null)
   
   const newManager = await client.db().collection('users').findOne({_id: ObjectId(company.user_id) , type:'manager' , company_id: {$exists:true}} );
-  if(newManager){
-    return res.status(402).json({
-      success: false,
-      message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to admin or new user and try again)'
-    });
+  
+  if(ObjectId(newManager.company_id).toString() != ObjectId(id).toString() ){
+    if(newManager){
+      return res.status(402).json({
+        success: false,
+        message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to admin or new user and try again)'
+      });
+    }
+
   }
 
   // updating old manager info
