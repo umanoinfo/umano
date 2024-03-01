@@ -211,7 +211,7 @@ const PermissionsTable = () => {
 
   const handleDialogDeleteToggle = () => setDeleteDialogOpen(!deleteDialogOpen)
 
-  const handleAdminRestorePermission  = (permission) =>{
+  const handleAdminRestorePermission  = permission =>{
     setDeleteValue(permission)
     setOldTitle(permission.title)
     deletePernission(1);
