@@ -61,8 +61,13 @@ const UserDropdown = props => {
 
   const getRoles = async ()=>{
     try{
-      let res = await axios.get('/api/role/');
-      
+      let res ;
+      if(session?.user?.type == 'admin'){
+        res = await axios.get('/api/role');
+      }
+      else{
+        let res = await axios.get('/api/company-role/');
+      }
       
       if(res.data.success== true ){
         let roles = res.data?.data;
