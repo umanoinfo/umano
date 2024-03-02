@@ -121,29 +121,26 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
   
-    // setLoading(true)
+    setLoading(true)
     const { email, password } = data
-    
-    signIn('credentials', {
+
+    let res = await signIn('credentials', {
           email: email.toLowerCase(),
           password: password,
-          redirect:true,
-          callbackUrl:'/',
-    }).then((data)=>{
-      console.log('dat',data) ;
+          redirect:false
+    })
 
-    }).catch(err=>{
-      toast.error('Error : ' + res.error + ' !', {
-              delay: 1000,
-              position: 'bottom-right'
-      });
-    }).finally(data=>{
-      console.log('datf' , data) ; 
+    if(res?.status == 200 ){
+          router.push('/');
+    }
+    else {
+       toast.error('Error : ' + res.error + ' !', {
+          delay: 1000,
+          position: 'bottom-right'
+        });
 
-      // setLoading(false);
-    })    
-    
-    
+    }
+    setLoading(false);
     
   }
 
