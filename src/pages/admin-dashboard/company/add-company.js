@@ -87,7 +87,7 @@ const schema = yup.object().shape({
     .min(3, obj => showErrors('Name', obj.value.length, obj.min))
     .required(),
     
-  // manager: yup.string().required(),
+  // manager: yup.number().required(),
 })
 
 const defaultValues = {}
@@ -115,7 +115,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [userID, setUserId] = useState()
   const [user, setUser] = useState()
   const { data: session, status } = useSession()
-
+  
   const dispatch = useDispatch()
 
   const {
@@ -140,6 +140,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     setIsLoading(true)
     const res = await fetch('/api/user/manager-users')
     const { data } = await res.json()
+    console.log('users' , data) ;
     setIsLoading(false)
     setUsersDataSource(data)
   }
@@ -162,13 +163,20 @@ const DialogAddUser = ({ popperPlacement }) => {
   }
 
   const onSubmit = data => {
+    if(!userID){
+      toast.error('Manager field is required', {
+        delay:3000,position:'bottom-right'
+      });
+      
+      return;
+    }
     setLoading(true)
     data.type = type.value
     data.state = state.name
     data.country_id = country._id
     data.start_at = new Date(start_at).toISOString().substring(0, 10)
     data.end_at = new Date(end_at).toISOString().substring(0, 10)
-    data.user_id = userID
+    data.user_id = userID;
     data.status = 'pending'
     data.logo = logo
     data.created_at = new Date()
@@ -280,7 +288,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                           onChange={handleTypeChange}
                           defaultValue={companiesTypes[0]}
                           getOptionLabel={option => option.title}
-                          renderInput={params => <TextField {...params} label='Type' error={Boolean(errors.type)} />}
+                          renderInput={params => <TextField {...params} label='Type' value={userID} error={Boolean(errors.type)} />}
                         />
                       </FormControl>
                     </Grid>
@@ -408,24 +416,27 @@ const DialogAddUser = ({ popperPlacement }) => {
                         />
                       )}
                     />
-                    {/* {errors.address && (
+                    {errors.address && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.address.message}</FormHelperText>
-                    )} */}
+                    )}
                   </FormControl>
+                  
+                  
 
-                  <FormControl fullWidth sx={{ mb: 3 }} >
+                  <FormControl fullWidth sx={{ mb: 3 }} value={userID} >
                     <Autocomplete
                       size='small'
                       options={usersDataSource}
-                      value={user}
+                      value={userID}
                       onChange={handleUserChange}
                       id='autocomplete-outlined'
                       getOptionLabel={option => option.email}
-                      renderInput={params => <TextField {...params} label='Manager' error={Boolean(errors.manager)} />}
+                      renderInput={params => <TextField {...params} label='Manager' value={userID}   error={Boolean(errors.manager)}  />}
                     />
-                    {errors.manager && (
+                    
+                    {/* {errors.manager && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
-                    )}
+                    )} */}
                   </FormControl>
 
                   {/* <Grid container spacing={1}>

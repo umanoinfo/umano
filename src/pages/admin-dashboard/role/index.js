@@ -393,7 +393,7 @@ const RolesComponent = () => {
                       <TableBody>
                         <Checkbox 
                             check={()=>allChecked()}
-                            size='large'
+                            size='small'
                             onChange={ (e) => checkAll(e)}
                         />
                         Choose all

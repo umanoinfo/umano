@@ -141,8 +141,8 @@ const CrmAward = () => {
         </StyledGrid1>
         <StyledGrid2 item xs={12} md={3} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {session && session?.user && session?.user?.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
-            {session && session?.user && session?.user?.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
+            {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
+            {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
           </CardContent>
         </StyledGrid2>
       </Grid>

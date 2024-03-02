@@ -53,7 +53,7 @@ const Home = () => {
     .post('/api/dashboard', {
     }).then((data)=>{
       setLoading(false)
-      setData(data.data.data)
+      setData(data?.data?.data)
     })
   }
 
