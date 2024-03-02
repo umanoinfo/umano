@@ -276,14 +276,14 @@ const UserList = () => {
         return data;
        })
       .then((data) => {
-        console.log(data.message) ;
+        
         toast.success(data.message.toString() , {
           delay: 5000,
           position:'bottom-right'
         })
         setLoading(false);
       }).catch((err)=>{
-        console.log(err) ;
+        
         toast.error(err.toString() , {
           delay: 5000 , 
           position:'bottom-right' 

@@ -102,7 +102,7 @@ const Img = styled('img')(({ theme }) => ({
 const CrmAward = () => {
 
   let { data: session, status } = useSession();
-  console.log('session' , session?.user);
+  
   
 
   const days = [

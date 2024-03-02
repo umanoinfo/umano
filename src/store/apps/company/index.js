@@ -17,7 +17,7 @@ export const fetchData = createAsyncThunk('appCompanies/fetchData', async params
       e.manager = null;
     
   })
-  console.log('res' , response.data);
+  
 
   return response.data
 })
