@@ -552,6 +552,7 @@ const StepSalary = ({ handleNext, employee }) => {
                           }}
                           value={salaryChange}
                           data={salaryChanges}
+                          defaultValue={'other'}
                           block
                         />
                       </Grid>
