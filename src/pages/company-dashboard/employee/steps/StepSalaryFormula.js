@@ -143,7 +143,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     <Tab value='Over Time' label='Over Time' />
                     <Tab value='Absence' label='Absence' />
                     <Tab value='Leave' label='Leave' />
-                    <Tab value='Compensation' label='Compensation' />
+                    <Tab value='Compensation' label='End of service' />
                   </TabList>
                   <TabPanel value='Over Time'>
                     <Typography sx={{  mt: 5, mb:5 }}>Over Time</Typography>
