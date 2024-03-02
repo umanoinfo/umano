@@ -23,10 +23,10 @@ export const nextAuthOptions = (req, res) => {
         async authorize(credentials) {
 
           client = await connectToDatabase()
-          console.log('1') ;
+          
 
           let usersCollection = client.db().collection('users')
-          console.log('2') ;
+          
           
           const user = await usersCollection.findOne(
             {$and:[
@@ -34,41 +34,40 @@ export const nextAuthOptions = (req, res) => {
               { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
             ]}
           )
-          console.log('3' , user ) ;
+          
 
           if (!user) {
             throw new Error('No user found!')
           }
           const isValid = await verifyPassword(credentials.password, user.password)
 
-          console.log('4' , isValid) ;
+          
 
           if (!isValid) {
             throw new Error('Password invalid!')
           }
-
           
-          // if(user?.type == 'manager'){
-          //   console.log('5') ;
-          //   if(user?.company_id){
-          //     let company = await client.db().collection('companies').findOne({_id: ObjectId( user?.company_id) } );
-          //     console.log('6' , company ) ;
+          if(user?.type == 'manager'){
+          
+            if(user?.company_id){
+              let company = await client.db().collection('companies').findOne({_id: ObjectId( user?.company_id) } );
+          
 
-          //     // if company is (pending or blocked)
-          //     console.log('status', company?.status) ;
+              // if company is (pending or blocked)
+          
               
-          //     if( company?.status != 'active' ) {
-          //       throw new Error('Your company is blocked !') ;
-          //     }
-          //     console.log('7') ;
-          //   }
-          //   else{
-          //     // if user doesn't belong to any company
-          //     console.log('8') ;
-          //     throw new Error('Account have no active company!');
-          //   }
-          // }
-          console.log('9' , user ) ;
+              if( company?.status != 'active' ) {
+                throw new Error('Your company is blocked !') ;
+              }
+          
+            }
+            else{
+              // if user doesn't belong to any company
+          
+              throw new Error('Account have no active company!');
+            }
+          }
+          
 
           return user
         }
