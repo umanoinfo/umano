@@ -13,6 +13,8 @@ export default async function handler(req, res) {
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminViewCompany')) {
     res.status(401).json({ success: false, message: 'Not Auth' })
+    
+    return ;
   } 
 
   // ----------------------------- View Companies --------------------------------
@@ -71,4 +73,6 @@ export default async function handler(req, res) {
     .toArray()
 
   res.status(200).json({ success: true, data: companies })
+  
+return ;
 }

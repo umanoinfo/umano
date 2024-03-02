@@ -57,18 +57,18 @@ const UserDropdown = props => {
   }
 
   const { data: session, status } = useSession()
-  const [roles , setRoles ] = useState("");
+  const [roles , setRoles ] = useState('');
 
   const getRoles = async ()=>{
     try{
-      let res = await axios.get('/api/role');
-      console.log(res) ;
-      if(res.data.success== true ){
+      let res = await axios.get('/api/user/roles');
+      
+      if(res?.data?.success== true ){
         let roles = res?.data?.data;
-        roles = roles.map((role)=>{
-          return role.title;
-        });
-        setRoles(roles?.toString() ? roles.toString() : '') ; 
+        if(Array.isArray(roles) && roles && roles?.toString()){
+          setRoles(roles.toString()) ; 
+        }
+        
       }
     }
     catch(err){
@@ -80,7 +80,7 @@ const UserDropdown = props => {
     
       getRoles() ;
     
-  }, [session]) ;
+  }, []) ;
 
   const styles = {
     py: 2,

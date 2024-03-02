@@ -19,9 +19,21 @@ export default async function handler(req, res) {
     req.query.q = ''
   }
 
-  let roles = myUser.roles.map(async (roleId)=>{
-    return await client.db.collection('roles').findOne({_id: ObjectId(roleId)});
-  })
+  // let roles = await myUser.roles.map(async (roleId)=>{
+    
+    
+  //   return role.title ;
+  // });
+
+  let roles = [];
+  if(myUser?.roles){
+    for(let i =0 ;i < myUser.roles.length ;i++){
+      let role = await client.db().collection('roles').findOne({_id: ObjectId(myUser.roles[i])});
+      roles.push(role.title);
+    }
+  }
+
+  console.log('role', roles);
   
   return res.status(200).json({ success: true, data: roles })
 }
