@@ -99,7 +99,7 @@ const AllDocumentsList = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false)
   const [SelectedEditRow, setSelectedEditRow] = useState()
 
-  const [fromDate, setFromDate] = useState(new Date())
+  let [fromDate, setFromDate] = useState(new Date())
   const [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
@@ -161,11 +161,20 @@ const AllDocumentsList = () => {
 
 
 
-  const calculate = e => {
+  const calculate = async (e,type) => {
+    // when type == 'auto' date will be set automatically when manual (user will be able to set it on his own)
+
+    setLoading(true);
     let data = {}
     data._id = e
     data.fromDate = fromDate
     data.toDate = toDate
+    if(type == 'auto'){
+      let res = await axios.get(`/api/company-employee/${e}`);
+      if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
+        fromDate = res?.data?.data[0]?.joiningDate.toString() ;
+    }
+
     axios.post('/api/end-of-service/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
 
@@ -217,6 +226,12 @@ const AllDocumentsList = () => {
       employee.moreThanFiveValue = Number(moreThanFiveValue).toFixed(2)
       employee.endOfServeceTotalValue = (Number(moreThanFiveValue) + Number(lessThanFiveValue)).toFixed(2)
       setSelectedEmployee(employee)
+      
+      if(type == 'auto'){
+        if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
+          setFromDate(res?.data?.data[0]?.joiningDate.toString());
+      }
+      setLoading(false);
     })
   }
 
@@ -587,7 +602,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
@@ -639,8 +654,10 @@ const AllDocumentsList = () => {
                   name='employee_id'
                   data={employeesDataSource}
                   block
+                  
+                  
                   onChange={e => {
-                    calculate(e)
+                    calculate(e,'auto')
                   }}
                 />
               </FormControl>
@@ -651,7 +668,7 @@ const AllDocumentsList = () => {
               size='sm'
               variant='contained'
               onClick={() => {
-                calculate(selectedEmployee._id)
+                calculate(selectedEmployee._id , 'manual')
               }}
             >
               Calculate
@@ -662,8 +679,12 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-
-          <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
+          {
+            loading?
+            <Loading header='Please Wait' description='End of service is loading'></Loading>
+            :
+            <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
+          }
         </Card>
       </Grid>
 
