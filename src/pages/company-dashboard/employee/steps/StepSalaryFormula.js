@@ -143,7 +143,9 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     <Tab value='Over Time' label='Over Time' />
                     <Tab value='Absence' label='Absence' />
                     <Tab value='Leave' label='Leave' />
-                    <Tab value='Compensation' label='End of service' />
+                    <Tab value='EndOfService' label='End of service' />
+                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions' />
+                    
                   </TabList>
                   <TabPanel value='Over Time'>
                     <Typography sx={{  mt: 5, mb:5 }}>Over Time</Typography>
@@ -348,7 +350,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     </Grid>
                   </TabPanel>
 
-                  <TabPanel value='Compensation'>
+                  <TabPanel value='EndOfService'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
                         <Typography sx={{ mt: 5, mb:5 }}>End of service compensation</Typography>
@@ -392,30 +394,36 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                       </Grid>
                     </Grid>
                   </TabPanel>
+                  <TabPanel value='CompensationAndDeductions'>
+                    <Grid container spacing={1} sx={{ px: 5 }}>
+                      <Grid item sm={12} md={12}>
+                        <small>Add Compensations</small>
+                        <TagPicker
+                          data={compensationsOptions}
+                          value={selectedCompensations}
+                          onChange={e => {
+                            changeCompensations(e)
+                          }}
+                          block
+                        />
+                        <Divider></Divider>
+                        <small>Add Deductions</small>
+                        <TagPicker
+                          data={deductionsOptions}
+                          value={selectedDeductions}
+                          onChange={e => {
+                            changeDeductions(e)
+                          }}
+                          block
+                        />
+                      </Grid>
+                    </Grid>
+                  </TabPanel>
                 </TabContext>
               </Grid>
             )}
 
-            <Divider></Divider>
-            <small>Add Compensations</small>
-            <TagPicker
-              data={compensationsOptions}
-              value={selectedCompensations}
-              onChange={e => {
-                changeCompensations(e)
-              }}
-              block
-            />
-            <Divider></Divider>
-            <small>Add Deductions</small>
-            <TagPicker
-              data={deductionsOptions}
-              value={selectedDeductions}
-              onChange={e => {
-                changeDeductions(e)
-              }}
-              block
-            />
+        
             <Box sx={{ display: 'flex', alignItems: 'right', minHeight: 40, mt: 8 }}>
               {!loading && (
                 <>
