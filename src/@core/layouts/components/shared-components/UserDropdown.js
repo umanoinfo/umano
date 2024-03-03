@@ -148,7 +148,7 @@ const UserDropdown = props => {
                 {session.user.email}
               </Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                type: {session.user.type}
+                {session.user.type}
               </Typography>
             </Box>
           </Box>
@@ -191,13 +191,13 @@ const UserDropdown = props => {
             Change Password
           </Box>
         </MenuItem>
-        <Divider />
+        {/* <Divider />
         <MenuItem sx={{ p: 0 }} >
           <Box sx={styles}  >
             <Icon icon='mdi-security-network' />
              {session.user.type}
           </Box>
-        </MenuItem>
+        </MenuItem> */}
         <Divider />
         <MenuItem sx={{ p: 0 }} >
           <Box sx={styles}  >
