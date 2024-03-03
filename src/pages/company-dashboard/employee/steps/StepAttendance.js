@@ -276,11 +276,11 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
                         </Grid>
 
                         <Grid item sm={12} md={1.7}>
-                          <small>Available late</small>
+                          <small>Max Time in</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes.availableLate}</Typography>
                         </Grid>
                         <Grid item sm={12} md={1.7}>
-                          <small>Available early</small>
+                          <small>Min Time out</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes.availableEarly}</Typography>
                         </Grid>
 
