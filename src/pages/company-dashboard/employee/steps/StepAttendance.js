@@ -124,9 +124,12 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   const default_value = {
     availablePaidLeave: 14,
     availableUnpaidLeave: 30,
-    availableSickLeave: 30,
-    availableMaternityLeave: 60,
-    availableParentalLeave: 7,
+    availableSickLeave: 90,
+    availableParentalLeave: 105,
+
+    // availableSickLeave: 30,
+    // availableMaternityLeave: 60,
+    // availableParentalLeave: 7,
   }
   const [formValue, setFormValue] = useState(default_value)
 
