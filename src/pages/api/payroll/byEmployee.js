@@ -185,6 +185,9 @@ export default async function handler(req, res) {
   let attendances = []
   let index = 0
   const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  if(!company?.holidays){
+    return res.status(402).json({success:false, message: 'Please Define Holidays First'});
+  }
 
   const holidays = company.holidays.map(day => {
     return new Date(day.date).toLocaleDateString()
