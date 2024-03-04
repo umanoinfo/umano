@@ -92,7 +92,7 @@ const UserViewLeft = ({ id }) => {
 
   useEffect(() => {
     getUser()
-  }, [getUser])
+  }, [])
 
  
 

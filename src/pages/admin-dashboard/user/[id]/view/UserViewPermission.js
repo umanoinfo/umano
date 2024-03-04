@@ -45,12 +45,7 @@ const UserViewPermission = ({ id }) => {
       })
   };
 
-  useEffect(() => {
-    getPermissionGroup()
-    getUser()
-  }, [getUser])
-
-
+  
 
   const getPermissionGroup = () => {
     setLoading(true) ;
