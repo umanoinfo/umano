@@ -298,7 +298,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   }
 
   const close = () => {
-    router.push('/admin-dashboard/user')
+    router.push('/admin-dashboard/company')
   }
 
   // ------------------------------ View ---------------------------------
