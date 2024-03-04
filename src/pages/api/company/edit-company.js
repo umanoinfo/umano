@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     if(newManager){
       return res.status(402).json({
         success: false,
-        message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to admin or new user and try again)'
+        message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to fake@company.com or new user and try again)'
       });
     }
 
