@@ -178,47 +178,71 @@ const AllDocumentsList = () => {
     axios.post('/api/end-of-service/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
 
-      employee.lumpySalary = employee.salaries_info[0].lumpySalary //  Daily Salary
+      if( !employee?.salaries_info || !employee?.salaries_info[0]?.lumpySalary){
+        toast.error('Salary is not assigned for this employee (set salary first and try again)' 
+        , {duration:5000,position:'bottom-right'});
+        setLoading(false);
+        
+        return ;
+      }
 
-      employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1)
+      employee.lumpySalary = employee.salaries_info[0].lumpySalary/30 //  Daily Salary
+
+      employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1) ;
 
         //   -------------------------- Assume Leaves -------------------------------------
 
-        if (employee.leaves_info) {
+        if (employee?.leaves_info) {
 
           let unpaidLeaveTotal = 0
+          let parentalLeaveTotal =0 ;
           employee.leaves_info.map(leave => {
-          if(leave.type == "daily")
+          if(leave.type == "daily" && leave.status_reason == 'unpaidLeave')
             {
               let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
               let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
               let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
               unpaidLeaveTotal = unpaidLeaveTotal +  days
             }
+          else if(leave.type == 'daily' && leave.status_reason == 'parentalLeave'){
+              let from = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
+              let to = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
+              let days = ((to-from)/ (1000 * 60 * 60 * 24))+1;
+              parentalLeaveTotal = parentalLeaveTotal + days ;
+          }
           })
-
+          employee.parentalLeaveOver60 = 0 ;
+          if(parentalLeaveTotal > 60){
+            employee.parentalLeaveOver60 = parentalLeaveTotal - 60 ;
+          }
           employee.unpaidLeaveTotal = unpaidLeaveTotal
       }
 
-      employee.actualDays = employee.allDays - employee.unpaidLeaveTotal ;
-      employee.actualYears = Math.round((employee.allDays - employee.unpaidLeaveTotal)/365).toFixed(2) ;
 
+      employee.actualDays = employee.allDays - employee.parentalLeaveOver60 - employee.unpaidLeaveTotal;
+      employee.actualYears = Math.round((employee.actualDays)/365).toFixed(2) ;
+      
       let lessThanFiveValue = 0
       let moreThanFiveValue = 0
       let lessThanFiveDays = 0
       let moreThanFiveDays = 0
+      
+      let endOfServiceFrom1To5 = employee.salaryFormulas_info[0].compensationFrom1To5;
+      let endOfServiceMoreThan5 = employee.salaryFormulas_info[0].compensationMoreThan5;
 
+      
       if(employee.actualYears > 1 && employee.actualYears <= 5 ){
-        lessThanFiveValue = employee.actualYears * 21 * ((employee.lumpySalary)/30).toFixed(2)
-        lessThanFiveDays = employee.actualDays
+        lessThanFiveValue = (employee.actualYears * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2)
+        lessThanFiveDays = ((employee.actualYears * endOfServiceFrom1To5)).toFixed();
       }
       if(employee.actualYears > 5 ){
         let moreFive =  employee.actualYears -5
-        lessThanFiveValue = (5 * 21 * ((employee.lumpySalary)/30).toFixed(2)).toFixed(2) || 0
-        lessThanFiveDays = 5*365
-        moreThanFiveValue = (moreFive * 30 * ((employee.lumpySalary)/30).toFixed(2)).toFixed(2) || 0
-        moreThanFiveDays = moreFive*365
+        lessThanFiveValue = (5 * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2) || 0
+        lessThanFiveDays = 5 * endOfServiceFrom1To5 ;
+        moreThanFiveValue = (moreFive * endOfServiceMoreThan5 * ((employee.lumpySalary))).toFixed(2) || 0
+        moreThanFiveDays = (moreFive * endOfServiceMoreThan5).toFixed();
       }
+
 
       employee.lessThanFiveDays = lessThanFiveDays
       employee.moreThanFiveDays = moreThanFiveDays

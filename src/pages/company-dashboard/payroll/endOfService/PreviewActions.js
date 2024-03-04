@@ -17,7 +17,7 @@ import { toast } from 'react-hot-toast'
 const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-
+  
   const save = () => {
     setLoading(true)
 
@@ -55,6 +55,9 @@ const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
     })
   }
 
+  const handleClose = ()=>{
+    router.push('../');
+  }
   if (loading) return <Loading header='Please Wait' description='End of service gratuity Inserting'></Loading>
 
   return (
@@ -73,7 +76,7 @@ const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
         <Button fullWidth sx={{ mb: 3.5 }} color='success' onClick={save} variant='contained'>
           Save
         </Button>
-        <Button fullWidth sx={{ mb: 3.5 }} color='secondary' variant='outlined'>
+        <Button fullWidth sx={{ mb: 3.5 }} color='secondary' variant='outlined' onClick={handleClose}>
           Close
         </Button>
         {/* <Button
