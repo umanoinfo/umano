@@ -164,13 +164,14 @@ const Steppositions = ({ handleNext, employee }) => {
 
   const getDepartments = async () => {
     axios.get('/api/company-department', {}).then(function (response) {
-      const arr = response.data.data.map(department => ({
+      const arr = response.data?.data?.map(department => ({
         label: department.name,
         value: department._id
       }))
 
       setDepartmentsDataSource(arr)
-      setDepartment(response.data.data[0]._id)
+      if(reponse.data.data && response.data.data.length > 0 )
+        setDepartment(response.data.data[0]._id)
     })
 
     const positionChangeStartTypes = PositionChangeStartTypes.map(type => ({
