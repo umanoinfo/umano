@@ -186,7 +186,7 @@ export default async function handler(req, res) {
   let index = 0
   const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   if(!company?.holidays){
-    return res.status(402).json({success:false, message: 'Please Define Holidays First'});
+    return res.status(403).json({success:false, message: 'Please Define Holidays First'});
   }
 
   const holidays = company.holidays.map(day => {
@@ -219,27 +219,29 @@ export default async function handler(req, res) {
  
 
       // ----------------------- leaves ------------------------------------
-
-      employee[0].leaves_info.map(leave => {
-       
-          var dateFrom = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
-          var dateTo = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
-          var dateCheck = x.setUTCHours(0,0,0,0) ;
-          if ( dateCheck >= dateFrom && dateCheck <= dateTo) {
-            if (leave.type == 'daily') {
-              leaveDay = true
+      if(employee[0]?.leaves_info){
+        employee[0].leaves_info?.map(leave => {
+        
+            var dateFrom = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
+            var dateTo = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
+            var dateCheck = x.setUTCHours(0,0,0,0) ;
+            if ( dateCheck >= dateFrom && dateCheck <= dateTo) {
+              if (leave.type == 'daily') {
+                leaveDay = true
+              }
+              if (leave.type == 'hourly') {
+                leaveHourly = true
+              }
+              leaves.push(leave) 
             }
-            if (leave.type == 'hourly') {
-              leaveHourly = true
-            }
-            leaves.push(leave) 
-          }
-          
-        return new Date(day.date).toLocaleDateString()
-      })
+            
+          return new Date(day.date).toLocaleDateString()
+        })
+      }
   
       // -----------------------------------------------------------------
-
+      console.log(employee[0]) ;
+      
       let shift_in = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeIn.toString() + ' UTC')
       let shift_out = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeOut.toString() + ' UTC')
       let availableEarly = new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].availableEarly.toString() + ' UTC')
@@ -257,43 +259,45 @@ export default async function handler(req, res) {
 
 
       // -------------------------------------------------------------
-
-      employee[0].attendances_info.map(att => {
-        if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
-          _in = att.timeIn
-          _out = att.timeOut
-          earlyFlag = false
-          earlyHours =0
-          lateFlag = false
-          lateHours = 0
-          totalHours = (
-            (new Date('1/1/2023 ' + _out.toString() + ' UTC') - new Date('1/1/2023 ' + _in.toString() + ' UTC')) /
-            3600000
-          ).toFixed(2)
-
-          
-          if (new Date('1/1/2023 ' + _in.toString() + ' UTC') > availableLate) {
-            lateFlag = true
-            lateHours = ((new Date('1/1/2023 ' + _in.toString() + ' UTC') - shift_in) / 3600000).toFixed(3)
+      if(employee[0]?.attendances_info){
+        employee[0].attendances_info?.map(att => {
+          if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
+            _in = att.timeIn
+            _out = att.timeOut
+            earlyFlag = false
+            earlyHours =0
+            lateFlag = false
+            lateHours = 0
+            totalHours = (
+              (new Date('1/1/2023 ' + _out.toString() + ' UTC') - new Date('1/1/2023 ' + _in.toString() + ' UTC')) /
+              3600000
+            ).toFixed(2)
+  
+            
+            if (new Date('1/1/2023 ' + _in.toString() + ' UTC') > availableLate) {
+              lateFlag = true
+              lateHours = ((new Date('1/1/2023 ' + _in.toString() + ' UTC') - shift_in) / 3600000).toFixed(3)
+            }
+  
+            if (new Date('1/1/2023 ' + _out.toString() + ' UTC') < availableEarly) {
+              earlyFlag = true
+              earlyHours = ((shift_out - new Date('1/1/2023 ' + _out.toString() + ' UTC')) / 3600000).toFixed(3)
+            }
+  
+            // -------------------- overtime -----------------------
+  
+            if (new Date('1/1/2023 ' + _in.toString() + ' UTC') < shift_in) {
+              lateFlag = true
+              earlyOverTimeHours = ((shift_in - new Date('1/1/2023 ' + _in.toString() + ' UTC')) / 3600000).toFixed(3)
+            }
+            if (new Date('1/1/2023 ' + _out.toString() + ' UTC') > shift_out) {
+              lateFlag = true
+              lateOverTimeHours = ((new Date('1/1/2023 ' + _out.toString() + ' UTC') - shift_out) / 3600000).toFixed(3)
+            }
           }
-
-          if (new Date('1/1/2023 ' + _out.toString() + ' UTC') < availableEarly) {
-            earlyFlag = true
-            earlyHours = ((shift_out - new Date('1/1/2023 ' + _out.toString() + ' UTC')) / 3600000).toFixed(3)
-          }
-
-          // -------------------- overtime -----------------------
-
-          if (new Date('1/1/2023 ' + _in.toString() + ' UTC') < shift_in) {
-            lateFlag = true
-            earlyOverTimeHours = ((shift_in - new Date('1/1/2023 ' + _in.toString() + ' UTC')) / 3600000).toFixed(3)
-          }
-          if (new Date('1/1/2023 ' + _out.toString() + ' UTC') > shift_out) {
-            lateFlag = true
-            lateOverTimeHours = ((new Date('1/1/2023 ' + _out.toString() + ' UTC') - shift_out) / 3600000).toFixed(3)
-          }
-        }
-      })
+        })
+      }
+      
       attendances.push({
         day: weekday[day],
         workingDay: workingDay,

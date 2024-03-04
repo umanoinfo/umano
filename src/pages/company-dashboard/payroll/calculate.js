@@ -448,10 +448,11 @@ const AllDocumentsList = () => {
     data.fromDate = fromDate
     data.toDate = toDate
 
-    // setLoading(true);
+    setLoading(true);
+
     try{
       let res = await axios.post('/api/payroll/byEmployee', { data });
-
+      
       // .then(res => 
       
         if(!res.data?.data || res.status != 200 ){
@@ -460,6 +461,10 @@ const AllDocumentsList = () => {
           return ;
         }
         let employee = res.data.data[0]
+        console.log(employee);
+        if(!employee.salaries_info || employee.salaries_info.length == 0){
+          throw new Error('Add salary first (no salary defined!)')
+        }
         employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
         //   ----------------------- Assume Leave -------------------------------
@@ -653,12 +658,19 @@ const AllDocumentsList = () => {
 
         setSelectedEmployee(employee)
         setAttendances(res.data.attendances)
-        setLoading(true);
+        
     }
     catch(err){
-       
-      toast.error(err.response.data.message , {duration:5000 , position:'bottom-right'});
+      if(err?.response?.data?.message)
+      {
+        toast.error(err.response.data.message , {duration:5000 , position:'bottom-right'});
+      }
+      else{
+        toast.error(err.toString(), {duration:5000 , position:'bottom-right'});
+      }
+      setSelectedEmployee(null);
     }
+    setLoading(false);
   }
 
   const handleClose = () => {
@@ -702,7 +714,7 @@ const AllDocumentsList = () => {
           delay: 1000,
           position: 'bottom-right'
         })
-        setLoading(false)
+        setLoading(true)
       })
   }
 
