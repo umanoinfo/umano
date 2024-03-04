@@ -191,7 +191,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Tab value='Over Time' label='Over Time' />
                           <Tab value='Absence' label='Absence' />
                           <Tab value='Leave' label='Leave' />
-                          <Tab value='Compensation' label='Compensation' />
+                          <Tab value='EndOfService' label='End Of Service' />
                         </TabList>
                         <TabPanel value='Over Time'>
                           <Typography sx={{ mb: 5 }}>Over Time</Typography>
@@ -250,7 +250,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  paidLeave :
+                                  Justified :
                                 </Typography>
                                 <Form.Control
                                   controlId='justifiedAbsenceDay'
@@ -469,7 +469,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             </Grid>
                           </Grid>
                         </TabPanel>
-                        <TabPanel value='Compensation'>
+                        <TabPanel value='EndOfService'>
                           <Grid container spacing={1} sx={{ px: 5 }}>
                             <Grid item sm={12} md={12}>
                               <Typography sx={{ mt: 5, mb: 1 }}>End of service compensation</Typography>
