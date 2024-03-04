@@ -307,11 +307,16 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Sick Leave :
+                          Sick Leaves :
                           </Typography>
-                          {selectedSalaryFormula && selectedSalaryFormula.sickLeave && (
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          &emsp;&emsp; From 1 to 15
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom1To15 && (
                             <Typography sx={{ fontWeight: 500 }}>
-                              {selectedSalaryFormula.sickLeave}
+                              {selectedSalaryFormula.sickLeaveFrom1To15}
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
@@ -319,6 +324,32 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          &emsp;&emsp; From 16 to 30
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom16To30 && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.sickLeaveFrom16To30}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          &emsp; &emsp; From 31 to 90
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom31To90 && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.sickLeaveFrom31To90}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                           Maternity Leave :
                           </Typography>
@@ -330,14 +361,45 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                           %
                           </Typography>
+                        </Box> */}
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          Parental Leaves :
+                          </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Parental Leave :
+                           &emsp;&emsp; From 1 to 45
                           </Typography>
-                          {selectedSalaryFormula && selectedSalaryFormula.parentalLeave && (
+                          {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom1To45 && (
                             <Typography sx={{ fontWeight: 500 }}>
-                              {selectedSalaryFormula.parentalLeave}
+                              {selectedSalaryFormula.parentalLeaveFrom1To45}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          &emsp;&emsp; From 46 to 60
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom46To60 && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.parentalLeaveFrom46To60}
+                            </Typography>
+                          )}
+                          <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                          %
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                          &emsp;&emsp; From 61 to 105
+                          </Typography>
+                          {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom61To105 && (
+                            <Typography sx={{ fontWeight: 500 }}>
+                              {selectedSalaryFormula.parentalLeaveFrom61To105}
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
