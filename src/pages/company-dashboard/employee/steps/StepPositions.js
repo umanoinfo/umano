@@ -170,7 +170,7 @@ const Steppositions = ({ handleNext, employee }) => {
       }))
 
       setDepartmentsDataSource(arr)
-      if(reponse.data.data && response.data.data.length > 0 )
+      if(response.data.data && response.data.data.length > 0 )
         setDepartment(response.data.data[0]._id)
     })
 
