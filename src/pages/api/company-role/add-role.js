@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const secret = process.env.NEXT_AUTH_SECRET
   const token = await getToken({ req: req, secret: secret, raw: true })
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ---------------- Insert ----------------
@@ -22,6 +22,9 @@ export default async function handler(req, res) {
     
     return
   }
+  role.permissions = role?.permissions?.filter((permission)=>{
+    return !permission.includes('Admin');
+  });
   const client = await connectToDatabase()
   const newRole = await client.db().collection('roles').insertOne(role)
   const insertedRole = await client.db().collection('roles').findOne({ _id: newRole.insertedId })
