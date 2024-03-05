@@ -763,10 +763,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     if (employee.takenSickLeaves < +employee.availableSickLeave) {
       temp_reasons.push({ label: 'Sick Leave', value: 'sickLeave' })
     }
-    if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
-      temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
-    }
-    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'male') {
+
+    // if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
+    //   temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
+    // }
+    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'female') {
       temp_reasons.push({ label: 'Parental Leave', value: 'parentalLeave' })
     }
     temp_reasons.push({ label: 'Other Leave', value: 'otherLeave' })
@@ -1181,14 +1182,14 @@ const AddLeave = ({ popperPlacement, id }) => {
                       taken={+selectedEmployee.takenSickLeaves}
                     />
                     </Grid>
-                    { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
+                    {/* { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
                       <ChartCard
                         count={+selectedEmployee.availableMaternityLeave}
                         name={'Maternity Leave'}
                         taken={+selectedEmployee.takenMaternityLeaves}
                       />
-                     </Grid>}
-                     { selectedEmployee.gender == 'male' && <Grid item xs={12} sm={3} md={3}>
+                     </Grid>} */}
+                     { selectedEmployee.gender == 'female' && <Grid item xs={12} sm={3} md={3}>
                       <ChartCard
                         count={+selectedEmployee.availableParentalLeave}
                         name={'Parental Leave'}
