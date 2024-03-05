@@ -22,9 +22,7 @@ export default async function handler(req, res) {
   
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions ) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
-
-    return ;
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   const from3Date =new Date()
@@ -209,7 +207,6 @@ export default async function handler(req, res) {
 
     data.documentsExpired = documentsExpired
 
-  res.status(200).json({ success: true, data })
+    return res.status(200).json({ success: true, data })
   
-return ;
 }

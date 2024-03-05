@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditCompany')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------------------- Restore -------------------------------------
@@ -18,12 +18,10 @@ export default async function handler(req, res) {
   const { id  } = req.body
   
   if (!id) {
-    res.status(422).json({
+    return res.status(422).json({
       success: false,
       message: 'Invalid input'
     })
-
-    return
   }
   
     const company = {
@@ -49,5 +47,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(200).json({ success: true, message: 'sucess' })
+  return res.status(200).json({ success: true, message: 'sucess' })
 }

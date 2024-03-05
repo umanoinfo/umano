@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminAddUser')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // --------------------------- Change Password ---------------------------------
@@ -59,9 +59,7 @@ export default async function handler(req, res) {
 
   const creatingUser = await client.db().collection('users').findOne({ email: user.email })
   if (creatingUser) {
-    res.status(402).json({ success: false, message: 'This email has already been registered' })
-    
-    return
+    return  res.status(402).json({ success: false, message: 'This email has already been registered' })
   }
 
   const hashedPassword = await hashPassword(user.password)
@@ -82,5 +80,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: insertedUser })
+  return  res.status(201).json({ success: true, data: insertedUser })
 }

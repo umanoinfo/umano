@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const secret = process.env.NEXT_AUTH_SECRET
   const token = await getToken({ req: req, secret: secret, raw: true })
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   if (!req.query.q) {
@@ -37,5 +37,6 @@ export default async function handler(req, res) {
       }
     ])
     .toArray()
-  res.status(200).json({ success: true, data: permissions })
+    
+return res.status(200).json({ success: true, data: permissions })
 }

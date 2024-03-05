@@ -11,18 +11,16 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditCompany')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------ Add Subscription --------------------------------------------
 
   const subscription = req.body.data
   if (!subscription.company_id || !subscription.start_at || !subscription.end_at || !subscription.availableUsers) {
-    res.status(422).json({
+    return  res.status(422).json({
       message: 'Invalid input'
     })
-    
-    return
   }
   const newSubscription = await client.db().collection('subscriptions').insertOne(subscription)
 
@@ -57,5 +55,5 @@ export default async function handler(req, res) {
     .collection('subscriptions')
     .findOne({ _id: newSubscription.insertedId })
 
-  res.status(201).json({ success: true, data: insertedSubscription })
+    return res.status(201).json({ success: true, data: insertedSubscription })
 }

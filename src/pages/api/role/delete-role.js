@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminDeleteRole')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ---------------- Delete --------------------
@@ -99,5 +99,5 @@ export default async function handler(req, res) {
       .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
   }
 
-  res.status(201).json({ success: true, data: users })
+  return res.status(201).json({ success: true, data: users })
 }

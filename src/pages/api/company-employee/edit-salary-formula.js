@@ -19,11 +19,9 @@ export default async function handler(req, res) {
   const id = req.body.data._id
 
   if (!req.body.data._id || !req.body.data.salary_formula_id) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-    
-    return
   }
 
   const employee = await client
@@ -60,5 +58,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: employee })
+  return  res.status(201).json({ success: true, data: employee })
 }

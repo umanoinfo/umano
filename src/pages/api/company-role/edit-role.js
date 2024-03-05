@@ -19,11 +19,9 @@ export default async function handler(req, res) {
   delete role._id
 
   if (!role.title) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-
-    return
   }
   const client = await connectToDatabase()
 
@@ -90,5 +88,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: users })
+  return res.status(201).json({ success: true, data: users })
 }

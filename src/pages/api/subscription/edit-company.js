@@ -9,11 +9,9 @@ export default async function handler(req, res) {
   delete company._id
 
   if (!company.name) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-
-    return
   }
   
   const client = await connectToDatabase()
@@ -23,5 +21,5 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(id) }, { $set: company }, { upsert: false })
 
-  res.status(201).json({ success: true, data: company })
+    return res.status(201).json({ success: true, data: company })
 }

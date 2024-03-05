@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req: req, secret: secret, raw: true })
 
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ---------------- Insert ----------------
@@ -40,5 +40,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: insertedPermissio })
+  return  res.status(201).json({ success: true, data: insertedPermissio })
 }

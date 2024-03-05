@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ---------------- Delete ----------------
@@ -96,5 +96,5 @@ export default async function handler(req, res) {
 
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(200).json({ success: true, data: selectedPermission })
+  return res.status(200).json({ success: true, data: selectedPermission })
 }
