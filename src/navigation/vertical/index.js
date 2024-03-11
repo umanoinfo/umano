@@ -38,7 +38,12 @@ const navigation = () => {
         }
       ]
     },
-
+    {
+      title:'Documents',
+      icon:'mdi:shield-outline',
+      path:'/admin-dashboard/documents'
+    }
+    ,
     {
       sectionTitle: 'Company Dashboard'
     },

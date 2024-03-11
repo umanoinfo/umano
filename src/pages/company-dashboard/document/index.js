@@ -88,6 +88,7 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
+  const [AllDocumentTypes , setAllDocumentTypes] = useState('') ;
 
   // ** Hooks
 
@@ -95,15 +96,35 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.document)
   const router = useRouter()
 
+ const getDocumentTypes = async () =>{
+    setLoading(true);
+    try{
+        const res = await axios.get('/api/document-types');
+        if(res.status == 200 ){
+             
+            let documents = res?.data?.data?.map((document)=>{
+                return document.name ;
+            })
+            
+            setAllDocumentTypes(documents.toString());
+            setLoading(false);
+        }
+
+    }catch(err){
+        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+
+    }
+  }
   useEffect(() => {
+    getDocumentTypes();
     dispatch(
       fetchData({
-        documentTypes: 'DOH,CIVIL defense,Waste management,MCC,Tasneef,Oshad,ADHICS,Third Party Contracts,Others',
+        documentTypes: AllDocumentTypes ,
         documentStatus,
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, Types, documentStatus, value])
+  }, [dispatch, Types, documentStatus, value , AllDocumentTypes != '' ])
 
   // ----------------------- Handle ------------------------------
 

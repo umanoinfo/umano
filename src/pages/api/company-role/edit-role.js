@@ -5,6 +5,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 export default async function handler(req, res) {
   // -------------------- Token ---------------------
 
+  const client = await connectToDatabase()
+
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   
@@ -23,7 +25,7 @@ export default async function handler(req, res) {
       message: 'Invalid input'
     })
   }
-  const client = await connectToDatabase()
+  
 
   role.permissions = role?.permissions?.filter((permission)=>{
     return !permission.includes('Admin');

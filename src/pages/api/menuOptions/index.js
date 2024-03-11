@@ -58,6 +58,16 @@ export default async function handler(req, res) {
       ]
     })
   }
+  if(myUser && myUser.type == 'admin' && (myUser.permissions.includes('AdminViewDocumentType'))){
+    options.push(
+      {
+        title:'Documents',
+        icon:'mdi:checkbox-multiple-blank-outline',
+        path:'/admin-dashboard/documents'
+      }
+    );
+
+  }
 
   // -------------------------------- Company Dashboard -------------------------------------
 
@@ -114,46 +124,37 @@ export default async function handler(req, res) {
       ]
     })
   }
-  if (myUser && myUser.permissions.includes('ViewDocument')) {
+
+  const documents = await client.db().collection('documentTypes').find({$or:[{company_id:'general' },{company_id: myUser.company_id}]
+  }).toArray();
+
+  if (myUser &&( myUser.permissions.includes('ViewDocument')  )) {
+    const children = documents.map((document)=>{
+      return {title:document.name , category: document.category , path: `/company-dashboard/document/category/${document.category}/${document.name}`}
+    });
+    
     options.push({
       title: 'Documents',
       icon: 'mdi:checkbox-multiple-blank-outline',
       children: [
         {
-          title: 'DOH',
-          path: '/company-dashboard/document/doh-list'
-        },
-        {
-          title: 'Civil Defense',
-          path: '/company-dashboard/document/civil-list'
-        },
-        {
-          title: 'Waste Management',
-          path: '/company-dashboard/document/waste-list'
-        },
-        {
-          title: 'MCC',
-          path: '/company-dashboard/document/mcc-list'
-        },
-        {
-          title: 'Tasneef',
-          path: '/company-dashboard/document/tasneef-list'
-        },
-        {
-          title: 'Oshad',
-          path: '/company-dashboard/document/oshad-list'
-        },
-        {
-          title: 'ADHICS',
-          path: '/company-dashboard/document/adhics-list'
-        },
-        {
           title: 'Third Party Contracts',
-          path: '/company-dashboard/document/third-list'
+          children: children.filter(val=>val.category == 'Third Party Contracts')
+
         },
         {
-          title: 'Others',
-          path: '/company-dashboard/document/others'
+          title: 'Entity Documents',
+          children: children.filter(val=>val.category == 'Entity Documents')
+
+        },
+        {
+          title: 'Ownership Documents',
+          children: children.filter(val=>val.category == 'Ownership Documents')
+
+        },
+        {
+          title: 'Vendors',
+          children: children.filter(val=>val.category == 'Vendors')
         },
         {
           title: 'All Documents',
