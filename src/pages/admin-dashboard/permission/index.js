@@ -392,7 +392,7 @@ const PermissionsTable = () => {
               <MenuItem value='User'>User</MenuItem>
               <MenuItem value='Role'>Role</MenuItem>
               <MenuItem value='Permission'>Permission</MenuItem>
-              <MenuItem value='Coumpany'>Coumpany</MenuItem>
+              <MenuItem value='Company'>Company</MenuItem>
               <MenuItem value='Card'>Card</MenuItem>
               <MenuItem value='Department'>Department</MenuItem>
               <MenuItem value='Employee'>Employee</MenuItem>
@@ -470,7 +470,7 @@ const PermissionsTable = () => {
               <MenuItem value='User'>User</MenuItem>
               <MenuItem value='Role'>Role</MenuItem>
               <MenuItem value='Permission'>Permission</MenuItem>
-              <MenuItem value='Coumpany'>Coumpany</MenuItem>
+              <MenuItem value='Company'>Company</MenuItem>
               <MenuItem value='Card'>Card</MenuItem>
               <MenuItem value='Department'>Department</MenuItem>
               <MenuItem value='Employee'>Employee</MenuItem>

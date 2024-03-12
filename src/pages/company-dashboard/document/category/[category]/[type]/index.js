@@ -112,7 +112,7 @@ const AllDocumentsList = () => {
 
     }catch(err){
         toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
-
+        setLoading(false);
     }
   }
 
@@ -309,6 +309,9 @@ const AllDocumentsList = () => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.type.map((t, index) => {
+                if(index > 0 )
+                  return <></>;
+
                 return (
                   <CustomChip
                     onClick={() =>handleClick(t) }
@@ -321,6 +324,19 @@ const AllDocumentsList = () => {
                   />
                 )
               })}
+              {
+                row.type?.length -1 > 0?
+                <CustomChip                    
+                      key={1}
+                      color='primary'
+                      skin='light'
+                      size='small'
+                      sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                      label={`+${row.type?.length -1 } more categories`}
+                    />
+                :
+                <></>
+              }
             </div>
           </Box>
         )

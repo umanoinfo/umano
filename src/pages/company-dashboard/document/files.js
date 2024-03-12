@@ -83,12 +83,37 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
+  const [AllDocumentTypes , setAllDocumentTypes] = useState() ; 
+  const [documentTypeCategory , setDocumentTypeCategory ] = useState();
 
   // ** Hooks
 
   const dispatch = useDispatch()
   const store = useSelector(state => state.file)
   const router = useRouter()
+
+  const getDocumentTypes = async () =>{
+    setLoading(true);
+    try{
+        const res = await axios.get('/api/document-types');
+        if(res.status == 200 ){
+            let map = new Map() ;
+
+            let documents = res?.data?.data?.map((document)=>{
+                map[document.name] = document.category ;
+                
+                return document.name ;
+            })
+            setDocumentTypeCategory(map);
+            setAllDocumentTypes(documents.toString());
+            setLoading(false);
+        }
+
+    }catch(err){
+        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+        setLoading(false);
+    }
+  }
 
   useEffect(() => {
     dispatch(
@@ -98,6 +123,8 @@ const AllDocumentsList = () => {
         q: value
       })
     ).then(setLoading(false))
+    getDocumentTypes();
+
   }, [dispatch, fileTypes , fileStatus, value])
 
   // ----------------------- Handle ------------------------------
@@ -182,6 +209,11 @@ const AllDocumentsList = () => {
    
   }
 
+  const handleClick = (data) => {
+    router.push(`/company-dashboard/document/category/${documentTypeCategory[data]}/${data}`);
+  }
+
+
   // ------------------------------- Table columns --------------------------------------------
 
   const columns = [
@@ -241,17 +273,34 @@ const AllDocumentsList = () => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.document_info[0] && row.document_info[0].type.map((t, index) => {
+                if(index > 0 ) 
+                  return <></>;
+                
                 return (
                   <CustomChip
                     key={index}
                     color='primary'
                     skin='light'
                     size='small'
+                    onClick={()=>handleClick(t)}
                     sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
                     label={t}
                   />
                 )
               })}
+              {
+                row.document_info[0] && row.document_info[0].type?.length -1 > 0 ?
+                <CustomChip                    
+                    key={1}
+                    color='primary'
+                    skin='light'
+                    size='small'
+                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                    label={`+${row.document_info[0].type?.length -1 } more categories`}
+                />
+                :
+                <></>
+              }
             </div>
           </Box>
         )

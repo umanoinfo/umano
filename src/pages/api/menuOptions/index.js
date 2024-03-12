@@ -43,19 +43,23 @@ export default async function handler(req, res) {
     })
   }
   if (myUser &&  myUser.type == 'admin' &&(myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
+    let children = [];
+    if(myUser.permissions.includes('AdminViewPermission')){
+      children.push({
+        title: 'Permissions',
+        path: '/admin-dashboard/permission'
+      });
+    }
+    if(myUser.permissions.includes('AdminViewRole')){
+      children.push({
+          title: 'Roles',
+          path: '/admin-dashboard/role'
+      });
+    }
     options.push({
       title: 'Roles & Permissions',
       icon: 'mdi:shield-outline',
-      children: [
-        {
-          title: 'Roles',
-          path: '/admin-dashboard/role'
-        },
-        {
-          title: 'Permissions',
-          path: '/admin-dashboard/permission'
-        }
-      ]
+      children: children
     })
   }
   if(myUser && myUser.type == 'admin' && (myUser.permissions.includes('AdminViewDocumentType'))){
@@ -253,6 +257,29 @@ export default async function handler(req, res) {
     })
   }
 
+  // Settings
+
+  if(myUser && myUser.permissions && (myUser.permissions.includes('ViewDocumentType') || myUser.permissions.includes('ViewCompany')  )){
+    let children = [];
+    if(myUser.permissions.includes('ViewDocumentType')){
+      children.push({
+        title:'Company',
+        path:'/company-dashboard/company'
+      });
+    }
+    if(myUser.permissions.includes('ViewCompany')){
+      children.push({
+        title:'Documents',
+        path:'/company-dashboard/document-types'
+      })
+    }
+    options.push({
+      title:'Settings',
+      icon:'mdi:settings-outline',
+      children: children
+    })
+  }
+  
   return res.status(200).json({ success: true, data: options })
 
 }
