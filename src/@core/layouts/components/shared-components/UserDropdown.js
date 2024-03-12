@@ -57,7 +57,7 @@ const UserDropdown = props => {
   }
 
   const { data: session, status } = useSession()
-  const [roles , setRoles ] = useState('');
+  const [roles , setRoles ] = useState([]);
 
   const getRoles = async ()=>{
     try{
@@ -66,7 +66,7 @@ const UserDropdown = props => {
       if(res?.data?.success== true ){
         let roles = res?.data?.data;
         if(Array.isArray(roles) && roles && roles?.toString()){
-          setRoles(roles.toString()) ; 
+          setRoles(roles) ; 
         }
         
       }
@@ -86,7 +86,7 @@ const UserDropdown = props => {
     py: 2,
     px: 4,
     width: '100%',
-    display: 'flex',
+    display: 'block',
     alignItems: 'center',
     color: 'text.primary',
     textDecoration: 'none',
@@ -201,8 +201,17 @@ const UserDropdown = props => {
         <Divider />
         <MenuItem sx={{ p: 0 }} >
           <Box sx={styles}  >
-            <Icon icon='mdi-account' />
-             {roles}
+            <Icon icon='mdi-account' style={{display:'flex' , flexWrap:'wrap'}} />
+
+             {
+              roles?.map((role)=>{
+                  return <>
+                    <span style={{display:'flex', flexWrap:'wrap'}} >
+                      {role.toString()}
+                    </span>
+                  </>
+              })
+             }
           </Box>
         </MenuItem>
         <Divider />
