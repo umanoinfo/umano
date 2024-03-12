@@ -125,6 +125,7 @@ const StepSalary = ({ handleNext, employee }) => {
     if (employee) {
       setEmployeeId(employee._id)
       getOptions()
+      setLoading(true);
       dispatch(
         fetchData({
           employeeId: employeeId,
@@ -339,6 +340,7 @@ const StepSalary = ({ handleNext, employee }) => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

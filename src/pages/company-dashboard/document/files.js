@@ -116,6 +116,7 @@ const AllDocumentsList = () => {
   }
 
   useEffect(() => {
+    setLoading(true); 
     dispatch(
       fetchData({
         fileTypes,
@@ -148,6 +149,7 @@ const AllDocumentsList = () => {
   // -------------------------- Delete Document --------------------------------
 
   const deleteDocument = () => {
+    setLoading(true);
     axios
       .post('/api/document/delete-document', {
         selectedDocument
@@ -159,6 +161,7 @@ const AllDocumentsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

@@ -54,13 +54,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
    // ------------------------ Get Employee -----------------------------------
 
-   const getDeduction = async () => {
+  const getDeduction = async () => {
     setLoading(true)
     const res = await fetch('/api/deduction/' + id)
     const { data } = await res.json()
     setFormValue(data[0])
     setLoading(false)
-  }   ;
+  }
 
   useEffect(() => {
     getDeduction()

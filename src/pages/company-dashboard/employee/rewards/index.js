@@ -80,6 +80,8 @@ const DeductionsList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
+
     dispatch(
       fetchData({
         rewardType: rewardType,
@@ -110,6 +112,7 @@ const DeductionsList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteReward = () => {
+    setLoading(true);
     axios
       .post('/api/employee-reward/delete-reward', {
         selectedReward
@@ -121,6 +124,7 @@ const DeductionsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -344,7 +348,7 @@ const DeductionsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Forms is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Rewards is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployeeReward'))
     return <NoPermission header='No Permission' description='No permission to view employee reward'></NoPermission>

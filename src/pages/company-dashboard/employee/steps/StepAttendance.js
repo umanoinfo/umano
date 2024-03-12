@@ -199,6 +199,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   // ------------------------------- Submit --------------------------------------
 
   const handleSubmit = () => {
+    setLoading(true);
     if (!selectedShift) {
       toast.error('Error : ' + error.response.data.message + ' !', {
         delay: 3000,

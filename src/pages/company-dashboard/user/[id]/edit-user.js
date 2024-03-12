@@ -95,15 +95,15 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
       .catch(function (error) {
-        // setLoading(false)
+        setLoading(false)
       })
-  }   ;
+  }
 
 
   useEffect(() => {
     getUser()
     getRoles()
-  }, [ ])
+  }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 

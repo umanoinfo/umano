@@ -123,20 +123,23 @@ const EmployeeList = classNamec => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type,
         employeeType,
         q: value
       })
-    ).then(  getDepartments() , setLoading(false))
+    ).then(  getDepartments()  )
   }, [dispatch, type, employeeType, value ])
 
 
   
   const getDepartments = async () => {
+    setLoading(true);
     axios.get('/api/company-department/all-company-departments', {}).then(function (response) {
       setDepartments(response.data.data)
+      setLoading(false);
     })
   }
 

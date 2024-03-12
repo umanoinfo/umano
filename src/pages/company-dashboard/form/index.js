@@ -95,6 +95,7 @@ const AllDocumentsList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         formType,
@@ -125,6 +126,7 @@ const AllDocumentsList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteForm = () => {
+    setLoading(true);
     axios
       .post('/api/form/delete-form', {
         selectedForm
@@ -136,6 +138,7 @@ const AllDocumentsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -343,7 +346,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Forms is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Forms are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewForm'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>

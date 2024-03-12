@@ -117,7 +117,7 @@ const AllDocumentsList = () => {
   }
 
   useEffect(() => {
-    
+    setLoading(true);
     dispatch(
       fetchData({
         documentTypes: documentTypes,
@@ -151,6 +151,7 @@ const AllDocumentsList = () => {
   // -------------------------- Delete Document --------------------------------
 
   const deleteDocument = () => {
+    setLoading(true);
     axios
       .post('/api/document/delete-document', {
         selectedDocument
@@ -162,6 +163,7 @@ const AllDocumentsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -399,7 +401,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Documents is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Documents are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDocument'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>

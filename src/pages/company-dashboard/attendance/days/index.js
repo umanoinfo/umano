@@ -65,6 +65,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [MyCompany, setMyCompany] = useState()
 
   const getMyCompany = () => {
+    setLoading(true);
     axios.get('/api/company/my-company', {}).then(res => {
       let val = res.data.data[0]
       if (!val.working_days) {
@@ -79,6 +80,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       }
       setFormValue({ working_days: val.working_days, holidays: val.holidays })
       setMyCompany(val)
+      setLoading(false);
     })
   }
 

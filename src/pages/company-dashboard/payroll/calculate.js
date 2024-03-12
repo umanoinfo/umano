@@ -118,7 +118,8 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
-    getEmployees(),
+    getEmployees();
+    setLoading(true);
       dispatch(
         fetchData({
           fromDate: fromDate,
@@ -218,6 +219,7 @@ const AllDocumentsList = () => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getEmployees = () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data
@@ -232,9 +234,9 @@ const AllDocumentsList = () => {
       console.log(arr);
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
+      setLoading(false)
 
     })
-    setLoading(false)
   }
 
   function convertToMinutes(timeString) {
@@ -1040,7 +1042,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>

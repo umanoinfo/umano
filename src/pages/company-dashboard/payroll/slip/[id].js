@@ -20,16 +20,17 @@ const Slip = ({ id }) => {
   const [loading, setLoading] = useState(true)
   const [payroll, setPayroll] = useState()
 
-  const getPayroll = useCallback ( () => {
+  const getPayroll = () => {
+    setLoading(true);
     axios.get('/api/payroll/' + id, {}).then(res => {
       setPayroll(res.data.data[0])
       setLoading(false)
     })
-  } , [id] ) ;
+  };
 
   useEffect(() => {
     getPayroll()
-  }, [getPayroll ])
+  }, [ ])
 
 
 

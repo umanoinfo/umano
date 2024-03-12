@@ -29,6 +29,7 @@ import {
   handleSelectMail,
   handleSelectAllMail
 } from 'src/store/apps/email'
+import Loading from 'src/views/loading'
 
 // ** Variables
 const labelColors = {
@@ -60,6 +61,7 @@ const EmailAppLayout = ({ folder, label }) => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'))
   const hidden = useMediaQuery(theme.breakpoints.down('lg'))
   const store = useSelector(state => state.mail)
+  const [loading , setLoading] = useState();
 
   // ** Vars
   const leftSidebarWidth = 260
@@ -72,13 +74,14 @@ const EmailAppLayout = ({ folder, label }) => {
   }
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         mailStatus: mailStatus,
         mailType: MailType,
         q: query
       })
-    ).then()
+    ).then(setLoading(false))
   }, [mailStatus, MailType, query,dispatch])
 
   // useEffect(() => {
@@ -88,6 +91,8 @@ const EmailAppLayout = ({ folder, label }) => {
 
   const toggleComposeOpen = () => setComposeOpen(!composeOpen)
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
+  if(loading)
+    return <Loading header={'Please Wait'} description={'Mails are loading'} ></Loading>
 
   return (
     <Box

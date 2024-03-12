@@ -148,6 +148,7 @@ const Steppositions = ({ handleNext, employee }) => {
   useEffect(() => {
     if (employee) {
       getDepartments()
+      setLoading(true);
       setEmployeeId(employee._id)
         dispatch(
         fetchData({
@@ -163,6 +164,7 @@ const Steppositions = ({ handleNext, employee }) => {
   // ----------------------------- Get Options ----------------------------------
 
   const getDepartments = async () => {
+    setLoading(true);
     axios.get('/api/company-department', {}).then(function (response) {
       const arr = response.data?.data?.map(department => ({
         label: department.name,
@@ -172,6 +174,7 @@ const Steppositions = ({ handleNext, employee }) => {
       setDepartmentsDataSource(arr)
       if(response.data.data && response.data.data.length > 0 )
         setDepartment(response.data.data[0]._id)
+        setLoading(false);
     })
 
     const positionChangeStartTypes = PositionChangeStartTypes.map(type => ({
@@ -296,6 +299,7 @@ const Steppositions = ({ handleNext, employee }) => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

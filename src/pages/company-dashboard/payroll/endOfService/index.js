@@ -124,6 +124,7 @@ const PayrollList = classNamec => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         no,

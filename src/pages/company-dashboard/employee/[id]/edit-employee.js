@@ -241,6 +241,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setCountriesDataSource(countriesDataSource)
     setSourceOfHireDataSource(sourceOfHire)
     setHealthInsuranceTypeDataSource(healthInsuranceTypes)
+    setIsLoading(false);
   }
 
   function asyncCheckUsername(name) {

@@ -100,6 +100,7 @@ const LeaveList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         leaveType,
@@ -130,6 +131,7 @@ const LeaveList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteLeaves = () => {
+    setLoading(true);
     axios
       .post('/api/employee-leave/delete-leave', {
         selectedLeave
@@ -141,6 +143,7 @@ const LeaveList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -417,7 +420,7 @@ const LeaveList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Leaves is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Leaves are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployeeLeave'))
     return <NoPermission header='No Permission' description='No permission to view employees leaves'></NoPermission>

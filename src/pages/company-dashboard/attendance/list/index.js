@@ -118,6 +118,7 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         fromDate: fromDate,
@@ -161,6 +162,7 @@ const AllDocumentsList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteAttendance = () => {
+    setLoading(true);
     axios
       .post('/api/attendance/delete-attendance', {
         selectedAttendance
@@ -177,7 +179,7 @@ const AllDocumentsList = () => {
             delay: 1000,
             position: 'bottom-right'
           })
-
+          setLoading(false);
           setOpen(false)
         })
       })
