@@ -35,6 +35,7 @@ export const PositionChangeStartTypes = [
   { title: 'Temporary Delegate', value: 'Temporary Delegate' },
   { title: 'Promotion', value: 'Promotion' },
   { title: 'Permanent Transfer', value: 'Permanent Transfer' },
+  { title: 'Existing Employee' , value:'Existing Employee'},
   { title: 'other', value: 'other' }
 ]
 

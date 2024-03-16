@@ -120,14 +120,17 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
       <Grid item xs={12} lg={12}>
         <Grid container spacing={1}>
           {/* --------------------------- View ------------------------------------ */}
-          <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>
+          <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}
+            onClick={()=>router.push('/company-dashboard/payroll/formula')}
+            style={{cursor:'pointer'}}
+          >
             Salary Formula
           </Typography>
 
           {/* ------------------------ view Formula -------------------------------------- */}
 
           <Grid xs={12} md={7} lg={12} sx={{ px: 1, mt: 2 }}>
-            <small>Change Salary Formula</small>
+            <small >Change Salary Formula</small>
             <SelectPicker
               data={salaryFormulaOptions}
               value={selectedSalaryFormulaID}

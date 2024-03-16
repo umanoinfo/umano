@@ -16,6 +16,7 @@ import CardContent from '@mui/material/CardContent'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { DatePicker, Form, InputNumber, Schema, SelectPicker } from 'rsuite'
+import { useRouter } from 'next/router'
 
 // ** Custom Components Imports
 import { styled } from '@mui/material/styles'
@@ -120,6 +121,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   const [formError, setFormError] = useState()
 
   const dispatch = useDispatch()
+  const router = useRouter() ;
 
   const default_value = {
     availablePaidLeave: 14,
@@ -250,7 +252,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
       <Grid item xs={12} lg={12}>
         <Grid container spacing={1}>
           {/* --------------------------- View ------------------------------------ */}
-          <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Attendance</Typography>
+          <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }} style={{cursor:'pointer'}} onClick={()=>router.push('/company-dashboard/attendance/list')}>Attendance</Typography>
           <Grid xs={12} md={7} lg={12} sx={{ px: 1, mt: 2 }}>
             <small>Change Shift</small>
 

@@ -20,6 +20,8 @@ export default async function handler(req, res) {
 
   const attendances = req.body.data
 
+  let index = 1 ;
+  let existingAttendances = [ ] ;
   for (const attendance of attendances) {
     attendance.company_id = myUser.company_id
     attendance.date = new Date(attendance.date)
@@ -28,7 +30,14 @@ export default async function handler(req, res) {
     attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
     attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
     attendance.status = 'active'
-    const newAttendance = await client.db().collection('attendances').insertOne(attendance)
+    const existing = await client.db().collection('attendances').findOne({date: attendance.date , user_id: attendance.user_id});
+    if(!existing){
+      const newAttendance = await client.db().collection('attendances').insertOne(attendance)
+    }
+    else{
+      existingAttendances.push(index);
+    }
+    index++ ;
   }
 
   // -------------------- logBook ------------------------------------------
@@ -43,5 +52,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  return res.status(201).json({ success: true, data: [] })
+  return res.status(201).json({ success: true, data: [] , existing: existingAttendances })
 }

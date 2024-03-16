@@ -18,6 +18,7 @@ export const fetchData = createAsyncThunk('appEmployee/fetchData', async params 
       response.data.departmemts.map((departmemt)=>{
         if(departmemt._id == position.department_id){
           e.departments.push(departmemt.name)
+          if(departmemt?.user_info && departmemt.user_info.length > 0)
           e.managers.push(departmemt.user_info[0]?.firstName +" " + departmemt.user_info[0]?.lastName)
         }
       })
