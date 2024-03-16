@@ -99,7 +99,7 @@ const AllDocumentsList = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false)
   const [SelectedEditRow, setSelectedEditRow] = useState()
 
-  const [fromDate, setFromDate] = useState(new Date())
+  let [fromDate, setFromDate] = useState(new Date())
   const [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
@@ -118,7 +118,8 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
-    getEmployees(),
+    getEmployees();
+    setLoading(true);
       dispatch(
         fetchData({
           fromDate: fromDate,
@@ -133,6 +134,7 @@ const AllDocumentsList = () => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getEmployees = () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data
@@ -146,9 +148,8 @@ const AllDocumentsList = () => {
       })
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
-
+      setLoading(false)
     })
-    setLoading(false)
   }
 
 
@@ -161,55 +162,88 @@ const AllDocumentsList = () => {
 
 
 
-  const calculate = e => {
+  const calculate = async (e,type) => {
+    // when type == 'auto' date will be set automatically when manual (user will be able to set it on his own)
+
+    setLoading(true);
     let data = {}
     data._id = e
     data.fromDate = fromDate
     data.toDate = toDate
+    if(type == 'auto'){
+      let res = await axios.get(`/api/company-employee/${e}`);
+      if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
+        fromDate = res?.data?.data[0]?.joiningDate.toString() ;
+    }
+
     axios.post('/api/end-of-service/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
 
-      employee.lumpySalary = employee.salaries_info[0].lumpySalary //  Daily Salary
+      if( !employee?.salaries_info || !employee?.salaries_info[0]?.lumpySalary){
+        toast.error('Salary is not assigned for this employee (set salary first and try again)' 
+        , {duration:5000,position:'bottom-right'});
+        setLoading(false);
+        
+        return ;
+      }
 
-      employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1)
+      employee.lumpySalary = employee.salaries_info[0].lumpySalary/30 //  Daily Salary
+
+      employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1) ;
 
         //   -------------------------- Assume Leaves -------------------------------------
 
-        if (employee.leaves_info) {
+        if (employee?.leaves_info) {
 
           let unpaidLeaveTotal = 0
+          let parentalLeaveTotal =0 ;
           employee.leaves_info.map(leave => {
-          if(leave.type == "daily")
+          if(leave.type == "daily" && leave.status_reason == 'unpaidLeave')
             {
               let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
               let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
               let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
               unpaidLeaveTotal = unpaidLeaveTotal +  days
             }
+          else if(leave.type == 'daily' && leave.status_reason == 'parentalLeave'){
+              let from = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
+              let to = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
+              let days = ((to-from)/ (1000 * 60 * 60 * 24))+1;
+              parentalLeaveTotal = parentalLeaveTotal + days ;
+          }
           })
-
+          employee.parentalLeaveOver60 = 0 ;
+          if(parentalLeaveTotal > 60){
+            employee.parentalLeaveOver60 = parentalLeaveTotal - 60 ;
+          }
           employee.unpaidLeaveTotal = unpaidLeaveTotal
       }
 
-      employee.actualDays = employee.allDays - employee.unpaidLeaveTotal ;
-      employee.actualYears = Math.round((employee.allDays - employee.unpaidLeaveTotal)/365).toFixed(2) ;
 
+      employee.actualDays = employee.allDays - employee.parentalLeaveOver60 - employee.unpaidLeaveTotal;
+      employee.actualYears = Math.round((employee.actualDays)/365).toFixed(2) ;
+      
       let lessThanFiveValue = 0
       let moreThanFiveValue = 0
       let lessThanFiveDays = 0
       let moreThanFiveDays = 0
+      
+      let endOfServiceFrom1To5 = employee.salaryFormulas_info[0].compensationFrom1To5;
+      let endOfServiceMoreThan5 = employee.salaryFormulas_info[0].compensationMoreThan5;
 
+      
       if(employee.actualYears > 1 && employee.actualYears <= 5 ){
-        lessThanFiveValue = employee.actualYears * 21 * ((employee.lumpySalary)/30).toFixed(2)
-        lessThanFiveDays = employee.actualDays
+        lessThanFiveValue = (employee.actualYears * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2)
+        lessThanFiveDays = ((employee.actualYears * endOfServiceFrom1To5)).toFixed();
       }
       if(employee.actualYears > 5 ){
         let moreFive =  employee.actualYears -5
-        lessThanFiveValue = (5 * 21 * ((employee.lumpySalary)/30).toFixed(2)).toFixed(2) || 0
-        lessThanFiveDays = 5*365
-        moreThanFiveValue = (moreFive * 30 * ((employee.lumpySalary)/30).toFixed(2)).toFixed(2) || 0
-        moreThanFiveDays = moreFive*365
+        lessThanFiveValue = (5 * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2) || 0
+        lessThanFiveDays = 5 * endOfServiceFrom1To5 ;
+        moreThanFiveValue = (moreFive * endOfServiceMoreThan5 * ((employee.lumpySalary))).toFixed(2) || 0
+        moreThanFiveDays = (moreFive * endOfServiceMoreThan5).toFixed();
       }
+
 
       employee.lessThanFiveDays = lessThanFiveDays
       employee.moreThanFiveDays = moreThanFiveDays
@@ -217,6 +251,12 @@ const AllDocumentsList = () => {
       employee.moreThanFiveValue = Number(moreThanFiveValue).toFixed(2)
       employee.endOfServeceTotalValue = (Number(moreThanFiveValue) + Number(lessThanFiveValue)).toFixed(2)
       setSelectedEmployee(employee)
+      
+      if(type == 'auto'){
+        if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
+          setFromDate(res?.data?.data[0]?.joiningDate.toString());
+      }
+      setLoading(false);
     })
   }
 
@@ -587,7 +627,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
@@ -639,8 +679,10 @@ const AllDocumentsList = () => {
                   name='employee_id'
                   data={employeesDataSource}
                   block
+                  
+                  
                   onChange={e => {
-                    calculate(e)
+                    calculate(e,'auto')
                   }}
                 />
               </FormControl>
@@ -651,7 +693,7 @@ const AllDocumentsList = () => {
               size='sm'
               variant='contained'
               onClick={() => {
-                calculate(selectedEmployee._id)
+                calculate(selectedEmployee._id , 'manual')
               }}
             >
               Calculate
@@ -662,8 +704,12 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-
-          <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
+          {
+            loading?
+            <Loading header='Please Wait' description='End of service is loading'></Loading>
+            :
+            <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
+          }
         </Card>
       </Grid>
 

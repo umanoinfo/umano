@@ -55,17 +55,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------ Get Employee -----------------------------------
 
-  const getCompensation = useCallback( async () => {
+  const getCompensation = async () => {
     setLoading(true)
     const res = await fetch('/api/compensation/' + id)
     const { data } = await res.json()
     setFormValue(data[0])
     setLoading(false)
-  } ,[ id] ) ;
+  }   ;
 
   useEffect(() => {
     getCompensation()
-  }, [getCompensation])
+  }, [ ])
 
 
   // ------------------------------ validate Mmodel ------------------------------------

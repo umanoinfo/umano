@@ -86,6 +86,9 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
+  const [AllDocumentTypes , setAllDocumentTypes] = useState() ; 
+  const [documentTypeCategory , setDocumentTypeCategory ] = useState();
+
 
   // ** Hooks
 
@@ -101,6 +104,7 @@ const AllDocumentsList = () => {
         q: value
       })
     ).then(setLoading(false))
+    getDocumentTypes();
   }, [dispatch, type, documentStatus, value])
 
   // ----------------------- Handle ------------------------------
@@ -118,41 +122,36 @@ const AllDocumentsList = () => {
   }, [])
 
   const handleClick = (data) => {
+    router.push(`/company-dashboard/document/category/${documentTypeCategory[data]}/${data}`);
+  }
 
-    switch (data){
-      case 'DOH':
-        router.push('/company-dashboard/document/doh-list')
-        break;
-      case 'CIVIL defense':
-        router.push('/company-dashboard/document/civil-list')
-        break;
-      case 'Waste management':
-        router.push('/company-dashboard/document/waste-list')
-        break;
-      case 'MCC':
-        router.push('/company-dashboard/document/mcc-list')
-        break;
-      case 'Tasneef':
-      router.push('/company-dashboard/document/tasneef-list')
-      break;
-      case 'Oshad':
-        router.push('/company-dashboard/document/oshad-list')
-        break;
-      case 'ADHICS':
-        router.push('/company-dashboard/document/adhics-list')
-        break;
-      case 'Third Party Contracts':
-        router.push('/company-dashboard/document/third-list')
-        break;
-      case 'Others':
-        router.push('/company-dashboard/document/others')
-        break;
+  const getDocumentTypes = async () =>{
+    setLoading(true);
+    try{
+        const res = await axios.get('/api/document-types');
+        if(res.status == 200 ){
+            let map = new Map() ;
+
+            let documents = res?.data?.data?.map((document)=>{
+                map[document.name] = document.category ;
+                
+                return document.name ;
+            })
+            setDocumentTypeCategory(map);
+            setAllDocumentTypes(documents.toString());
+            setLoading(false);
+        }
+
+    }catch(err){
+        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+        setLoading(false);
     }
   }
 
   // -------------------------- Delete Document --------------------------------
 
   const deleteDocument = () => {
+    setLoading(true);
     axios
       .post('/api/document/delete-document', {
         selectedDocument
@@ -164,6 +163,7 @@ const AllDocumentsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

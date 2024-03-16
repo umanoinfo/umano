@@ -5,6 +5,10 @@
   margin: 0;
   transition: transform 0.3s, opacity 0.3s;
 }
+.line-through{
+  text-decoration: line-through;
+}
+
 
 .orgchart ul li {
   display: inline-block;

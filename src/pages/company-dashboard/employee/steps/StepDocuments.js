@@ -81,6 +81,7 @@ const StepDocuments = ({ handleNext, employee }) => {
     if (employee) {
           getDepartments()
     setEmployeeId(employee._id)
+    setLoading(true);
     dispatch(
       fetchData({
         employeeId: employeeId,
@@ -252,6 +253,7 @@ const deleteFile =()=>{
           })
           setOpen(false)
           setAction('add')
+          setLoading(false);
         })
       })
       .catch(function (error) {

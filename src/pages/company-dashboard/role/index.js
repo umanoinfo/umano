@@ -58,6 +58,7 @@ const RolesComponent = () => {
 
   useEffect(() => {
     getPermissionGroup()
+    setLoading(true);
     dispatch(
       fetchData({
         q: value
@@ -80,12 +81,16 @@ const RolesComponent = () => {
   // ------------------------ Get Permission Group ------------------------------------
 
   const getPermissionGroup = () => {
+    setLoading(true);
     axios
       .get('/api/permission/company-premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
+        setLoading(false);
       })
-      .catch(function (error) {})
+      .catch(function (error) {
+        setLoading(false);
+      })
   }
 
   // ------------------------ Change Permission ------------------------------------
@@ -257,7 +262,7 @@ const RolesComponent = () => {
       </Grid>
     ))
 
-  if (loading) return <Loading header='Please Wait' description='Role is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Roles are loading'></Loading>
   if (session && session.user && !session.user.permissions.includes('ViewRole')) {
     return <NoPermission header='No Permission' description='No permission to View Roles'></NoPermission>
   }

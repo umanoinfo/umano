@@ -181,7 +181,7 @@ const DepartmentList = ({ apiData }) => {
         department.logo = data[x].user_info[0]?.logo 
         department.title = data[x].name
         department.employeesCount = data[x].employeesCount
-        if (data[x].children_info) {
+        if (data && data[x] && data[x].children_info) {
           const chile = []
           for (let dep of data[x].children_info) {
             const department1 = {}
@@ -289,7 +289,8 @@ const DepartmentList = ({ apiData }) => {
     setFileextension(event.target.value)
   }
 
-  const getMainDepartment = useCallback( () => {
+  const getMainDepartment =  () => {
+    setLoading(true);
     axios.get('/api/company-department/main-departments', {}).then(function (response) {
       setMainDepartments(response.data.data)
       response.data.data.map(department => {
@@ -305,12 +306,13 @@ const DepartmentList = ({ apiData }) => {
         }
       })
       drawChart(response.data.data)
+      setLoading(false);
     })
-  }, []) ;
+  }  ;
 
   useEffect(() => {
     getMainDepartment()
-  }, [getMainDepartment]);
+  }, []);
 
  
 

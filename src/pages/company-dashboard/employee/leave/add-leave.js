@@ -359,7 +359,7 @@ const AddLeave = ({ popperPlacement, id }) => {
       let employees = res.data.data
       employees = employees.map((employee , index) => {
    
-        if (employee.shift_info[0]) {
+        if (employee?.shift_info[0]) {
           arr.push({
             label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
             value: employee._id
@@ -368,10 +368,12 @@ const AddLeave = ({ popperPlacement, id }) => {
           return calcLeaves(employee)
         }
       })
+      employees.filter(employee => employee != undefined ) ;
+
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
+      setLoading(false)
     })
-    setLoading(false)
   }
 
   const [daysDuration , setDaysDeurtion] = useState(0)
@@ -723,11 +725,13 @@ const AddLeave = ({ popperPlacement, id }) => {
   ]
 
   const [pageSize, setPageSize] = useState(10)
-  const [employeesFullInfo, setEmployeesFullInfo] = useState([])
+  let [employeesFullInfo, setEmployeesFullInfo] = useState([])
   const [leavesDataSource, setLeavesDataSource] = useState([])
 
 
   const fillTable = id => {
+    employeesFullInfo = employeesFullInfo.filter(employee=> employee != undefined );
+    console.log('filltable a',employeesFullInfo);
     let val = employeesFullInfo.find(val => val._id == id)
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
@@ -741,6 +745,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   //-------------------------components-----------------------------
 
   const changeEmployee = e => {
+    
     fillTable(e)
 
     const employee = employeesFullInfo.find(val => {
@@ -758,10 +763,11 @@ const AddLeave = ({ popperPlacement, id }) => {
     if (employee.takenSickLeaves < +employee.availableSickLeave) {
       temp_reasons.push({ label: 'Sick Leave', value: 'sickLeave' })
     }
-    if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
-      temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
-    }
-    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'male') {
+
+    // if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
+    //   temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
+    // }
+    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'female') {
       temp_reasons.push({ label: 'Parental Leave', value: 'parentalLeave' })
     }
     temp_reasons.push({ label: 'Other Leave', value: 'otherLeave' })
@@ -1176,14 +1182,14 @@ const AddLeave = ({ popperPlacement, id }) => {
                       taken={+selectedEmployee.takenSickLeaves}
                     />
                     </Grid>
-                    { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
+                    {/* { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
                       <ChartCard
                         count={+selectedEmployee.availableMaternityLeave}
                         name={'Maternity Leave'}
                         taken={+selectedEmployee.takenMaternityLeaves}
                       />
-                     </Grid>}
-                     { selectedEmployee.gender == 'male' && <Grid item xs={12} sm={3} md={3}>
+                     </Grid>} */}
+                     { selectedEmployee.gender == 'female' && <Grid item xs={12} sm={3} md={3}>
                       <ChartCard
                         count={+selectedEmployee.availableParentalLeave}
                         name={'Parental Leave'}

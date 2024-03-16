@@ -168,17 +168,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
 
 
-  const getForm = useCallback( () => {
+  const getForm =  () => {
+    setLoading(true);
     axios.get('/api/form/' + id, {}).then(res => {
       setSelectedForm(res.data.data[0])
       setFormValue(res.data.data[0])
       setContent(res.data.data[0].content)
+      setLoading(false);
     })
-  } , [id] ) ;
+  }  ;
   
   useEffect(() => {
     getForm()
-  }, [getForm])
+  }, [ ])
 
   const editorRef = useRef()
 

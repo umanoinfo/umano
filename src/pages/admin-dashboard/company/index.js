@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, useCallback, forwardRef } from 'react'
+import { useState, useEffect, useCallback, forwardRef, useRef } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -58,6 +58,7 @@ import { useSession } from 'next-auth/react'
 import { companiesTypes } from 'src/local-db'
 import { useRouter } from 'next/router'
 import NoPermission from 'src/views/noPermission'
+import { t } from 'i18next'
 
 // ** Vars
 const companyTypeObj = {
@@ -122,7 +123,7 @@ const CompaniesList = () => {
   const [open, setOpen] = useState(false)
   const [openVisit , setOpenVisit] =useState(false)
   const [loading, setLoading] = useState(true)
-
+  const [searchValue , setSearchValue]= useState('');
   const [selectedCompany, setSelectedCompany] = useState()
 
   const [editUserOpen, setEditUserOpen] = useState(false)
@@ -134,6 +135,7 @@ const CompaniesList = () => {
   const dispatch = useDispatch()
 
   const store = useSelector(state => state.company)
+  console.log(store);
   const router = useRouter()
 
   const handleExcelExport = () => {
@@ -167,14 +169,17 @@ const CompaniesList = () => {
   }
 
   useEffect(() => {
+   
+    setLoading(true);
     dispatch(
        fetchData({
         type,
         companyStatus,
-        q: value
+        q: searchValue
       })
-    ).then(setLoading(false))
-  }, [dispatch, type, companyStatus, value])
+    ).then(setLoading(false) )
+
+  }, [dispatch, type, companyStatus, searchValue])
 
   // ----------------------- Handle ------------------------------
 
@@ -202,6 +207,7 @@ const CompaniesList = () => {
   // -------------------------- Delete --------------------------------
 
   const deleteCompany = () => {
+    setLoading(true);
     axios
       .post('/api/company/delete-company', {
         selectedCompany
@@ -212,7 +218,8 @@ const CompaniesList = () => {
             delay: 1000,
             position: 'bottom-right'
           })
-          setOpen(false)
+          setOpen(false);
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -228,6 +235,7 @@ const CompaniesList = () => {
     // -------------------------- Visit --------------------------------
 
     const visitCompany = () => {
+      setLoading(true) ;
       axios
         .post('/api/user/change-company', {
           selectedCompany
@@ -238,6 +246,7 @@ const CompaniesList = () => {
               delay: 3000,
               position: 'bottom-right'
             })
+            setLoading(false) ;
             setOpenVisit(false)
             router.replace("/login")
           })
@@ -270,6 +279,30 @@ const CompaniesList = () => {
       setAnchorEl(null)
     }
 
+    const handleRestoreRowOptions = async ()=> {
+      setLoading(true) ;
+
+      try{
+        let res = await axios.post('/api/company/restore-company' , {
+          id: row._id
+        });
+        
+        if(res.status == 200 ) {         
+          toast.success('Company restored successfully' , {position:'bottom-right' , duration:5000 });
+        }
+        else{
+          throw new Error(res.message) ;
+        }
+        dispatch(fetchData({}));
+
+      }
+      catch(err){
+        toast.error(res , {duration:5000 , position:'bottom-right'} );
+      }
+
+      setLoading(false) ;
+    }
+
     const handleEditRowOptions = () => {
       router.push('/admin-dashboard/company/' + row._id + '/edit-company')
       handleRowOptionsClose()
@@ -289,6 +322,7 @@ const CompaniesList = () => {
       setSelectedCompany(row)
       setOpenVisit(true)
     }
+    
 
     // ------------------------------ Table Definition ---------------------------------
 
@@ -324,12 +358,25 @@ const CompaniesList = () => {
               Visit
             </MenuItem>
           )}
-          {session && session.user && session.user.permissions.includes('AdminEditCompany') && (
-            <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
-              Edit
-            </MenuItem>
-          )}
+          
+            
+            {
+              row.deleted_at && session && session.user && session.user.permissions.includes('AdminEditCompany') && (
+              <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
+                <Icon icon='mdi:pencil-outline' fontSize={20} />
+                Restore
+              </MenuItem>
+            )}
+            
+            {!row.deleted_at && session && session.user && session.user.permissions.includes('AdminEditCompany') && (
+              <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
+                <Icon icon='mdi:pencil-outline' fontSize={20} />
+                Edit
+              </MenuItem>
+            
+            )}
+          
+          
           {session && session.user && session.user.permissions.includes('AdminDeleteCompany') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
@@ -349,7 +396,7 @@ const CompaniesList = () => {
       headerName: '#',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography   variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }} className={row?.deleted_at  ? 'line-through' : ''}>
             {row.index}
           </Typography>
         )
@@ -362,7 +409,7 @@ const CompaniesList = () => {
       headerName: 'Company',
       renderCell: ({ row }) => {
         return (
-          <Typography  noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography  noWrap sx={{ textTransform: 'capitalize' }} className={row?.deleted_at  ? 'line-through' : ''} >
             {row.name}
           </Typography>
         )
@@ -375,9 +422,9 @@ const CompaniesList = () => {
       headerName: 'Type',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }} className={row?.deleted_at  ? 'line-through' : ''} >
             <Icon fontSize={20} />
-            {row.type}
+              {row.type == 'healthCenter' ? 'Health Center' : 'Clinic'}
           </Box>
         )
       }
@@ -391,7 +438,7 @@ const CompaniesList = () => {
         const { user_info } = row
 
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }} className={row?.deleted_at  ? 'line-through' : ''}>
             {row.user_info[0] && (
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
@@ -413,7 +460,7 @@ const CompaniesList = () => {
       headerName: 'End Subscription',
       renderCell: ({ row }) => {
         return (
-          <>
+          <div className={row?.deleted_at  ? 'line-through' : ''}>
             {row.end_at}
             <CustomChip
               skin='light'
@@ -426,7 +473,7 @@ const CompaniesList = () => {
               )}
               sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
             />
-          </>
+          </div>
         )
       }
     },
@@ -442,6 +489,7 @@ const CompaniesList = () => {
             size='small'
             label={row.status}
             color={StatusObj[row.status]}
+            className={row?.deleted_at  ? 'line-through' : ''}
             sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
           />
         )
@@ -453,13 +501,16 @@ const CompaniesList = () => {
       sortable: false,
       field: 'actions',
       headerName: '',
-      renderCell: ({ row }) => <RowOptions row={row} />
+      renderCell: ({ row }) => {
+        return <RowOptions row={row}/>
+
+      }
     }
   ]
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Companies is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Companies are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('AdminViewCompany'))
     return <NoPermission header='No Permission' description='No permission to view companies'></NoPermission>
@@ -546,7 +597,11 @@ const CompaniesList = () => {
                 sx={{ mr: 6, mb: 2 }}
                 placeholder='Search Company'
                 onChange={e => handleFilter(e.target.value)}
+                
               />
+              <Button sx={{ mb:3 }} style={{marginRight:'10px'}} type='button' onClick={()=> setSearchValue(value)} >
+                Search
+              </Button>
 
               {session && session.user && session.user.permissions.includes('AdminAddCompany') && (
                 <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addCompany()}>
@@ -558,7 +613,7 @@ const CompaniesList = () => {
           {/* -------------------------- Table -------------------------------------- */}
 
           {!loading && store.data && <DataGrid
-          rowHeight={35}
+            rowHeight={40}
             autoHeight
             rows={store.data}
             columns={columns}

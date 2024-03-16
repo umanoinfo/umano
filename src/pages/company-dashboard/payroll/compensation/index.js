@@ -91,6 +91,7 @@ const CompensationsList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         compensationType,
@@ -146,6 +147,7 @@ const CompensationsList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteCompensation = () => {
+    setLoading(true);
     axios
       .post('/api/compensation/delete-compensation', {
         selectedCompensation
@@ -157,6 +159,7 @@ const CompensationsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

@@ -64,8 +64,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
     paidLeave: 100 ,
     unpaidLeave: 0,
     sickLeave: 30,
+    sickLeaveFrom1To15:100,
+    sickLeaveFrom16To30:50,
+    sickLeaveFrom31To90: 0,
     maternityLeave: 100 ,
-    parentalLeave: 100
+    parentalLeaveFrom1To45:100,
+    parentalLeaveFrom46To60:50,
+    parentalLeaveFrom61To105:0,
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -82,6 +87,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...formValue }
+        console.log(data);
         data.status = 'active'
         data.created_at = new Date()
         setLoading(true)
@@ -185,7 +191,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Tab value='Over Time' label='Over Time' />
                           <Tab value='Absence' label='Absence' />
                           <Tab value='Leave' label='Leave' />
-                          <Tab value='Compensation' label='Compensation' />
+                          <Tab value='EndOfService' label='End Of Service' />
                         </TabList>
                         <TabPanel value='Over Time'>
                           <Typography sx={{ mb: 5 }}>Over Time</Typography>
@@ -244,7 +250,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  paidLeave :
+                                  Justified :
                                 </Typography>
                                 <Form.Control
                                   controlId='justifiedAbsenceDay'
@@ -310,7 +316,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </TabPanel>
                         <TabPanel value='Leave'>
                           <Grid container spacing={1} sx={{ px: 5 }}>
-                            <Grid item sm={12} md={6}>
+                            <Grid item sm={12} md={6} >
                               <Typography sx={{ mt: 5, mb: 1 }}>leaves</Typography>
                               <Box sx={{ mb: 1,  mt: 5, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
@@ -343,14 +349,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '50%' }}>
+                                  Sick Leave:
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Sick Leave :
+                                  &emsp;&emsp; From 1 to 15
                                 </Typography>
                                 <Form.Control
-                                  controlId='sickLeave'
+                                  controlId='sickLeaveFrom1To15'
                                   size='sm'
                                   type='number'
-                                  name='sickLeave'
+                                  name='sickLeaveFrom1To15'
                                   placeholder='Sick Leave'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
@@ -358,6 +369,36 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 </Typography>
                               </Box>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  &emsp;&emsp; From 16 to 30
+                                </Typography>
+                                <Form.Control
+                                  controlId='sickLeaveFrom16To30'
+                                  size='sm'
+                                  type='number'
+                                  name='sickLeaveFrom16To30'
+                                  placeholder='Sick Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                &emsp;&emsp; From 31 to 90
+                                </Typography>
+                                <Form.Control
+                                  controlId='sickLeaveFrom31To90'
+                                  size='sm'
+                                  type='number'
+                                  name='sickLeaveFrom31To90'
+                                  placeholder='Sick Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                 Maternity Leave :
                                 </Typography>
@@ -371,29 +412,64 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                                 %
                                 </Typography>
-                              </Box>
+                              </Box> */}
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                 Parental Leave :
                                 </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  &emsp; From 1 to 45
+                                </Typography>
                                 <Form.Control
-                                  controlId='parentalLeave'
+                                  controlId='parentalLeaveFrom1To45'
                                   size='sm'
                                   type='number'
-                                  name='parentalLeave'
+                                  name='parentalLeaveFrom1To45'
                                   placeholder='Parental Leave'
                                 />
                                 <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                                 %
                                 </Typography>
                               </Box>
-             
+                            
+                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  &emsp; From 46 to 60
+                                </Typography>
+                                <Form.Control
+                                  controlId='parentalLeaveFrom46To60'
+                                  size='sm'
+                                  type='number'
+                                  name='parentalLeaveFrom46To60'
+                                  placeholder='Parental Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
+                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                  &emsp; From 61 to 105
+                                </Typography>
+                                <Form.Control
+                                  controlId='parentalLeaveFrom61To105'
+                                  size='sm'
+                                  type='number'
+                                  name='parentalLeaveFrom61To105'
+                                  placeholder='Parental Leave'
+                                />
+                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                %
+                                </Typography>
+                              </Box>
                             </Grid>
                             <Grid item sm={12} md={6}>
                             </Grid>
                           </Grid>
                         </TabPanel>
-                        <TabPanel value='Compensation'>
+                        <TabPanel value='EndOfService'>
                           <Grid container spacing={1} sx={{ px: 5 }}>
                             <Grid item sm={12} md={12}>
                               <Typography sx={{ mt: 5, mb: 1 }}>End of service compensation</Typography>

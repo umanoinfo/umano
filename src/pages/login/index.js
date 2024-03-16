@@ -121,16 +121,15 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
   
-    
     setLoading(true)
     const { email, password } = data
-    
+
     let res = await signIn('credentials', {
           email: email.toLowerCase(),
           password: password,
           redirect:false
     })
-     
+
     if(res?.status == 200 ){
           router.push('/');
     }
@@ -139,13 +138,10 @@ const LoginPage = () => {
           delay: 1000,
           position: 'bottom-right'
         });
-  
+
     }
-    
-    
-    
-    
     setLoading(false);
+    
   }
 
   // -----------------------------------------------------

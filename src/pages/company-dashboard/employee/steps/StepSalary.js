@@ -125,6 +125,7 @@ const StepSalary = ({ handleNext, employee }) => {
     if (employee) {
       setEmployeeId(employee._id)
       getOptions()
+      setLoading(true);
       dispatch(
         fetchData({
           employeeId: employeeId,
@@ -229,7 +230,7 @@ const StepSalary = ({ handleNext, employee }) => {
   //-------------------------- validate -----------------------------------
 
   const validateMmodel = Schema.Model({
-    overtimeSalary: StringType().isRequired('Overtime Salary is required.'),
+    // overtimeSalary: StringType().isRequired('Overtime Salary is required.'),
     lumpySalary: StringType().isRequired('lumpy Salary is required.')
   })
 
@@ -244,7 +245,7 @@ const StepSalary = ({ handleNext, employee }) => {
         console.log(startChangeDate)
         data.startChangeDate = new Date(startChangeDate)
         data.employee_id = employee._id
-
+        data.overtimeSalary = data.lumpySalary;
         if (action == 'add') {
           data.created_at = new Date()
           axios
@@ -272,6 +273,7 @@ const StepSalary = ({ handleNext, employee }) => {
         if (action == 'edit') {
           Object.assign({}, data._id, selectedSalary._id)
           data.updated_at = new Date()
+          data.overtimeSalary = data.lumpySalary;
           axios
             .post('/api/employee-salary/edit-salary', {
               data
@@ -338,6 +340,7 @@ const StepSalary = ({ handleNext, employee }) => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -381,23 +384,24 @@ const StepSalary = ({ handleNext, employee }) => {
       </>
       )
     },
-    {
-      flex: 0.3,
-      minWidth: 100,
-      field: 'overtimeٍٍSalary',
-      headerName: 'Overtime Salary',
-      renderCell: ({ row }) => ( 
-      <>
-        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{Number((Number(row.overtimeSalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
-          <CustomChip
-            skin='light'
-            size='small'
-            label={labelChip(row.overtimeSalaryPercentageChange)}
-            color={colorChip(row.overtimeSalaryPercentageChange)}
-            sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
-          />
-        </>)
-    },
+
+    // {
+    //   flex: 0.3,
+    //   minWidth: 100,
+    //   field: 'overtimeٍٍSalary',
+    //   headerName: 'Overtime Salary',
+    //   renderCell: ({ row }) => ( 
+    //   <>
+    //     <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{Number((Number(row.overtimeSalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
+    //       <CustomChip
+    //         skin='light'
+    //         size='small'
+    //         label={labelChip(row.overtimeSalaryPercentageChange)}
+    //         color={colorChip(row.overtimeSalaryPercentageChange)}
+    //         sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
+    //       />
+    //     </>)
+    // },
     {
       flex: 0.15,
       minWidth: 100,
@@ -519,7 +523,7 @@ const StepSalary = ({ handleNext, employee }) => {
                 >
                   <Grid container sx={{ mt: 3, px: 5 }}>
                     <Grid container spacing={3}>
-                      <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                      <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                         <small>Monthly Basic Salary</small>
                         <Form.Control
                           type='number'
@@ -529,7 +533,7 @@ const StepSalary = ({ handleNext, employee }) => {
                           placeholder='Basic Salary'
                         />
                       </Grid>
-                      <Grid item sm={12} md={6} sx={{ mt: 2 }}>
+                      {/* <Grid item sm={12} md={6} sx={{ mt: 2 }}>
                         <small>Monthly Overtime Salary</small>
                         <Form.Control
                           controlId='overtimeSalary'
@@ -538,7 +542,7 @@ const StepSalary = ({ handleNext, employee }) => {
                           name='overtimeSalary'
                           placeholder='Overtime Salary'
                         />
-                      </Grid>
+                      </Grid> */}
                     </Grid>
 
                     <Grid container spacing={3}>
@@ -552,6 +556,7 @@ const StepSalary = ({ handleNext, employee }) => {
                           }}
                           value={salaryChange}
                           data={salaryChanges}
+                          defaultValue={'other'}
                           block
                         />
                       </Grid>

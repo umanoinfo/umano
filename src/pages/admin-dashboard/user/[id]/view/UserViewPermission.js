@@ -18,6 +18,7 @@ import axios from 'axios'
 import { FormControlLabel } from '@mui/material'
 import Link from 'src/@core/theme/overrides/link'
 import { useRouter } from 'next/router'
+import Loading from 'src/views/loading'
 
 const UserViewPermission = ({ id }) => {
   const router = useRouter()
@@ -26,7 +27,12 @@ const UserViewPermission = ({ id }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const getUser = useCallback( () => {
+  useEffect( () => {
+    getPermissionGroup()
+    getUser()
+  }, [])
+
+  const getUser = async () => {
     setLoading(true)
     axios
       .get('/api/user/' + id, {})
@@ -37,26 +43,29 @@ const UserViewPermission = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }, [id])
+  };
 
-  useEffect(() => {
-    getPermissionGroup()
-    getUser()
-  }, [getUser])
-
-
+  
 
   const getPermissionGroup = () => {
+    setLoading(true) ;
     axios
       .get('/api/permission/premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
+        setLoading(false) ;
       })
-      .catch(function (error) {})
+      .catch(function (error) {
+        setLoading(false) ;
+      })
   }
 
   const routeToEditUser = () => {
     router.push('/admin-dashboard/user/' + id + '/edit-user')
+  }
+  if(loading){
+    return  <Loading header='Please Wait' description='Permissions are
+     loading'/>;
   }
 
   return (
@@ -81,7 +90,7 @@ const UserViewPermission = ({ id }) => {
       </CardContent>
 
       <Divider sx={{ m: '0 !important' }} />
-
+        
       <TableContainer>
         <Table size='small'>
           <TableHead></TableHead>

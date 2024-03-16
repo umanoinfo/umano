@@ -118,7 +118,8 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
-    getEmployees(),
+    getEmployees();
+    setLoading(true);
       dispatch(
         fetchData({
           fromDate: fromDate,
@@ -218,6 +219,7 @@ const AllDocumentsList = () => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getEmployees = () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data
@@ -232,9 +234,9 @@ const AllDocumentsList = () => {
       console.log(arr);
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
+      setLoading(false)
 
     })
-    setLoading(false)
   }
 
   function convertToMinutes(timeString) {
@@ -442,208 +444,235 @@ const AllDocumentsList = () => {
     }
 
 
-  const calculate = e => {
+  const calculate = async (e) => {
     let data = {}
     data._id = e
     data.fromDate = fromDate
     data.toDate = toDate
-    axios.post('/api/payroll/byEmployee', { data }).then(res => {
-      let employee = res.data.data[0]
-      console.log(res.data) ;
-      employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
-      //   ----------------------- Assume Leave -------------------------------
+    setLoading(true);
 
-      employee = calcTakenLeaves(employee)
+    try{
+      let res = await axios.post('/api/payroll/byEmployee', { data });
+      
+      // .then(res => 
+      
+        if(!res.data?.data || res.status != 200 ){
+          toast.error(res.data.message , {duration:5000, position:'bottom-right'});
+          
+          return ;
+        }
+        let employee = res.data.data[0]
+        console.log(employee);
+        if(!employee.salaries_info || employee.salaries_info.length == 0){
+          throw new Error('Add salary first (no salary defined!)')
+        }
+        employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30).toFixed(2) //  Daily Salary
 
-      //   ----------------------- Assume hourly Salary -------------------------------
+        //   ----------------------- Assume Leave -------------------------------
 
-      employee.hourlySalary = (
-        employee.dailySalary /
-        (
-          (new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC') -
-            new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')) /
-          3600000
+        employee = calcTakenLeaves(employee)
+
+        //   ----------------------- Assume hourly Salary -------------------------------
+
+        employee.hourlySalary = (
+          employee.dailySalary /
+          (
+            (new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC') -
+              new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')) /
+            3600000
+          ).toFixed(2)
         ).toFixed(2)
-      ).toFixed(2)
 
 
-      let totalEarlyHours = 0
-      let totalLateHours = 0
-      let totalEarlyOverTimeHours = 0
-      let totalLateOverTimeHours = 0
-      let totalholidayHours = 0
-      let totalOffDayHours = 0
-      let totalCompensations = 0
-      let totalDeductions = 0
-      let totalEmployeeDeductions = 0
-      let totalEmployeeRewards = 0
-      let totalWorkingDaysCount = 0
-      let totalLeave = 0
+        let totalEarlyHours = 0
+        let totalLateHours = 0
+        let totalEarlyOverTimeHours = 0
+        let totalLateOverTimeHours = 0
+        let totalholidayHours = 0
+        let totalOffDayHours = 0
+        let totalCompensations = 0
+        let totalDeductions = 0
+        let totalEmployeeDeductions = 0
+        let totalEmployeeRewards = 0
+        let totalWorkingDaysCount = 0
+        let totalLeave = 0
 
-    //   ------------------------ Assume Early & Late OverTime Hours -------------------------------
+      //   ------------------------ Assume Early & Late OverTime Hours -------------------------------
 
-      res.data.attendances.map(att => {
-        totalEarlyOverTimeHours = totalEarlyOverTimeHours + Number(att.earlyOverTimeHours)
-        totalLateOverTimeHours = totalLateOverTimeHours + Number(att.lateOverTimeHours)
-      })
-
-      employee.totalEarlyOverTimeHours = totalEarlyOverTimeHours
-      employee.totalLateOverTimeHours = totalLateOverTimeHours
-
-      employee.totalEarlyOverTimeValue = (
-        +totalEarlyOverTimeHours *
-        +employee.hourlySalary *
-        +employee.salaryFormulas_info[0].firstOverTime
-      ).toFixed(2)
-
-      employee.totalLateOverTimeValue = (
-        +totalLateOverTimeHours *
-        +employee.hourlySalary *
-        +employee.salaryFormulas_info[0].firstOverTime
-      ).toFixed(2)
-
-
-     //   ----------------------- Assume Early & Late Hours -------------------------------
-
-      res.data.attendances.map(att => {
-        if (att._in) {
-          totalWorkingDaysCount++
-        }
-        totalEarlyHours = totalEarlyHours + Number(att.earlyHours)
-        totalLateHours = totalLateHours + Number(att.lateHours)
-        if (att.holidayDay) {
-          totalholidayHours = totalholidayHours + +Number(att.totalHours)
-        }
-        if (!att.holidayDay && !att.workingDay) {
-          totalOffDayHours = totalOffDayHours + Number(att.totalHours)
-        }
-      })
-
-      employee.totalWorkingDaysCount = totalWorkingDaysCount
-      employee.totalholidayHours = totalholidayHours
-      employee.totalholidayValue = (
-        +totalholidayHours *
-        +employee.hourlySalary *
-        +employee.salaryFormulas_info[0].holidayOverTime
-      ).toFixed(2)
-
-      employee.totalOffDayHours = totalOffDayHours
-      employee.totalOffDayValue = (
-        +totalOffDayHours *
-        +employee.hourlySalary *
-        +employee.salaryFormulas_info[0].weekendOverTime
-      ).toFixed(2)
-
-      employee.totalEarlyHours = totalEarlyHours
-      employee.totalLateHours = totalLateHours
-      employee.totalEarlyValue =
-        (Number(employee.totalEarlyHours + employee.totalLateHours) *
-        Number(employee.salaryFormulas_info[0].notJustifiedAbsenceHoure) *
-        Number(employee.hourlySalary) *
-        -1).toFixed(2)
-
-      //   -------------------------- Assume Compensations -----------------------------------------
-
-      if (employee.compensations_array) {
-        employee.compensations_array.map(comp => {
-          let totalValue = 0
-
-          if (comp.type == 'Monthly') {
-            totalValue = totalValue + Number(comp.fixedValue)
-            totalValue = totalValue + Number((comp.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
-          }
-          if (comp.type == 'Daily') {
-            totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
-            totalValue =
-              totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
-          }
-          comp.totalValue = totalValue
-          totalCompensations = totalCompensations + totalValue
+        res.data.attendances.map(att => {
+          totalEarlyOverTimeHours = totalEarlyOverTimeHours + Number(att.earlyOverTimeHours)
+          totalLateOverTimeHours = totalLateOverTimeHours + Number(att.lateOverTimeHours)
         })
 
-        employee.totalCompensations = totalCompensations
-      }
+        employee.totalEarlyOverTimeHours = totalEarlyOverTimeHours
+        employee.totalLateOverTimeHours = totalLateOverTimeHours
 
-      //   -------------------------- Assume Deduction ----------------------------------------------
+        employee.totalEarlyOverTimeValue = (
+          +totalEarlyOverTimeHours *
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].firstOverTime
+        ).toFixed(2)
 
-      if (employee.deductions_array) {
-        employee.deductions_array.map(deduction => {
-          let totalValue = 0
+        employee.totalLateOverTimeValue = (
+          +totalLateOverTimeHours *
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].firstOverTime
+        ).toFixed(2)
 
-          if (deduction.type == 'Monthly') {
-            totalValue = totalValue + Number(deduction.fixedValue)
-            totalValue = totalValue + Number((deduction.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
+
+      //   ----------------------- Assume Early & Late Hours -------------------------------
+
+        res.data.attendances.map(att => {
+          if (att._in) {
+            totalWorkingDaysCount++
           }
-          if (deduction.type == 'Daily') {
-            totalValue = totalValue + Number(deduction.fixedValue * employee.totalWorkingDaysCount)
-            totalValue =
-              totalValue +
-              Number((deduction.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+          totalEarlyHours = totalEarlyHours + Number(att.earlyHours)
+          totalLateHours = totalLateHours + Number(att.lateHours)
+          if (att.holidayDay) {
+            totalholidayHours = totalholidayHours + +Number(att.totalHours)
           }
-          deduction.totalValue = totalValue
-          totalDeductions = totalDeductions + totalValue
+          if (!att.holidayDay && !att.workingDay) {
+            totalOffDayHours = totalOffDayHours + Number(att.totalHours)
+          }
         })
 
-        employee.totalDeductions = totalDeductions
-      }
+        employee.totalWorkingDaysCount = totalWorkingDaysCount
+        employee.totalholidayHours = totalholidayHours
+        employee.totalholidayValue = (
+          +totalholidayHours *
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].holidayOverTime
+        ).toFixed(2)
 
-      //   -------------------------- Assume Employee Deduction -------------------------------------
+        employee.totalOffDayHours = totalOffDayHours
+        employee.totalOffDayValue = (
+          +totalOffDayHours *
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].weekendOverTime
+        ).toFixed(2)
 
-      if (employee.employee_deductions_info) {
-        employee.employee_deductions_info.map(deduction => {
-          let totalDeductionsValue = 0
-          totalDeductionsValue = totalDeductionsValue + Number(deduction.value)
-          totalEmployeeDeductions = totalEmployeeDeductions + totalDeductionsValue
-        })
-        employee.totalEmployeeDeductions = totalEmployeeDeductions
-      }
+        employee.totalEarlyHours = totalEarlyHours
+        employee.totalLateHours = totalLateHours
+        employee.totalEarlyValue =
+          (Number(employee.totalEarlyHours + employee.totalLateHours) *
+          Number(employee.salaryFormulas_info[0].notJustifiedAbsenceHoure) *
+          Number(employee.hourlySalary) *
+          -1).toFixed(2)
 
-      //   -------------------------- Assume Employee Rewards ----------------------------------------
+        //   -------------------------- Assume Compensations -----------------------------------------
 
-      if (employee.employee_rewards_info) {
-        employee.employee_rewards_info.map(reward => {
-          let totalRewardsValue = 0
-          totalRewardsValue = totalRewardsValue + Number(reward.value)
-          totalEmployeeRewards = totalEmployeeRewards + totalRewardsValue
-        })
-        employee.totalEmployeeRewards = totalEmployeeRewards
-      }
+        if (employee.compensations_array) {
+          employee.compensations_array.map(comp => {
+            let totalValue = 0
 
-      //   --------------------------- Assume Leaves -------------------------------------------------
-
-        if (employee.leaves_info) {
-          let totalWorkingDaysCount = 0
-
-          let shift_out = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC')
-          let shift_in = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')
-
-          employee.leaves_info.map(leave => {
-          if(leave.type == "daily")
-          {
-            let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
-            let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
-            let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
-            leave.time = (((shift_out - shift_in)*days) / 3600000).toFixed(2)
-            leave.days = days
-            totalLeave = totalLeave + Number(((days*employee.dailySalary * (100 - leave.paidValue))/100).toFixed(3))
-          }
-          if(leave.type == "hourly")
-            {
-              leave.time = ((new Date(leave.date_to) - new Date(leave.date_from)) / 3600000).toFixed(2)
-              totalLeave = totalLeave + Number((((leave.time*employee.hourlySalary) * (100 - leave.paidValue))/100).toFixed(3))
+            if (comp.type == 'Monthly') {
+              totalValue = totalValue + Number(comp.fixedValue)
+              totalValue = totalValue + Number((comp.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
             }
+            if (comp.type == 'Daily') {
+              totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
+              totalValue =
+                totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+            }
+            comp.totalValue = totalValue
+            totalCompensations = totalCompensations + totalValue
           })
 
-          employee.totalLeave = (totalLeave)
+          employee.totalCompensations = totalCompensations
+        }
+
+        //   -------------------------- Assume Deduction ----------------------------------------------
+
+        if (employee.deductions_array) {
+          employee.deductions_array.map(deduction => {
+            let totalValue = 0
+
+            if (deduction.type == 'Monthly') {
+              totalValue = totalValue + Number(deduction.fixedValue)
+              totalValue = totalValue + Number((deduction.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
+            }
+            if (deduction.type == 'Daily') {
+              totalValue = totalValue + Number(deduction.fixedValue * employee.totalWorkingDaysCount)
+              totalValue =
+                totalValue +
+                Number((deduction.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+            }
+            deduction.totalValue = totalValue
+            totalDeductions = totalDeductions + totalValue
+          })
+
+          employee.totalDeductions = totalDeductions
+        }
+
+        //   -------------------------- Assume Employee Deduction -------------------------------------
+
+        if (employee.employee_deductions_info) {
+          employee.employee_deductions_info.map(deduction => {
+            let totalDeductionsValue = 0
+            totalDeductionsValue = totalDeductionsValue + Number(deduction.value)
+            totalEmployeeDeductions = totalEmployeeDeductions + totalDeductionsValue
+          })
+          employee.totalEmployeeDeductions = totalEmployeeDeductions
+        }
+
+        //   -------------------------- Assume Employee Rewards ----------------------------------------
+
+        if (employee.employee_rewards_info) {
+          employee.employee_rewards_info.map(reward => {
+            let totalRewardsValue = 0
+            totalRewardsValue = totalRewardsValue + Number(reward.value)
+            totalEmployeeRewards = totalEmployeeRewards + totalRewardsValue
+          })
+          employee.totalEmployeeRewards = totalEmployeeRewards
+        }
+
+        //   --------------------------- Assume Leaves -------------------------------------------------
+
+          if (employee.leaves_info) {
+            let totalWorkingDaysCount = 0
+
+            let shift_out = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC')
+            let shift_in = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')
+
+            employee.leaves_info.map(leave => {
+            if(leave.type == "daily")
+            {
+              let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
+              let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
+              let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
+              leave.time = (((shift_out - shift_in)*days) / 3600000).toFixed(2)
+              leave.days = days
+              totalLeave = totalLeave + Number(((days*employee.dailySalary * (100 - leave.paidValue))/100).toFixed(3))
+            }
+            if(leave.type == "hourly")
+              {
+                leave.time = ((new Date(leave.date_to) - new Date(leave.date_from)) / 3600000).toFixed(2)
+                totalLeave = totalLeave + Number((((leave.time*employee.hourlySalary) * (100 - leave.paidValue))/100).toFixed(3))
+              }
+            })
+
+            employee.totalLeave = (totalLeave)
+        }
+
+        //   --------------------------- Assume OverTime -------------------------------------------------
+
+
+        setSelectedEmployee(employee)
+        setAttendances(res.data.attendances)
+        
+    }
+    catch(err){
+      if(err?.response?.data?.message)
+      {
+        toast.error(err.response.data.message , {duration:5000 , position:'bottom-right'});
       }
-
-      //   --------------------------- Assume OverTime -------------------------------------------------
-
-
-      setSelectedEmployee(employee)
-      setAttendances(res.data.attendances)
-    })
+      else{
+        toast.error(err.toString(), {duration:5000 , position:'bottom-right'});
+      }
+      setSelectedEmployee(null);
+    }
+    setLoading(false);
   }
 
   const handleClose = () => {
@@ -687,7 +716,7 @@ const AllDocumentsList = () => {
           delay: 1000,
           position: 'bottom-right'
         })
-        setLoading(false)
+        setLoading(true)
       })
   }
 
@@ -1013,7 +1042,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
@@ -1078,7 +1107,7 @@ const AllDocumentsList = () => {
               sx={{ mt: 8 }}
               size='sm'
               variant='contained'
-              onClick={() => {
+              onClick={(selectedEmployee) => {
                 calculate(selectedEmployee._id)
               }}
             >

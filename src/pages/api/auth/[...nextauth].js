@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { verifyPassword } from 'src/configs/auth'
-import cookie from 'cookie'
+import { ObjectId } from 'mongodb'
 
 export const nextAuthOptions = (req, res) => {
   let selectedUser
@@ -23,22 +23,51 @@ export const nextAuthOptions = (req, res) => {
         async authorize(credentials) {
 
           client = await connectToDatabase()
-          let usersCollection = client.db().collection('users')
+          
 
+          let usersCollection = client.db().collection('users')
+          
+          
           const user = await usersCollection.findOne(
             {$and:[
               { email: credentials.email } ,   
               { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
             ]}
           )
+          
 
           if (!user) {
             throw new Error('No user found!')
           }
           const isValid = await verifyPassword(credentials.password, user.password)
+
+          
+
           if (!isValid) {
             throw new Error('Password invalid!')
           }
+          
+          if(user?.type == 'manager'){
+          
+            if(user?.company_id){
+              let company = await client.db().collection('companies').findOne({_id: ObjectId( user?.company_id) } );
+          
+
+              // if company is (pending or blocked)
+          
+              
+              if( company?.status != 'active' ) {
+                throw new Error('Your company is blocked !') ;
+              }
+          
+            }
+            else{
+              // if user doesn't belong to any company
+          
+              throw new Error('Account have no active company!');
+            }
+          }
+          
 
           return user
         }

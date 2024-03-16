@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -15,10 +15,13 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useSession } from 'next-auth/react'
 
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 import { signOut } from 'next-auth/react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -54,12 +57,36 @@ const UserDropdown = props => {
   }
 
   const { data: session, status } = useSession()
+  const [roles , setRoles ] = useState([]);
+
+  const getRoles = async ()=>{
+    try{
+      let res = await axios.get('/api/user/roles');
+      
+      if(res?.data?.success== true ){
+        let roles = res?.data?.data;
+        if(Array.isArray(roles) && roles && roles?.toString()){
+          setRoles(roles) ; 
+        }
+        
+      }
+    }
+    catch(err){
+      toast.error(err , {delay:1000 , position:'bottom-right'});
+    }
+  }
+
+  useEffect( ()=>{
+    
+      getRoles() ;
+    
+  }, []) ;
 
   const styles = {
     py: 2,
     px: 4,
     width: '100%',
-    display: 'flex',
+    display: 'block',
     alignItems: 'center',
     color: 'text.primary',
     textDecoration: 'none',
@@ -120,6 +147,9 @@ const UserDropdown = props => {
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
                 {session.user.email}
               </Typography>
+              <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                {session.user.type}
+              </Typography>
             </Box>
           </Box>
         </Box>
@@ -159,6 +189,29 @@ const UserDropdown = props => {
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
             Change Password
+          </Box>
+        </MenuItem>
+        {/* <Divider />
+        <MenuItem sx={{ p: 0 }} >
+          <Box sx={styles}  >
+            <Icon icon='mdi-security-network' />
+             {session.user.type}
+          </Box>
+        </MenuItem> */}
+        <Divider />
+        <MenuItem sx={{ p: 0 }} >
+          <Box sx={styles}  >
+            <Icon icon='mdi-account' style={{display:'flex' , flexWrap:'wrap'}} />
+
+             {
+              roles?.map((role)=>{
+                  return <>
+                    <span style={{display:'flex', flexWrap:'wrap'}} >
+                      {role.toString()}
+                    </span>
+                  </>
+              })
+             }
           </Box>
         </MenuItem>
         <Divider />

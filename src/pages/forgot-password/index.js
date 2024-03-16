@@ -211,7 +211,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
-        console.log(data);
+        
         if (data.success) {
           setmailsent(true);
         }

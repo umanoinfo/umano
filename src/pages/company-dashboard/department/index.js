@@ -146,7 +146,7 @@ const DepartmentList = ({ apiData }) => {
   }
 
   useEffect(() => {
-    // console.log('q,q' , value ) 
+    setLoading(true);
     dispatch(
       fetchDepartmentData({
         type,
@@ -352,6 +352,7 @@ const DepartmentList = ({ apiData }) => {
   }
 
   const deleteDepartment = () => {
+    setLoading(true);
     axios
       .post('/api/company-department/delete-department', {
         selectedDepartment
@@ -363,6 +364,7 @@ const DepartmentList = ({ apiData }) => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -376,7 +378,7 @@ const DepartmentList = ({ apiData }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Department is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Departments are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDepartment'))
     return <NoPermission header='No Permission' description='No permission to view departments'></NoPermission>

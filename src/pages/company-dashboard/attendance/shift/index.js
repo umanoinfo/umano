@@ -94,6 +94,7 @@ const ShiftList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         ShiftType,
@@ -124,6 +125,7 @@ const ShiftList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteShift = () => {
+    setLoading(true);
     axios
       .post('/api/shift/delete-shift', {
         selectedShift
@@ -135,6 +137,7 @@ const ShiftList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -346,7 +349,7 @@ const ShiftList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Shifts is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Shifts are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendanceShift'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>

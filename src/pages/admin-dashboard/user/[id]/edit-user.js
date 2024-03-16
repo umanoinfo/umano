@@ -88,7 +88,7 @@ const DialogAddUser = ({ id }) => {
   const { data: session, status } = useSession()
 
   
-  const getUser = useCallback(  () => {
+  const getUser =  () => {
     setLoading(true)
     axios
       .get('/api/user/' + id, {})
@@ -102,9 +102,9 @@ const DialogAddUser = ({ id }) => {
       .catch(function (error) {
         // setLoading(false)
       })
-  } , [id , reset ]) ;
+  }   ;
 
-  const getRoles = useCallback(() => {
+  const getRoles = () => {
     setLoading(true)
     axios
       .get('/api/role/', {})
@@ -116,13 +116,13 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
     }
-  , []) 
+
 
 
   useEffect(() => {
     getUser()
     getRoles()
-  }, [getUser , getRoles])
+  }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 

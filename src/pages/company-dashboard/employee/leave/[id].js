@@ -710,13 +710,16 @@ const EditLeave = ({ popperPlacement, id }) => {
   ]
 
   const [pageSize, setPageSize] = useState(10)
-  const [employeesFullInfo, setEmployeesFullInfo] = useState([])
+  let [employeesFullInfo, setEmployeesFullInfo] = useState([])
   const [leavesDataSource, setLeavesDataSource] = useState([])
 
 
   const fillTable = id => {
 
+    employeesFullInfo = employeesFullInfo.filter(employee=> employee != undefined );
+
     let val = employeesFullInfo.find(val => val._id == id)
+
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id

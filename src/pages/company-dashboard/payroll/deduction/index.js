@@ -97,6 +97,7 @@ const DeductionsList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         deductionType,
@@ -152,6 +153,7 @@ const DeductionsList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteDeduction = () => {
+    setLoading(true);
     axios
       .post('/api/deduction/delete-deduction', {
         selectedDeduction
@@ -163,6 +165,7 @@ const DeductionsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {

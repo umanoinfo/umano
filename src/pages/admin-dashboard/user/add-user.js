@@ -252,7 +252,7 @@ const DialogAddUser = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
                   {!loading && (
                     <>
-                      <Button color='success' type='submit' variant='contained' sx={{ mr: 3 }}>
+                      <Button color='success' type='submit' variant='contained' sx={{ mr: 3 }}  >
                         Save
                       </Button>
                       <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => close()}>

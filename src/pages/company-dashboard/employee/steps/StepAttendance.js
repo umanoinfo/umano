@@ -124,9 +124,12 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   const default_value = {
     availablePaidLeave: 14,
     availableUnpaidLeave: 30,
-    availableSickLeave: 30,
-    availableMaternityLeave: 60,
-    availableParentalLeave: 7,
+    availableSickLeave: 90,
+    availableParentalLeave: 105,
+
+    // availableSickLeave: 30,
+    // availableMaternityLeave: 60,
+    // availableParentalLeave: 7,
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -196,6 +199,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   // ------------------------------- Submit --------------------------------------
 
   const handleSubmit = () => {
+    setLoading(true);
     if (!selectedShift) {
       toast.error('Error : ' + error.response.data.message + ' !', {
         delay: 3000,
@@ -276,11 +280,11 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
                         </Grid>
 
                         <Grid item sm={12} md={1.7}>
-                          <small>Available late</small>
+                          <small>Max Time in</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes.availableLate}</Typography>
                         </Grid>
                         <Grid item sm={12} md={1.7}>
-                          <small>Available early</small>
+                          <small>Min Time out</small>
                           <Typography sx={{ mb: 3, fontWeight: 500 }}>{selectedTimes.availableEarly}</Typography>
                         </Grid>
 

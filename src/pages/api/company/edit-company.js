@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditCompany')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------------------- Edit -------------------------------------
@@ -20,13 +20,35 @@ export default async function handler(req, res) {
   delete company._id
 
   if (!company.name) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-
-    return
   }
+ 
+  // when done set the (oldCompany.user_id to null)
   
+  const newManager = await client.db().collection('users').findOne({_id: ObjectId(company.user_id) , type:'manager' , company_id: {$exists:true}} );
+  
+  if(ObjectId(newManager.company_id).toString() != ObjectId(id).toString() ){
+    if(newManager){
+      return res.status(402).json({
+        success: false,
+        message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to fake@company.com or new user and try again)'
+      });
+    }
+
+  }
+
+  // updating old manager info
+  const oldManager = await client.db().collection('users').findOne({company_id:id , type:'manager'});
+  
+  if(oldManager){
+    delete oldManager.company_id ;
+    const oldManagerId = oldManager._id;
+    delete oldManager.company_info;  
+    const updatedOldManager = await client.db().collection('users').replaceOne({_id:oldManagerId} , oldManager);
+  }
+
   const newCompany = await client
     .db()
     .collection('companies')
@@ -48,34 +70,38 @@ export default async function handler(req, res) {
     .collection('users')
     .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
 
+  
+
   //------------------------ Holidy Event -------------------------
 
   const holidyEvents = await  client.db().collection('events').aggregate(
     [
       {$match: {
-        company_id: { $regex: myUser.company_id } ,
-        type: { $regex: 'Holiday' } ,
+        company_id:myUser.company_id  ,
+        type: 'Holiday'   ,
       }}
     ]).toArray()
     holidyEvents.map ( async (e)=>{
-    await client.db().collection('events').deleteOne( {_id:ObjectId(e._id)})
+      await client.db().collection('events').deleteOne( {_id:ObjectId(e._id)})
     })
 
-    company.holidays.map((day)=>{
-      let event ={}
-      event.title = day.name
-      event.allDay = true
-      event.description = day.name
-      event.startDate = new Date (day.date)
-      event.endDate = new Date (day.date)
-      event.type = 'Holiday'
-      event.users = []
-      event.status = 'active'
-      event.created_at = new Date ()
-      event.company_id = myUser.company_id
-      event.user_id = myUser._id
-      const newEvent = client.db().collection('events').insertOne(event)
-    })
+    
+    if(company.holidays)
+      company.holidays.map((day)=>{
+        let event ={}
+        event.title = day.name
+        event.allDay = true
+        event.description = day.name
+        event.startDate = new Date (day.date)
+        event.endDate = new Date (day.date)
+        event.type = 'Holiday'
+        event.users = []
+        event.status = 'active'
+        event.created_at = new Date ()
+        event.company_id = myUser.company_id
+        event.user_id = myUser._id
+        const newEvent = client.db().collection('events').insertOne(event)
+      })
 
 
   // -------------------------- logBook ---------------------------
@@ -90,5 +116,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: company })
+  return res.status(201).json({ success: true, data: company })
 }

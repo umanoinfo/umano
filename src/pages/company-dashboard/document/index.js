@@ -88,6 +88,8 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
+  const [AllDocumentTypes , setAllDocumentTypes] = useState('') ;
+  const [documentTypeCategory , setDocumentTypeCategory] = useState();
 
   // ** Hooks
 
@@ -95,15 +97,39 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.document)
   const router = useRouter()
 
+ const getDocumentTypes = async () =>{
+    setLoading(true);
+    try{
+        const res = await axios.get('/api/document-types');
+        if(res.status == 200 ){
+            let map = new Map() ;
+
+            let documents = res?.data?.data?.map((document)=>{
+                map[document.name] = document.category ;
+                
+                return document.name ;
+            })
+            setDocumentTypeCategory(map);
+            setAllDocumentTypes(documents.toString());
+            setLoading(false);
+        }
+
+    }catch(err){
+        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+        setLoading(false);
+    }
+  }
   useEffect(() => {
+    setLoading(true);
+    getDocumentTypes();
     dispatch(
       fetchData({
-        documentTypes: 'DOH,CIVIL defense,Waste management,MCC,Tasneef,Oshad,ADHICS,Third Party Contracts,Others',
+        documentTypes: AllDocumentTypes ,
         documentStatus,
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, Types, documentStatus, value])
+  }, [dispatch, Types, documentStatus, value , AllDocumentTypes != '' ])
 
   // ----------------------- Handle ------------------------------
 
@@ -122,6 +148,7 @@ const AllDocumentsList = () => {
   // -------------------------- Delete Document --------------------------------
 
   const deleteDocument = () => {
+    setLoading(true);
     axios
       .post('/api/document/delete-document', {
         selectedDocument
@@ -133,6 +160,7 @@ const AllDocumentsList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -145,36 +173,7 @@ const AllDocumentsList = () => {
   }
 
   const handleClick = (data) => {
-
-    switch (data){
-      case 'DOH':
-        router.push('/company-dashboard/document/doh-list')
-        break;
-      case 'CIVIL defense':
-        router.push('/company-dashboard/document/civil-list')
-        break;
-      case 'Waste management':
-        router.push('/company-dashboard/document/waste-list')
-        break;
-      case 'MCC':
-        router.push('/company-dashboard/document/mcc-list')
-        break;
-      case 'Tasneef':
-      router.push('/company-dashboard/document/tasneef-list')
-      break;
-      case 'Oshad':
-        router.push('/company-dashboard/document/oshad-list')
-        break;
-      case 'ADHICS':
-        router.push('/company-dashboard/document/adhics-list')
-        break;
-      case 'Third Party Contracts':
-        router.push('/company-dashboard/document/third-list')
-        break;
-      case 'Others':
-        router.push('/company-dashboard/document/others')
-        break;
-    }
+    router.push(`/company-dashboard/document/category/${documentTypeCategory[data]}/${data}`);
   }
 
   // -------------------------- Add Document -----------------------------------------------
@@ -315,6 +314,8 @@ const AllDocumentsList = () => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.type.map((t, index) => {
+                if(index > 0 ) return <></>;
+                
                 return (
                   <CustomChip
                     onClick={() =>handleClick(t) }
@@ -327,6 +328,19 @@ const AllDocumentsList = () => {
                   />
                 )
               })}
+              {
+                row.type?.length -1 > 0 ?
+                  <CustomChip                    
+                  key={1}
+                  color='primary'
+                  skin='light'
+                  size='small'
+                  sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                  label={`+${row.type?.length -1 } more categories`}
+                  />
+                  :
+                <></>
+              }
             </div>
           </Box>
         )

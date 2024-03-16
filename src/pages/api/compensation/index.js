@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayrollCompensation')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // --------------------- Post ---------------------------------------------------
@@ -47,5 +47,5 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  res.status(200).json({ success: true, data: compensations })
+    return res.status(200).json({ success: true, data: compensations })
 }

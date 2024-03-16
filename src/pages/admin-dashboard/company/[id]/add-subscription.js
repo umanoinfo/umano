@@ -70,7 +70,7 @@ const DialogAddUser = ({ id }) => {
   const formRef = useRef()
 
   // ---------------------- Get Company ------------------------------------
-  const getCompany = useCallback( () => {
+  const getCompany =  () => {
     setLoading(true)
     axios
         .get('/api/company/' + id, {})
@@ -82,12 +82,11 @@ const DialogAddUser = ({ id }) => {
           setLoading(false)
         })
     }
-  ,[id]);
+  
 
   useEffect(() => {
-    
     getCompany()
-  }, [getCompany])
+  }, [])
 
   
   

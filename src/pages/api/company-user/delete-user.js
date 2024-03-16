@@ -25,5 +25,5 @@ export default async function handler(req, res) {
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
   }
 
-  res.status(200).json({ success: true, data: user })
+  return res.status(200).json({ success: true, data: user })
 }

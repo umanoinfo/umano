@@ -85,7 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setLoading(false)
   }
 
-  const getDeduction =  useCallback( () => {
+  const getDeduction =    () => {
     setLoading(true)
     axios
       .get('/api/employee-deduction/' + id, {})
@@ -99,11 +99,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  },[id]);
+  } ;
 
   useEffect(() => {
     getEmployees(), getDeduction()
-  }, [getDeduction])
+  }, [ ])
 
   // ------------------------------- Submit --------------------------------------
 

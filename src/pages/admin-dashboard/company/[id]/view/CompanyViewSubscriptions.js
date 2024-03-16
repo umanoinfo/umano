@@ -23,6 +23,7 @@ import UsersProjectListTable from 'src/views/apps/user/view/UsersProjectListTabl
 import { DataGrid } from '@mui/x-data-grid'
 import IconButton from '@mui/material/IconButton'
 import Icon from 'src/@core/components/icon'
+import Loading from 'src/views/loading'
 
 const CompanyViewSubscriptions = ({ id }) => {
   const router = useRouter()
@@ -115,7 +116,7 @@ const CompanyViewSubscriptions = ({ id }) => {
  
    // ------------------------------ Get Users ------------------------------------
 
-   const getSubscriptions = useCallback( async () => {
+   const getSubscriptions =   async () => {
     setIsLoading(true)
     const res = await fetch('/api/subscription/' + id + '/byCompany')
     const { data } = await res.json()
@@ -134,12 +135,12 @@ const CompanyViewSubscriptions = ({ id }) => {
     setSubscriptionsDataSource(data)
     setIsLoading(false)
   }
-  , [id]);
+   
 
 
   useEffect(() => {
     getSubscriptions()
-  }, [getSubscriptions])
+  }, [ ])
   
  
   const addSubscription = () => {
@@ -164,7 +165,10 @@ const CompanyViewSubscriptions = ({ id }) => {
           </Typography>
         </Box>
       </CardContent>
-      <DataGrid
+      {
+        isLoading ?
+        <Loading header='Please Wait' description='Subscriptions are loading'/> :
+        <DataGrid
         autoHeight
         rows={subscriptionsDataSource}
         columns={columns}
@@ -173,6 +177,8 @@ const CompanyViewSubscriptions = ({ id }) => {
         rowsPerPageOptions={[7, 10, 25, 50]}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
       />
+      }
+     
     </Card>
   )
 }

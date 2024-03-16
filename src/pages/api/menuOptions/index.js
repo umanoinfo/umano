@@ -13,14 +13,14 @@ export default async function handler(req, res) {
 
   if( !token || !token.email ){
 
-    res.status(206).json({ success: false, message: 'Not Auth' })
+    return res.status(206).json({ success: false, message: 'Not Auth' })
 
   }
 
   const myUser = await client.db().collection('users').findOne({ email: token.email })
 
   if (!myUser || !myUser.permissions ) {
-    res.status(206).json({ success: false, message: 'Not Auth' })
+    return res.status(206).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------------------ Fill View --------------------------------------
@@ -43,20 +43,34 @@ export default async function handler(req, res) {
     })
   }
   if (myUser &&  myUser.type == 'admin' &&(myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
+    let children = [];
+    if(myUser.permissions.includes('AdminViewPermission')){
+      children.push({
+        title: 'Permissions',
+        path: '/admin-dashboard/permission'
+      });
+    }
+    if(myUser.permissions.includes('AdminViewRole')){
+      children.push({
+          title: 'Roles',
+          path: '/admin-dashboard/role'
+      });
+    }
     options.push({
       title: 'Roles & Permissions',
       icon: 'mdi:shield-outline',
-      children: [
-        {
-          title: 'Roles',
-          path: '/admin-dashboard/role'
-        },
-        {
-          title: 'Permissions',
-          path: '/admin-dashboard/permission'
-        }
-      ]
+      children: children
     })
+  }
+  if(myUser && myUser.type == 'admin' && (myUser.permissions.includes('AdminViewDocumentType'))){
+    options.push(
+      {
+        title:'Documents',
+        icon:'mdi:checkbox-multiple-blank-outline',
+        path:'/admin-dashboard/documents'
+      }
+    );
+
   }
 
   // -------------------------------- Company Dashboard -------------------------------------
@@ -114,46 +128,37 @@ export default async function handler(req, res) {
       ]
     })
   }
-  if (myUser && myUser.permissions.includes('ViewDocument')) {
+
+  const documents = await client.db().collection('documentTypes').find({$or:[{company_id:'general' },{company_id: myUser.company_id}]
+  }).toArray();
+
+  if (myUser &&( myUser.permissions.includes('ViewDocument')  )) {
+    const children = documents.map((document)=>{
+      return {title:document.name , category: document.category , path: `/company-dashboard/document/category/${document.category}/${document.name}`}
+    });
+    
     options.push({
       title: 'Documents',
       icon: 'mdi:checkbox-multiple-blank-outline',
       children: [
         {
-          title: 'DOH',
-          path: '/company-dashboard/document/doh-list'
-        },
-        {
-          title: 'Civil Defense',
-          path: '/company-dashboard/document/civil-list'
-        },
-        {
-          title: 'Waste Management',
-          path: '/company-dashboard/document/waste-list'
-        },
-        {
-          title: 'MCC',
-          path: '/company-dashboard/document/mcc-list'
-        },
-        {
-          title: 'Tasneef',
-          path: '/company-dashboard/document/tasneef-list'
-        },
-        {
-          title: 'Oshad',
-          path: '/company-dashboard/document/oshad-list'
-        },
-        {
-          title: 'ADHICS',
-          path: '/company-dashboard/document/adhics-list'
-        },
-        {
           title: 'Third Party Contracts',
-          path: '/company-dashboard/document/third-list'
+          children: children.filter(val=>val.category == 'Third Party Contracts')
+
         },
         {
-          title: 'Others',
-          path: '/company-dashboard/document/others'
+          title: 'Entity Documents',
+          children: children.filter(val=>val.category == 'Entity Documents')
+
+        },
+        {
+          title: 'Ownership Documents',
+          children: children.filter(val=>val.category == 'Ownership Documents')
+
+        },
+        {
+          title: 'Vendors',
+          children: children.filter(val=>val.category == 'Vendors')
         },
         {
           title: 'All Documents',
@@ -252,6 +257,29 @@ export default async function handler(req, res) {
     })
   }
 
-  res.status(200).json({ success: true, data: options })
+  // Settings
+
+  if(myUser && myUser.permissions && (myUser.permissions.includes('ViewDocumentType') || myUser.permissions.includes('ViewCompany')  )){
+    let children = [];
+    if(myUser.permissions.includes('ViewDocumentType')){
+      children.push({
+        title:'Company',
+        path:'/company-dashboard/company'
+      });
+    }
+    if(myUser.permissions.includes('ViewCompany')){
+      children.push({
+        title:'Documents',
+        path:'/company-dashboard/document-types'
+      })
+    }
+    options.push({
+      title:'Settings',
+      icon:'mdi:settings-outline',
+      children: children
+    })
+  }
+  
+  return res.status(200).json({ success: true, data: options })
 
 }

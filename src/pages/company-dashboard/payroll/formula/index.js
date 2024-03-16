@@ -97,6 +97,7 @@ const FormulaList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         formulaType,
@@ -127,6 +128,7 @@ const FormulaList = () => {
   // -------------------------- Delete Form --------------------------------
 
   const deleteForm = () => {
+    setLoading(true);
     axios
       .post('/api/salary-formula/delete-formula', {
         selectedFormula
@@ -137,6 +139,7 @@ const FormulaList = () => {
             delay: 1000,
             position: 'bottom-right'
           })
+          setLoading(false);
           setOpen(false)
         })
       })

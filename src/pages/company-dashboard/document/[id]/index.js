@@ -135,7 +135,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  const getDocument = useCallback( () => {
+  const getDocument =  () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       setSelectedDocument(response.data.data[0])
@@ -149,12 +149,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setSelectedFiles(files)
       setLoading(false)
     })
-  } , [id] );
+  }  ;
 
   
   useEffect(() => {
     getDocument()
-  }, [getDocument])
+    
+  }, [ ])
 
   // -----------------------------------------------------------
 
@@ -328,13 +329,102 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 {new Date(selectedDocument.issueDate).toISOString().substring(0, 10)}
                               </Typography>
                             </Box>
-                              <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
+                            {
+                              selectedDocument.category.includes('Vendors') ? 
+                              <>
+                                <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
+                                <strong pt={5} className='px-5 pt-4'> Company Information </strong >
+                                </Typography>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Name:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyName}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Mobile:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyMobile}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Email:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyEmail}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Fax:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyFax}
+                                  </Typography>
+                                </Box>
+                                 <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Landline:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyLandline}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Company Contact Person:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.companyContactPerson}
+                                  </Typography>
+                                </Box>
+                              </>
+                              :
+                              <>
+                              </>
+                            }
+
+                            {
+                              selectedDocument.category.includes('Third Party Contracts') ? 
+                              <>
+                                <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
+                                <strong pt={5} className='px-5 pt-4'> Third Party Contracts Information </strong >
+                                </Typography>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Third Party Email:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.thirdPartyContractorsEmail}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
+                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                    Third Party Landline:
+                                  </Typography>
+                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                    {selectedDocument.thirdPartyContractorsLandline}
+                                  </Typography>
+                                </Box>
+                              </>
+                              :
+                              <>
+                              </>
+                            }
+                            
+
+                            <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
                                 <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
-                              </Typography>
+                            </Typography>
 
                             <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
                               <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Nmae:
+                                Name:
                               </Typography>
                               <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
                                 {selectedDocument.renewing_name}

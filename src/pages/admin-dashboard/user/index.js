@@ -118,6 +118,7 @@ const UserList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type,
@@ -233,13 +234,31 @@ const UserList = () => {
       setOpen(true)
     }
 
+    const handleRestoreRowOptions = async () =>{
+      setLoading(true) ;
+      try{
+        let res = await axios.post('/api/user/restore-user' , {id:row._id} ) ;
+        if(res.status == 200 ){
+          toast.success('User restored successfully', {duration: 5000 , position: 'bottom-right'}) ;
+        }
+        else{
+          throw new Error(res.message) ;
+        }
+        dispatch(fetchData({}));
+      }
+      catch(err){
+        toast.error(err ,  {duration: 5000 , position: 'bottom-right'} ) ;
+      }
+      setLoading(false) ;
+    }
+
       //----------------- Request mail ------------------------------
 
 
   const activationLink = (row) => {
-    console.log(row)
+    
     setLoading(true);
-    const { email } = row
+    const { email } = row;
     fetch("/api/reset-password/request/", {
       method: "POST",
       body: JSON.stringify({ email: email }),
@@ -248,12 +267,28 @@ const UserList = () => {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        let data = await res.json();
+        if(res.status != 200 ){
+          throw Error(data.message);
+        }
+
+        return data;
+       })
       .then((data) => {
-        toast(data.message , {
+        
+        toast.success(data.message.toString() , {
           delay: 5000,
+          position:'bottom-right'
         })
         setLoading(false);
+      }).catch((err)=>{
+        
+        toast.error(err.toString() , {
+          delay: 5000 , 
+          position:'bottom-right' 
+        });
+        setLoading(false) ;
       });
   };
 
@@ -283,7 +318,13 @@ const UserList = () => {
               View
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('AdminEditUser') && (
+           {row.deleted_at && session && session.user.permissions.includes('AdminEditUser') && (
+            <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              Restore
+            </MenuItem>
+          )}
+          {!row.deleted_at && session && session.user.permissions.includes('AdminEditUser') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
               Edit
@@ -322,7 +363,7 @@ const UserList = () => {
       headerName: '#',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }} className={row.deleted_at ? 'line-through' : ''}>
             {row.index}
           </Typography>
         )
@@ -337,10 +378,10 @@ const UserList = () => {
         const { email, name } = row
 
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }} className={row.deleted_at ? 'line-through' : ''} >
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
+              <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }} >
                 {name}
               </Typography>
               <Typography noWrap variant='caption'>
@@ -358,7 +399,7 @@ const UserList = () => {
       headerName: 'Company',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }} className={row.deleted_at ? 'line-through' : ''} >
             {row.company_info[0] && row.company_info[0].name}
           </Typography>
         )
@@ -371,7 +412,7 @@ const UserList = () => {
       headerName: 'Type',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: userTypeObj[row.type].color } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: userTypeObj[row.type].color } }} className={row.deleted_at ? 'line-through' : ''} >
             <Icon icon={userTypeObj[row.type].icon} fontSize={20} />
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
               {row.type}
@@ -393,6 +434,7 @@ const UserList = () => {
             label={row.status}
             color={userStatusObj[row.status]}
             sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
+            className={row.deleted_at ? 'line-through' : ''}
           />
         )
       }

@@ -75,7 +75,7 @@ const UserViewLeft = ({ id }) => {
 
   // ------------------------------ Get Company ------------------------------------------------
 
-  const getCompany = useCallback(() => {
+  const getCompany = () => {
       setLoading(true)
       axios
         .get('/api/company/' + id, {})
@@ -86,11 +86,11 @@ const UserViewLeft = ({ id }) => {
         .catch(function (error) {
           setLoading(false)
         })
-  } , [id]) ;
+  }  ;
 
   useEffect(() => {
     getCompany()
-  }, [getCompany])
+  }, [])
 
 
 

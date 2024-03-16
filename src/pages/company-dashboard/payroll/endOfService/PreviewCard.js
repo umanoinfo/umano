@@ -54,7 +54,10 @@ const renderClient = employee => {
   }
 }
 
+
 const PreviewCard = ({ data, fromDate, toDate }) => {
+  console.log('employee--' , data);
+
 
   // ** Hook
   const theme = useTheme()
@@ -200,6 +203,14 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                     </TableRow>
                     <TableRow>
                       <MUITableCell>
+                        <Typography variant='body2'>Parental Leave over 60:</Typography>
+                      </MUITableCell>
+                      <MUITableCell>
+                        <Typography variant='body2'>{data.parentalLeaveOver60} Day</Typography>
+                      </MUITableCell>
+                    </TableRow>
+                    <TableRow>
+                      <MUITableCell>
                         <Typography variant='body2'>Service Years:</Typography>
                       </MUITableCell>
                       <MUITableCell>
@@ -229,13 +240,13 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
             {
               ((data.actualYears > 1) ) && <TableRow>
                 <TableCell>For first 5 years</TableCell>
-                <TableCell>{(((data.lessThanFiveDays)/365)*21).toFixed(2)}<small> Day</small></TableCell>
+                <TableCell>{(((data.lessThanFiveDays) ) )}<small> Day</small></TableCell>
                 
                 <TableCell>
-                  {((data.salaries_info[0].lumpySalary/30).toFixed(2))} <small>AED</small>
+                  {Number(((data.salaries_info[0].lumpySalary/30).toFixed(2))).toLocaleString()} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{data.lessThanFiveValue}</strong>
+                  <strong>{Number(data.lessThanFiveValue).toLocaleString()}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>
@@ -243,13 +254,13 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
             {
               ((data.actualYears > 5) ) && <TableRow>
                 <TableCell>For more 5 years</TableCell>
-                <TableCell>{(((data.moreThanFiveDays)/365)*30).toFixed(2)}<small> Day</small></TableCell>
+                <TableCell>{(((data.moreThanFiveDays)))}<small> Day</small></TableCell>
                 
                 <TableCell>
-                  {((data.salaries_info[0].lumpySalary/30).toFixed(2))} <small>AED</small>
+                  {Number(((data.salaries_info[0].lumpySalary/30).toFixed(2))).toLocaleString()} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{data.moreThanFiveValue}</strong>
+                  <strong>{Number(data.moreThanFiveValue).toLocaleString()}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>
@@ -259,7 +270,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
           </Table>
         </TableContainer>}
 
-        { (Number(data.allDays) - Number(data.unpaidLeaveTotal)) < 365 &&
+        { (Number(data.allDays) - Number(data.unpaidLeaveTotal) - Number(data.parentalLeaveOver60) ) < 365 &&
         <Typography sx={{textAlign:'center' }} p={4} width={'100%'} variant='body2'>
             <MUITableCell>
               <Typography variant='body2'>
@@ -280,7 +291,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                  {Number(data.endOfServeceTotalValue).toFixed(2)}
+                  {Number(Number(data.endOfServeceTotalValue).toFixed(2)).toLocaleString()}
                 </Typography>
               </CalcWrapper>
               <CalcWrapper>
@@ -295,7 +306,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                {Number(data.endOfServeceTotalValue).toFixed(2)}
+                {Number(Number(data.endOfServeceTotalValue).toFixed(2)).toLocaleString()}
                 </Typography>
               </CalcWrapper>
             </Grid>

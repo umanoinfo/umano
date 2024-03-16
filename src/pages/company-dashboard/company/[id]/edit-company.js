@@ -135,7 +135,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Company ----------------------------------
 
-  const getCompany = useCallback(
+  const getCompany =  
     () => {
       setLoading(true)
       axios
@@ -157,9 +157,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
           setLoading(false)
         })
     }
-    ,
-    [id]
-  )
+   
 
   useEffect(() => {
     dispatch(
@@ -170,7 +168,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       })
     )
     getUsers().then(getCountries()).then(getCompany())
-  }, [dispatch, type, companyStatus, value , getCompany ])
+  }, [dispatch, type, companyStatus, value  ])
 
   function asyncCheckUsername(name) {
     return new Promise(resolve => {

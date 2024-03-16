@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditUser')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return  res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // -------------------------- Edit --------------------------------------
@@ -60,9 +60,10 @@ export default async function handler(req, res) {
       Description: 'Edit user (' + user.name + ')',
       created_at: new Date()
     }
+    const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-    res.status(200).json({ success: true, data: updatedUser })
+    return res.status(200).json({ success: true, data: updatedUser })
   } catch (error) {
-    res.status(400).json({ success: false })
+    return  res.status(400).json({ success: false })
   }
 }

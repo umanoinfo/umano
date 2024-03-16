@@ -45,8 +45,8 @@ export default async function handler(req, res) {
       employeesIds.push(+emp.idNo)
     }
   })
-  console.log(employeesIds)  ;
-  res.status(200).json({ 
+  
+  return res.status(200).json({ 
     success: true, 
     max: employeesIds.sort(function (a, b) {  return a - b;  })[employeesIds.length-1],
     companyEmployeeID : company[0].employeeID

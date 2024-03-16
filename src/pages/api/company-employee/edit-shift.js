@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditEmployee')) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------ Edit -------------------
@@ -18,11 +18,9 @@ export default async function handler(req, res) {
   const id = req.body.data._id
 
   if (!req.body.data._id || !req.body.data.shift_id) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-    
-    return
   }
 
   const employee = await client
@@ -63,5 +61,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: employee })
+  return res.status(201).json({ success: true, data: employee })
 }

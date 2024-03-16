@@ -150,6 +150,7 @@ const UserList = () => {
   }
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type,
@@ -486,6 +487,7 @@ const UserList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(falsedelete);
         })
       })
       .catch(function (error) {

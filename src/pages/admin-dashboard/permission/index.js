@@ -93,14 +93,14 @@ const PermissionsTable = () => {
       field: 'group',
       minWidth: 140,
       headerName: 'Group',
-      renderCell: ({ row }) => <Typography>{row.group}</Typography>
+      renderCell: ({ row }) => <Typography className={row.deleted_at ? 'line-through' : ''}>{row.group}</Typography>
     },
     {
       flex: 0.25,
       field: 'title',
       minWidth: 140,
       headerName: 'Name',
-      renderCell: ({ row }) => <Typography>{row.title}</Typography>
+      renderCell: ({ row }) => <Typography className={row.deleted_at ? 'line-through' : ''} >{row.title}</Typography>
     },
     {
       flex: 0.35,
@@ -114,6 +114,7 @@ const PermissionsTable = () => {
               size='small'
               key={index}
               skin='light'
+              className={row.deleted_at ? 'line-through' : ''}
               color={colors[assignee]}
               label={assignee.replace('-', ' ')}
               sx={{ '& .MuiChip-label': { textTransform: 'capitalize' }, '&:not(:last-of-type)': { mr: 3 } }}
@@ -134,7 +135,12 @@ const PermissionsTable = () => {
               <Icon icon='mdi:pencil-outline' />
             </IconButton>
           )}
-          {session && session.user && session.user.permissions.includes('AdminDeletePermission') && (
+          {row.deleted_at && session && session.user && session.user.permissions.includes('AdminDeletePermission') && (
+            <IconButton onClick={() => handleAdminRestorePermission(row)}>
+              <Icon icon='mdi:replay' />
+            </IconButton>
+          )}
+          {!row.deleted_at && session && session.user && session.user.permissions.includes('AdminDeletePermission') && (
             <IconButton onClick={() => handleAdminDeletePermission(row)}>
               <Icon icon='mdi:delete-outline' />
             </IconButton>
@@ -198,12 +204,18 @@ const PermissionsTable = () => {
         })
         setLoading(false)
       })
-    setEditDialogOpen(false)
+    setAddDialogOpen(false)
   }
 
   // -------------------------- Delete Permission ----------------------------------------
 
   const handleDialogDeleteToggle = () => setDeleteDialogOpen(!deleteDialogOpen)
+
+  const handleAdminRestorePermission  = permission =>{
+    setDeleteValue(permission)
+    setOldTitle(permission.title)
+    deletePernission(1);
+  }
 
   const handleAdminDeletePermission = permission => {
     setDeleteValue(permission)
@@ -211,7 +223,8 @@ const PermissionsTable = () => {
     setDeleteDialogOpen(true)
   }
 
-  const deletePernission = () => {
+  const deletePernission = (type) => {
+    setLoading(true)
     axios
       .post('/api/permission/delete-permission', {
         deleteValue: deleteValue,
@@ -219,10 +232,19 @@ const PermissionsTable = () => {
       })
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
-          toast.success('Permission (' + deleteValue.title + ') Deleted Successfully.', {
+          let message = '';
+          if(type == 1  )
+          {
+            message = 'Permission (' + deleteValue.title + ') Restored Successfully.';
+          }
+          else{
+            message = 'Permission (' + deleteValue.title + ') Deleted Successfully.';
+          }
+          toast.success(message , {
             delay: 3000,
             position: 'bottom-right'
           })
+          setLoading(false)
           setDeleteDialogOpen(false)
         })
       })
@@ -232,7 +254,9 @@ const PermissionsTable = () => {
           position: 'bottom-right'
         })
         setLoading(false)
+        
       })
+      
   }
 
   // -------------------------- Edit Permission ----------------------------------------
@@ -368,7 +392,7 @@ const PermissionsTable = () => {
               <MenuItem value='User'>User</MenuItem>
               <MenuItem value='Role'>Role</MenuItem>
               <MenuItem value='Permission'>Permission</MenuItem>
-              <MenuItem value='Coumpany'>Coumpany</MenuItem>
+              <MenuItem value='Company'>Company</MenuItem>
               <MenuItem value='Card'>Card</MenuItem>
               <MenuItem value='Department'>Department</MenuItem>
               <MenuItem value='Employee'>Employee</MenuItem>
@@ -446,7 +470,7 @@ const PermissionsTable = () => {
               <MenuItem value='User'>User</MenuItem>
               <MenuItem value='Role'>Role</MenuItem>
               <MenuItem value='Permission'>Permission</MenuItem>
-              <MenuItem value='Coumpany'>Coumpany</MenuItem>
+              <MenuItem value='Company'>Company</MenuItem>
               <MenuItem value='Card'>Card</MenuItem>
               <MenuItem value='Department'>Department</MenuItem>
               <MenuItem value='Employee'>Employee</MenuItem>
@@ -526,7 +550,7 @@ const PermissionsTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button onClick={deletePernission}>Yes</Button>
+          <Button onClick={()=>deletePernission(0)}>Yes</Button>
           <Button onClick={handleDialogDeleteToggle}>No</Button>
         </DialogActions>
       </Dialog>

@@ -43,7 +43,7 @@ const EmployeeTimeLine = ({ id }) => {
 
 
 
-  const getTimeline = useCallback( () => {
+  const getTimeline =  () => {
     let data = { id: id }
     setIsLoading(true)
     axios.post('/api/company-employee/timeline/', { data }).then(response => {
@@ -51,11 +51,11 @@ const EmployeeTimeLine = ({ id }) => {
       setTimeline(response.data.timeline)
       setIsLoading(false)
     })
-  }, [id ]) ;
+  }  ;
 
   useEffect(() => {
     getTimeline()
-  }, [getTimeline])
+  }, [ ])
 
   // if (employee) {
   //   employee.employeePositions_info.map((e, index) => {

@@ -5,9 +5,13 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 export default async function handler(req, res) {
   // -------------------- Token ---------------------
 
+  const client = await connectToDatabase()
+
   const token = await getToken({ req })
-  if (!token || !token.user) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditRole')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ------------------ Edit -------------------
@@ -17,13 +21,15 @@ export default async function handler(req, res) {
   delete role._id
 
   if (!role.title) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-
-    return
   }
-  const client = await connectToDatabase()
+  
+
+  role.permissions = role?.permissions?.filter((permission)=>{
+    return !permission.includes('Admin');
+  });
 
   const newRole = await client
     .db()
@@ -84,5 +90,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: users })
+  return res.status(201).json({ success: true, data: users })
 }

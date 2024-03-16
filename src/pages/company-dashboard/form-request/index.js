@@ -95,6 +95,7 @@ const AllDocumentsList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         requestType,
@@ -310,7 +311,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Documents is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Requests are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDocument'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>

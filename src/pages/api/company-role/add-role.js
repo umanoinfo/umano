@@ -9,19 +9,20 @@ export default async function handler(req, res) {
   const secret = process.env.NEXT_AUTH_SECRET
   const token = await getToken({ req: req, secret: secret, raw: true })
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not Auth' })
+    return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
   // ---------------- Insert ----------------
 
   const role = req.body.data
   if (!role.title) {
-    res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
-    
-    return
   }
+  role.permissions = role?.permissions?.filter((permission)=>{
+    return !permission.includes('Admin');
+  });
   const client = await connectToDatabase()
   const newRole = await client.db().collection('roles').insertOne(role)
   const insertedRole = await client.db().collection('roles').findOne({ _id: newRole.insertedId })
@@ -38,5 +39,5 @@ export default async function handler(req, res) {
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  res.status(201).json({ success: true, data: insertedRole })
+  return res.status(201).json({ success: true, data: insertedRole })
 }
