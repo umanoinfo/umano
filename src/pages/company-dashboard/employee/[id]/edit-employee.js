@@ -110,7 +110,10 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const [selectedEmployee, setSelectedEmployee] = useState()
   const [deductionDataSource, setDeductionDataSource] = useState()
   const [compensationDataSource, setCompensationDataSource] = useState()
-
+  const [unpaidLeaves , setUnpaidLeaves] = useState();
+  const [parentalLeaves , setParentalLeaves] = useState();
+  const [newEmployeeID , setNewEmployeeID] = useState() ;
+  const [companyEmployeeID , setCompanyEmployeeID] = useState() ;
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
   const { data: session, setSession } = useSession()
@@ -165,7 +168,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   // ------------------------ Get Employee -----------------------------------
 
   const getEmployee = async (tab) => {
-    setIsLoading(true)
+    setIsLoading(true);
+
+    const companyIDRes = await axios.get('/api/company/max-employee-id',{}) ;
+    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+    
     const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
     setSelectedEmployee(data[0])
@@ -179,16 +186,33 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setAddress(data[0].address)
     setNewLogo(data[0].logo)
     setGender(data[0].gender)
-
+    setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
+    setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
+    if(companyEmployeeID)
+      setNewEmployeeID(data[0].idNo.split(companyEmployeeID)[1]);
+    else
+      setNewEmployeeID(data[0].idNo);
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
 
     setIsLoading(false)
-  } 
+  }
+ 
+  const getMaxEmployeeId = async () => {
+    setIsLoading(true)
+
+    const res = await axios.get('/api/company/max-employee-id',{}).then(function (response) {
+      setCompanyEmployeeID(response.data?.companyEmployeeID)
+    })
+   
+    setIsLoading(false)
+  }
 
   useEffect(() => {
+    getMaxEmployeeId().then(
+      getEmployee()
+    )
     getCountries()
     getShifts()
-    getEmployee()
     getSalaryFormula()
     getDeduction()
     getCompensation()
@@ -337,11 +361,16 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, mb: 5 }}>
                 <Grid container spacing={3}>
-                  <Grid item sm={12} xs={12} md={5} mt={1}>
-                    <Form.Group controlId='idNo'>
-                      <small>ID No.</small>
-                      <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' />
-                    </Form.Group>
+                    <Grid item sm={12} xs={12} md={5} mt={1}>
+                      <Form.Group controlId='idNo'>
+                        <small>ID No.</small>
+                        <InputGroup>
+                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
+                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
+                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
+                        </InputGroup>
+                      </Form.Group>
+                    </Grid>
                   </Grid>
                 </Grid>
 
@@ -621,6 +650,34 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                   </Grid>
                 </Grid>
                 <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
+                        Leaves before adding to system:
+                  </Typography>
+                <Grid container spacing={3}>
+
+                  <Grid item sm={12} xs={12} md={6} mt={2}>
+                    <small> Unpaid Leaves</small>
+                    <Form.Control
+                      size='sm'
+                      name='unpaidLeavesBeforeAddingToSystem'
+                      controlId='unpaidLeavesBeforeAddingToSystem'
+                      type='number'
+                      placeholder='unpaid leaves'
+                      onChange={(e)=>{setUnpaidLeaves(e)}}
+                    />
+                  </Grid>
+                  <Grid item sm={12} xs={12} md={6} mt={2}>
+                      <small>Parental Leaves over 60 (for each year) </small>
+                      <Form.Control
+                        size='sm'
+                        name='parentalLeavesBeforeAddingToSystem'
+                        controlId='parentalLeavesBeforeAddingToSystem'
+                        type='number'
+                        placeholder='parental leaves'
+                        onChange={(e)=>{setParentalLeaves(e)}}
+                      />
+                    </Grid>
+                </Grid>
+                <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                   Home Country Details
                 </Typography>
                 <Grid container spacing={3}>
@@ -657,7 +714,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                 </Grid>
               </Grid>
         
-            </Grid>
+            
 
             <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
             <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
@@ -722,6 +779,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
+        
         data = formValue
         data._id = id
         data.countryID = countryID
@@ -735,6 +793,10 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         data.logo = newLogo
         data.status = newStatus
         data.updated_at = new Date()
+        data.parentalLeavesBeforeAddingToSystem = parentalLeaves ;
+        data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
+        data.newEmployeeID = companyEmployeeID + String(newEmployeeID);
+
         axios
           .post('/api/company-employee/edit-employee', {
             data
