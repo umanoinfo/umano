@@ -385,6 +385,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 %
                                 </Typography>
                               </Box>
+                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                Sick Leave :
+                              </Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                   &emsp;&emsp; From 1 to 15

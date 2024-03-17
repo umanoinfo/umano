@@ -650,6 +650,32 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
+                        Leaves before adding to system:
+                  </Typography>
+                  <Grid container spacing={3}>
+
+                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                      <small> Unpaid Leaves</small>
+                      <Form.Control
+                        size='sm'
+                        name='unpaidLeavesBeforeAddingToSystem'
+                        controlId='unpaidLeavesBeforeAddingToSystem'
+                        type='number'
+                        placeholder='unpaid leaves'
+                      />
+                    </Grid>
+                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                        <small>Parental Leaves over 60 (for each year)</small>
+                        <Form.Control
+                          size='sm'
+                          name='parentalLeavesBeforeAddingToSystem'
+                          controlId='parentalLeavesBeforeAddingToSystem'
+                          type='number'
+                          placeholder='parental leaves'
+                        />
+                      </Grid>
+                  </Grid>
+                  <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                     Home Country Details
                   </Typography>
                   <Grid container spacing={3}>
