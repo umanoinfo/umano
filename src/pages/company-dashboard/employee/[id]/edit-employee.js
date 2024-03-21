@@ -27,6 +27,7 @@ import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import MuiStepper from '@mui/material/Stepper'
 import Loading from 'src/views/loading'
+import { EmployeesPositions } from 'src/local-db'
 
 import { Input, InputGroup, Row, Col, Radio, RadioGroup } from 'rsuite'
 import { Form, Schema, Panel } from 'rsuite'
@@ -103,6 +104,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const [maritalStatus, setMaritalStatus] = useState()
   const [employeeType, setEmployeeType] = useState()
   const [sourceOfHire, setSourceOfHire] = useState()
+  const [position , setPosition ] = useState() ;
   const [gender, setGender] = useState('male')
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
@@ -193,7 +195,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     else
       setNewEmployeeID(data[0].idNo);
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
-
+    setPosition(data[0].type);
     setIsLoading(false)
   }
  
@@ -447,7 +449,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                 </Grid>
 
                 <Grid container spacing={3}>
-                  <Grid item sm={12} xs={12} md={12} mt={2}>
+                  <Grid item sm={6} xs={12} md={6} mt={2}>
                     <small>Nationality</small>
                     <SelectPicker
                       size='sm'
@@ -460,6 +462,24 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                       block
                     />
                   </Grid>
+                  <Grid item sm={6} xs={12} md={6} mt={2}>
+                      <small>Type </small>
+                      <Form.Group
+                          controlId='type'
+                        >
+                        <SelectPicker
+                          size='sm'
+                          name='type'
+                          onChange={e => {
+                            setPosition(e)
+                          }}
+                          checkAsync
+                          value={position}
+                          data={EmployeesPositions}
+                          block
+                        />
+                      </Form.Group>
+                    </Grid>
                 </Grid>
 
                 <Grid container spacing={3}>
@@ -796,6 +816,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         data.parentalLeavesBeforeAddingToSystem = parentalLeaves ;
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
         data.newEmployeeID = companyEmployeeID + String(newEmployeeID);
+        data.type = position ; 
 
         axios
           .post('/api/company-employee/edit-employee', {

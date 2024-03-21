@@ -34,6 +34,8 @@ import payroll from 'src/store/apps/payroll'
 import endOfService from 'src/store/apps/endOfService'
 import file from 'src/store/apps/file'
 import documentTypes from 'src/store/apps/document-types';
+import cme from 'src/store/apps/cme' ;
+import employeeCME from 'src/store/apps/employee-cme';
 
 export const store = configureStore({
   reducer: {
@@ -68,6 +70,8 @@ export const store = configureStore({
     payroll,
     file,
     endOfService,
-    documentTypes
+    documentTypes,
+    cme,
+    employeeCME    
   }
 })

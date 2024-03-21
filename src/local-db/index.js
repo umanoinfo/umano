@@ -12,6 +12,14 @@ export const EmployeesTypes = [
   { title: 'Job sharing', value: 'jobSharing' }
 ]
 
+export const EmployeesPositions = [
+    {label: 'Nurse' , value:'Nurse'},
+    {label: 'Physician' , value:'Physician'},
+    {label: 'Dentist' , value:'Dentist'},
+    {label: 'Allied Health Pharmacist' , value:'Allied Health Pharmacist'},
+    {label: 'T&CAM' , value:'T&CAM'},
+];
+
 export const MaritalStatus = [
   { title: 'Single', value: 'Single' },
   { title: 'Married', value: 'Married' },
