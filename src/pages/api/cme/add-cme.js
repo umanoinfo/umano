@@ -4,7 +4,10 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
   const { method } = req
-
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+  
   const client = await connectToDatabase()
 
 
@@ -15,7 +18,7 @@ export default async function handler(req, res) {
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddCME')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
-  console.log(req.body);
+
   if(!req.body.amount || !req.body.employee_id || !req.body.url){
     return res.status(400).json({success: false , message: 'Amount & employee id & certificate are required '});
   }

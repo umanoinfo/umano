@@ -13,7 +13,10 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddEmployee')) {
+     return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+ 
   const company = await client
   .db()
   .collection('companies')

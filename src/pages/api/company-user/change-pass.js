@@ -1,8 +1,17 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { hashPassword } from 'src/configs/auth'
+import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
+  const client = await connectToDatabase()
+
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+
   const user = req.body.user
   const hashedPassword = await hashPassword(req.body.user.password)
   user.password = hashedPassword
@@ -10,7 +19,6 @@ export default async function handler(req, res) {
   delete user._id
 
   try {
-    const client = await connectToDatabase()
     
     const newUser = await client
       .db()

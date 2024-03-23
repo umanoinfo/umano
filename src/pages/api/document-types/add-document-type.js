@@ -2,6 +2,9 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------

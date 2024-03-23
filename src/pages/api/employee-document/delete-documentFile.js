@@ -3,6 +3,9 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------
@@ -19,7 +22,10 @@ export default async function handler(req, res) {
 
   const id = employeeDocument._id
 
-  const document = await client.db().collection('employeeDocuments').findOne({_id: ObjectId(id) })
+  const document = await client.db().collection('employeeDocuments').findOne({_id: ObjectId(id) , company_id: myUser.company_id.toString() })
+  if(!document){
+    return res.status(404).json({success: false, message: 'Document not found'});
+  }
 
   const file = document.file
   delete document._id

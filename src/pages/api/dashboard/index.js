@@ -2,6 +2,7 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
+  console.log('dashboard',req.user);
   if (!req.query.q) {
     req.query.q = ''
   }
@@ -13,6 +14,7 @@ export default async function handler(req, res) {
     let arr = req.query.documentTypes.split(',')
     req.query.type = arr
   }
+  
 
   const client = await connectToDatabase()
 

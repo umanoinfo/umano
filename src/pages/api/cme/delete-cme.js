@@ -4,7 +4,9 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
   const { method } = req
-
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   console.log(req.body) ;   
@@ -20,9 +22,14 @@ export default async function handler(req, res) {
    if(!req.body.id){
     return res.status(400).json({success: false , message: 'id is required'});
   }
+  const curCME = await client.db().collection('cme').findOne({company_id: myUser.company_id.toString() , _id: ObjectId(req.body.id) }) ; 
+  if(!curCME){
+    return res.status(404).json({success: false, message: "CME not found"}) ;
+  }
+
 
   // ----------------------------- View Companies --------------------------------
-  const cme = await client.db().collection('cme').deleteOne({company_id: myUser.company_id , _id: ObjectId(req.body.id) }) ; 
+  const cme = await client.db().collection('cme').deleteOne({company_id: myUser.company_id.toString() , _id: ObjectId(req.body.id) }) ; 
    
   let log = {
     user_id: myUser._id,

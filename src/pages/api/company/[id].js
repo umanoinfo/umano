@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
+import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
   const {
@@ -8,7 +9,16 @@ export default async function handler(req, res) {
   } = req
 
   const client = await connectToDatabase()
-  
+ 
+
+  // -------------------- Token --------------------------------------------------
+
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminViewCompany')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+
   const company = await client
     .db()
     .collection('companies')

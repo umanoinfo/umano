@@ -1,15 +1,36 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { hashPassword } from 'src/configs/auth'
+import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+  const client = await connectToDatabase()
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+
+  const curUser = await client
+  .db()
+  .collection('users')
+  .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() } );
+  if(!curUser){
+    return res.status(404).json({success: false, message: 'User not found'});
+  }
+
+
+
   const user = req.body.data
   const id = user._id
   user.email = user.email.toLowerCase();
   delete user._id
   user.permissions = []
 
-  const client = await connectToDatabase()
+
 
   if (user.roles) {
     for (const role_id of user.roles) {
