@@ -70,6 +70,7 @@ import StepDocuments from './steps/StepDocuments'
 import StepPositions from './steps/StepPositions'
 import StepAttendance from './steps/StepAttendance'
 import StepSalaryFormula from './steps/StepSalaryFormula'
+import {EmployeesPositions} from 'src/local-db';
 
 // ** Styled Components
 import StepperWrapper from 'src/@core/styles/mui/stepper'
@@ -85,6 +86,9 @@ import React from 'react';
 const styles = {
   marginBottom: 10
 }
+
+
+
 
 const CustomInput = ({ ...props }) => <Input {...props} style={styles} />
 
@@ -116,6 +120,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [maritalStatus, setMaritalStatus] = useState()
   const [employeeType, setEmployeeType] = useState()
   const [sourceOfHire, setSourceOfHire] = useState()
+  const [position , setPosition] = useState('Dentist') 
+
   const [gender, setGender] = useState('male')
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
@@ -319,7 +325,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
     lastName: StringType().isRequired('Last name is required.'),
     email: StringType().isEmail('Please enter a valid email address.').isRequired('This field is required.'),
     mobilePhone: NumberType().isRequired('Mobile phone is required.').isInteger('It can only be an integer'),
-    
+
+    // type: StringType().isRequired('Employee type is required')
+
     // idNo: NumberType().isRequired('Id No. is required.')
   })
 
@@ -450,7 +458,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={3}>
-                    <Grid item sm={12} xs={12} md={12} mt={2}>
+                    <Grid item sm={6} xs={12} md={6} mt={2}>
                       <small>Nationality</small>
                       <SelectPicker
                         size='sm'
@@ -462,6 +470,26 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         data={countriesDataSource}
                         block
                       />
+                    </Grid>
+                    <Grid item sm={6} xs={12} md={6} mt={2}>
+                      <small>Type </small>
+                      <Form.Group
+                          controlId='type'
+                        >
+                        <SelectPicker
+                          size='sm'
+                          name='type'
+                          controlId='type'
+                          onChange={e => {
+                              setPosition(e)
+                          }}
+                          checkAsync
+                          defaultValue='Dentist'
+                          value={position}
+                          data={EmployeesPositions}
+                          block
+                        />
+                      </Form.Group>
                     </Grid>
                   </Grid>
 
@@ -650,6 +678,32 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
+                        Leaves before adding to system:
+                  </Typography>
+                  <Grid container spacing={3}>
+
+                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                      <small> Unpaid Leaves</small>
+                      <Form.Control
+                        size='sm'
+                        name='unpaidLeavesBeforeAddingToSystem'
+                        controlId='unpaidLeavesBeforeAddingToSystem'
+                        type='number'
+                        placeholder='unpaid leaves'
+                      />
+                    </Grid>
+                    <Grid item sm={12} xs={12} md={6} mt={2}>
+                        <small>Parental Leaves over 60 (for each year)</small>
+                        <Form.Control
+                          size='sm'
+                          name='parentalLeavesBeforeAddingToSystem'
+                          controlId='parentalLeavesBeforeAddingToSystem'
+                          type='number'
+                          placeholder='parental leaves'
+                        />
+                      </Grid>
+                  </Grid>
+                  <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                     Home Country Details
                   </Typography>
                   <Grid container spacing={3}>
@@ -767,6 +821,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         data.logo = newLogo
         data.status = newStatus
         data.created_at = new Date()
+        data.type = position ; 
         axios
           .post('/api/company-employee/add-employee', {
             data

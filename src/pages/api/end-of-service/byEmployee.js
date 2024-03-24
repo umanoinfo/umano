@@ -18,8 +18,8 @@ export default async function handler(req, res) {
   const selectedEmployee = req.body.data
   const id = selectedEmployee._id
 
-  const fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0))
-  const toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999))
+  const fromDate = new Date(new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)).toISOString());
+  const toDate = new Date( new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)).toISOString());
 
 
 
@@ -79,6 +79,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+
             {
               $match: {
                 date_from: { $gte: fromDate, $lte: toDate }

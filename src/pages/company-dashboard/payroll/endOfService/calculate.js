@@ -152,18 +152,9 @@ const AllDocumentsList = () => {
     })
   }
 
-
-
-
-
-
-
-
-
-
-
   const calculate = async (e,type) => {
     // when type == 'auto' date will be set automatically when manual (user will be able to set it on his own)
+    if(!e) return;
 
     setLoading(true);
     let data = {}
@@ -175,7 +166,7 @@ const AllDocumentsList = () => {
       if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
         fromDate = res?.data?.data[0]?.joiningDate.toString() ;
     }
-
+    
     axios.post('/api/end-of-service/byEmployee', { data }).then(res => {
       let employee = res.data.data[0]
 
@@ -188,15 +179,19 @@ const AllDocumentsList = () => {
       }
 
       employee.lumpySalary = employee.salaries_info[0].lumpySalary/30 //  Daily Salary
-
+      employee.monthlySalary = employee.salaries_info[0].lumpySalary  ;
       employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1) ;
 
         //   -------------------------- Assume Leaves -------------------------------------
 
         if (employee?.leaves_info) {
 
-          let unpaidLeaveTotal = 0
+          let unpaidLeaveTotal = 0 ; 
           let parentalLeaveTotal =0 ;
+          let parentalLeave = new Map() ; 
+
+          // add leaves before adding to system & check ( there is a paretnal leave that is not returned when calculating end of service for rew@emil.com)
+
           employee.leaves_info.map(leave => {
           if(leave.type == "daily" && leave.status_reason == 'unpaidLeave')
             {
@@ -209,25 +204,39 @@ const AllDocumentsList = () => {
               let from = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
               let to = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
               let days = ((to-from)/ (1000 * 60 * 60 * 24))+1;
-              parentalLeaveTotal = parentalLeaveTotal + days ;
+              
+              let curDate = new Date(leave.date_from) ;
+              for(let i= 0 ; i < days ;i++){
+                  let val = (parentalLeave.get(curDate.getFullYear())  || 0) 
+                  parentalLeave.set( curDate.getFullYear()  , val + 1) ;
+                  curDate.setDate( curDate.getDate() + 1 )
+              }
           }
           })
-          employee.parentalLeaveOver60 = 0 ;
-          if(parentalLeaveTotal > 60){
-            employee.parentalLeaveOver60 = parentalLeaveTotal - 60 ;
-          }
+          parentalLeave.forEach((count)=> {
+            if(count > 60 ){
+              parentalLeaveTotal = parentalLeaveTotal + (count - 60 );
+            }
+          });
+
+          employee.parentalLeaveOver60 = parentalLeaveTotal ;
           employee.unpaidLeaveTotal = unpaidLeaveTotal
       }
 
 
-      employee.actualDays = employee.allDays - employee.parentalLeaveOver60 - employee.unpaidLeaveTotal;
-      employee.actualYears = Math.round((employee.actualDays)/365).toFixed(2) ;
+      employee.actualDays = employee.allDays - employee.parentalLeaveOver60 - employee.unpaidLeaveTotal - (employee?.unpaidLeavesBeforeAddingToSystem ?? 0 )- (employee?.parentalLeavesBeforeAddingToSystem ?? 0);
+      employee.actualYears =  ((employee.actualDays)/365).toFixed(2) ;
       
       let lessThanFiveValue = 0
       let moreThanFiveValue = 0
       let lessThanFiveDays = 0
       let moreThanFiveDays = 0
-      
+      if(!employee.salaryFormulas_info || !employee?.salaryFormulas_info?.length || employee.salaryFormulas_info.length == 0 ){
+        toast.error('Salary Formula is not defined for this employee define it first and try again' , {duration: 5000 , position:'bottom-right'});
+        setLoading(false);
+
+        return; 
+      }
       let endOfServiceFrom1To5 = employee.salaryFormulas_info[0].compensationFrom1To5;
       let endOfServiceMoreThan5 = employee.salaryFormulas_info[0].compensationMoreThan5;
 
@@ -237,19 +246,19 @@ const AllDocumentsList = () => {
         lessThanFiveDays = ((employee.actualYears * endOfServiceFrom1To5)).toFixed();
       }
       if(employee.actualYears > 5 ){
-        let moreFive =  employee.actualYears -5
-        lessThanFiveValue = (5 * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2) || 0
-        lessThanFiveDays = 5 * endOfServiceFrom1To5 ;
-        moreThanFiveValue = (moreFive * endOfServiceMoreThan5 * ((employee.lumpySalary))).toFixed(2) || 0
-        moreThanFiveDays = (moreFive * endOfServiceMoreThan5).toFixed();
+        let moreFive =  employee.actualYears -5 // years of service more than 5
+        lessThanFiveValue = (5 * endOfServiceFrom1To5 * ((employee.lumpySalary))).toFixed(2) || 0 // end of service for the first 5 years
+        lessThanFiveDays = 5 * endOfServiceFrom1To5 ; // service days for the first 5 years
+        moreThanFiveValue = (moreFive * endOfServiceMoreThan5 * ((employee.lumpySalary))).toFixed(2) || 0 // end of service value for years greater than 5
+        moreThanFiveDays = (moreFive * endOfServiceMoreThan5).toFixed(2); // service days for years greater than 5
       }
 
 
-      employee.lessThanFiveDays = lessThanFiveDays
-      employee.moreThanFiveDays = moreThanFiveDays
-      employee.lessThanFiveValue = Number(lessThanFiveValue).toFixed(2)
-      employee.moreThanFiveValue = Number(moreThanFiveValue).toFixed(2)
-      employee.endOfServeceTotalValue = (Number(moreThanFiveValue) + Number(lessThanFiveValue)).toFixed(2)
+      employee.lessThanFiveDays = lessThanFiveDays // service days for the first 5 years
+      employee.moreThanFiveDays = moreThanFiveDays// service days for years greater than 5
+      employee.lessThanFiveValue = Number(lessThanFiveValue).toFixed(2) // end of service for the first 5 years
+      employee.moreThanFiveValue = Number(moreThanFiveValue).toFixed(2)// end of service value for years greater than 5
+      employee.endOfServeceTotalValue = (Number(moreThanFiveValue) + Number(lessThanFiveValue)).toFixed(2) // total end of service
       setSelectedEmployee(employee)
       
       if(type == 'auto'){
@@ -648,7 +657,21 @@ const AllDocumentsList = () => {
             </Typography>
           </Breadcrumbs>
           <Divider sx={{ pb: 0, mb: 0 }} />
+          
           <Grid container spacing={2} sx={{ px: 5, pt: 0, mt: -2 }}>
+            <Grid item sm={4} xs={12}>
+              <FormControl fullWidth size='small' sx={{ mt: 0 }}>
+                <small>Employee</small>
+                <SelectPicker
+                  name='employee_id'
+                  data={employeesDataSource}
+                  block
+                  onChange={e => {
+                    calculate(e,'auto')
+                  }}
+                />
+              </FormControl>
+            </Grid>
             <Grid item sm={2} xs={6}>
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date From</small>
@@ -672,21 +695,7 @@ const AllDocumentsList = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid item sm={4} xs={12}>
-              <FormControl fullWidth size='small' sx={{ mt: 0 }}>
-                <small>Employee</small>
-                <SelectPicker
-                  name='employee_id'
-                  data={employeesDataSource}
-                  block
-                  
-                  
-                  onChange={e => {
-                    calculate(e,'auto')
-                  }}
-                />
-              </FormControl>
-            </Grid>
+          
             <Grid item sm={2} xs={12}>
               <Button
               sx={{ mt: 8 }}

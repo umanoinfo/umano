@@ -491,6 +491,7 @@ const PermissionsTable = () => {
               <MenuItem value='AttendanceLeave'>Employee Leave</MenuItem>
               <MenuItem value='EmployeeDeduction'>Employee Deduction</MenuItem>
               <MenuItem value='EmployeeReward'>Employee Reward</MenuItem>
+              <MenuItem value='CME'> CME </MenuItem>
             </Select>
 
             <TextField

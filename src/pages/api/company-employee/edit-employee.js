@@ -3,6 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+    if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------
@@ -11,6 +15,11 @@ export default async function handler(req, res) {
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditEmployee')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
+  const emp = await client.db().collection('employees').findOne({_id: ObjectId(id) , company_id: myUser.company_id.toString}) ;
+  if(!emp){
+    return res.status(404).json({success: false, message: 'Employee not found'});
+
   }
 
   // ------------------ Edit -------------------
@@ -30,7 +39,7 @@ export default async function handler(req, res) {
   const updatEmployee = await client
     .db()
     .collection('employees')
-    .updateOne({ _id: ObjectId(id) }, { $set: employee }, { upsert: false })
+    .updateOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()}, { $set: employee }, { upsert: false })
     
   const getEmployee = await client
     .db()

@@ -128,6 +128,13 @@ export default async function handler(req, res) {
       ]
     })
   }
+  if(myUser && myUser.permissions.includes('ViewCME')){
+    options.push({
+      title:'CME',
+      icon: 'mdi:school-outline',
+      path: '/company-dashboard/cme'
+    })
+  }
 
   const documents = await client.db().collection('documentTypes').find({$or:[{company_id:'general' },{company_id: myUser.company_id}]
   }).toArray();

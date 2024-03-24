@@ -85,7 +85,8 @@ const AddLeave = ({ popperPlacement, id }) => {
     resolution_number: 0,
     description: '',
     status_reason: 'paidLeave',
-    reason: ''
+    reason: '',
+    paidValue: 100
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -144,13 +145,24 @@ const AddLeave = ({ popperPlacement, id }) => {
       if (val.type == 'daily') {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        let curDate = new Date( val.date_from ) ;
+        let totalDays =0  ;
+        for(let i =0  ;i < diffDays ;i++){
+          if(curDate.getFullYear() == new Date().getFullYear())
+            totalDays++;
+          curDate.setDate(curDate.getDay() + 1 ) ; 
+        }
         
-        return { ...val, leave_value: diffDays }
+        return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = Math.ceil(diffTime / (1000 * 60))
-
-        return { ...val, leave_value: diffDays }
+        if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
+          return { ...val, leave_value: diffDays };
+        }
+        else{
+          return {...val , leave_value: 0 } ;
+        }
       }
     })
   }
@@ -551,9 +563,22 @@ const AddLeave = ({ popperPlacement, id }) => {
             }
           }
         }
+        
+        // if(selectedEmployee.status_reason == 'parentalLeave'){
+        //   if(selectedEmployee.takenPaidLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45 ){
+
+        //   }
+        //   else if(selectedEmployee.takenPaidLeaves < 90 && diffDays + selectedEmployee.takenParentalLeaves > 90 ){
+
+        //   }
+
+        // }
+        // if(selectedEmployee.status_reason == 'sickLeave'){
+
+        // }
 
         setLoading(true)
-        setLoadingDescription('leaves is inserting')
+        setLoadingDescription('leave is inserting')
 
         let newData = { ...data_request }
         newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
@@ -790,6 +815,28 @@ const AddLeave = ({ popperPlacement, id }) => {
     let paidValue = selectedEmployee.salaryFormulas_info[0][e]
     if(e == 'otherLeave'){
       paidValue = 0
+    }
+    if(e == 'parentalLeave'){
+      if(selectedEmployee.takenParentalLeaves < 45) {
+          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom1To45'];
+      }
+      else if(selectedEmployee.takenParentalLeaves >= 45 && selectedEmployee.takenParentalLeaves < 60){
+          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom46To60'];
+      }
+      else if(selectedEmployee.takenParentalLeaves >= 60  ){
+          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom61To105'];
+      }
+    }
+    if(e == 'sickLeave'){
+      if(selectedEmployee.takenParentalLeaves < 15) {
+          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom1To15'];
+      }
+      else if(selectedEmployee.takenParentalLeaves >= 15 && selectedEmployee.takenParentalLeaves < 30){
+          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom16To30'];
+      }
+      else if(selectedEmployee.takenParentalLeaves >= 30  ){
+          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom31To90'];
+      }
     }
     formValue.status_reason = e
     setFormValue({

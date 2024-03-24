@@ -31,6 +31,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
 
+
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -44,7 +46,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-import { fetchData } from 'src/store/apps/attendance'
+import attendance, { fetchData } from 'src/store/apps/attendance'
 
 // ** Actions Imports
 import { FormType } from 'src/local-db'
@@ -334,23 +336,26 @@ const AllDocumentsList = () => {
           const data = XLSX.utils.sheet_to_json(ws) // to get 2d array pass 2nd parameter as object {header: 1}
 
           let d = data.map((val, index) => {
+            console.log(val.Date);
+            console.log(val['Date']);
+            
             return {
               'Emp No.': val['Emp No.'],
-              Date: ExcelDateToJSDate(val.Date),
+              'Date': new Date(val['Date']),
               'Clock Out': excelDateToJSDate(val['Clock Out'], true),
               'Clock In': excelDateToJSDate(val['Clock In'], true),
-              index: index + 1,
-              Name: val.Name
+              index: index + 1
             }
           })
 
           let ids = employeesList.map(val => {
             return val.idNo
           })
-
+          console.log(d);
+          
           let unValid = d.filter(val => {
             let i = !val['Emp No.']
-            let i2 = !val.Date
+            let i2 = !val['Date']
             let i3 = !val['Clock Out']
             let i4 = !val['Clock In']
             let j = !ids.includes(val['Emp No.'].toString())
@@ -376,6 +381,13 @@ const AllDocumentsList = () => {
     }
   }
 
+  const downloadExcel = ()=>{
+      const link = document.getElementById('attendanceTemplate');
+      link.href = '/attendance.xlsx' ;
+      link.setAttribute('download' , 'attendance-template.xlsx');
+      link.click();
+  }
+
   const handleSubmit = data => {
     data = data.map(({ reasons, index, Name, ...item }) => {
       return {
@@ -396,6 +408,13 @@ const AllDocumentsList = () => {
           delay: 3000,
           position: 'bottom-right'
         })
+        
+        if(response.data.existing && response.data.existing.length > 0){
+          let attendances = new Array(response.data.existing );
+          console.log('at' , typeof(attendances)) ;
+          let str = (attendances.toString());
+          toast.success(`the following attendances already exists at lines: ` + str, {duration:5000 , position:'bottom-right',icon: 'ℹ️', });
+        }
         setLoading(false)
       })
       .catch(function (error) {
@@ -595,15 +614,16 @@ const AllDocumentsList = () => {
             <Grid item sm={4} xs={12} textAlign={right}>
               {session && session.user && session.user.permissions.includes('AddAttendance') && (
                 <>
-                  {/* <Button
+                  <Button
                     type='button'
                     variant='contained'
                     size='small'
                     sx={{ mr: 1, mt: 2 }}
-                    onClick={() => addAttendance()}
+                    onClick={() => downloadExcel()}
                   >
-                    Add
-                  </Button> */}
+                    Download template
+                  </Button>
+                  <a style={{display:'hidden'}} id='attendanceTemplate' />
                   <Button type='button' variant='contained' size='small' sx={{ mt: 2 }} onClick={() => importExcel()}>
                     Import
                   </Button>

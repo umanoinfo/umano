@@ -4,6 +4,9 @@ import { hashPassword } from 'src/configs/auth'
 import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const { method } = req
 
   const client = await connectToDatabase()

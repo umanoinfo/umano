@@ -27,6 +27,7 @@ export default async function handler(req, res) {
       {
         $match: {
           _id: ObjectId(id)
+          , company_id: myUser.company_id.toString()
         }
       }
     ])

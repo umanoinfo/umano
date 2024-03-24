@@ -3,13 +3,16 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!token) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddDocument')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 

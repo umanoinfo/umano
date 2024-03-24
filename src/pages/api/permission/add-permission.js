@@ -3,15 +3,20 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+
   // ---------------- Token ----------------
 
-  const secret = process.env.NEXT_AUTH_SECRET
+  const client = await connectToDatabase()
+  
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminAddPermission')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })  
+  }   
 
-  const token = await getToken({ req: req, secret: secret, raw: true })
-
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Not Auth' })
-  }
 
   // ---------------- Insert ----------------
 
@@ -25,7 +30,6 @@ export default async function handler(req, res) {
     
     return
   }
-  const client = await connectToDatabase()
   const newPermission = await client.db().collection('permissions').insertOne(permission)
   const insertedPermissio = await client.db().collection('permissions').findOne({ _id: newPermission.insertedId })
 

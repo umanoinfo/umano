@@ -23,7 +23,8 @@ export default async function handler(req, res) {
     .aggregate([
       {
         $match: {
-          _id: ObjectId(id)
+          _id: ObjectId(id),
+          company_id : myUser.company_id.toString()
         }
       },
       {

@@ -3,6 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+  
   const client = await connectToDatabase()
 
   // ------------------------------- Token -------------------------------------
@@ -21,6 +25,10 @@ export default async function handler(req, res) {
       message: 'Invalid input'
     })
   }
+  const curAttendance = await client.db().collection('attendances').findOne({_id: ObjectId(attendance._id)});
+  if(!curAttendance || curAttendance.company_id != myUser.company_id) {
+    return res.status(404).json({success: false, message: 'Attendance not found'});
+  }
 
   attendance.company_id = myUser.company_id
   attendance.updated_at = new Date()
@@ -35,7 +43,7 @@ export default async function handler(req, res) {
   const newAttendance = await client
     .db()
     .collection('attendances')
-    .updateOne({ _id: ObjectId(id) }, { $set: attendance }, { upsert: false })
+    .updateOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() }, { $set: attendance }, { upsert: false })
 
   // -------------------------- logBook ---------------------------
 

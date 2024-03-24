@@ -3,6 +3,9 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // ---------------------------- Token -------------------------------------
@@ -22,7 +25,9 @@ export default async function handler(req, res) {
   const selectedRole = await client
     .db()
     .collection('roles')
-    .findOne({ _id: ObjectId(id) })
+    .findOne({ _id: ObjectId(id)})
+  
+ 
 
   if (selectedRole && selectedRole.deleted_at) {
     const deletRole = await client

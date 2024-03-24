@@ -6,13 +6,18 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
+
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewAttendance')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddAttendance')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -27,8 +32,14 @@ export default async function handler(req, res) {
   attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
   attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
   attendance.status = 'active'
-
-  const newAttendance = await client.db().collection('attendances').insertOne(attendance)
+  const existing = await client.db().collection('attendances').findOne({date: attendance.date , user_id: attendance.user_id});
+  if(!existing)
+  {
+      const newAttendance = await client.db().collection('attendances').insertOne(attendance)
+  }
+  else{
+    return res.status(400).json({success: false , message: 'Attendance for this date already exist'});
+  }
 
   // -------------------- logBook ------------------------------------------
 

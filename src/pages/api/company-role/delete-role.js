@@ -3,11 +3,17 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+
+  const client = await connectToDatabase()
+
   // ---------------- Token ----------------
 
-  const secret = process.env.NEXT_AUTH_SECRET
-  const token = await getToken({ req: req, secret: secret, raw: true })
-  if (!token) {
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewEmployee')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -17,12 +23,14 @@ export default async function handler(req, res) {
   const id = role._id
   delete role._id
 
-  const client = await connectToDatabase()
 
   const selectedRole = await client
     .db()
     .collection('roles')
-    .findOne({ _id: ObjectId(id) })
+    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() })
+  if(!selectedRole){
+    return res.status(404).json({success: false, message: 'Role not found'});
+  }
 
   if (selectedRole && selectedRole.deleted_at) {
     const deletRole = await client

@@ -3,6 +3,9 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // ------------------------------- Token -------------------------------------
@@ -14,8 +17,13 @@ export default async function handler(req, res) {
   }
 
   // ------------------------------- Edit -------------------------------------
-
   const compensation = req.body.data
+  const comp = await client.db().collection('compensations').findOne({_id: ObjectId(compensation._id)  , company_id: myUser.company_id.toString()});
+  if(!comp){
+    return res.status(404).json({success: false, message: 'Compensation not found'});
+  }
+
+
   if (!compensation.type || !compensation.title || (!compensation.fixedValue && !compensation.percentageValue)) {
     return res.status(422).json({
       message: 'Invalid input'

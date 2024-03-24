@@ -28,6 +28,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
+import * as XLSX from 'xlsx'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -90,6 +91,7 @@ const AllDocumentsList = () => {
   const { data: session, status } = useSession()
   const [AllDocumentTypes , setAllDocumentTypes] = useState('') ;
   const [documentTypeCategory , setDocumentTypeCategory] = useState();
+  const [isFetched , setIsFetched] = useState();
 
   // ** Hooks
 
@@ -98,7 +100,7 @@ const AllDocumentsList = () => {
   const router = useRouter()
 
  const getDocumentTypes = async () =>{
-    setLoading(true);
+  setLoading(true);
     try{
         const res = await axios.get('/api/document-types');
         if(res.status == 200 ){
@@ -111,14 +113,15 @@ const AllDocumentsList = () => {
             })
             setDocumentTypeCategory(map);
             setAllDocumentTypes(documents.toString());
-            setLoading(false);
         }
+        setLoading(false);
 
     }catch(err){
         toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
         setLoading(false);
     }
   }
+  
   useEffect(() => {
     setLoading(true);
     getDocumentTypes();
@@ -128,7 +131,8 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( setLoading(false) )
+
   }, [dispatch, Types, documentStatus, value , AllDocumentTypes != '' ])
 
   // ----------------------- Handle ------------------------------
@@ -182,6 +186,65 @@ const AllDocumentsList = () => {
     router.push('/company-dashboard/document/add-document')
   }
 
+  const handleExcelExport = () => {
+    let ex  = store.data ;
+    console.log(ex) ;
+
+    const wb = XLSX.utils.book_new()
+
+    ex = ex.map(val => {
+      
+      let c = {
+        'Contract Name': val.title ,
+        'Mandatory by DOH': '',
+        'Scope of works':'',
+        'Issue Date': new Date(val.issueDate).toLocaleDateString(),
+        'categories': val.category.toString() , 
+        'Expiray Date': new Date(val.expiryDate).toLocaleDateString(),
+        'Amount': '',
+        'Mode of Payment':'',
+        'Remarks/Status': new Date(val.expiryDate) <= new Date() ? 'Expired':'Valid',
+        'Suppliers Name': val.companyName,
+        'Contact Persons' :val.renewing_name,
+        'Mobile Number': val.renewing_phone,
+        'Remarks' : val.description
+      };
+
+      return c
+    })
+
+    let customMergeHeaders = [
+      "" ,"" ,"","","","","","","","","Contact Person information","",""
+    ];
+
+    let customHeaders = [
+      'Contract Name',
+      'Mandatory by DOH',
+      'Scope of works',
+      'Issue Date',
+      'categories',
+      'Expiray Date',
+      'Amount',
+      'Mode of Payment',
+      'Remarks/Status',
+      'Suppliers Name',
+      'Contact Persons' ,
+      'Mobile Number',
+      'Remarks' ,
+    ];
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.sheet_add_aoa(ws, [customMergeHeaders , customHeaders]);
+    XLSX.utils.sheet_add_json(ws, ex, {
+      skipHeader: true,
+      origin: -1,
+    });
+    ws['!merges'] = [{s:{c:10,r:0},e:{c:11,r:0}}];
+    ws['!cols'] = { alignment: { wrapText: '1' } };
+    XLSX.utils.book_append_sheet(wb, ws, 'hehe')
+    XLSX.writeFile(wb, 'documents.xlsx')
+  }
+
+
   // -------------------------- Row Options -----------------------------------------------
 
   const RowOptions = ({ row }) => {
@@ -212,7 +275,7 @@ const AllDocumentsList = () => {
       setOpen(true)
     }
 
- 
+    
 
     // ------------------------------ Table Definition ---------------------------------
 
@@ -403,7 +466,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Documents is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Documents are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDocument'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>
@@ -454,10 +517,13 @@ const AllDocumentsList = () => {
             <Grid item sm={2} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
               {session && session.user && session.user.permissions.includes('AddDocument') && (
-                <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addDocument()}>
+                <Button type='button' variant='contained' sx={{ mb: 3 , margin:1 }} onClick={() => addDocument()}>
                   Add Document
                 </Button>
               )}
+              <Button type='button' variant='contained' sx={{ mb: 3 , margin:1 }} onClick={() => handleExcelExport()}>
+                  Export
+              </Button>
             </Grid>
           </Grid>
 

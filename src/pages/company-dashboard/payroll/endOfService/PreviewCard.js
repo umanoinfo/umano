@@ -118,14 +118,14 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <Typography variant='body2'>
                     <MUITableCell>
                       <Typography variant='body2'>
-                        Monthly Basic Salary : {data.lumpySalary}  <small>AED</small>
+                        Monthly Basic Salary : {data.monthlySalary}  <small>AED</small>
                       </Typography>
                     </MUITableCell>
                   </Typography>
                   <Typography variant='body2'>
                     <MUITableCell>
                       <Typography variant='body2' sx={{fontWeight:'bold'}}>
-                        Daily Basic Salary : {((data.lumpySalary)/30).toFixed(2)}  <small>AED</small>
+                        Daily Basic Salary : {((data.lumpySalary)).toFixed(2)}  <small>AED</small>
                       </Typography>
                     </MUITableCell>
                   </Typography>

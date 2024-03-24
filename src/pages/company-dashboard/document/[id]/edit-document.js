@@ -76,7 +76,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
             const documents = new Map() ;
 
             let data = res?.data?.data?.map((document)=>{
-                return {label: document.name , value: document.name , category: document.category} ;
+                return {label: document.name + ' ( ' + document.category + ' )' , value: document.name , category: document.category} ;
             })
             let map = new Map();
             res?.data?.data?.map((document)=>{

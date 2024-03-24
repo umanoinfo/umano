@@ -3,6 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
+  
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------
@@ -22,7 +26,11 @@ export default async function handler(req, res) {
   const selectedAttendance = await client
     .db()
     .collection('attendances')
-    .findOne({ _id: ObjectId(id) })
+    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() })
+  
+  if(!selectedAttendance){
+    return res.status(404).json({success: false, message: 'Attendance not found'});
+  }
 
   if (selectedAttendance && selectedAttendance.deleted_at) {
     const deleteAttendance = await client

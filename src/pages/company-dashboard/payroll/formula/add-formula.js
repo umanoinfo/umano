@@ -55,9 +55,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
     holidayOverTime: 2,
     weekendOverTime: 2,
     justifiedAbsenceDay: 1,
-    notJustifiedAbsenceDay: 2,
+    notJustifiedAbsenceDay: 1,
     justifiedAbsenceHoure: 1,
-    notJustifiedAbsenceHoure: 2,
+    notJustifiedAbsenceHoure: 1,
     compensationFrom1To5: 21,
     compensationMoreThan5: 30,
     maxCompensation: 2,
@@ -280,7 +280,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               </Box>
                             </Grid>
                             <Grid item sm={12} md={6}>
-                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
+                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s</Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                   Justified :

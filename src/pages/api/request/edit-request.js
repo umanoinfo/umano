@@ -3,6 +3,9 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
+  if(req.method != 'POST'){
+    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  }
   const client = await connectToDatabase()
 
   // ------------------------------- Token -------------------------------------
@@ -26,6 +29,16 @@ export default async function handler(req, res) {
 
   request.company_id = myUser.company_id
   request.updated_at = new Date()
+  const id = request._id;
+ 
+  const selectedRequest = await client
+    .db()
+    .collection('requests')
+    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
+  if(!selectedRequest){
+    return res.status(404).json({success: false, message: 'Request not found'});
+  }
+  
   delete request._id
   delete request.user_id
   request.user_id = myUser._id

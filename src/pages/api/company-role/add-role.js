@@ -4,11 +4,13 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
 
+  const client = await connectToDatabase()
+
   // ---------------- Token ----------------
 
-  const secret = process.env.NEXT_AUTH_SECRET
-  const token = await getToken({ req: req, secret: secret, raw: true })
-  if (!token) {
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddRole')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -23,7 +25,6 @@ export default async function handler(req, res) {
   role.permissions = role?.permissions?.filter((permission)=>{
     return !permission.includes('Admin');
   });
-  const client = await connectToDatabase()
   const newRole = await client.db().collection('roles').insertOne(role)
   const insertedRole = await client.db().collection('roles').findOne({ _id: newRole.insertedId })
 

@@ -193,7 +193,7 @@ const Slip = ({ id }) => {
               <div style={{ width: '100%', display: 'flex', border: '1px solid black' }}>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>Total</div>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>
-                  {payroll.endOfServeceTotalValue} AUD
+                  {payroll.endOfServeceTotalValue} AED
                 </div>
               </div>
             </div>
