@@ -276,9 +276,9 @@ const deleteFile =()=>{
     date: DateType().isRequired('Date is required')
   });
 
-  const handleSubmit =  ()=>{
+  const handleSubmit =  async ()=>{
     setLoading(true);
-    formRef.current.checkAsync().then(  (result )=>{
+    formRef.current.checkAsync().then( async  (result )=>{
         if(!result.hasError){
           let data = formValue ; 
           data.url = tempFile ;
@@ -403,7 +403,9 @@ const deleteFile =()=>{
                         {
                         (
                             <>
-                                <Button color='success' type='submit' variant='contained' onClick={() => handleSubmit()} sx={{ mr: 3 }}>
+                                <Button color='success' type='submit' variant='contained' onClick={() => handleSubmit()} sx={{ mr: 3 }}
+                                  disabled={fileLoading}
+                                >
                                 Save
                                 </Button>
                                 <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => close()}>
