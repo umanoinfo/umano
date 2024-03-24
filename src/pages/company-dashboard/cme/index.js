@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
+import * as XLSX from 'xlsx'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -114,6 +115,35 @@ const CMEList = () => {
     ).then(setLoading(false))
   }, [dispatch, value , startDate , endDate])
 
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    let ex = [...store.data]
+
+    ex = ex.map(val => {
+      let required = 0 ;
+      CMETypes?.map((type)=> {
+        if(type == val.type){
+          required = requiredCME.get(type);
+        }
+      });
+
+      
+      let c = {
+        'Employee Name': val.employee,
+        'Amount': val.amount ,
+        'Completed' :( val.amount >= required ? "YES" : "NO"),
+        'Percentage': val.amount / required
+      };
+      
+      return c
+    })
+
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.book_append_sheet(wb, ws, 'CME')
+    XLSX.writeFile(wb, 'CME.xlsx')
+  }
+
+
   const handleStartDateChange = useCallback( (e)=>{
     setStartDate(e) ; 
   },[])
@@ -157,33 +187,8 @@ const CMEList = () => {
     setShiftType(e.target.value)
   }, [])
 
-  // -------------------------- Delete Form --------------------------------
-
-  const deleteShift = () => {
-    setLoading(true);
-    axios
-      .post('/api/shift/delete-shift', {
-        selectedShift
-      })
-      .then(function (response) {
-        dispatch(fetchData({})).then(() => {
-          toast.success('Form (' + selectedShift.name + ') Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
-          setOpen(false)
-          setLoading(false);
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 1000,
-          position: 'bottom-right'
-        })
-        setLoading(false)
-      })
-  }
-
+  
+  
   // -------------------------- Add Document -----------------------------------------------
 
   const addShift = () => {
@@ -287,6 +292,27 @@ const CMEList = () => {
         )
       }
     },
+    ,
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'percentage',
+      headerName: 'Percentage',
+      renderCell: ({ row , index }) => {
+        let required = 0 ; 
+        CMETypes?.map((type)=> {
+          if(type == row.type){
+            required = requiredCME.get(type);
+          }
+        })
+        
+      return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+              {required != 0 ?row.amount / required : <></> } %
+          </Typography>
+        )
+      }
+    },
     {
       flex: 0.17,
       minWidth: 100,
@@ -299,7 +325,7 @@ const CMEList = () => {
           </Typography>
         )
       }
-    },  
+    },
     {
       flex: 0.01,
       minWidth: 45,
@@ -375,6 +401,7 @@ const CMEList = () => {
                 color='secondary'
                 variant='outlined'
                 startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+                onClick={exportToExcel}
               >
                 Export
               </Button>
@@ -422,8 +449,7 @@ const CMEList = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button onClick={deleteShift}>Yes</Button>
-          <Button onClick={handleClose}>No</Button>
+           <Button onClick={handleClose}>No</Button>
         </DialogActions>
       </Dialog>
     </Grid>

@@ -46,7 +46,7 @@ export default async function handler(req, res) {
             {
               date : {
                 $gte: (req.body.from_date ? new Date(req.body.from_date)?.toISOString() : new Date(0).toISOString()),
-                $lte: (req.body.to_date ? new Date(req.body.to_date).toISOString() :  new Date().toISOString() )
+                $lte: (req.body.to_date ? new Date(req.body.to_date)?.toISOString() :  new Date().toISOString() )
               }
             }
             ]
