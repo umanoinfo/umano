@@ -68,7 +68,8 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
       .catch(function (error) {
-        // setLoading(false)
+        toast.error(error.toString() , {duration: 5000 , position: 'bottom-right'})
+        setLoading(false)
       })
   }  ;
 

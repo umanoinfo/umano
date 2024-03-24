@@ -104,37 +104,39 @@ export default async function handler(req, res) {
     })
   }
   if (myUser && myUser.permissions.includes('ViewEmployee')) {
+    let children = [
+      {
+        title: 'List',
+        path: '/company-dashboard/employee'
+      },
+      {
+        title: 'Leave',
+        path: '/company-dashboard/employee/leave/'
+      },
+      {
+        title: 'Deductions',
+        path: '/company-dashboard/employee/deduction/'
+      },
+      {
+        title: 'Rewards',
+        path: '/company-dashboard/employee/rewards/'
+      },
+    ]
+    if(myUser && myUser.permissions.includes('ViewCME')){
+      children.push({
+        title :'CME',
+        path:'/company-dashboard/cme'
+      })
+    }
+
     options.push({
       title: 'Employees',
       icon: 'mdi:badge-account-horizontal-outline',
+      children: children
+     
+    })
+  }
 
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/employee'
-        },
-        {
-          title: 'Leave',
-          path: '/company-dashboard/employee/leave/'
-        },
-        {
-          title: 'Deductions',
-          path: '/company-dashboard/employee/deduction/'
-        },
-        {
-          title: 'Rewards',
-          path: '/company-dashboard/employee/rewards/'
-        }
-      ]
-    })
-  }
-  if(myUser && myUser.permissions.includes('ViewCME')){
-    options.push({
-      title:'CME',
-      icon: 'mdi:school-outline',
-      path: '/company-dashboard/cme'
-    })
-  }
 
   const documents = await client.db().collection('documentTypes').find({$or:[{company_id:'general' },{company_id: myUser.company_id}]
   }).toArray();

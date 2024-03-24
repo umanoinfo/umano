@@ -11,7 +11,14 @@ import Typography from '@mui/material/Typography'
 import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
+import { TextField, Select, MenuItem, InputLabel, FormControl} from '@mui/material'
+import { TimePicker } from '@mui/x-date-pickers'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
+
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import en from 'date-fns/locale/en-US';
 import toast from 'react-hot-toast'
 
 import axios from 'axios'
@@ -19,7 +26,7 @@ import axios from 'axios'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-import { Form, SelectPicker, DatePicker } from 'rsuite'
+import { Form, SelectPicker  } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
 
@@ -115,60 +122,43 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
             </Grid>
 
             <Grid container spacing={2}>
-            <Grid item sm={6} xs={12}>
-                <div>
-                  <Form.Group>
-                    <small>Date</small>
+              <Grid container spacing={2}>
+                <Grid item sm={6} xs={12}>
+                  
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                     <DatePicker
-                      format='yyyy-MM-dd'
-                      size='md'
-                      onChange={e => {
-                        setDate(e)
-                      }}
+                      label="Date"
                       value={date}
-                      name='Date'
-                      block
+                      onChange={e => setDate(e)}
                     />
-                  </Form.Group>
-                </div>
-              </Grid>
-              <Grid item sm={3} xs={4}>
-                <div>
-                  <Form.Group>
-                    <small>Time in</small>
-                    <DatePicker
-                      format='HH:mm'
-                      size='md'
-                      onChange={e => {
-                        setTimeIn(e)
-                      }}
-                      value={timeIn}
-                      name='Date'
-                      block
+                  </LocalizationProvider>
+                    
+                </Grid>
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                      <TimePicker
+                        label="Time in"
+                        type="time"
+                        value={timeIn }
+                        onChange={e => setTimeIn(e)}
+                        fullWidth
+                      />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                    <TimePicker
+                      label="Time out"
+                      type="time"
+                      value={timeOut }
+                      onChange={e => setTimeOut(e) }
+                      fullWidth
                     />
-                  </Form.Group>
-                </div>
+                  </LocalizationProvider>
+                </Grid>
+                
               </Grid>
-              <Grid item sm={3} xs={4}>
-                <div>
-                  <Form.Group>
-                    <small>Time out</small>
-                    <DatePicker
-                      format='HH:mm'
-                      size='md'
-                      onChange={e => {
-                        setTimeOut(e)
-                      }}
-                      value={timeOut}
-                      name='Date'
-                      block
-                    />
-                  </Form.Group>
-                </div>
               </Grid>
-            </Grid>
- 
-
 
           </Grid>
         </Form>

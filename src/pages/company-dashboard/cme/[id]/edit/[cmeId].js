@@ -68,22 +68,17 @@ const AddCME = ({  }) => {
   const formRef = useRef()
   const [formError, setFormError] = useState()
   let [employeesFullInfo, setEmployeesFullInfo] = useState([])
-  
+  const [CME , setCME ] = useState()  ;
+  const {id , cmeId} = router.query; 
 
-  const getEmployees = () => {
+  const getCME = () => {
     setLoading(true);
-    axios.get('/api/company-employee', {}).then(res => {
-      let arr = []
-      let employees = res.data.data
-      setEmployeesFullInfo(employees)
-      employees = employees.map((employee , index) => {      
-          arr.push({
-            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
-            value: employee._id
-          })
-      })
-      employees.filter(employee => employee != undefined ) ;
-      setEmployeesDataSource(arr)
+    axios.get(`/api/cme/${cmeId}`, {}).then(res => {
+      
+      let cme  = res.data.data
+      formValue.amount = cme.amount ;
+      formValue.date = new Date(cme.date) ; 
+      setTempFile(cme.url) ;
       setLoading(false)
     })
   }
@@ -265,28 +260,29 @@ const deleteFile =()=>{
   const [formValue, setFormValue] = useState(default_value)
 
   useEffect(() => {
-    getEmployees();
+    getCME();
   }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
 
   const validateMmodel = Schema.Model({
-    employee_id: StringType().isRequired('Employee field is required'),
     amount: NumberType().min(0).isRequired('Amount of Hour/s field is required'),
     date: DateType().isRequired('Date is required')
   });
 
-  const handleSubmit =  ()=>{
+  const handleSubmit =   ()=>{
     setLoading(true);
-    formRef.current.checkAsync().then(  (result )=>{
+    formRef.current.checkAsync().then(   (result )=>{
         if(!result.hasError){
           let data = formValue ; 
           data.url = tempFile ;
-          axios.post('/api/cme/add-cme' , data ).then(res =>{
+          axios.post(`/api/cme/edit-cme/?id=${cmeId}` , data ).then(res =>{
               setFormValue(default_value);
               setTempFile(null);
               setLoading(false);
               toast.success('Updated successfully' , {duration: 5000 , position: 'bottom-right'}) ;
+              router.push(`/company-dashboard/cme/${id}`)
+
             }
           ).catch((err)=>{
             toast.error(err.response.data.message , {duration: 5000 , position: 'bottom-right'});
@@ -295,9 +291,11 @@ const deleteFile =()=>{
         }
         else{
           setLoading(false);
+         
         }
 
       }
+      
     )
   }
   
@@ -305,7 +303,7 @@ const deleteFile =()=>{
   // -------------------------------- Routes -----------------------------------------------
 
   const close = () => {
-    router.push('/company-dashboard/cme/')
+    router.push(`/company-dashboard/cme/${id}`)
   }
  
   // ------------------------------ View ---------------------------------
@@ -353,38 +351,41 @@ const deleteFile =()=>{
                         accepter={SelectPicker}
                         data={employeesDataSource}
                         block
-                        value={formValue.employee_id}
+                        value={id}
+                        disabled={true}
                         onChange={e => {
                           changeEmployee(e)
                         }}
                       />
                     </Grid>
-                    <Grid item sm={4} md={5} lg={3}>
-                      <small>Date of certificate </small>
-                      <Form.Control
-                        size='sm'
-                        controlid='date'
-                        name='date'
-                        accepter={DatePicker}
-                        block
-                        oneTap
-                        defaultValue={new Date()}
-                        value={formValue.date}
-                      />
-                    </Grid>
+           
+                      <Grid item sm={4} md={5} lg={3}>
+                        <small>Date of certificate </small>
+                        <Form.Control
+                          size='sm'
+                          controlid='date'
+                          name='date'
+                          accepter={DatePicker}
+                          block
+                          oneTap
+                          value={formValue.date}
+                        />
+                      </Grid>
+                  
+                   
+                        <Grid item sm={4} md={3} lg={3}>
+                          <small>Amount of hours</small>
+                          <Form.Control
+                            size='sm'
+                            controlid='amount'
+                            name='amount'
+                            type='number'
+                            block
+                            value={formValue.amount}
+                          />
+                        </Grid>
+                       
 
-                    <Grid item sm={4} md={3} lg={3}>
-                      <small>Amount of hours</small>
-                      <Form.Control
-                        size='sm'
-                        controlid='amount'
-                        name='amount'
-                        type='number'
-                        block
-                        defaultValue={0}
-                        value={formValue.amount}
-                      />
-                    </Grid>
                     <Grid item sm={12} xs={12} mt={-4} mb={10}>
                           <Typography sx={{ pt: 6 }}>
                             File :

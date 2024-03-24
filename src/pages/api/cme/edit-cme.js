@@ -12,33 +12,26 @@ export default async function handler(req, res) {
 
 
   // ------------------------------- Token -------------------------------------
-
+  const {id} = req.query; 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddCME')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditCME')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
-  if(!req.body.amount || !req.body.employee_id || !req.body.date){
+  if(!req.body.amount || !req.body.date ){
     return res.status(400).json({success: false , message: 'Amount & Employee & Date are required'});
   }
 
   // ----------------------------- View Companies --------------------------------
-  const cme = await client.db().collection('cme').insertOne({
-    url: req.body.url ,
-    amount : req.body.amount,
-    employee_id: req.body.employee_id,
-    company_id: myUser.company_id,
-    created_at: new Date(),
-    date: new Date(req.body.date)
-  });
+  const cme = await client.db().collection('cme').updateOne({_id: ObjectId(id)},{$set: req.body}, {upsert:false,  });
 
   let log = {
     user_id: myUser._id,
     company_id: myUser.company_id,
     Module: 'CME',
-    Action: 'Add',
-    Description: 'Add CME ',
+    Action: 'Edit',
+    Description: 'Edit CME ('+ (id) + ' )' ,
     created_at: new Date()
   }
 

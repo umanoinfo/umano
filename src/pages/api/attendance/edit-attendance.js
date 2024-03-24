@@ -44,6 +44,9 @@ export default async function handler(req, res) {
     .db()
     .collection('attendances')
     .updateOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() }, { $set: attendance }, { upsert: false })
+  
+  console.log(id);
+  console.log(newAttendance);
 
   // -------------------------- logBook ---------------------------
 

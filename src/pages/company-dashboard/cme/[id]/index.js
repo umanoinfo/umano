@@ -177,6 +177,10 @@ const EmployeeCmes = () => {
       setOpen(true);
     }
 
+    const handleRowOptionsEdit = (_id)=>{
+      router.push(`/company-dashboard/cme/${id}/edit/${_id}`);
+    }
+
     // ------------------------------ Table Definition ---------------------------------
 
     return (
@@ -203,6 +207,12 @@ const EmployeeCmes = () => {
             <MenuItem onClick={()=>open_file(row.url)} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
+            </MenuItem>
+          )}
+          {session && session.user && session.user.permissions.includes('EditCME') && (
+            <MenuItem onClick={()=>handleRowOptionsEdit(row._id)} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:eye-outline' fontSize={20} />
+              Edit
             </MenuItem>
           )}
           {

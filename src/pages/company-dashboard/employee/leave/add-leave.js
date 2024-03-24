@@ -422,7 +422,6 @@ const AddLeave = ({ popperPlacement, id }) => {
   // ------------------------------- Submit --------------------------------------
 
   const handleSubmit = () => {
-
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...formValue }
