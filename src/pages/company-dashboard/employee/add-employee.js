@@ -378,9 +378,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
                         <InputGroup>
-                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
-                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
-                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
+                          {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
+                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> 
+                          {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
                     </Grid>

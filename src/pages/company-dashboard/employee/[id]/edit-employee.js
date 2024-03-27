@@ -115,7 +115,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const [unpaidLeaves , setUnpaidLeaves] = useState();
   const [parentalLeaves , setParentalLeaves] = useState();
   const [newEmployeeID , setNewEmployeeID] = useState() ;
-  const [companyEmployeeID , setCompanyEmployeeID] = useState() ;
+  let [companyEmployeeID , setCompanyEmployeeID] = useState() ;
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
   const { data: session, setSession } = useSession()
@@ -173,10 +173,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setIsLoading(true);
 
     const companyIDRes = await axios.get('/api/company/max-employee-id',{}) ;
-    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+    companyEmployeeID = companyIDRes.data.companyEmployeeID ;
     
     const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
+    
     setSelectedEmployee(data[0])
     setFormValue(data[0])
     setCountryID(data[0].countryID)
@@ -190,10 +191,12 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setGender(data[0].gender)
     setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
     setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
-    if(companyEmployeeID)
-      setNewEmployeeID(data[0].idNo.split(companyEmployeeID)[1]);
+    if(companyEmployeeID ||  isNaN(data[0].idNo))
+      setNewEmployeeID(Number(data[0].idNo.split(companyEmployeeID)[1]));
     else
-      setNewEmployeeID(data[0].idNo);
+      setNewEmployeeID(Number(data[0].idNo));
+    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+    console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
     setPosition(data[0].type);
     setIsLoading(false)
@@ -367,9 +370,9 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
                         <InputGroup>
-                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
-                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
-                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
+                         {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
+                          { <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID}  onChange={(e)=>{setNewEmployeeID(e)}} /> }
+                          {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
                     </Grid>
@@ -815,7 +818,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         data.updated_at = new Date()
         data.parentalLeavesBeforeAddingToSystem = parentalLeaves ;
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
-        data.newEmployeeID = companyEmployeeID + String(newEmployeeID);
+        data.idNo = `${companyEmployeeID}${String(newEmployeeID)}`;
         data.type = position ; 
 
         axios
