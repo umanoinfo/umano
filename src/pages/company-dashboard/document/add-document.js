@@ -449,7 +449,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
 
                           <Grid item sm={12} xs={12} mt={5}>
-                          <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+                          <strong pt={5} className='px-5 pt-4'>Person In-Charge of renewing licenses informations</strong >
 
                             <div className='flex d-flex row-flex'>
                               <small>Name</small>

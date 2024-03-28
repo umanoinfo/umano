@@ -61,7 +61,9 @@ const EmployeeViewLeft = ({ id, employee }) => {
   const router = useRouter()
   const [grossSalary , setGrossSalary]=useState(0)
 
-  
+ 
+  const joiningDate = employee ? new Date(employee.joiningDate).toLocaleDateString().toString() : new Date().toLocaleDateString().toString();
+
   const newArray = employee?.employeePositions_info.filter((pos)=>{
     return(pos.endChangeType == "onPosition")
   })
@@ -129,7 +131,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
             </CardContent>
 
             <CardContent>
-              <Typography variant='h6'>Details <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+              <Typography variant='h6'>Summery <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
               <Box sx={{ pt: 2, pb: 1 }}>
                 {employee.firstName && (
@@ -269,6 +271,14 @@ const EmployeeViewLeft = ({ id, employee }) => {
                       Address:
                     </Typography>
                     <Typography variant='body2'>{employee.address}</Typography>
+                  </Box>
+                )}
+                {employee.joiningDate && (
+                  <Box sx={{ display: 'flex', mb: 2.7 }}>
+                    <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                      Joining Date:
+                    </Typography>
+                    <Typography variant='body2'>{joiningDate}</Typography>
                   </Box>
                 )}
               </Box>

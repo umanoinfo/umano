@@ -488,7 +488,7 @@ const LeaveList = () => {
                   label='Search'
                   value={value}
                   sx={{ mr: 6, mb: 2 }}
-                  placeholder='Search User'
+                  placeholder='Search Reason'
                   onChange={e => handleFilter(e.target.value)}
                 />
               </FormControl>

@@ -84,6 +84,24 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+    const recentDocuments = await client
+    .db()
+    .collection('documents')
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            { company_id: myUser.company_id },
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+          ]
+        }
+      },
+      {
+        $sort: { updated_at: -1}
+      }
+    ])
+    .toArray()
+
     const expiaryDocuments = await client
     .db()
     .collection('documents')
@@ -208,7 +226,13 @@ export default async function handler(req, res) {
     })
 
     data.documentsExpired = documentsExpired
-
-    return res.status(200).json({ success: true, data })
+    let index = 1;
+    data.recentDocuments = recentDocuments.map((document)=>{
+      document.id = index++ ; 
+      
+      return document ;
+    });
+    
+return res.status(200).json({ success: true, data })
   
 }

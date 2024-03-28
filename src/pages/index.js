@@ -57,6 +57,7 @@ const Home = () => {
     })
   }
 
+
   if(loading){
     return <Spinner sx={{ height: '100%' }} />
   }
@@ -109,7 +110,11 @@ const Home = () => {
             </Grid>  */}
 
             <Grid item xs={12} md={8}>
-              <CrmTable data={data.documentsExpired} />
+              <CrmTable data={data.documentsExpired} type={'expired'}/>
+            </Grid>
+            
+            <Grid item xs={12} md={8}>
+              <CrmTable data={data.recentDocuments} type={'recent'} />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <CrmMeetingSchedule birthdays={data.birthdays}/>
