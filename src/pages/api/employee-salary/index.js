@@ -1,5 +1,6 @@
 import { connectToDatabase } from 'src/configs/dbConnect'
 import { getToken } from 'next-auth/jwt'
+import { ObjectId} from 'mongodb'
 
 export default async function handler(req, res) {
   if (!req.query.q) {
@@ -39,6 +40,45 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+    const employee = await client.db().collection('employees').aggregate([
+      {
+        $match: {
+          $and: [{ _id: ObjectId(req.query.employeeId) }, { company_id: myUser.company_id }]
+        }
+      },
+      {
+        $lookup: {
+          from: 'compensations',
+          let: { compensations: '$compensations' },
+          pipeline: [
+            { $addFields: { string_id: { $toString: '$_id' } } },
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $isArray: '$$compensations' }, { $in: ['$string_id', '$$compensations'] }],
+                  
+                },
+                $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] 
+              }
+            }
+          ],
+          as: 'compensations_array'
+        }
+      },
+      {
+        $lookup: {
+          from: 'deductions',
+          let: { deductions: '$deductions' },
+          pipeline: [
+            { $addFields: { string_id: { $toString: '$_id' } } },
+            { $match: { $expr: { $and: [{ $isArray: '$$deductions' }, { $in: ['$string_id', '$$deductions'] }] } } }
+          ],
+          as: 'deductions_array'
+        }
+      },
+    ]).toArray();
+    
+
     salaries.map((salary , index)=>{
       if(index == 0){
         salary.lumpySalaryPercentageChange = '-' 
@@ -53,6 +93,18 @@ export default async function handler(req, res) {
       }
     })
 
+    let size = salaries.length ;
+    salaries[size-1].lumpySalary = Number( salaries[size-1].lumpySalary) ;
+    salaries[size-1].totalSalary = Number( salaries[size-1].lumpySalary) ;
+    employee[0].compensations_array.map((comp)=>{
+      salaries[size-1].totalSalary += Number(comp.fixedValue) ;
+      salaries[size-1].totalSalary += (Number(comp.percentageValue)/100) * salaries[size-1].lumpySalary ;
+    })
+    employee[0].deductions_array.map((deduction )=>{
+      salaries[size-1].totalSalary -= Number(deduction.fixedValue) ;
+      salaries[size-1].totalSalary -= Number(( Number(deduction.percentageValue)/100 )* salaries[size-1].lumpySalary) ;
+    })
+ 
 
 
   return res.status(200).json({ success: true, data: salaries })

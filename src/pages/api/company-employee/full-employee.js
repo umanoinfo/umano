@@ -66,7 +66,10 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeSalaries',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+            { $sort: { startChangeDate: -1 } }],
           as: 'salaries_info'
         }
       },
@@ -133,5 +136,28 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+    let prev = employee[0].salaries_info[0].lumpySalary ;
+    employee[0].salaries_info.map((salary)=>{
+          if(salary.lumpySalary >= prev ){
+            salary.lumpySalaryPercentageChange = ((salary.lumpySalary - prev)/ prev * 100).toFixed(2);
+          }
+          else{
+            salary.lumpySalaryPercentageChange = - ((prev - salary.lumpySalary)/ prev * 100).toFixed(2);
+          }
+          prev = salary.lumpySalary ;
+    })
+
+    let size = employee[0].salaries_info.length ;
+    console.log(employee[0].salaries_info[size-1]);
+    employee[0].salaries_info[size-1].totalSalary = Number( employee[0].salaries_info[size-1].lumpySalary ) ;
+    employee[0].compensations_array.map((comp)=>{
+      employee[0].salaries_info[size-1].totalSalary += Number(comp.fixedValue) ;
+      employee[0].salaries_info[size-1].totalSalary += (Number(comp.percentageValue)/100) * employee[0].salaries_info[size-1].lumpySalary ;
+    })
+    employee[0].deductions_array.map((deduction )=>{
+      employee[0].salaries_info[size-1].totalSalary -= Number(deduction.fixedValue) ;
+      employee[0].salaries_info[size-1].totalSalary -= Number(( Number(deduction.percentageValue)/100 )* employee[0].salaries_info[size-1].lumpySalary) ;
+    })
+ 
   return res.status(200).json({ success: true, data: employee })
 }

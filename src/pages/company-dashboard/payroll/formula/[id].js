@@ -316,7 +316,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               </Box>
                             </Grid>
                             <Grid item sm={12} md={6}>
-                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
+                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s </Typography>
                               <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                   Justified :

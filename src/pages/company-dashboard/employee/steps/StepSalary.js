@@ -384,6 +384,18 @@ const StepSalary = ({ handleNext, employee }) => {
       </>
       )
     },
+    {
+      flex: 0.3,
+      minWidth: 100,
+      field: 'total_salary',
+      headerName: 'Total Salary',
+      renderCell: ({ row }) => ( 
+      <>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>
+          {row.totalSalary ??  '-' }  
+        </Typography>
+        </>)
+    },
 
     // {
     //   flex: 0.3,

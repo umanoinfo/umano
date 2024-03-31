@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { DataGrid } from '@mui/x-data-grid'
 import Icon from 'src/@core/components/icon'
+import CustomChip from 'src/@core/components/mui/chip'
 
 const EmployeeViewSalary = ({ employee }) => {
   const [pageSize, setPageSize] = useState(10)
@@ -14,6 +15,22 @@ const EmployeeViewSalary = ({ employee }) => {
     employee.salaries_info.map((e, index) => {
       e.id = index + 1
     })
+  }
+
+  const colorChip =(data)=>{
+    if(data > 0)
+    return 'success'
+    if(data < 0)
+    return 'error'
+  }
+
+  const labelChip =(data)=>{
+    if(data > 0)
+    return (data + '%')
+    if(data < 0)
+    return (data + '%')
+    if(data == '-')
+    return ('-')
   }
 
   const columns = [
@@ -29,10 +46,10 @@ const EmployeeViewSalary = ({ employee }) => {
     {
       flex: 0.15,
       minWidth: 100,
-      field: 'overtimeٍٍSalary',
-      headerName: 'Overtime',
+      field: 'Total Salary',
+      headerName: 'Total Salary',
       renderCell: ({ row }) => (
-        <Typography variant='body2'>{new Intl.NumberFormat().format(row.overtimeSalary)} AED</Typography>
+        <Typography variant='body2'> {row.totalSalary ?? '-'} </Typography>
       )
     },
     {
@@ -40,14 +57,27 @@ const EmployeeViewSalary = ({ employee }) => {
       minWidth: 100,
       field: 'date',
       headerName: 'Date',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.startChangeDate}</Typography>
+      renderCell: ({ row }) => <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString()}</Typography>
     },
     {
       flex: 0.15,
       minWidth: 100,
       field: 'salaryChange',
       headerName: 'Change',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.salaryChange}</Typography>
+      renderCell: ({ row }) => {
+        return (
+          <>
+            <Typography variant='body2'>{row.salaryChange}</Typography>
+            <CustomChip
+              skin='light'
+              size='small'
+              label={labelChip(row.lumpySalaryPercentageChange)}
+              color={colorChip(row.lumpySalaryPercentageChange)}
+              sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
+            />
+          </>
+        )
+      }
     }
   ]
 
