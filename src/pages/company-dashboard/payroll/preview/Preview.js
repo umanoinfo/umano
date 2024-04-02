@@ -18,7 +18,7 @@ import AttendanceList from './PreviwAttendance'
 import AddPaymentDrawer from 'src/views/apps/invoice/shared-drawer/AddPaymentDrawer'
 import SendInvoiceDrawer from 'src/views/apps/invoice/shared-drawer/SendInvoiceDrawer'
 
-const InvoicePreview = ({ employee, attendances, fromDate, toDate }) => {
+const InvoicePreview = ({ employee, attendances, fromDate, toDate , lumpySalary }) => {
   // ** State
   const [error, setError] = useState(false)
   const [data, setData] = useState(null)
@@ -48,12 +48,17 @@ const InvoicePreview = ({ employee, attendances, fromDate, toDate }) => {
           </Grid>
           <Grid item xl={3} md={4} xs={12}>
             <PreviewActions
-              employee={employee} attendances={attendances} fromDate={fromDate} toDate={toDate}
+              employee={employee} attendances={attendances} fromDate={fromDate} toDate={toDate} lumpySalary={lumpySalary}
             />
           </Grid>
-          <Grid item xl={12} md={12} xs={12}>
-            <AttendanceList attendances={attendances} />
-          </Grid>
+          {
+            !employee.flexible ?
+              <Grid item xl={12} md={12} xs={12}>
+                <AttendanceList attendances={attendances} />
+              </Grid>
+            :
+             <></>
+          }
         </Grid>
         <SendInvoiceDrawer open={sendInvoiceOpen} toggle={toggleSendInvoiceDrawer} />
         <AddPaymentDrawer open={addPaymentOpen} toggle={toggleAddPaymentDrawer} />

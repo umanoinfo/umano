@@ -92,6 +92,7 @@ const AllDocumentsList = () => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedEmployee, setSelectedEmployee] = useState()
+  const [selectedEmployeeID, setSelectedEmployeeID] = useState()
   const { data: session, status } = useSession()
 
   const myRef = createRef()
@@ -105,6 +106,7 @@ const AllDocumentsList = () => {
   const [employeesList, setEmployeesList] = useState([])
 
   const [employee , setEmployee ] = useState() ;
+  const [lumpySalary , setLumpySalary] = useState(0);
 
   // ** Hooks
 
@@ -114,6 +116,7 @@ const AllDocumentsList = () => {
   const [employeesDataSource, setEmployeesDataSource] = useState([])
   const [attendances, setAttendances] = useState([])
   const [employeesFullInfo, setEmployeesFullInfo] = useState([])
+  const [done , setDone ] = useState(false) ;
   const router = useRouter()
 
   const dispatch = useDispatch()
@@ -297,9 +300,12 @@ const AllDocumentsList = () => {
       let employees = res.data.data
       employees.map(employee => {
         // if (employee.shift_info[0]) {
+        let salaryFormulaType =  '' 
+        if(employee?.salaryFormulas_info[0]?.type )
+          salaryFormulaType =  employee.salaryFormulas_info[0].type;
         arr.push({
           label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
-          value: employee._id
+          value: {id: employee._id , salaryFormulaType }
         })
 
         // }
@@ -390,16 +396,22 @@ const AllDocumentsList = () => {
 
     return totalIntersection
   }
- 
+  
 
   const calculate = async (e) => {
     let data = {}
-    data._id = e
+    data._id = e.id
     data.fromDate = fromDate
     data.toDate = toDate
-
+    data.lumpySalary = lumpySalary ;
+    if(e.salaryFormulaType == 'Flexible' && lumpySalary == 0 ){
+      setSelectedEmployeeID(e);
+      setDone(1);
+      
+      return ;
+    }
+    
     setLoading(true);
-
     try{
       let res = await axios.post('/api/payroll/byEmployee', { data });
       
@@ -412,27 +424,34 @@ const AllDocumentsList = () => {
           return ;
         }
         let employee = res.data.data[0]
-        console.log(employee);
+         if(employee.flexible || e.salaryFormulaType == 'Flexible'){
+            employee.salaries_info= [{lumpySalary}]
 
-        // console.log(employee);
-        if(!employee.salaries_info || employee.salaries_info.length == 0){
-          throw new Error('Add salary first (no salary defined!)')
+            // employee.totalWorkingDaysCount = Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24) ;
+            
+         }
+        
+        if(!employee.flexible && (!employee.salaries_info || employee.salaries_info.length == 0)){
+            throw new Error('Add salary first (no salary defined!)')
         }
+        
 
         //   ----------------------- Assume Leave -------------------------------
-
-        let employeeLeavesForThisYear = calcLeaves(employee,'year');
-        employee = calcLeaves(employee,'range');
-        employee.yearlyTakenPaidLeaves = employeeLeavesForThisYear.takenPaidLeaves ; 
-        employee.yearlyTakenUnpaidLeaves = employeeLeavesForThisYear.takenUnpaidLeaves ; 
-        employee.yearlyTakenSickLeaves = employeeLeavesForThisYear.takenSickLeaves ; 
-        employee.yearlyTakenParentalLeaves = employeeLeavesForThisYear.takenParentalLeaves ; 
+        if(!employee.flexible){
+          let employeeLeavesForThisYear = calcLeaves(employee,'year');
+          employee = calcLeaves(employee,'range');
+          employee.yearlyTakenPaidLeaves = employeeLeavesForThisYear.takenPaidLeaves ; 
+          employee.yearlyTakenUnpaidLeaves = employeeLeavesForThisYear.takenUnpaidLeaves ; 
+          employee.yearlyTakenSickLeaves = employeeLeavesForThisYear.takenSickLeaves ; 
+          employee.yearlyTakenParentalLeaves = employeeLeavesForThisYear.takenParentalLeaves ; 
+        }
  
         //   --------------------------- Assume OverTime -------------------------------------------------
  
         setSelectedEmployee(employee)
-        setAttendances(res.data.attendances)
-        
+        if(!employee.flexible)
+          setAttendances(res.data.attendances)
+        setDone(true);
     }
     catch(err){
       if(err?.response?.data?.message)
@@ -879,14 +898,36 @@ const AllDocumentsList = () => {
                 />
               </FormControl>
             </Grid>
+            {
+              done == 1?
+                  <Grid item sm={2} xs={12}>
+                    <FormControl  size='sm' sx={{ mt: 0 }}>
+                      <small>Lumpy Salary </small>
+                      <TextField
+                        value={lumpySalary}
+                        onChange={e => {
+                            setLumpySalary(e.target.value)
+                        }}
+                        type='number'
+                        size='small'
+
+                        // label='Lumpy Salary'
+                        placeholder='Lumpy Salary'
+                        />
+                    </FormControl>
+                    
+                  </Grid>
+                  :
+                <></>
+            }
             <Grid item sm={2} xs={12}>
               <Button
               sx={{ mt: 8 }}
               size='sm'
               variant='contained'
               onClick={() => {
-                if(selectedEmployee)
-                calculate(selectedEmployee._id)
+                if(selectedEmployeeID)
+                calculate(selectedEmployeeID)
               }}
             >
               Calculate
@@ -897,8 +938,10 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table ----------------------------------- */}
-
-          <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} />
+          {
+            selectedEmployee && 
+            <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} lumpySalary={lumpySalary}/>
+          }
         </Card>
       </Grid>
       {/* -------------------------- Delete Dialog -------------------------------------- */}

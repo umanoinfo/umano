@@ -81,7 +81,8 @@ export const FormulaType = [
   { label: 'Monthly', value: 'Monthly' },
   { label: 'Weekly', value: 'Weekly' },
   { label: 'Daily', value: 'Daily' },
-  { label: 'Hourly', value: 'Hourly' }
+  { label: 'Hourly', value: 'Hourly' },
+  { label: 'Flexible' , value: 'Flexible'}
 ]
 
 export const CompensationsType = [

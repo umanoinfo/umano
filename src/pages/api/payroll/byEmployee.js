@@ -27,7 +27,7 @@ export default async function handler(req, res) {
   const toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
 
 
-  console.log('tofrom',fromDate , toDate )
+  
 
   // --------------------- Get ------------------------------------------
 
@@ -190,8 +190,91 @@ export default async function handler(req, res) {
     return res.status(404).json({success: false, message : 'No employee with this ID'});
   }
   employee = employee[0] ; 
+  
+  let lumpySalary = 0;
+  if(employee && employee.salaryFormulas_info && employee.salaryFormulas_info[0].type == 'Flexible'){
+    employee.flexible = true ;
+    lumpySalary = Number(req.body.data.lumpySalary) ;
+    employee.salaries_info = [ { lumpySalary: lumpySalary } ] ;
+    employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / ( 1000 * 60 * 60 * 24  ));
+  }
+  else if(employee && employee.salaries_info && employee.salaries_info[0] && employee.salaries_info[0].lumpySalary){
+    lumpySalary = employee.salaries_info[0].lumpySalary;
+  }
+  employee.dailySalary = lumpySalary / 30 ;
 
-  // ------------------------- Validation ----------------------------------
+  //   -------------------------- Assume Compensations -----------------------------------------
+
+  if (employee.compensations_array) {
+          let totalCompensations = 0
+          employee.compensations_array.map(comp => {
+            let totalValue = 0
+            
+            if (comp.type == 'Monthly') {
+              totalValue = totalValue + Number(comp.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30))
+              totalValue = totalValue + Number((comp.percentageValue * lumpySalary ) / 100) * Math.ceil((employee.totalWorkingDaysCount/ 30));
+            }
+            if (comp.type == 'Daily') {
+              totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
+              totalValue =
+                totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+            }
+            comp.totalValue = totalValue
+            totalCompensations = totalCompensations + totalValue
+          })
+  
+          employee.totalCompensations = totalCompensations
+  }
+  
+        //   -------------------------- Assume Deduction ----------------------------------------------
+  
+  if (employee.deductions_array) {
+          let totalDeductions = 0
+          employee.deductions_array.map(deduction => {
+            let totalValue = 0
+  
+            if (deduction.type == 'Monthly') {
+              totalValue = totalValue + Number(deduction.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30));
+              totalValue = totalValue + Number((deduction.percentageValue * lumpySalary) / 100) * Math.ceil((employee.totalWorkingDaysCount/ 30))
+            }
+            if (deduction.type == 'Daily') {
+              totalValue = totalValue + Number(deduction.fixedValue * employee.totalWorkingDaysCount)
+              totalValue =
+                totalValue +
+                Number((deduction.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+            }
+            deduction.totalValue = totalValue
+            totalDeductions = totalDeductions + totalValue
+          })
+  
+          employee.totalDeductions = totalDeductions
+  }
+  
+  //   -------------------------- Assume Employee Deduction -------------------------------------
+  let totalEmployeeDeductions = 0
+  if (employee.employee_deductions_info) {
+            employee.employee_deductions_info.map(deduction => {
+              totalEmployeeDeductions = totalEmployeeDeductions +  Number(deduction.value)
+            })
+            employee.totalEmployeeDeductions = totalEmployeeDeductions
+          }
+  
+  //   -------------------------- Assume Employee Rewards ----------------------------------------
+  
+          if (employee.employee_rewards_info) {
+            let totalEmployeeRewards = 0
+            employee.employee_rewards_info.map(reward => {
+              totalEmployeeRewards = totalEmployeeRewards + Number(reward.value)
+            })
+            employee.totalEmployeeRewards = totalEmployeeRewards
+  }
+
+  /// -------------------------- Validation ----------------------------------------------------
+  console.log(employee.totalEmployeeDeductions , employee.totalEmployeeRewards , employee.totalCompensations , employee.totalDeductions , lumpySalary);
+  if(employee.flexible){
+    return res.status(200).json({success: true , data : [employee] }) ;
+  }
+  
   if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0]  ){
     let message = [] ;
     if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
@@ -300,7 +383,7 @@ export default async function handler(req, res) {
         if(!leaveDay){
             employee.attendances_info?.map(att => {
               if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString() ) {
-                console.log(att.date , x );
+                
                 _in = setUTCHours( att.timeIn.toString() ) ;
                 _out = setUTCHours( att.timeOut.toString() ) ;
                 
@@ -358,7 +441,7 @@ export default async function handler(req, res) {
             })
           }
         }
-      console.log(lateFlag , lateHours ,earlyFlag , earlyHours) ;
+      
       attendances.push({
         day: weekday[day],
         workingDay: workingDay,
@@ -461,71 +544,7 @@ export default async function handler(req, res) {
       Number(employee.hourlySalary) *
       -1)
   
-      //   -------------------------- Assume Compensations -----------------------------------------
 
-      if (employee.compensations_array) {
-        let totalCompensations = 0
-        employee.compensations_array.map(comp => {
-          let totalValue = 0
-
-          if (comp.type == 'Monthly') {
-            totalValue = totalValue + Number(comp.fixedValue)
-            totalValue = totalValue + Number((comp.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
-          }
-          if (comp.type == 'Daily') {
-            totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
-            totalValue =
-              totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
-          }
-          comp.totalValue = totalValue
-          totalCompensations = totalCompensations + totalValue
-        })
-
-        employee.totalCompensations = totalCompensations
-      }
-
-      //   -------------------------- Assume Deduction ----------------------------------------------
-
-      if (employee.deductions_array) {
-        let totalDeductions = 0
-        employee.deductions_array.map(deduction => {
-          let totalValue = 0
-
-          if (deduction.type == 'Monthly') {
-            totalValue = totalValue + Number(deduction.fixedValue)
-            totalValue = totalValue + Number((deduction.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
-          }
-          if (deduction.type == 'Daily') {
-            totalValue = totalValue + Number(deduction.fixedValue * employee.totalWorkingDaysCount)
-            totalValue =
-              totalValue +
-              Number((deduction.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
-          }
-          deduction.totalValue = totalValue
-          totalDeductions = totalDeductions + totalValue
-        })
-
-        employee.totalDeductions = totalDeductions
-      }
-
-              //   -------------------------- Assume Employee Deduction -------------------------------------
-        let totalEmployeeDeductions = 0
-        if (employee.employee_deductions_info) {
-          employee.employee_deductions_info.map(deduction => {
-            totalEmployeeDeductions = totalEmployeeDeductions +  Number(deduction.value)
-          })
-          employee.totalEmployeeDeductions = totalEmployeeDeductions
-        }
-
-        //   -------------------------- Assume Employee Rewards ----------------------------------------
-
-        if (employee.employee_rewards_info) {
-          let totalEmployeeRewards = 0
-          employee.employee_rewards_info.map(reward => {
-            totalEmployeeRewards = totalEmployeeRewards + Number(reward.value)
-          })
-          employee.totalEmployeeRewards = totalEmployeeRewards
-        }
 
         //   --------------------------- Assume Leaves -------------------------------------------------
 
@@ -544,13 +563,13 @@ export default async function handler(req, res) {
                 let cur = new Date(leave.date_from + ' UTC') ;
                 let intersectedDays = 0 ;
                 for(let i = 0 ;i < days;i++){
-                  console.log(cur , fromDate, toDate , cur >= fromDate && cur <= toDate );
+                  
                   if(cur >= fromDate && cur <= toDate ){
                     intersectedDays++ ;
                   }
                   cur.setDate(cur.getDay() + 1 ) ;
                 }
-                console.log(leave.date_from , days , intersectedDays );
+                
                 leave.time = (((shift_out - shift_in)*intersectedDays) / 3600000) 
                 leave.days = intersectedDays
                 totalLeave = totalLeave + Number(((intersectedDays*employee.dailySalary * (100 -leave.paidValue))/100) ) 
@@ -578,23 +597,3 @@ export default async function handler(req, res) {
 
 return res.status(200).json({ success: true, data: employee, attendances: attendances })
 }
-
-// to do
-/*
-  1. calculate the overall salary
-     subtract the leaves:
-      based on the salary formula
-      add the overtime based on the salary formula 
-      salary formula -> paid leaves , unpaid leaves , sick leaves(1,2,3) , parental leaves(1,2,3)
-  ..
-    
-  2. getting the leaves is not correct:
-      where are checking:
-        from_date : {gte: from_date , lte: to_date };
-      what if :
-        the leave was before from_date and after to_date
-        ...
-
-
-
-*/
