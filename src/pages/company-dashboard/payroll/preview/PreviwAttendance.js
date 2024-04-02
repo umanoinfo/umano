@@ -40,11 +40,12 @@ const AttendanceList = ({ attendances }) => {
 
   console.log(attendances)
 
-  const [pageSize, setPageSize] = useState(31)
+  const [pageSize, setPageSize] = useState(32)
 
   const [loading, setLoading] = useState(false)
 
   const { data: session, status } = useSession()
+  console.log('.',attendances)
 
   // ------------------------------- Table columns --------------------------------------------
 
@@ -64,7 +65,7 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 60,
+      minWidth: 70,
       field: 'timeIn',
       headerName: 'In',
       renderCell: ({ row }) => {
@@ -73,7 +74,7 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 60,
+      minWidth: 70,
       field: 'timeOut',
       headerName: 'Out',
       renderCell: ({ row }) => {
@@ -86,7 +87,7 @@ const AttendanceList = ({ attendances }) => {
       field: 'lateHours',
       headerName: 'Late (R)',
       renderCell: ({ row }) => {
-        return <>{row.lateHours != 0 && <Typography sx={{ fontSize: 14, color: 'red' }}>{row.lateHours}</Typography>}</>
+        return <>{row.lateHours != 0 && <Typography sx={{ fontSize: 14, color: 'red' }}>{Number(row.lateHours).toFixed(2)}</Typography>}</>
       }
     },
     {
@@ -136,7 +137,7 @@ const AttendanceList = ({ attendances }) => {
       field: 'holiday',
       headerName: 'Holiday',
       renderCell: ({ row }) => {
-        return <>{row.holidayDay && <Typography sx={{ fontSize: 14, color: 'green' }}>{row.totalHours}</Typography>}</>
+        return <>{row.holidayDay && <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(row.totalHours).toFixed(2)}</Typography>}</>
       }
     },
     {
@@ -148,7 +149,7 @@ const AttendanceList = ({ attendances }) => {
         return (
           <>
             {!row.workingDay && !row.holidayDay && row.totalHours != 0 && (
-              <Typography sx={{ fontSize: 14, color: 'green' }}>{row.totalHours}</Typography>
+              <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(row.totalHours).toFixed(2)}</Typography>
             )}
           </>
         )

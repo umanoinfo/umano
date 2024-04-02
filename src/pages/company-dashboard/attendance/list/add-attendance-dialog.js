@@ -27,6 +27,7 @@ import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import en from 'date-fns/locale/en-US';
 import de from 'date-fns/locale/de'; 
 
 const Transition = forwardRef(function Transition(props, ref) {

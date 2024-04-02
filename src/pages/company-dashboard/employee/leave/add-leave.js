@@ -21,8 +21,13 @@ import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 
 import toast from 'react-hot-toast'
 
+// import { TimePicker } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import en from 'date-fns/locale/en-US'
+
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker, DatePicker, Input } from 'rsuite'
+import { Form, Schema, SelectPicker, DatePicker , DateInput , Input } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -37,6 +42,7 @@ import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 import { DataGrid } from '@mui/x-data-grid'
 import Link from 'next/link'
+
 
 const { StringType, NumberType, DateType } = Schema.Types
 
@@ -144,7 +150,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     return val.map(val => {
       if (val.type == 'daily') {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        const diffDays = (diffTime / (1000 * 60 * 60 * 24))
         let curDate = new Date( val.date_from ) ;
         let totalDays =0  ;
         for(let i =0  ;i < diffDays ;i++){
@@ -156,7 +162,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
-        const diffDays = Math.ceil(diffTime / (1000 * 60))
+        const diffDays = (diffTime / (1000 * 60))
         if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
           return { ...val, leave_value: diffDays };
         }
@@ -391,6 +397,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   const [daysDuration , setDaysDeurtion] = useState(0)
 
   const assumeDurationFrom = (date_from)=>{
+    console.log(date_from);
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(formValue.date_to  - date_from)
@@ -426,7 +433,9 @@ const AddLeave = ({ popperPlacement, id }) => {
       if (!result.hasError) {
         let data = { ...formValue }
         const data_request = { ...formValue }
-
+        console.log(formValue);
+        
+        
         const range1 = selectedEmployee.shift_info[0].times.map(time => {
           return { start: time.timeIn, end: time.timeOut }
         })
@@ -563,18 +572,38 @@ const AddLeave = ({ popperPlacement, id }) => {
           }
         }
         
-        // if(selectedEmployee.status_reason == 'parentalLeave'){
-        //   if(selectedEmployee.takenPaidLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45 ){
+        if(selectedEmployee.status_reason == 'parentalLeave'){
+          if(selectedEmployee.takenParentalLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45 ){
+              toast.error(`Error: add the first ${45 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 45} `,
+              {duration:5000, position: 'bottom-right'});
+              
+              return ;
+          }
+          else if(selectedEmployee.takenParentalLeaves < 60 && diffDays + selectedEmployee.takenParentalLeaves > 60 ){
+              toast.error(`Error: add the first ${60 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 60} `,
+              {duration:5000, position: 'bottom-right'});
 
-        //   }
-        //   else if(selectedEmployee.takenPaidLeaves < 90 && diffDays + selectedEmployee.takenParentalLeaves > 90 ){
+              return ;
+          }
 
-        //   }
+        }
+        console.log(selectedEmployee.status_reason , selectedEmployee.takenSickLeaves , diffDays);
+        if(selectedEmployee.status_reason == 'sickLeave'){
+          if(selectedEmployee.takenSickLeaves < 15 && diffDays + selectedEmployee.takenSickLeaves > 15 ){
+            toast.error(`Error: add the first ${15 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 15} `,
+            {duration:5000, position: 'bottom-right'});
 
-        // }
-        // if(selectedEmployee.status_reason == 'sickLeave'){
+            return ;
+          }
+          else if(selectedEmployee.takenSickLeaves < 30 && diffDays + selectedEmployee.takenSickLeaves > 30 ){
+            toast.error(`Error: add the first ${30 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 30} `,
+            {duration:5000, position: 'bottom-right'});
 
-        // }
+            return ;
+          }
+        }
+        
+
 
         setLoading(true)
         setLoadingDescription('leave is inserting')
@@ -827,20 +856,22 @@ const AddLeave = ({ popperPlacement, id }) => {
       }
     }
     if(e == 'sickLeave'){
-      if(selectedEmployee.takenParentalLeaves < 15) {
+      if(selectedEmployee.takenSickLeaves < 15) {
           paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom1To15'];
       }
-      else if(selectedEmployee.takenParentalLeaves >= 15 && selectedEmployee.takenParentalLeaves < 30){
+      else if(selectedEmployee.takenSickLeaves >= 15 && selectedEmployee.takenSickLeaves < 30){
           paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom16To30'];
       }
-      else if(selectedEmployee.takenParentalLeaves >= 30  ){
+      else if(selectedEmployee.takenSickLeaves >= 30  ){
           paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom31To90'];
       }
     }
-    formValue.status_reason = e
+    paidValue = Number(paidValue);
+    setSelectedEmployee({...selectedEmployee , status_reason: e , paidValue: paidValue});
     setFormValue({
       ...formValue,
-      paidValue:paidValue
+      paidValue:paidValue,
+      status_reason: e
     })
   }
 
@@ -866,7 +897,6 @@ const AddLeave = ({ popperPlacement, id }) => {
                 accepter={DatePicker}
                 value={formValue.date_from}
                 onSelect={(e) =>assumeDurationFrom(e)}
-                oneTap
               />
             </div>
           </Box>
@@ -889,7 +919,6 @@ const AddLeave = ({ popperPlacement, id }) => {
                 accepter={DatePicker}
                 value={formValue.date_to}
                 onSelect={(e) =>assumeDurationTo(e)}
-                oneTap
               />
             </div>
           </Box>
@@ -920,7 +949,6 @@ const AddLeave = ({ popperPlacement, id }) => {
                 format='yyyy-MM-dd '
                 name='date_from'
                 size='small'
-                oneTap
                 accepter={DatePicker}
                 value={formValue.date_from}
                 onChange={e => {
@@ -928,19 +956,19 @@ const AddLeave = ({ popperPlacement, id }) => {
                   setFormValue({ ...formValue, date_to: e, date_from: e })
                 }}
               />
-              <Form.Control
+            <Form.Control
                 disabledDate={val => {
                   return !disableDates(val)
                 }}
-                controlid='date_from'
+                controlid='date_from'                                                                                                                                                                                                                                                                                                   
                 format='HH:mm'
                 size='small'
                 name='date_from'
-                accepter={DatePicker}
                 value={formValue.date_from}
+                accepter={DatePicker}
                 onSelect={(e) =>assumeDurationFrom(e)}
-              />
-            </div>
+                />
+             </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
@@ -959,7 +987,6 @@ const AddLeave = ({ popperPlacement, id }) => {
                 format=' yyyy-MM-dd'
                 name='date_to'
                 size='small'
-                oneTap
                 accepter={DatePicker}
                 value={formValue.date_to}
                 disabled

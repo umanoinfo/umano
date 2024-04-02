@@ -23,19 +23,24 @@ export default async function handler(req, res) {
   let index = 1 ;
   let existingAttendances = [ ] ;
   for (const attendance of attendances) {
+    const is12Format = (str)=>{
+      return str.toUppserCase().includes('AM') || str.toUppserCase().includes('PM') ;
+    };
+    if(is12Format(attendance.timeIn ) ||  is12Format(attendance.timeOut)){
+      attendance.timeIn = new Date('2000-1-1 ' + attendance.timeIn ).toLocaleTimeString('en-US' , {hour12: false}) ;
+      attendance.timeOut = new Date('2000-1-1 ' + attendance.timeOut ).toLocaleTimeString('en-US' , {hour12: false}) ;
+    }
     attendance.company_id = myUser.company_id
     attendance.date = new Date(attendance.date)
     attendance.user_id = myUser._id
     attendance.created_at = new Date()
-    attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
-    attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
     attendance.status = 'active'
-    const existing = await client.db().collection('attendances').findOne({date: attendance.date , user_id: attendance.user_id});
+    const existing = await client.db().collection('attendances').findOne({date: attendance.date , employee_no: attendance.employee_no , $or:[{deleted_at:{$exists:false} , deleted_at: null}]});
     if(!existing){
       const newAttendance = await client.db().collection('attendances').insertOne(attendance)
     }
     else{
-      existingAttendances.push(index);
+      existingAttendances.push(index+1);
     }
     index++ ;
   }

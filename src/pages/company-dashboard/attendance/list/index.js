@@ -336,14 +336,17 @@ const AllDocumentsList = () => {
           const data = XLSX.utils.sheet_to_json(ws) // to get 2d array pass 2nd parameter as object {header: 1}
 
           let d = data.map((val, index) => {
-            console.log(val.Date);
-            console.log(val['Date']);
+            let timeOut = excelDateToJSDate(val['Clock Out']);
+            let timeIn = excelDateToJSDate(val['Clock In']);
+            
+            timeOut = new Date(timeOut).toLocaleTimeString('en-US' , {hour12: false});
+            timeIn =  new Date(timeIn).toLocaleTimeString('en-US' , {hour12: false});
             
             return {
               'Emp No.': val['Emp No.'],
               'Date': new Date(val['Date']),
-              'Clock Out': excelDateToJSDate(val['Clock Out'], true),
-              'Clock In': excelDateToJSDate(val['Clock In'], true),
+              'Clock Out': timeOut ,
+              'Clock In': timeIn ,
               index: index + 1
             }
           })
@@ -351,23 +354,27 @@ const AllDocumentsList = () => {
           let ids = employeesList.map(val => {
             return val.idNo
           })
-          console.log(d);
           
           let unValid = d.filter(val => {
             let i = !val['Emp No.']
             let i2 = !val['Date']
-            let i3 = !val['Clock Out']
-            let i4 = !val['Clock In']
+            let i3 = !val['Clock Out'] 
+            let k3 = val['Clock Out'].toUpperCase().includes('AM') || val['Clock Out'].toUpperCase().includes('PM') 
+            let i4 = !val['Clock In'] 
+            let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM') ;
             let j = !ids.includes(val['Emp No.'].toString())
-
+            let k5 = val['Clock In'] > val['Clock Out'] ;
             val.reasons = []
             val.reasons = i ? [...val.reasons, 'Emp No.'] : val.reasons
             val.reasons = i2 ? [...val.reasons, 'Date'] : val.reasons
             val.reasons = i3 ? [...val.reasons, 'Clock Out'] : val.reasons
             val.reasons = i4 ? [...val.reasons, 'Clock In'] : val.reasons
             val.reasons = j ? [...val.reasons, 'not in the system'] : val.reasons
+            val.reasons = k3 ? [...val.reasons , 'Clock out should be in 24 hour format'] : val.reasons ;
+            val.reasons = k4 ? [...val.reasons , 'Clock In should be in 24 hour format'] : val.reasons ;
+            val.reasons = k5 ? [...val.reasons , 'Clock In should be smaller than clock out (double check its 24 hour format)'] : val.reasons;
 
-            return i || i2 || i3 || j
+            return i || i2 || i3 || i4 || j || k3 || k4
           })
 
           if (unValid.length > 0) {
@@ -389,7 +396,7 @@ const AllDocumentsList = () => {
   }
 
   const handleSubmit = data => {
-    data = data.map(({ reasons, index, Name, ...item }) => {
+    data = data.map(({ reasons, index, Name, ...item }) => {      
       return {
         date: new Date(item.Date),
         timeOut: item['Clock Out'],
@@ -411,7 +418,6 @@ const AllDocumentsList = () => {
         
         if(response.data.existing && response.data.existing.length > 0){
           let attendances = new Array(response.data.existing );
-          console.log('at' , typeof(attendances)) ;
           let str = (attendances.toString());
           toast.success(`the following attendances already exists at lines: ` + str, {duration:5000 , position:'bottom-right',icon: 'ℹ️', });
         }

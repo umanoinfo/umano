@@ -154,7 +154,7 @@ const Slip = ({ id }) => {
                   Leaves
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  -{payroll.totalLeave} AED
+                  -{payroll.totalLeave.toFixed(2)} AED
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
@@ -191,7 +191,7 @@ const Slip = ({ id }) => {
               </div>
             </div>
             <div style={{ margin: '5px', width: '50%', border: '1px solid black' }} xs={12} md={6}>
-              <h4 style={{ margin: '5px', textAlign: 'center' }}>Ernings</h4>
+              <h4 style={{ margin: '5px', textAlign: 'center' }}>Earnings</h4>
 
               <div style={{ width: '100%', display: 'flex' }}>
                 <div
@@ -223,6 +223,12 @@ const Slip = ({ id }) => {
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
                   {payroll.totalholidayValue} <small>AED</small>
+                </div>
+                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                  Overtime
+                </div>
+                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                  {(payroll.totalEarlyOverTimeValue +  payroll.totalLateOverTimeValue).toFixed(2)} <small>AED</small>
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>

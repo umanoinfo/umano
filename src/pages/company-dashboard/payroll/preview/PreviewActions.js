@@ -39,11 +39,11 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalCompensations = employee.totalCompensations
     data.totalDeductions = employee.totalDeductions
     data.totalEarlyHours = employee.totalEarlyHours
+    data.totalLateHours = employee.totalLateHours
     data.totalEarlyValue = employee.totalEarlyValue
     data.lumpySalary = employee.salaries_info[0].lumpySalary
     data.totalEmployeeDeductions = employee.totalEmployeeDeductions
     data.totalEmployeeRewards = employee.totalEmployeeRewards
-    data.totalLateHours = employee.totalLateHours
     data.totalLeave = employee.totalLeave
     data.totalOffDayHours = employee.totalOffDayHours
     data.totalOffDayValue = employee.totalOffDayValue
@@ -67,7 +67,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
                     Number(employee.totalLeave)+
                       Number(employee.totalLateOverTimeValue)+
                         Number(employee.totalEarlyOverTimeValue)
-
+    
     axios.post('/api/payroll/add-payroll', data).then((res)=>{
       router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
       toast.success('Payroll (' + res.data.data.name + ') Inserted Successfully.', {

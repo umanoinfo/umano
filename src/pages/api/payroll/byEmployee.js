@@ -27,11 +27,11 @@ export default async function handler(req, res) {
   const toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
 
 
-
+  console.log('tofrom',fromDate , toDate )
 
   // --------------------- Get ------------------------------------------
 
-  const employee = await client
+  let employee = await client
     .db()
     .collection('employees')
     .aggregate([
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
           from: 'attendances',
           let: { employee_no: { $toString: '$idNo' } },
           pipeline: [
-            { $match: { $expr: { $eq: ['$employee_no', '$employee_no'] } } },
+            { $match: { $expr: { $eq: ['$employee_no', '$$employee_no'] } } },
             {
               $match: { date: { $gte: fromDate, $lte: toDate } }
             },
@@ -189,19 +189,23 @@ export default async function handler(req, res) {
   if(!employee || !employee[0] ){
     return res.status(404).json({success: false, message : 'No employee with this ID'});
   }
-  if(!employee[0].salaryFormulas_info || ! employee[0].salaryFormulas_info[0]|| !employee[0]?.shift_info || !employee[0]?.shift_info[0]  ){
+  employee = employee[0] ; 
+
+  // ------------------------- Validation ----------------------------------
+  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0]  ){
     let message = [] ;
-    if(!employee[0].salaryFormulas_info || ! employee[0].salaryFormulas_info[0]){
+    if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
       message.push('Error: define Sarlary Formula for this employee first');
 
     }
-    if(!employee[0]?.shift_info || !employee[0]?.shift_info[0] ){
+    if(!employee?.shift_info || !employee?.shift_info[0] ){
       message.push('Error: define Shift info for this employee first');
     }  
     
     return res.status(400).json({success: false, message: message }); 
   }
-  let start = fromDate
+
+  let start = new Date(fromDate)
   let end = toDate
   let attendances = []
   let index = 0
@@ -242,8 +246,9 @@ export default async function handler(req, res) {
  
 
       // ----------------------- leaves ------------------------------------
-      if(employee[0]?.leaves_info){ // each day we may have more than one leave 
-        employee[0].leaves_info?.map(leave => {
+      let totalLeaveHours = 0 ; 
+      if(employee?.leaves_info){ // each day we may have more than one leave 
+        employee.leaves_info?.map(leave => {
             
             var dateFrom = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
             var dateTo = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
@@ -254,6 +259,7 @@ export default async function handler(req, res) {
               }
               if (leave.type == 'hourly') {
                 leaveHourly = true
+                totalLeaveHours += (Math.abs(dateTo - dateFrom) / 3600000).toFixed(2)
               }
               leaves.push(leave) 
             }
@@ -263,7 +269,7 @@ export default async function handler(req, res) {
       }
   
       // -----------------------------------------------------------------
-      // console.log(employee[0]) ;
+      // console.log(employee) ;
    
  
       const setUTCHours = (time)=>{
@@ -273,71 +279,92 @@ export default async function handler(req, res) {
         return date ;
       }
  
-      let shift_in = setUTCHours(employee[0].shift_info[0].times[0].timeIn.toString() ) ; 
-      let shift_out =  setUTCHours( employee[0].shift_info[0].times[0].timeOut.toString()  )
-      let availableEarly =  setUTCHours( employee[0].shift_info[0].times[0].availableEarly.toString()  )// the amount of delay that doesn't count (in the morning)
-      let availableLate =  setUTCHours( employee[0].shift_info[0].times[0].availableLate.toString()  )// the amount of delay that doesn't count (in the afternoon)
-      let shiftOverTime1 =  setUTCHours( employee[0].shift_info[0].times[0]['1st'].toString()  )
-      let shiftOverTime2 =  setUTCHours( employee[0].shift_info[0].times[0]['2nd'].toString()  )
-      let shiftOverTime3 =  setUTCHours( employee[0].shift_info[0].times[0]['3rd'].toString()  )
+      let shift_in = setUTCHours(employee.shift_info[0].times[0].timeIn.toString() ) ; 
+      let shift_out =  setUTCHours( employee.shift_info[0].times[0].timeOut.toString()  )
+      let availableEarly =  setUTCHours( employee.shift_info[0].times[0].availableEarly.toString()  )// the amount of delay that doesn't count (in the morning)
+      let availableLate =  setUTCHours( employee.shift_info[0].times[0].availableLate.toString()  )// the amount of delay that doesn't count (in the afternoon)
+      let shiftOverTime1 =  setUTCHours( employee.shift_info[0].times[0]['1st'].toString()  )
+      let shiftOverTime2 =  setUTCHours( employee.shift_info[0].times[0]['2nd'].toString()  )
+      let shiftOverTime3 =  setUTCHours( employee.shift_info[0].times[0]['3rd'].toString()  )
 
       // ----------------------- Absence days -----------------------------------------
 
       if (!leaveDay && !holidayDay && workingDay) {
         lateFlag = true // initlizing it to true (assuming employee didn't attend ) then check if he did....
-        lateHours = ((shift_out - shift_in) / 3600000).toFixed(2)
+        lateHours = ((shift_out - shift_in) / 3600000) 
       }
 
 
       // -------------------------------------------------------------
-      if(employee[0]?.attendances_info){
+      if(employee?.attendances_info){
         if(!leaveDay){
-            employee[0].attendances_info?.map(att => {
-              if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString() && !att.deleted_at ) {
-                console.log(att.date , att.deleted_at) ;
-                _in = att.timeIn
-                _out = att.timeOut
+            employee.attendances_info?.map(att => {
+              if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString() ) {
+                console.log(att.date , x );
+                _in = setUTCHours( att.timeIn.toString() ) ;
+                _out = setUTCHours( att.timeOut.toString() ) ;
+                
                 earlyFlag = false
                 earlyHours =0
                 lateFlag = false
                 lateHours = 0
-                totalHours = (
-                  (new Date('1/1/2023 ' + _out.toString() + ' UTC') - new Date('1/1/2023 ' + _in.toString() + ' UTC')) /
-                  3600000
-                ).toFixed(2)
-      
+
                 
-                if (new Date('1/1/2023 ' + _in.toString() + ' UTC') > availableLate) {
-                  lateFlag = true
-                  lateHours = ((new Date('1/1/2023 ' + _in.toString() + ' UTC') - shift_in) / 3600000).toFixed(3)
-                }
-      
-                if (new Date('1/1/2023 ' + _out.toString() + ' UTC') < availableEarly) {
-                  earlyFlag = true
-                  earlyHours = ((shift_out - new Date('1/1/2023 ' + _out.toString() + ' UTC')) / 3600000).toFixed(3)
-                }
+                totalHours = (
+                  ( Math.min(shift_out , _out ) -  Math.max(shift_in , _in )) / 3600000
+                )
+                
+                // ---------------- late ---------------------
+                if(!holidayDay && workingDay) // in holidays & off days lateness doesn't count
+                  if (_in > availableEarly) {
+                    lateFlag = true
+                    lateHours = (Math.abs(_in - shift_in) / 3600000).toFixed(2)
+                  }
+                if(!holidayDay && workingDay) // in holidays & off days lateness doesn't count
+                  if (_out < availableLate) {
+                    earlyFlag = true
+                    earlyHours = (Math.abs(shift_out - _out ) / 3600000).toFixed(2)
+                  }
       
                 // -------------------- overtime -----------------------
-      
-                if (new Date('1/1/2023 ' + _in.toString() + ' UTC') < shift_in) {
-                  earlyOvertimeFlag = true
-                  earlyOverTimeHours = ((shift_in - new Date('1/1/2023 ' + _in.toString() + ' UTC')) / 3600000).toFixed(3)
+                if(workingDay)
+                {  
+                  if (_in < shift_in) {
+                    earlyOvertimeFlag = true
+                    earlyOverTimeHours = ((shift_in - _in ) / 3600000).toFixed(2)
+                  }
+                  if (_out  > shift_out) {
+                    lateOvertimeFlag = true
+                    lateOverTimeHours = ((_out - shift_out) / 3600000).toFixed(2)
+                  }
                 }
-                if (new Date('1/1/2023 ' + _out.toString() + ' UTC') > shift_out) {
-                  lateOvertimeFlag = true
-                  lateOverTimeHours = ((new Date('1/1/2023 ' + _out.toString() + ' UTC') - shift_out) / 3600000).toFixed(3)
+                else{
+                  if(_in < shift_in ){
+                    earlyOvertimeFlag = true ;
+                    if(holidayDay){
+                      earlyOverTimeHours = (((shift_in - _in) / 3600000).toFixed(2) * employee.salaryFormulas_info[0].holidayOverTime ).toFixed(2);
+                    }
+                    else if(!workingDay){ // off day ( weekend )
+                      earlyOverTimeHours = (((shift_in - _in) / 3600000).toFixed(2) * employee.salaryFormulas_info[0].weekendOverTime).toFixed(2) ;
+                    }
+
+                  }
                 }
+                _in = _in.toISOString().substr(11,8)
+                _out = _out.toISOString().substr(11,8)
+
               }
+              
             })
           }
         }
-      
+      console.log(lateFlag , lateHours ,earlyFlag , earlyHours) ;
       attendances.push({
         day: weekday[day],
         workingDay: workingDay,
         id: index,
         date: new Date(x),
-        _in: _in,
+        _in: _in ,
         _out: _out,
         lateFlag: lateFlag,
         earlyFlag: earlyFlag,
@@ -351,46 +378,53 @@ export default async function handler(req, res) {
         holidayDay: holidayDay,
         leaveDay: leaveDay,
         leaveHourly: leaveHourly,
-        leaves:leaves
+        leaves:leaves,
+        totalLeaveHours: totalLeaveHours
       })
     }
-    employee[0].hourlySalary = ( // ok
-    employee[0].dailySalary /
+
+    //   ----------------------- Assume hourly Salary -------------------------------
+    employee.dailySalary = (employee.salaries_info[0].lumpySalary / 30) //  Daily Salary
+    employee.hourlySalary = ( // ok
+    employee.dailySalary /
     (
-      (new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeOut.toString() + ' UTC') -
-        new Date('1/1/2023 ' + employee[0].shift_info[0].times[0].timeIn.toString() + ' UTC')) /
+      (new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC') -
+        new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')) /
       3600000
     )
   )
   let totalEarlyOverTimeHours = 0 // overtime hours (morning)
   let totalLateOverTimeHours = 0// overtime hours (evening)
 
+  //   ------------------------ Assume Early & Late OverTime Hours -------------------------------
+  
   attendances.map(att => { 
     totalEarlyOverTimeHours = totalEarlyOverTimeHours + Number(att.earlyOverTimeHours)
     totalLateOverTimeHours = totalLateOverTimeHours + Number(att.lateOverTimeHours)
   })
 
-  employee[0].totalEarlyOverTimeHours = totalEarlyOverTimeHours
-  employee[0].totalLateOverTimeHours = totalLateOverTimeHours
+  employee.totalEarlyOverTimeHours = totalEarlyOverTimeHours
+  employee.totalLateOverTimeHours = totalLateOverTimeHours
 
-  employee[0].totalEarlyOverTimeValue = (
+  employee.totalEarlyOverTimeValue = (
     +totalEarlyOverTimeHours *
-    +employee[0].hourlySalary *
-    +employee[0].salaryFormulas_info[0].firstOverTime
+    +employee.hourlySalary *
+    +employee.salaryFormulas_info[0].firstOverTime
   )
 
-  employee[0].totalLateOverTimeValue = (
+  employee.totalLateOverTimeValue = (
     +totalLateOverTimeHours *
-    +employee[0].hourlySalary *
-    +employee[0].salaryFormulas_info[0].firstOverTime
+    +employee.hourlySalary *
+    +employee.salaryFormulas_info[0].firstOverTime
   )
 
   let totalWorkingDaysCount =0 ;
   let totalholidayHours = 0
   let totalEarlyHours = 0 // lateness hours (morning)
   let totalLateHours = 0 // lateness hours (evening)
-  let totalOffDayHours =0 ;
+  let totalOffDayHours =0 ; // days that company are not working in.
 
+  //   ----------------------- Assume Early & Late Hours -------------------------------
   attendances.map(att => {
     if (att._in) {
       totalWorkingDaysCount++
@@ -404,30 +438,145 @@ export default async function handler(req, res) {
       totalOffDayHours = totalOffDayHours + Number(att.totalHours)
     }
   })
-  employee[0].totalWorkingDaysCount = totalWorkingDaysCount
-  employee[0].totalholidayHours = totalholidayHours
+  employee.totalWorkingDaysCount = totalWorkingDaysCount
+  employee.totalholidayHours = totalholidayHours
 
-  employee[0].totalholidayValue = (
+  employee.totalholidayValue = (
           +totalholidayHours *
-          +employee[0].hourlySalary *
-          +employee[0].salaryFormulas_info[0].holidayOverTime
-  ).toFixed(2)
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].holidayOverTime
+  )
 
-  employee[0].totalOffDayHours = totalOffDayHours
-  employee[0].totalOffDayValue = (
+  employee.totalOffDayHours = totalOffDayHours
+  employee.totalOffDayValue = (
           +totalOffDayHours *
-          +employee[0].hourlySalary *
-          +employee[0].salaryFormulas_info[0].weekendOverTime
-  ).toFixed(2)
-  employee[0].totalEarlyHours = totalEarlyHours
-  employee[0].totalLateHours = totalLateHours
-  employee[0].totalEarlyValue =
-      (Number(employee[0].totalEarlyHours + employee[0].totalLateHours) *
-      Number(employee[0].salaryFormulas_info[0].notJustifiedAbsenceHoure) * // those hours are not justified because justified hours (are in leaves)
-      Number(employee[0].hourlySalary) *
-      -1).toFixed(2)
-    
-  return res.status(200).json({ success: true, data: employee, attendances: attendances })
+          +employee.hourlySalary *
+          +employee.salaryFormulas_info[0].weekendOverTime
+  )
+  employee.totalEarlyHours = totalEarlyHours
+  employee.totalLateHours = totalLateHours
+  employee.totalEarlyValue =
+      (Number(employee.totalEarlyHours + employee.totalLateHours) *
+      Number(employee.salaryFormulas_info[0].notJustifiedAbsenceHoure) * // those hours are not justified because justified hours (are in leaves)
+      Number(employee.hourlySalary) *
+      -1)
+  
+      //   -------------------------- Assume Compensations -----------------------------------------
+
+      if (employee.compensations_array) {
+        let totalCompensations = 0
+        employee.compensations_array.map(comp => {
+          let totalValue = 0
+
+          if (comp.type == 'Monthly') {
+            totalValue = totalValue + Number(comp.fixedValue)
+            totalValue = totalValue + Number((comp.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
+          }
+          if (comp.type == 'Daily') {
+            totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
+            totalValue =
+              totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+          }
+          comp.totalValue = totalValue
+          totalCompensations = totalCompensations + totalValue
+        })
+
+        employee.totalCompensations = totalCompensations
+      }
+
+      //   -------------------------- Assume Deduction ----------------------------------------------
+
+      if (employee.deductions_array) {
+        let totalDeductions = 0
+        employee.deductions_array.map(deduction => {
+          let totalValue = 0
+
+          if (deduction.type == 'Monthly') {
+            totalValue = totalValue + Number(deduction.fixedValue)
+            totalValue = totalValue + Number((deduction.percentageValue * employee.salaries_info[0].lumpySalary) / 100)
+          }
+          if (deduction.type == 'Daily') {
+            totalValue = totalValue + Number(deduction.fixedValue * employee.totalWorkingDaysCount)
+            totalValue =
+              totalValue +
+              Number((deduction.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+          }
+          deduction.totalValue = totalValue
+          totalDeductions = totalDeductions + totalValue
+        })
+
+        employee.totalDeductions = totalDeductions
+      }
+
+              //   -------------------------- Assume Employee Deduction -------------------------------------
+        let totalEmployeeDeductions = 0
+        if (employee.employee_deductions_info) {
+          employee.employee_deductions_info.map(deduction => {
+            totalEmployeeDeductions = totalEmployeeDeductions +  Number(deduction.value)
+          })
+          employee.totalEmployeeDeductions = totalEmployeeDeductions
+        }
+
+        //   -------------------------- Assume Employee Rewards ----------------------------------------
+
+        if (employee.employee_rewards_info) {
+          let totalEmployeeRewards = 0
+          employee.employee_rewards_info.map(reward => {
+            totalEmployeeRewards = totalEmployeeRewards + Number(reward.value)
+          })
+          employee.totalEmployeeRewards = totalEmployeeRewards
+        }
+
+        //   --------------------------- Assume Leaves -------------------------------------------------
+
+          if (employee.leaves_info) {
+            let totalLeave = 0 ;// this value will be subtracted from total salary
+            let shift_out = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeOut.toString() + ' UTC')
+            let shift_in = new Date('1/1/2023 ' + employee.shift_info[0].times[0].timeIn.toString() + ' UTC')
+
+            employee.leaves_info.map(leave => {
+              let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
+              let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
+              if(leave.type == "daily")
+              {
+
+                let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
+                let cur = new Date(leave.date_from + ' UTC') ;
+                let intersectedDays = 0 ;
+                for(let i = 0 ;i < days;i++){
+                  console.log(cur , fromDate, toDate , cur >= fromDate && cur <= toDate );
+                  if(cur >= fromDate && cur <= toDate ){
+                    intersectedDays++ ;
+                  }
+                  cur.setDate(cur.getDay() + 1 ) ;
+                }
+                console.log(leave.date_from , days , intersectedDays );
+                leave.time = (((shift_out - shift_in)*intersectedDays) / 3600000) 
+                leave.days = intersectedDays
+                totalLeave = totalLeave + Number(((intersectedDays*employee.dailySalary * (100 -leave.paidValue))/100) ) 
+                
+              }
+              if(leave.type == "hourly")
+              {
+                let cur = new Date(leave.date_from).setUTCHours(0,0,0,0) ; 
+                if(cur >= fromDate && cur <= toDate){
+                  leave.time = ((new Date(leave.date_to) - new Date(leave.date_from)) / 3600000)
+                  totalLeave = totalLeave + Number((((leave.time*employee.hourlySalary) * (100 - leave.paidValue))/100) ) 
+                  
+                }
+              }
+            })
+
+            employee.totalLeave = (totalLeave)
+        }
+
+
+
+
+
+  employee = [employee];
+
+return res.status(200).json({ success: true, data: employee, attendances: attendances })
 }
 
 // to do
