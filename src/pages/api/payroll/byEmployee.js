@@ -296,7 +296,9 @@ export default async function handler(req, res) {
   let holidays = [] ; 
   if(company.holidays){
     holidays = company.holidays.map(day => {
-      return new Date(day.date).toLocaleDateString()
+      let holidayDate = new Date(day.date).toLocaleDateString().split('/');
+
+      return holidayDate[0] + '/' + holidayDate[1] ;      
     })
   }
 
@@ -324,8 +326,11 @@ export default async function handler(req, res) {
       day = new Date(x).getDay() // index 
       let workingDay = working_days.includes(weekday[day]) // boolean
       let dateFormate = new Date(x).toLocaleDateString()
-      if(company?.holidays)
-        holidayDay = holidays.includes(dateFormate) // boolean
+      if(company?.holidays){
+        let isHoliday = dateFormate.split('/');
+
+        holidayDay = holidays.includes(isHoliday[0] + '/' + isHoliday[1]) // boolean
+      }
  
 
       // ----------------------- leaves ------------------------------------

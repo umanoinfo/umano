@@ -67,7 +67,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const getMyCompany = () => {
     setLoading(true);
     axios.get('/api/company/my-company', {}).then(res => {
-      let val = res.data.data[0]
+      let val = res.data.data
+      console.log();
       if (!val.working_days) {
         val.working_days = []
       }
