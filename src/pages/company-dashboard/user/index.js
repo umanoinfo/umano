@@ -477,7 +477,7 @@ const UserList = () => {
   const deleteUser = () => {
     setLoading(true)
     axios
-      .post('/api/user/delete-user', {
+      .post('/api/company-user/delete-user', {
         selectedUser
       })
       .then(function (response) {
@@ -487,7 +487,7 @@ const UserList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
-          setLoading(falsedelete);
+          setLoading(false);
         })
       })
       .catch(function (error) {

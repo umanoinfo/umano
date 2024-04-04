@@ -22,7 +22,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async params => 
 // ** Add User
 export const addUser = createAsyncThunk('appUsers/addUser', async (data, { getState, dispatch }) => {
   const response = await axios
-    .post('/api/user/add-user', {
+    .post('/api/company-user/add-user', {
       data
     })
     .then(
@@ -52,7 +52,7 @@ const updateUser = createAsyncThunk('users/update', async (userData, { rejectWit
 
 // ** Delete User
 export const deleteUser = createAsyncThunk('appUsers/deleteUser', async (id, { getState, dispatch }) => {
-  const response = await axios.delete('/apps/users/delete', {
+  const response = await axios.delete('/api/company-user/delete-user', {
     data: id
   })
   dispatch(fetchData(getState().user.params))

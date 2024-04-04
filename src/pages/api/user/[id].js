@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
+import { getToken } from 'next-auth/jwt'
 
 export default async function handler(req, res) {
   const {

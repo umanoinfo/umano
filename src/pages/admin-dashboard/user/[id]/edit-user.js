@@ -93,14 +93,17 @@ const DialogAddUser = ({ id }) => {
     axios
       .get('/api/user/' + id, {})
       .then(function (response) {
+        console.log(response.data.data[0]);
         setUserStatus(response.data.data[0].status)
         setType(response.data.data[0].type)
+        setEmail(response.data.data[0].email)
+        setName(response.data.data[0].name);
         setRoles(response.data.data[0].roles)
         reset(response.data.data[0])
         setLoading(false)
       })
       .catch(function (error) {
-        // setLoading(false)
+        setLoading(false)
       })
   }   ;
 
@@ -235,11 +238,12 @@ const DialogAddUser = ({ id }) => {
                     name='email'
                     control={control}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                     render={({ field: { value, onChange } }) => (
                       <TextField
                         type='email'
                         size='small'
                         value={value}
+                        defaultValue={email}
                         label='Email'
                         onChange={onChange}
                         placeholder='name@email.com'

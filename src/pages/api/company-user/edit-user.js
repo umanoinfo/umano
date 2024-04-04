@@ -9,10 +9,37 @@ export default async function handler(req, res) {
   }
   const client = await connectToDatabase()
   const token = await getToken({ req })
-  const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser')) {
+
+  let myUser = await client.db().collection('users').aggregate(
+    [
+      {
+        $match:{
+          email: token.email
+        }
+      },
+      {
+        $lookup: {
+          from: 'subscriptions',
+          let: { company_id:  '$company_id'  },
+          pipeline: 
+          [
+            { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } },
+
+            { $sort: {start_at : -1 } },
+         ],
+          as: 'subscriptions_info'
+        }
+      }
+    ]
+  ).toArray()
+  myUser = myUser[0] ;
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser') || !myUser.subscriptions_info || !myUser.subscriptions_info[0]) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
+
+  const user = req.body.data
+  const id = user._id
+
 
   const curUser = await client
   .db()
@@ -22,10 +49,13 @@ export default async function handler(req, res) {
     return res.status(404).json({success: false, message: 'User not found'});
   }
 
+  const usersCount = await client.db().collection('users').countDocuments({company_id: myUser.company_id , status: 'active', $or:[{deleted_at: {$exists:false}} , {deleted_at: null}]}); 
+
+  if(req.body.data.status == 'active' && req.body.data.status != curUser.status && usersCount + 1 > myUser.subscriptions_info[0].availableUsers){
+    return res.status(400).json({success: false, message: `You are limited to only ${myUser.subscriptions_info[0].availableUsers} in your subscription`});
+  }
 
 
-  const user = req.body.data
-  const id = user._id
   user.email = user.email.toLowerCase();
   delete user._id
   user.permissions = []

@@ -50,7 +50,7 @@ const updateUser = createAsyncThunk('users/update', async (userData, { rejectWit
 
 // ** Delete User
 export const deleteUser = createAsyncThunk('appUsers/deleteUser', async (id, { getState, dispatch }) => {
-  const response = await axios.delete('/apps/users/delete', {
+  const response = await axios.delete('/api/user/delete-user', {
     data: id
   })
   dispatch(fetchData(getState().user.params))

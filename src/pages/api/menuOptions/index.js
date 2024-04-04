@@ -138,8 +138,11 @@ export default async function handler(req, res) {
   }
 
 
-  const documents = await client.db().collection('documentTypes').find({$or:[{company_id:'general' },{company_id: myUser.company_id}]
-  }).toArray();
+  const documents = await client.db().collection('documentTypes')
+        .find({$or:[{company_id:'general' , 
+              $or: [{deleted_at: {$exists:false}} , {deleted_at: null }] },
+              {company_id: myUser.company_id}]
+        }).toArray();
 
   if (myUser &&( myUser.permissions.includes('ViewDocument')  )) {
     const children = documents.map((document)=>{
