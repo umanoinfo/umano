@@ -40,14 +40,15 @@ export default async function handler(req, res) {
           as: 'parent_info'
         }
       },
-      {
-        $lookup: {
-          from: 'departments',
-          let: { id: '$_id' },
-          pipeline: [{ $match: { $expr: { $eq: ['$parent', '$id'] } } }],
-          as: 'children_info'
-        }
-      },
+
+      // {
+      //   $lookup: {
+      //     from: 'departments',
+      //     let: { id: '$_id' },
+      //     pipeline: [{ $match: { $expr: { $eq: ['$parent', '$id'] } , $or: [{deleted_at: { $exists: false } } , { deleted_at: null}] , status: 'active' } }],
+      //     as: 'children_info'
+      //   }
+      // },
 
       {
         $lookup: {
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
           let: { id: { $toObjectId: '$_id' } },
           pipeline: [
             { $addFields: { parent: { $toObjectId: '$parent' } } },
-            { $match: { $expr: { $eq: ['$parent', '$$id'] } } }
+            { $match: { $expr: { $eq: ['$parent', '$$id'] } ,$or: [{deleted_at: { $exists: false } } , { deleted_at: null}] , status: 'active'} }
           ],
           as: 'children_info'
         }
