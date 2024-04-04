@@ -13,7 +13,7 @@ import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker, DatePicker, Input, CheckPicker } from 'rsuite'
+import { Form, Schema, SelectPicker, DatePicker, Input, CheckPicker , Checkbox} from 'rsuite'
 
 import 'rsuite/dist/rsuite.min.css'
 
@@ -32,6 +32,11 @@ import Link from 'next/link'
 const { StringType, NumberType, DateType, ArrayType } = Schema.Types
 
 const Textarea = forwardRef((props, ref) => <Input {...props} as='textarea' ref={ref} />)
+
+const footerStyles = {
+  padding: '10px 2px',
+  borderTop: '1px solid #e5e5e5'
+};
 
 const AddDepartment = ({ popperPlacement, id }) => {
   // ** States
@@ -184,6 +189,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         size='sm'
                         controlId='employees'
                         name='employees'
+                        renderExtraFooter={() => (
+                          <div style={footerStyles}>
+                            <Checkbox
+                              indeterminate={formValue.employees.length > 0 && formValue.employees.length < employeesDataSource.length}
+                              checked={formValue.employees.length === employeesDataSource.length}
+                              onChange={(value , checked )=>{
+                                setFormValue(checked ? {...formValue , employees: employeesDataSource.map((val)=>val.value) }: {...formValue , employees: []})
+                              }}
+                            >
+                              Check all
+                            </Checkbox>
+                          </div>
+                        )}
                         data={employeesDataSource}
                         block
                         onChange={e => {

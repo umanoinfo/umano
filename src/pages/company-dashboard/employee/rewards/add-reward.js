@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useRef, useEffect, forwardRef } from 'react'
+import React , { useState , useRef, useEffect, forwardRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -13,7 +13,7 @@ import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker, DatePicker, Input, CheckPicker } from 'rsuite'
+import { Form, Schema, SelectPicker, DatePicker, Input, CheckPicker , Checkbox } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -32,6 +32,17 @@ const { StringType, NumberType, DateType, ArrayType } = Schema.Types
 
 const Textarea = forwardRef((props, ref) => <Input {...props} as='textarea' ref={ref} />)
 
+const footerStyles = {
+  padding: '10px 2px',
+  borderTop: '1px solid #e5e5e5'
+};
+
+const footerButtonStyle = {
+  float: 'right',
+  marginRight: 10,
+  marginTop: 2
+};
+
 const AddDepartment = ({ popperPlacement, id }) => {
   // ** States
   const [loadingDescription, setLoadingDescription] = useState('')
@@ -42,6 +53,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession
   const formRef = useRef()
   const [formError, setFormError] = useState()
+  const picker = useRef();
 
   // --------------forms values--------------------------------
 
@@ -52,7 +64,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
     resolution_number: 0,
     description: '',
     value: 0,
-    reason: ''
+    reason: '',
+    employees:[]
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -73,6 +86,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getEmployees = () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -82,8 +96,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
       })
       setEmployeesDataSource(arr)
+      setLoading(false)
     })
-    setLoading(false)
   }
 
   // ------------------------------- Submit --------------------------------------
@@ -183,6 +197,20 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         size='sm'
                         controlId='employees'
                         name='employees'
+                        ref={picker}
+                        renderExtraFooter={() => (
+                          <div style={footerStyles}>
+                            <Checkbox
+                              indeterminate={formValue.employees.length > 0 && formValue.employees.length < employeesDataSource.length}
+                              checked={formValue.employees.length === employeesDataSource.length}
+                              onChange={(value , checked )=>{
+                                setFormValue(checked ? {...formValue , employees: employeesDataSource.map((val)=>val.value) }: {...formValue , employees: []})
+                              }}
+                            >
+                              Check all
+                            </Checkbox>
+                          </div>
+                        )}
                         data={employeesDataSource}
                         block
                         onChange={e => {
