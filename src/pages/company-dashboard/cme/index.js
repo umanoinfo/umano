@@ -101,7 +101,6 @@ const CMEList = () => {
 
   const dispatch = useDispatch()
   const store = useSelector(state => state.cme)
-  console.log(store);
   const router = useRouter()
 
   useEffect(() => {
@@ -211,7 +210,7 @@ const CMEList = () => {
     }
 
     const handleRowView = () => {
-      router.push('/company-dashboard/cme/' + row._id)
+      router.push('/company-dashboard/cme/' + row._id )
       handleRowOptionsClose()
     }
 
@@ -240,7 +239,7 @@ const CMEList = () => {
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           {session && session.user && session.user.permissions.includes('ViewCME') && (
-            <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
+            <MenuItem onClick={()=>handleRowView()} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>

@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
+import FormHelperText from '@mui/material/FormHelperText'
 
 import Icon from 'src/@core/components/icon'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -260,7 +261,10 @@ const deleteFile =()=>{
   // --------------forms values--------------------------------
 
   const default_value = {
-  
+    date: new Date(),
+    amount: 1 ,
+    description:'',
+
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -272,15 +276,18 @@ const deleteFile =()=>{
 
   const validateMmodel = Schema.Model({
     employee_id: StringType().isRequired('Employee field is required'),
-    amount: NumberType().min(0).isRequired('Amount of Hour/s field is required'),
-    date: DateType().isRequired('Date is required')
+    amount: NumberType().min(1).isRequired('Amount of Hour/s field is required'),
+    date: DateType().isRequired('Date is required'),
+    description: StringType().isRequired('Description is a required field')
   });
 
   const handleSubmit =  async ()=>{
     setLoading(true);
     formRef.current.checkAsync().then( async  (result )=>{
+      console.log(result.formError.employee_id);
         if(!result.hasError){
           let data = formValue ; 
+          console.log('.' , data) ;
           data.url = tempFile ;
           axios.post('/api/cme/add-cme' , data ).then(res =>{
               setFormValue(default_value);
@@ -358,6 +365,11 @@ const deleteFile =()=>{
                           changeEmployee(e)
                         }}
                       />
+                      {
+                        formError?.employee_id && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{formError.employee_id}</FormHelperText>
+                        )
+                      }
                     </Grid>
                     <Grid item sm={4} md={5} lg={3}>
                       <small>Date of certificate </small>
@@ -371,6 +383,11 @@ const deleteFile =()=>{
                         defaultValue={new Date()}
                         value={formValue.date}
                       />
+                      {
+                        formError?.date && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{formError.date}</FormHelperText>
+                        )
+                      }
                     </Grid>
 
                     <Grid item sm={4} md={3} lg={3}>
@@ -384,6 +401,27 @@ const deleteFile =()=>{
                         defaultValue={0}
                         value={formValue.amount}
                       />
+                      {
+                        formError?.amount && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{formError.amount}</FormHelperText>
+                        )
+                      }
+                    </Grid>
+                    <Grid item sm={8} md={8} lg={9}>
+                      <small> Description </small>
+                      <Form.Control
+                        size='sm'
+                        controlid='description'
+                        type='text'
+                        name='description'
+                        block
+                        value={formValue.description}
+                      />
+                      {
+                        formError?.description && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{formError.description}</FormHelperText>
+                        )
+                      }
                     </Grid>
                     <Grid item sm={12} xs={12} mt={-4} mb={10}>
                           <Typography sx={{ pt: 6 }}>

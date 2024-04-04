@@ -19,8 +19,8 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
-  if(!req.body.amount || !req.body.employee_id || !req.body.date){
-    return res.status(400).json({success: false , message: 'Amount & Employee & Date are required'});
+  if(!req.body.amount || !req.body.employee_id || !req.body.date || !req.body.description){
+    return res.status(400).json({success: false , message: 'Amount & Employee & Date & Description are required'});
   }
 
   // ----------------------------- View Companies --------------------------------
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
     employee_id: req.body.employee_id,
     company_id: myUser.company_id,
     created_at: new Date(),
+    description: req.body.description,
     date: new Date(req.body.date)
   });
 

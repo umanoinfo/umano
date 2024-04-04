@@ -7,6 +7,7 @@ import Link from 'next/link'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import * as XLSX from 'xlsx'
 import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
@@ -59,7 +60,7 @@ import NoPermission from 'src/views/noPermission'
 import { right } from '@popperjs/core'
 import { Breadcrumbs } from '@mui/material'
 
-const EmployeeCmes = () => {
+const EmployeeCmes = ({}) => {
   // ** State
   const [ShiftType, setShiftType] = useState()
   const [shiftStatus, setShiftStatus] = useState('')
@@ -149,6 +150,26 @@ const EmployeeCmes = () => {
         })
         setLoading(false)
       })
+  }
+
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    let ex = [...store.data]
+
+    ex = ex.map(val => {
+      let c = {
+        'Employee No.': val.employee_info[0].idNo,
+        'Date': new Date(val.date).toLocaleDateString(),
+        'Amount': val.amount ,
+        'Description': val.description
+      };
+      
+      return c
+    })
+
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.book_append_sheet(wb, ws, 'CME')
+    XLSX.writeFile(wb, 'CME.xlsx')
   }
 
    
@@ -271,6 +292,20 @@ const EmployeeCmes = () => {
       }
     },
     {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'description',
+      headerName: 'description',
+      renderCell: ({ row , index }) => {
+        
+      return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+              {row?.description}
+          </Typography>
+        )
+      }
+    },
+    {
       flex: 0.01,
       minWidth: 45,
       sortable: false,
@@ -303,6 +338,17 @@ const EmployeeCmes = () => {
             </Typography>
           </Breadcrumbs>
           <Divider />
+          <Grid container justify="flex-end" justifyContent="flex-end">
+            <Button 
+                variant='outlined'  
+                sx={{ mr: 4, mb: 2 , right:0 }}
+                color='secondary'
+                startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+                onClick={exportToExcel}
+              >
+              Export
+            </Button>
+            </Grid>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
             <Grid item sm={3} xs={12}>
               {/* <FormControl fullWidth size='small'>
