@@ -26,7 +26,8 @@ export default async function handler(req, res) {
     .db()
     .collection('endOfServices')
     .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
-  if(selectedEndOfService){
+
+  if(!selectedEndOfService){
     return res.status(404).json({success: false, message: 'End of service not found'});
   }
 

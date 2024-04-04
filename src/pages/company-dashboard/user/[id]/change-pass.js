@@ -62,7 +62,7 @@ const DialogAddUser = ({ id }) => {
   const getUser = () => {
     setLoading(true)
     axios
-      .get('/api/user/' + id, {})
+      .get('/api/company-user/' + id, {})
       .then(function (response) {
         setUser(response.data.data[0])
         setLoading(false)
@@ -94,7 +94,7 @@ const DialogAddUser = ({ id }) => {
     user._id = id
     user.updated_at = new Date()
     axios
-      .post('/api/user/change-pass', {
+      .post('/api/company-user/change-pass', {
         user
       })
       .then(function (response) {
@@ -102,7 +102,7 @@ const DialogAddUser = ({ id }) => {
           delay: 3000,
           position: 'bottom-right'
         })
-        router.push('/admin-dashboard/user')
+        router.push('/company-dashboard/user')
       })
       .catch(function (error) {
         toast.error('Error : ' + error.message + ' !', {

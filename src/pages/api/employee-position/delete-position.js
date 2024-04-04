@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     .db()
     .collection('employeePositions')
     .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
-  if(selectedEmployeePosition){
+  if(!selectedEmployeePosition){
     return res.status(404).json({success: false, message: 'Employee position not found'});
   }
 
