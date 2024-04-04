@@ -24,5 +24,5 @@ export default async function handler(req, res) {
         _id: ObjectId(myUser.company_id)
     })
 
-  return res.status(200).json({ success: true, data: company })
+  return res.status(200).json({ success: true, data: [company] })
 }
