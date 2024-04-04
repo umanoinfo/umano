@@ -74,7 +74,7 @@ const Home = () => {
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
-                stats={data.employees_count}
+                stats={ data.employees_count}
                 color='primary'
                 title='Employees'
                 chipText='Last 4 Month'
@@ -83,7 +83,7 @@ const Home = () => {
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               {data && <CardStatisticsVertical
-                stats={data.users_count}
+                stats={ data.active_users_count + '/' + data.users_count  }
                 color='warning'
                 title='Users'
                 chipText='Last Six Month'

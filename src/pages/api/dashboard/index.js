@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { company_id: myUser.company_id },
-            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
           ]
         }
       }
@@ -62,7 +62,25 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { company_id: myUser.company_id },
-            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
+            { $or: [{ type : 'employee' } , { type : 'manager'}] }
+          ]
+        }
+      }
+    ])
+    .toArray()
+
+    const activeUsers = await client
+    .db()
+    .collection('users')
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            { company_id: myUser.company_id },
+            { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
+            { $or: [{ type : 'employee' } , { type : 'manager'}] },
+            { status: 'active'}
           ]
         }
       }
@@ -198,6 +216,7 @@ export default async function handler(req, res) {
     let data = {}
     data.employees_count = employees.length ;
     data.users_count = users.length ;
+    data.active_users_count = activeUsers.length ;
     data.documents_count = documents.length ;
     data.expiaryDocuments_count = expiaryDocuments.length ;
     data.birthdays = birthdays ;
