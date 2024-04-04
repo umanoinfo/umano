@@ -25,20 +25,35 @@ export const nextAuthOptions = (req, res) => {
           client = await connectToDatabase()
           
 
-          let usersCollection = client.db().collection('users')
-          
-          
-          const user = await usersCollection.findOne(
-            {$and:[
-              { email: credentials.email } ,   
-              { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
-            ]}
-          )
-          
-
-          if (!user) {
+          let user = await client.db().collection('users').aggregate([
+            {
+              $match :{
+                $and:[
+                  { email: credentials.email } ,   
+                  { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } 
+                ]
+              }
+            },
+            {
+              $lookup:{
+                from: 'subscriptions',
+                let: { company_id:  '$company_id'  },
+                pipeline: 
+                [
+                  { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } },
+      
+                  { $sort: { created_at : -1 } },
+                ],
+                as: 'subscriptions_info'
+               }
+               }
+              ]
+          ).toArray();
+          if(!user || !user[0]){
             throw new Error('No user found!')
           }
+          user = user[0];
+          
           const isValid = await verifyPassword(credentials.password, user.password)
 
           
@@ -57,7 +72,7 @@ export const nextAuthOptions = (req, res) => {
           
               
               if( company?.status != 'active' ) {
-                throw new Error('Your company is blocked !') ;
+                throw new Error('Your company is not active !') ;
               }
           
             }

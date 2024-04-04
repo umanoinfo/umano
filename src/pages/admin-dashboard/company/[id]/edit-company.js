@@ -432,7 +432,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={2} mt={1}>
-                    {formValue.start_at && (
+                    {/* {formValue.start_at && (
                       <Grid item sm={4} xs={12}>
                         <small>Subscription start</small>
                         <Form.Control
@@ -464,7 +464,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                           block
                         />
                       </Grid>
-                    )}
+                    )} */}
 
                     <Grid item sm={4} xs={12}>
                       <small>Select status</small>

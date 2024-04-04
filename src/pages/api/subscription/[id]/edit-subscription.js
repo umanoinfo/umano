@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     .collection('companies')
     .findOne({ _id: ObjectId(subscription.company_id) })
 
-  company.end_at = subscription.end_at
+  // company.end_at = subscription.end_at
 
   const newCompany = await client
     .db()

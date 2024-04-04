@@ -58,7 +58,7 @@ export default async function handler(req, res) {
   }  
 
   if(myUser.type != 'admin'){
-    delete company.start_at ;
+    delete company.start_at ; // if you want to edit subscrption (if entered add new subscription to the subscriptoins collection)
     delete company.end_at ;
     delete company.status ;
     delete company.user_info;

@@ -30,7 +30,7 @@ export default async function handler(req, res) {
           [
             { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } },
 
-            { $sort: {start_at : -1 } },
+            { $sort: { created_at : -1 } },
          ],
           as: 'subscriptions_info'
         }
