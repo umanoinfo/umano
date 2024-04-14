@@ -60,6 +60,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Actions Imports
 import { fetchData } from 'src/store/apps/employeePosition'
 import { DataGrid } from '@mui/x-data-grid'
+import Loading from 'src/views/loading'
 
 const { StringType } = Schema.Types
 
@@ -516,6 +517,9 @@ const Steppositions = ({ handleNext, employee }) => {
 
   if (!employee) {
     return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+  }
+  if(loading){
+    return <Loading header='Please Wait' description='Positions are loading'/>
   }
 
   return (

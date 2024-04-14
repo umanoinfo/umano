@@ -2,7 +2,7 @@
 import CardContent from '@mui/material/CardContent'
 import LinearProgress from '@mui/material/LinearProgress'
 
-import CustomAvatar from 'src/@core/components/mui/avatar'
+
 
 // ** React Imports
 import { useState, useRef, useEffect, forwardRef } from 'react'
@@ -20,14 +20,15 @@ import CustomChip from 'src/@core/components/mui/chip'
 import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 
 import toast from 'react-hot-toast'
-
-// import { TimePicker } from '@mui/x-date-pickers'
+import { DatePicker } from '@mui/x-date-pickers';
+import { TimePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US'
+import en from 'date-fns/locale/en-GB' // for 24 hourrs format 
+
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker, DatePicker , DateInput , Input } from 'rsuite'
+import { Form, Schema, SelectPicker , DateInput , Input } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -413,6 +414,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const assumeDurationTo = (date_to)=>{
+    console.log(date_to) ;
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(date_to  - formValue.date_from)
@@ -884,20 +886,23 @@ const AddLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div>
-              <Form.Control
-                disabledDate={val => {
-                  let i = !days.includes(val.getDay())
-                  let j = holyDays.includes(val.toDateString())
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_from'
-                format='yyyy-MM-dd '
-                name='date_from'
-                accepter={DatePicker}
-                value={formValue.date_from}
-                onSelect={(e) =>assumeDurationFrom(e)}
-              />
+                    return i || j
+                  }}
+                  controlid='date_from'
+                  format='yyyy-MM-dd'
+                  name='date_from'
+                  accepter={DatePicker}
+                  value={formValue.date_from}
+                  slotProps={{ textField: { size: 'small' } }}
+                  onChange={(e) =>assumeDurationFrom(e) }
+                />
+            </LocalizationProvider>
             </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'end' }}>
@@ -905,21 +910,24 @@ const AddLeave = ({ popperPlacement, id }) => {
               To Date :
             </Typography>
             <div>
-              <Form.Control
-                disabledDate={val => {
-                  let i = !days.includes(val.getDay())
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
 
-                  let j = holyDays.includes(val.toDateString())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_to'
-                format=' yyyy-MM-dd'
-                name='date_to'
-                accepter={DatePicker}
-                value={formValue.date_to}
-                onSelect={(e) =>assumeDurationTo(e)}
-              />
+                    return i || j
+                  }}
+                  controlid='date_to'
+                  format=' yyyy-MM-dd'
+                  name='date_to'
+                  accepter={DatePicker}
+                  value={formValue.date_to}
+                  onChange={(e) =>assumeDurationTo(e)}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+            </LocalizationProvider>
             </div>
           </Box>
           <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
@@ -938,36 +946,42 @@ const AddLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div style={{ display: 'flex' }}>
-              <Form.Control
-                disabledDate={val => {
-                  let i = !days.includes(val.getDay())
-                  let j = holyDays.includes(val.toDateString())
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_from'
-                format='yyyy-MM-dd '
-                name='date_from'
-                size='small'
-                accepter={DatePicker}
-                value={formValue.date_from}
-                onChange={e => {
-                  e.setHours(0, 0, 0, 0)
-                  setFormValue({ ...formValue, date_to: e, date_from: e })
-                }}
-              />
-            <Form.Control
-                disabledDate={val => {
-                  return !disableDates(val)
-                }}
-                controlid='date_from'                                                                                                                                                                                                                                                                                                   
-                format='HH:mm'
-                size='small'
-                name='date_from'
-                value={formValue.date_from}
-                accepter={DatePicker}
-                onSelect={(e) =>assumeDurationFrom(e)}
+                    return i || j
+                  }}
+                  controlid='date_from'
+                  format='yyyy-MM-dd'
+                  name='date_from'
+                  size='small'
+                  accepter={DatePicker}
+                  value={formValue.date_from}
+                  onChange={e => {
+                    e.setHours(0, 0, 0, 0)
+                    setFormValue({ ...formValue, date_to: e, date_from: e })
+                  }}
+                  slotProps={{ textField: { size: 'small' } }}
                 />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <Form.Control
+                  shouldDisableDate={val => {
+                    return !disableDates(val)
+                  }}
+                  controlid='date_from'                                                                                                                                                                                                                                                                                                   
+                  format='HH:mm'
+                  size='small'
+                  name='date_from'
+                  value={formValue.date_from}
+                  accepter={TimePicker}
+                  onChange={(e) =>assumeDurationFrom(e)}
+                  slotProps={{ textField: { size: 'small' } }}
+                  />
+             </LocalizationProvider>
              </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -975,34 +989,40 @@ const AddLeave = ({ popperPlacement, id }) => {
               To Date :
             </Typography>
             <div style={{ display: 'flex' }}>
-              <Form.Control
-                disabledDate={val => {
-                  let i = !days.includes(val.getDay())
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
 
-                  let j = holyDays.includes(val.toDateString())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_to'
-                format=' yyyy-MM-dd'
-                name='date_to'
-                size='small'
-                accepter={DatePicker}
-                value={formValue.date_to}
-                disabled
-              />
-              <Form.Control
-                disabledDate={val => {
-                  return !disableDates(val)
-                }}
-                controlid='date_to'
-                format=' HH:mm'
-                name='date_to'
-                size='small'
-                accepter={DatePicker}
-                value={formValue.date_to}
-                onSelect={(e) =>assumeDurationTo(e)}
-              />
+                    return i || j
+                  }}
+                  controlid='date_to'
+                  format=' yyyy-MM-dd'
+                  name='date_to'
+                  size='small'
+                  accepter={DatePicker}
+                  value={formValue.date_to}
+                  disabled
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                  <Form.Control
+                    shouldDisableDate={val => {
+                      return !disableDates(val)
+                    }}
+                    controlid='date_to'
+                    format=' HH:mm'
+                    name='date_to'
+                    size='small'
+                    accepter={TimePicker}
+                    value={formValue.date_to}
+                    onChange={(e) =>assumeDurationTo(e)}
+                    slotProps={{ textField: { size: 'small' } }}
+                  />
+               </LocalizationProvider>
             </div>
           </Box>
           <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>

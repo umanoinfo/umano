@@ -28,7 +28,7 @@ import attendance from 'src/store/apps/attendance'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import en from 'date-fns/locale/en-US';
-import de from 'date-fns/locale/de'; 
+import de from 'date-fns/locale/en-US'; 
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />

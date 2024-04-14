@@ -40,6 +40,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Actions Imports
 import { fetchData, deleteUser } from 'src/store/apps/employeeDocument'
 import { DataGrid } from '@mui/x-data-grid'
+import Loading from 'src/views/loading';
 
 const { StringType } = Schema.Types
 
@@ -144,7 +145,10 @@ const StepDocuments = ({ handleNext, employee }) => {
               data
             })
             .then(function (response) {
-              dispatch(fetchData({ employeeId: employee._id })).then(() => {
+              dispatch(fetchData({    
+                employeeId: employeeId,
+                userStatus,
+                q: value })).then(() => {
                 toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
@@ -169,7 +173,9 @@ const StepDocuments = ({ handleNext, employee }) => {
               data
             })
             .then(function (response) {
-              dispatch(fetchData({ employeeId: employee._id })).then(() => {
+              dispatch(fetchData({   employeeId: employeeId,
+                userStatus,
+                q: value })).then(() => {
                 toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
@@ -219,7 +225,9 @@ const deleteFile =()=>{
         data
       })
       .then(function (response) {
-        dispatch(fetchData({ employeeId: employee._id })).then(() => {
+        dispatch(fetchData({    employeeId: employeeId,
+          userStatus,
+          q: value })).then(() => {
           toast.success('Document (' + data.documentTitle + ') deleted file successfully.', {
             delay: 3000,
             position: 'bottom-right'
@@ -246,7 +254,9 @@ const deleteFile =()=>{
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({   employeeId: employeeId,
+          userStatus,
+          q: value})).then(() => {
           toast.success('Employee document (' + selectedDocument.documentTitle + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
@@ -298,7 +308,9 @@ const deleteFile =()=>{
             data
           })
           .then(function (response) {
-            dispatch(fetchData({ employeeId: employee._id })).then(() => {
+            dispatch(fetchData({   employeeId: employeeId,
+              userStatus,
+              q: value })).then(() => {
               toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                 delay: 3000,
                 position: 'bottom-right'
@@ -327,13 +339,16 @@ const deleteFile =()=>{
 
   const uploadNewFile = async event => {
     setFileLoading(true)
+    console.log(selectedDocument);  
     const file = event.target.files[0]
     let formData = new FormData()
     formData.append('file', file)
-    formData.append('id', selectedDocument._id)
+    if(action == 'edit')
+      formData.append('id', selectedDocument._id)
     formData.append('type', 'employeeDocument')
     let data = {}
-    data.id = selectedDocument._id
+    if(action == 'edit')
+      data.id = selectedDocument._id
     data.formData = formData
     axios
       .post('https://robin-sass.pioneers.network/api/test', formData)
@@ -437,6 +452,9 @@ const deleteFile =()=>{
 
   if (!employee) {
     return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+  }
+  if(loading){
+    return <Loading header='Please Wait' description='Documents are loading' />
   }
   
   return (
