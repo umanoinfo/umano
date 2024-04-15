@@ -38,9 +38,9 @@ export default async function handler(req, res) {
     [
       {
         $match:{
-          $or: [
+          $and: [
             {
-                  employee_id: { $in: ids  }
+              employee_id: { $in: ids  }
             }
             ,
             {
