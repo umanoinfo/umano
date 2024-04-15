@@ -232,14 +232,14 @@ const EmployeeCmes = ({}) => {
           )}
           {session && session.user && session.user.permissions.includes('EditCME') && (
             <MenuItem onClick={()=>handleRowOptionsEdit(row._id)} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
+              <Icon icon='mdi:edit-outline' fontSize={20} />
               Edit
             </MenuItem>
           )}
           {
             session && session.user && session.user.permissions.includes('DeleteCME') && (
               <MenuItem onClick={()=>handleRowOptionsDelete(row._id)} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
+              <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
             </MenuItem>
             )

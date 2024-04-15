@@ -131,7 +131,7 @@ const CMEList = () => {
         'Employee Name': val.employee,
         'Amount': val.amount ,
         'Completed' :( val.amount >= required ? "YES" : "NO"),
-        'Percentage': val.amount / required
+        'Percentage': (val.amount / required) * 100
       };
       
       return c
@@ -307,7 +307,7 @@ const CMEList = () => {
         
       return (
           <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              {required != 0 ?row.amount / required : <></> } %
+              {required != 0 ?(row.amount / required) * 100 : <></> } %
           </Typography>
         )
       }
