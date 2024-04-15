@@ -42,7 +42,7 @@ export default async function handler(req, res) {
       .collection('events')
       .deleteMany({ document_id: ObjectId(id) })
 
-    if (!insertedDocument.expiryDateFlag) {
+    if (!selectedDocument.expiryDateFlag) {
       let event = {}
       event.title = 'Expiry date for ' + document.title
       event.allDay = true
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       event.company_id = myUser.company_id
       event.user_id = myUser._id
       event.created_at = new Date()
-      event.document_id = insertedDocument._id
+      event.document_id = selectedDocument._id
       const newEvent = await client.db().collection('events').insertOne(event)
     }
 

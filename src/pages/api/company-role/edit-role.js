@@ -6,10 +6,21 @@ export default async function handler(req, res) {
   if(req.method != 'POST'){
     return res.status(405).json({success: false , message: 'Method is not allowed'});
   }
-
+  
   const client = await connectToDatabase()
 
+  const role = req.body.data
+  const id = role._id
+  delete role._id
+  
+  const token = await getToken({ req })
+  const myUser = await client.db().collection('users').findOne({ email: token.email })
+
   // -------------------- Token ---------------------
+
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditRole')) {
+    return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
 
   const curRole = await client
   .db()
@@ -21,19 +32,10 @@ export default async function handler(req, res) {
 
 
 
-  const token = await getToken({ req })
-  const myUser = await client.db().collection('users').findOne({ email: token.email })
   
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditRole')) {
-    return res.status(401).json({ success: false, message: 'Not Auth' })
-  }
-
 
   // ------------------ Edit -------------------
 
-  const role = req.body.data
-  const id = role._id
-  delete role._id
 
   if (!role.title) {
     return res.status(422).json({
