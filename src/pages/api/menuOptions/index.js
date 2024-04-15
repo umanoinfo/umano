@@ -276,13 +276,13 @@ export default async function handler(req, res) {
     if(myUser.permissions.includes('ViewDocumentType')){
       children.push({
         title:'Company',
-        path:'/company-dashboard/company'
+        path:'/company-dashboard/settings/company'
       });
     }
     if(myUser.permissions.includes('ViewCompany')){
       children.push({
         title:'Documents',
-        path:'/company-dashboard/document-types'
+        path:'/company-dashboard/settings/document-types'
       })
     }
     options.push({

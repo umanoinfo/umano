@@ -190,9 +190,16 @@ export default async function handler(req, res) {
     return res.status(404).json({success: false, message : 'No employee with this ID'});
   }
   employee = employee[0] ; 
-  
+
+  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
+    let message = [] ;
+    message.push('Error: define Sarlary Formula for this employee first');
+
+    return res.status(400).json({success: false, message: message }); 
+  }
+
   let lumpySalary = 0;
-  if(employee && employee.salaryFormulas_info && employee.salaryFormulas_info[0].type == 'Flexible'){
+  if(employee && employee.salaryFormulas_info && employee.salaryFormulas_info[0]  && employee.salaryFormulas_info[0].type == 'Flexible'){
     employee.flexible = true ;
     lumpySalary = Number(req.body.data.lumpySalary) ;
     employee.salaries_info = [ { lumpySalary: lumpySalary } ] ;
@@ -261,7 +268,7 @@ export default async function handler(req, res) {
   
   //   -------------------------- Assume Employee Rewards ----------------------------------------
   
-          if (employee.employee_rewards_info) {
+  if (employee.employee_rewards_info) {
             let totalEmployeeRewards = 0
             employee.employee_rewards_info.map(reward => {
               totalEmployeeRewards = totalEmployeeRewards + Number(reward.value)
@@ -279,7 +286,6 @@ export default async function handler(req, res) {
     let message = [] ;
     if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
       message.push('Error: define Sarlary Formula for this employee first');
-
     }
     if(!employee?.shift_info || !employee?.shift_info[0] ){
       message.push('Error: define Shift info for this employee first');
