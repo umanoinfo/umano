@@ -17,6 +17,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Tab,
+  TextField,
   Typography
 } from '@mui/material'
 
@@ -25,7 +26,12 @@ import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { CheckboxGroup, Checkbox, Form, Schema, DatePicker, Input } from 'rsuite'
+import { DatePicker } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import en from 'date-fns/locale/en-US'; 
+
+import { CheckboxGroup, Checkbox, Form, Schema , Input } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -200,23 +206,27 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <Grid item sm={12} md={5}>
                         <Card sx={{ p: 3 }}>
                           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                             <DatePicker
-                              size='sm'
+                              
                               value={NewHoliday.date}
                               onChange={e => {
                                 setNewHoliday({ ...NewHoliday, date: e })
                               }}
+                              views={[ 'month' ,'day' ]}
+                              slotProps={{ textField: { size: 'small' , fullWidth: true }  }}
                             />
+                            </LocalizationProvider>
                             <Input
                               size='sm'
                               placeholder='Holiday title'
                               value={NewHoliday.name}
-                              style={{ marginRight: 3, marginLeft: 3 }}
+                              style={{ marginRight: 3, marginLeft: 3 , height:'2.5rem'}}
                               onChange={e => {
                                 setNewHoliday({ ...NewHoliday, name: e })
                               }}
                             />
-                            <Button variant='outlined' size='small' onClick={addHoliday}>
+                            <Button variant='outlined' size='small' style={{height:'2.5rem'}} onClick={addHoliday}>
                               Add
                             </Button>
                           </Box>
@@ -228,7 +238,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                     primary={
                                       <>
                                         <span style={{ color: 'blue', paddingRight: 20 }}>
-                                          {holiday.date.toDateString()}
+                                          {holiday.date.toLocaleDateString().slice(0,holiday.date.toLocaleDateString().lastIndexOf('/'))}
                                         </span>{' '}
                                         <span>{holiday.name}</span>
                                       </>

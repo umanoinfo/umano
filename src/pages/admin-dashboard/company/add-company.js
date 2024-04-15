@@ -158,6 +158,16 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const uploadImage = async event => {
     const file = event.target.files[0]
+    const size = file.size / (1024 * 1024) ;
+    if(size > 1 ){
+      toast.error('Logo size is more than 1 MB' , {
+        duration: 5000 , 
+        position: 'bottom-right' 
+      });
+
+      return ;
+    }
+    
     const base64 = await convertBase64(file)
     setLogo(base64)
   }

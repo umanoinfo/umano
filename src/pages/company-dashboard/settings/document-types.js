@@ -215,7 +215,7 @@ const DocumentsTable = () => {
             //       'Document Type (' + {deleteValue.name} + ') Restored Successfully.';
             // </div>
 
-            message =  'Document Type (' + deleteValue.name + ') Restored Successfully.';
+            message =  'Dorouter.push('/admin-dashboard/company')cument Type (' + deleteValue.name + ') Restored Successfully.';
           }
           else{
             message = 'Document Type (' + deleteValue.name + ') Deleted Successfully.';
