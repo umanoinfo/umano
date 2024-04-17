@@ -182,6 +182,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                         value={timeIn }
                         onChange={e => setTimeIn(e)}
                         fullWidth
+                        ampm={false}
                       />
                   </LocalizationProvider>
                 </Grid>
@@ -193,6 +194,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                       value={timeOut }
                       onChange={e => setTimeOut(e) }
                       fullWidth
+                      ampm={false}
                     />
                   </LocalizationProvider>
                 </Grid>

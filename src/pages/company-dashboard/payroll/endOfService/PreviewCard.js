@@ -217,7 +217,14 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <Typography variant='body2' sx={{fontWeight: 'bold'}}>{data.actualYears} Year</Typography>
                       </MUITableCell>
                     </TableRow>
-
+                    <TableRow>
+                      <MUITableCell>
+                        <Typography variant='body2'> Absense Days:</Typography>
+                      </MUITableCell>
+                      <MUITableCell>
+                        <Typography variant='body2' sx={{fontWeight: 'bold'}}>{data.absenseDays} Days</Typography>
+                      </MUITableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </Box>

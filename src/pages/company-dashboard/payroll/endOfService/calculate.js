@@ -177,66 +177,25 @@ const AllDocumentsList = () => {
         
         return ;
       }
-
-      employee.lumpySalary = employee.salaries_info[0].lumpySalary/30 //  Daily Salary
-      employee.monthlySalary = employee.salaries_info[0].lumpySalary  ;
-      employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1) ;
-
-        //   -------------------------- Assume Leaves -------------------------------------
-
-        if (employee?.leaves_info) {
-
-          let unpaidLeaveTotal = 0 ; 
-          let parentalLeaveTotal =0 ;
-          let parentalLeave = new Map() ; 
-
-          // add leaves before adding to system & check ( there is a paretnal leave that is not returned when calculating end of service for rew@emil.com)
-
-          employee.leaves_info.map(leave => {
-          if(leave.type == "daily" && leave.status_reason == 'unpaidLeave')
-            {
-              let from =  new Date(leave.date_from).setUTCHours(0,0,0,0)
-              let to =  new Date(leave.date_to).setUTCHours(0,0,0,0)
-              let days = ((to-from)/ (1000 * 60 * 60 * 24))+1
-              unpaidLeaveTotal = unpaidLeaveTotal +  days
-            }
-          else if(leave.type == 'daily' && leave.status_reason == 'parentalLeave'){
-              let from = new Date(leave.date_from).setUTCHours(0,0,0,0) ;
-              let to = new Date(leave.date_to).setUTCHours(0,0,0,0) ;
-              let days = ((to-from)/ (1000 * 60 * 60 * 24))+1;
-              
-              let curDate = new Date(leave.date_from) ;
-              for(let i= 0 ; i < days ;i++){
-                  let val = (parentalLeave.get(curDate.getFullYear())  || 0) 
-                  parentalLeave.set( curDate.getFullYear()  , val + 1) ;
-                  curDate.setDate( curDate.getDate() + 1 )
-              }
-          }
-          })
-          parentalLeave.forEach((count)=> {
-            if(count > 60 ){
-              parentalLeaveTotal = parentalLeaveTotal + (count - 60 );
-            }
-          });
-
-          employee.parentalLeaveOver60 = parentalLeaveTotal ;
-          employee.unpaidLeaveTotal = unpaidLeaveTotal
-      }
-
-
-      employee.actualDays = employee.allDays - employee.parentalLeaveOver60 - employee.unpaidLeaveTotal - (employee?.unpaidLeavesBeforeAddingToSystem ?? 0 )- (employee?.parentalLeavesBeforeAddingToSystem ?? 0);
-      employee.actualYears =  ((employee.actualDays)/365).toFixed(2) ;
-      
-      let lessThanFiveValue = 0
-      let moreThanFiveValue = 0
-      let lessThanFiveDays = 0
-      let moreThanFiveDays = 0
       if(!employee.salaryFormulas_info || !employee?.salaryFormulas_info?.length || employee.salaryFormulas_info.length == 0 ){
         toast.error('Salary Formula is not defined for this employee define it first and try again' , {duration: 5000 , position:'bottom-right'});
         setLoading(false);
 
         return; 
       }
+
+      employee.lumpySalary = employee.salaries_info[0].lumpySalary/30 //  Daily Salary
+      employee.monthlySalary = employee.salaries_info[0].lumpySalary  ;
+
+      // employee.allDays = Math.round(((new Date(toDate) - new Date(fromDate))/1000/60/60/24) + 1) ;
+
+        //   -------------------------- Assume Leaves -------------------------------------
+
+      let lessThanFiveValue = 0
+      let moreThanFiveValue = 0
+      let lessThanFiveDays = 0
+      let moreThanFiveDays = 0
+    
       let endOfServiceFrom1To5 = employee.salaryFormulas_info[0].compensationFrom1To5;
       let endOfServiceMoreThan5 = employee.salaryFormulas_info[0].compensationMoreThan5;
 

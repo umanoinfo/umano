@@ -13,6 +13,7 @@ import Icon from 'src/@core/components/icon'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { fetchData } from 'src/store/apps/event'
+import Loading from 'src/views/loading'
 
 const blankEvent = {
   title: '',
@@ -70,6 +71,7 @@ const Calendar = props => {
     return r
   })
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         eventType: params,
@@ -92,7 +94,13 @@ const Calendar = props => {
   // },
 
   // ** Refs
+
   const calendarRef = useRef()
+
+  if(loading){
+    return <Loading header={'Please Wait'} description={'Calender is loading'} />
+  }
+  
   if (store) {
     // ** calendarOptions(Props)
     const calendarOptions = {

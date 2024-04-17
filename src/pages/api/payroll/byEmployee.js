@@ -277,7 +277,7 @@ export default async function handler(req, res) {
   }
 
   /// -------------------------- Validation ----------------------------------------------------
-  console.log(employee.totalEmployeeDeductions , employee.totalEmployeeRewards , employee.totalCompensations , employee.totalDeductions , lumpySalary);
+  // console.log(employee.totalEmployeeDeductions , employee.totalEmployeeRewards , employee.totalCompensations , employee.totalDeductions , lumpySalary);
   if(employee.flexible){
     return res.status(200).json({success: true , data : [employee] }) ;
   }
