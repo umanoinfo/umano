@@ -18,7 +18,15 @@ import Grid from '@mui/material/Grid'
 
 import axios from 'axios'
 
-import { Form, Schema, SelectPicker, DatePicker, Toggle, CheckPicker, Input, Divider } from 'rsuite'
+import { Form, Schema,  Toggle, CheckPicker, Input, Divider } from 'rsuite'
+
+import { MenuItem, Select } from '@mui/material';
+
+import { DatePicker } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import en from 'date-fns/locale/en-US'; 
+
 import 'rsuite/dist/rsuite.min.css'
 
 
@@ -435,17 +443,24 @@ const AddEventSidebar = props => {
 
                     <Form.Group>
                       <small>Start Date</small>
-                      <DatePicker
-                     
-                        size='md'
-                        format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                        onChange={e => {
-                          setValues({ ...values, startDate: e })
-                        }}
-                        value={values.startDate}
-                        name='startDate'
-                        block
-                      />
+                      <div>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                            <DatePicker
+                          
+                              size='md'
+                              format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                              onChange={e => {
+                                setValues({ ...values, startDate: e })
+                              }}
+                              value={values.startDate}
+                              name='startDate'
+                              block
+                              slotProps={{
+                                textField:{ size: 'small' , fullWidth: '2rem'}
+                              }}
+                            />
+                        </LocalizationProvider>
+                      </div>
                     </Form.Group>
                   </Grid>
                 </Grid>
@@ -454,19 +469,26 @@ const AddEventSidebar = props => {
                   <Grid item sm={12} xs={12} mt={2}>
                     <Form.Group>
                       <small>End Date</small>
-                      <DatePicker
-                        itemType='date'
-                        showTimeSelect={!values.allDay}
-                        format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                        size='md'
-                        onChange={e => {
-                          setValues({ ...values, endDate: e })
-                        }}
-                        value={values.endDate}
-                        name='endDate'
-                        checkAsync
-                        block
-                      />
+                      <div>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                          <DatePicker
+                            itemType='date'
+                            showTimeSelect={!values.allDay}
+                            format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                            size='md'
+                            onChange={e => {
+                              setValues({ ...values, endDate: e })
+                            }}
+                            value={values.endDate}
+                            name='endDate'
+                            checkAsync
+                            block
+                            slotProps={{
+                              textField:{ size: 'small' , fullWidth: '2rem'}
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </div>
                     </Form.Group>
                   </Grid>
                 </Grid>
@@ -474,35 +496,57 @@ const AddEventSidebar = props => {
                   <Grid item sm={12} xs={12} mt={2}>
                     <small>Type</small>
                     <Form.Group controlId='type'>
-                      <SelectPicker
-                        size='md'
+                      <Select
+                        size='sm'
                         name='type'
+                        fullWidth='2rem'
                         onChange={e => {
-                          setValues({ ...values, type: e })
+                          setValues({ ...values, type: e.target.value })
                         }}
                         value={values.type}
                         data={typesData}
                         block
-                      />
+                      >
+                        {
+                          typesData &&
+                            typesData.map((val)=>{
+                              return (
+                                <MenuItem key={val.value} value={val.value}> {val.label} </MenuItem>
+                              )
+                            })
+                        }
+                      </Select>
                     </Form.Group>
                   </Grid>
                 </Grid>
 
+                
+
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
                     <small>Employees</small>
-                    <CheckPicker
+                    <Select
                       controlId='users'
                       onChange={e => {
-                        setValues({ ...values, users: e })
+                        setValues({ ...values, users: e.target.value })
                       }}
+                      multiple
                       value={values.users}
                       size='md'
                       name='users'
-                      color= 'red'
-                      data={usersDataSource}
+                      fullWidth='2rem'
                       block
-                    />
+                    >
+                      {
+                        usersDataSource &&
+                          usersDataSource.map((user)=>{
+                            return (
+                              <MenuItem key={user.value} value={user.value} > {user.label} </MenuItem>
+                            )
+                          })
+                      }
+                    </Select>
+
 
                   </Grid>
                 </Grid>
