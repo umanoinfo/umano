@@ -285,6 +285,12 @@ const AddFormRequest = ({ popperPlacement, id }) => {
       const u = allEmployees.find(val => {
         return val._id == selectedEmployee
       })
+      if(!u?.positions_info || !u?.positions_info?.length || u?.position_info?.length == 0){
+        toast.error('Employee is not assigned a position' , {duration: 5000 , position:'bottom-right'});
+        setSelectedEmployee(null);
+        
+        return ;
+      }
       setoptions(
         removedub(
           [
