@@ -218,7 +218,6 @@ export default async function handler(req, res) {
       
    
       // -------------------------------------------------------------
-      console.log(workingDay , _in , ' .. ', (workingDay && ! _in )) ;
 
       // here when there are no attendances 
       if( workingDay && ! _in ){ // absense day

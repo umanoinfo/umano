@@ -181,6 +181,7 @@ const AddFormRequest = ({ popperPlacement, id }) => {
   }, [selectedEmployee])
 
   const getEmployees = () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       setallEmployees(res.data.data)
       res.data.data.map(employee => {
@@ -189,9 +190,9 @@ const AddFormRequest = ({ popperPlacement, id }) => {
           value: employee._id
         })
       })
+      setLoading(false)
     })
     setEmployeesDataSource(employeesDataSource)
-    setLoading(false)
   }
 
   const getForm = () => {
