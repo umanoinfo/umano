@@ -267,7 +267,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   if (loading) return <Loading header='Please Wait' description={loadingDescription}></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('Edit Form'))
+  if (session && session.user && !session.user.permissions.includes('EditForm'))
     return <NoPermission header='No Permission' description='No permission to edit form'></NoPermission>
 
   return (

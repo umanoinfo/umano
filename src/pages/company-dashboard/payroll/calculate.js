@@ -837,7 +837,7 @@ const AllDocumentsList = () => {
 
   if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
+  if (session && session.user && !session.user.permissions.includes('ViewEmployee'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
 
   return (

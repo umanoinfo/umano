@@ -339,7 +339,7 @@ const CMEList = () => {
 
   if (loading) return <Loading header='Please Wait' description='CMEs are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewAttendanceShift'))
+  if (session && session.user && !session.user.permissions.includes('ViewCME'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>
 
   return (

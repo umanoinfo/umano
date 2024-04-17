@@ -439,7 +439,7 @@ const PayrollList = classNamec => {
 
   if (loading) return <Loading header='Please Wait' description='Employee are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewEmployee')) {
+  if (session && session.user && !session.user.permissions.includes('ViewPayroll')) {
     return <NoPermission header='No Permission' description='No permission to View Employees'></NoPermission>
   }
 

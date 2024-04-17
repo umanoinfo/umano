@@ -995,7 +995,7 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   if (loading) return <Loading header='Please Wait' description={loadingDescription}></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('AddEmployeeLeave'))
+  if (session && session.user && !session.user.permissions.includes('EditEmployeeLeave'))
     return <NoPermission header='No Permission' description='No permission to add employees leaves'></NoPermission>
 
   return (

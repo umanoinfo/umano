@@ -310,7 +310,7 @@ const deleteFile =()=>{
 
   if (loading) return <Loading header='Please Wait' description={'Loading...'}></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('AddCME'))
+  if (session && session.user && !session.user.permissions.includes('EditCME'))
     return <NoPermission header='No Permission' description='No permission to add employees leaves'></NoPermission>
 
   return (
