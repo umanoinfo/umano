@@ -117,6 +117,13 @@ const DialogAddUser = ({ id }) => {
       })
       .catch(function (error) {
         setLoading(false)
+        console.log(error);
+        let message = error?.response?.data?.message || error.toString();
+        if(message == 'Not Auth'){
+          message = 'Error : failed to fetch roles (you do not have permission to view roles)';
+        }
+        toast.error(message , {duration: 5000 , position:'bottom-right'}) ;
+
       })
     }
 

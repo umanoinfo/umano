@@ -63,6 +63,9 @@ export default async function handler(req, res) {
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
 
+
+  // --- deleting that role form users ---------
+  
   const users = await client
     .db()
     .collection('users')

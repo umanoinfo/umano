@@ -291,24 +291,32 @@ const DepartmentList = ({ apiData }) => {
 
   const getMainDepartment =  () => {
     setLoading(true);
+ 
     axios.get('/api/company-department/main-departments', {}).then(function (response) {
-      setMainDepartments(response.data.data)
-      response.data.data.map(department => {
-        if (department.children_info) {
-          const arr = []
-          department.children_info.map(child => {
-            const find = response.data.data.filter(e => {
-              return e._id == child._id
+        setMainDepartments(response.data.data)
+        response.data.data.map(department => {
+          if (department.children_info) {
+            const arr = []
+            department.children_info.map(child => {
+              const find = response.data.data.filter(e => {
+                return e._id == child._id
+              })
+              arr.push(find[0])
             })
-            arr.push(find[0])
-          })
-          department.children_info = arr
-        }
-      })
-      drawChart(response.data.data)
-      setLoading(false);
+            department.children_info = arr
+          }
+        })
+        drawChart(response.data.data)
+        setLoading(false);
+    }).catch(err=>{
+        
+        toast.error(err.toString() , {duration: 5000 , position: 'bottom-right'}) ;
+        setLoading(false);
     })
-  }  ;
+    
+    
+  };
+  
 
   useEffect(() => {
     getMainDepartment()
@@ -322,7 +330,7 @@ const DepartmentList = ({ apiData }) => {
 
   if (session && session.user && !session.user.permissions.includes('ViewDepartment'))
     return <NoPermission header='No Permission' description='No permission to view departments'></NoPermission>
-
+  
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

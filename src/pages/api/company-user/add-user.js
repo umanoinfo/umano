@@ -40,7 +40,12 @@ export default async function handler(req, res) {
   myUser = myUser[0] ; 
   let subscription = myUser.subscriptions_info[0];
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddUser') || !myUser.subscriptions_info || !myUser.subscriptions_info[0]) {
-    return res.status(401).json({ success: false, message: 'Not Auth' })
+    let message = 'Not Auth'; 
+    if(!myUser.subscriptions_info || !myUser.subscriptions_info[0]){
+      message = 'You are not allowed to add users because (You do not have active subscription)'
+    }
+    
+    return res.status(401).json({ success: false, message  })
   }
 
   const user = req.body.data

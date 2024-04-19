@@ -57,7 +57,7 @@ const Sub = styled('sub')({
 })
 
 const EmployeeViewLeft = ({ id, employee }) => {
-
+  console.log(employee);
   const router = useRouter()
   const [grossSalary , setGrossSalary]=useState(0)
 
@@ -288,7 +288,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
       </Grid>
     )
   } else {
-    <span>222222</span>
+    <span>No data</span>
   }
 }
 

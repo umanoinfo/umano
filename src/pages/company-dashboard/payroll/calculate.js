@@ -57,7 +57,9 @@ import { useRouter } from 'next/router'
 import NoPermission from 'src/views/noPermission'
 import { right } from '@popperjs/core'
 import { Breadcrumbs, List, ListItem, ListItemSecondaryAction, ListItemText, useMediaQuery } from '@mui/material'
+
 import DialogEditAttendance from './../attendance/list/edit-attendance-dialog'
+
 import { DatePicker, Input, SelectPicker } from 'rsuite'
 
 // ** Status Obj
@@ -118,7 +120,7 @@ const AllDocumentsList = () => {
   const [employeesFullInfo, setEmployeesFullInfo] = useState([])
   const [done , setDone ] = useState(false) ;
   const router = useRouter()
-
+  const [notAuthorized, setNotAuthorized ] = useState([]) ;
   const dispatch = useDispatch()
   const store = useSelector(state => state.attendance)
 
@@ -310,10 +312,21 @@ const AllDocumentsList = () => {
 
         // }
       })
-      console.log(arr);
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
       setLoading(false)
+
+    }).catch(err=>{
+      let message = err?.response?.data?.message || err.toString() ;
+      setEmployeesDataSource([{
+        label: <div style={{color:'red'}}> no permission to view Employees </div>,
+        value: undefined
+      }])
+      if(err.response.status == 401){
+        setNotAuthorized([...notAuthorized , 'ViewEmployee' ])
+        message = 'Error : Failed to fetch employeees ( not Permissin'
+      }
+      toast.error(message , {duration : 5000 , position: 'bottom-right'}) ; 
 
     })
   }
@@ -835,10 +848,10 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Payroll is loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewEmployee'))
-    return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
+  if (session && session.user && !session.user.permissions.includes('ViewPayroll'))
+    return <NoPermission header='No Permission' description='No permission to view payroll'></NoPermission>
 
   return (
     <Grid container spacing={6}>
@@ -857,6 +870,22 @@ const AllDocumentsList = () => {
           </Breadcrumbs>
           <Divider sx={{ pb: 0, mb: 0 }} />
           <Grid container spacing={2} sx={{ px: 5, pt: 0, mt: -2 }}>
+          <Grid item sm={4} xs={12}>
+              <FormControl fullWidth size='small' sx={{ mt: 0 }}>
+                <small>Employee</small>
+                <SelectPicker
+                  name='employee_id'
+                  data={employeesDataSource}
+                  block
+
+                  // value={selectedEmployee.firstName}
+                  // valueKey={selectedEmployee?.firstName}
+                  onChange={e => {
+                    calculate(e)
+                  }}
+                />
+              </FormControl>
+            </Grid>
             <Grid item sm={2} xs={6}>
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date From</small>
@@ -882,22 +911,7 @@ const AllDocumentsList = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid item sm={4} xs={12}>
-              <FormControl fullWidth size='small' sx={{ mt: 0 }}>
-                <small>Employee</small>
-                <SelectPicker
-                  name='employee_id'
-                  data={employeesDataSource}
-                  block
-
-                  // value={selectedEmployee.firstName}
-                  // valueKey={selectedEmployee?.firstName}
-                  onChange={e => {
-                    calculate(e)
-                  }}
-                />
-              </FormControl>
-            </Grid>
+          
             {
               done == 1?
                   <Grid item sm={2} xs={12}>
@@ -945,7 +959,7 @@ const AllDocumentsList = () => {
         </Card>
       </Grid>
       {/* -------------------------- Delete Dialog -------------------------------------- */}
-      <Dialog
+      {/* <Dialog
         open={open}
         disableEscapeKeyDown
         aria-labelledby='alert-dialog-title'
@@ -975,7 +989,7 @@ const AllDocumentsList = () => {
           employee={SelectedEditRow}
           setupdate={setupdate}
         />
-      ) : null}
+      ) : null} */}
     </Grid>
   )
 }

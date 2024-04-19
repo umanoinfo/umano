@@ -74,12 +74,14 @@ const AddEventSidebar = props => {
     addEventSidebarOpen,
     handleAddEventSidebarToggle,
     UpdateEvent,
-    setUpdateEvent
+    setUpdateEvent,
+    fetchEvents
   } = props
 
   const [values, setValues] = useState({ ...defaultState })
 
   // ** States
+  
 
   const { data: session, status } = useSession()
 
@@ -89,7 +91,7 @@ const AddEventSidebar = props => {
 
   const [usersDataSource, setUsersDataSource] = useState([])
   const [typesData, setTypesData] = useState(EventType)
-
+  const [notAuthroized , setNotAuthorized ] = useState(false) ;
   const formRef = useRef()
 
   const dispatch = useDispatch()
@@ -111,7 +113,7 @@ const AddEventSidebar = props => {
   })
 
   useEffect(() => {
-    getUsers()
+      getUsers()  
   }, [])
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const AddEventSidebar = props => {
       setValues({ ...values, ...val })
       defaultUpdateState = val
     }
-  }, [UpdateEvent , values])
+  }, [UpdateEvent ])
 
   const handleDeleteEvent = () => {
     axios
@@ -137,14 +139,27 @@ const AddEventSidebar = props => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/company-employee')
-    const { data } = await res.json()
-
-    const users = data.map(user => ({
-      label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
-      value: user._id
-    }))
-    setUsersDataSource(users)
+    try{
+      const res = await fetch('/api/company-employee')
+      const { data , message , success } = await res.json()
+      if(res.status == 401 ){
+        setNotAuthorized(true);
+      }
+      if(!success){
+        throw new Error('Error: Fetching Employees ( ' + message + ' )');
+      }
+  
+      const users = data.map(user => ({
+        label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
+        value: user._id
+      }))
+      setUsersDataSource(users)
+      
+    }
+    catch(err){
+      console.log(err);
+      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+    }
     setIsLoading(false)
   }
 
@@ -193,6 +208,7 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
+            dispatch(fetchEvents())
             sendEmails(response.data.data._id  , 'Update ' + values.type + ' ' + values.title), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
           })
           .catch(function (error) {
@@ -538,7 +554,11 @@ const AddEventSidebar = props => {
                       block
                     >
                       {
-                        usersDataSource &&
+                        notAuthroized &&
+                        <MenuItem key={undefined} value={undefined} style={{color: 'red'}} > {'You do not have Permission to view Employees'} </MenuItem>
+                      }
+                      {
+                        usersDataSource && !notAuthroized &&
                           usersDataSource.map((user)=>{
                             return (
                               <MenuItem key={user.value} value={user.value} > {user.label} </MenuItem>

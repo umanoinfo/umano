@@ -72,7 +72,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getMyCompany = () => {
     setLoading(true);
-    axios.get('/api/company/my-company', {}).then(res => {
+    axios.get('/api/attendance/days', {}).then(res => {
       let val = res.data.data[0]
       if (!val.working_days) {
         val.working_days = []
@@ -110,11 +110,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...MyCompany, ...formValue }
-
+        console.log(formValue);
         setLoading(true)
 
         axios
-          .post('/api/company/edit-company', {
+          .post('/api/attendance/days/edit-days', {
             data
           })
           .then(function (response) {

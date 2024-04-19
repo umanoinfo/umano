@@ -96,7 +96,7 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedAttendance, setSelectedAttendance] = useState()
   const { data: session, status } = useSession()
-
+  const [dialogEmployeesList , setDialogEmployeesList] = useState([]);
   const myRef = createRef()
 
   const [openEditDialog, setOpenEditDialog] = useState(false)
@@ -107,6 +107,7 @@ const AllDocumentsList = () => {
   const [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
+  const [notAuthorized , setNotAuthorized] = useState([]) ;
 
   // ** Hooks
 
@@ -131,8 +132,29 @@ const AllDocumentsList = () => {
   }, [dispatch, fromDate, toDate, value])
 
   const getEmployees = () => {
+    
     axios.get('/api/company-employee', {}).then(res => {
       setEmployeesList(res.data.data)
+      let arr = []
+          res.data.data.map(employee => {
+            arr.push({
+              label: employee.firstName + ' ' + employee.lastName,
+              value: employee.idNo
+            })
+          })
+      setDialogEmployeesList(arr)
+
+    }).catch(err=>{
+      let message = err?.response?.data?.message || err?.toString();
+      if(err.response.status == 401 ) {
+        setNotAuthorized([...notAuthorized , 'ViewEmployee']) ; 
+        message = 'Error: Failed to fetch employees : (No Permission to View Employees';
+      }
+      toast.error(message , {duration : 5000 , position: 'bottom-right' }  ) ; 
+      setDialogEmployeesList([{
+        label: <div style={{color:'red'}}> You do not have permission to view Employees </div> ,
+        value: undefined
+      }])
     })
   }
   useEffect(() => {
@@ -315,6 +337,13 @@ const AllDocumentsList = () => {
 
   const onFileChange = event => {
     /* wire up file reader */
+    if(notAuthorized.includes('ViewEmployee')){
+      toast.error('You do not have permission to view Employees' , {
+        duration:5000 , position:'bottom-right'
+      });
+      
+      return ;
+    }
     const target = event.target
 
     if (target.files.length != 0) {
@@ -704,6 +733,7 @@ const AllDocumentsList = () => {
           attendance={SelectedEditRow}
           updateData={updateData}
           setupdate={setupdate}
+          dataSource={dialogEmployeesList}
         />
       ) : null}
       {openAddDialog ? (
@@ -714,6 +744,7 @@ const AllDocumentsList = () => {
           attendance={SelectedEditRow}
           updateData={updateData}
           setupdate={setupdate}
+          dataSource={dialogEmployeesList}
           onClose ={(e=>{ console.log("55555")})}
         />
       ) : null}

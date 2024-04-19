@@ -128,12 +128,29 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
 
   // ------------------------ Get Shifts -----------------------------------
-
   const getShifts = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/shift/')
-    const { data } = await res.json()
-    setShiftsDataSource(data)
+    try{
+      const res = await fetch('/api/shift/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+
+      setShiftsDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setShiftsDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Shifts </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch shifts (you do not have permission to view shifts)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -141,9 +158,28 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getSalaryFormula = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/salary-formula/')
-    const { data } = await res.json()
-    setSalaryFormulaDataSource(data)
+    try{
+      const res = await fetch('/api/salary-formula/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setSalaryFormulaDataSource(data)
+
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setSalaryFormulaDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Salary Formula </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch salary formula (you do not have permission to view salary formula)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+
+    }
     setIsLoading(false)
   }
 
@@ -151,9 +187,26 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getDeduction = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/deduction/')
-    const { data } = await res.json()
-    setDeductionDataSource(data)
+    try{
+      const res = await fetch('/api/deduction/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setDeductionDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setDeductionDataSource([{
+          title:   'You do not have permission to view dedutions', 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch dedutions (you do not have permission to view dedutions)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -161,9 +214,27 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getCompensation = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/compensation/')
-    const { data } = await res.json()
-    setCompensationDataSource(data)
+    try{
+      const res = await fetch('/api/compensation/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setCompensationDataSource(data)
+
+    }catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setCompensationDataSource([{
+          title :   'You do not have permission to view compensations' , 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch compensations (you do not have permission to view compensations)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
+    
     setIsLoading(false)
   }
 

@@ -103,6 +103,7 @@ const AllDocumentsList = () => {
   const [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
+  const [notAuthorized, setNotAuthorized] = useState([]) ;
 
   // ** Hooks
 
@@ -139,16 +140,33 @@ const AllDocumentsList = () => {
       let arr = []
       let employees = res.data.data
       employees.map(employee => {
-        if (employee.shift_info[0]) {
+        // if (employee.shift_info[0]) {
+        let salaryFormulaType =  '' 
+        if(employee?.salaryFormulas_info[0]?.type )
+          salaryFormulaType =  employee.salaryFormulas_info[0].type;
         arr.push({
           label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
-          value: employee._id
+          value: {id: employee._id , salaryFormulaType }
         })
-        }
+
+        // }
       })
       setEmployeesDataSource(arr)
       setEmployeesFullInfo(employees)
       setLoading(false)
+
+    }).catch(err=>{
+      let message = err?.response?.data?.message || err.toString() ;
+      setEmployeesDataSource([{
+        label: <div style={{color:'red'}}> no permission to view Employees </div>,
+        value: undefined
+      }])
+      if(err.response.status == 401){
+        setNotAuthorized([...notAuthorized , 'ViewEmployee' ])
+        message = 'Error : Failed to fetch employeees ( not Permissin'
+      }
+      toast.error(message , {duration : 5000 , position: 'bottom-right'}) ; 
+
     })
   }
 
@@ -161,8 +179,9 @@ const AllDocumentsList = () => {
     data._id = e
     data.fromDate = fromDate
     data.toDate = toDate
+    console.log(e);
     if(type == 'auto'){
-      let res = await axios.get(`/api/company-employee/${e}`);
+      let res = await axios.get(`/api/company-employee/${e.id}`);
       if(res?.data?.data && res?.data?.data[0] && res?.data?.data[0]?.joiningDate)
         fromDate = res?.data?.data[0]?.joiningDate.toString() ;
     }

@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   const options = []
 
   // -------------------------------- Admin Dashboard -------------------------------------
-
+  let checkPermissions = [] ;
   if (myUser && myUser.type == 'admin') {
     options.push({ sectionTitle: 'Admin Dashboard' })
   }
@@ -42,7 +42,15 @@ export default async function handler(req, res) {
       path: '/admin-dashboard/user'
     })
   }
-  if (myUser &&  myUser.type == 'admin' &&(myUser.permissions.includes('AdminViewRole') || myUser.permissions.includes('AdminViewPermission'))) {
+
+  const checkForPermissions = (array , permissions )=>{
+
+    return array.map((val)=> permissions.includes(val)).filter((val)=> val == true).length > 0 ; 
+  }
+
+  checkPermissions = ['AdminViewRole' , 'AdminViewPermission'] ;
+  
+  if (myUser &&  myUser.type == 'admin' &&  checkForPermissions(checkPermissions , myUser.permissions  )) {
     let children = [];
     if(myUser.permissions.includes('AdminViewPermission')){
       children.push({
@@ -103,25 +111,34 @@ export default async function handler(req, res) {
       ]
     })
   }
-  if (myUser && myUser.permissions.includes('ViewEmployee')) {
-    let children = [
-      {
+  checkPermissions = ['ViewEmployee' , 'ViewEmployeeLeave' , 'ViewEmployeeReward' , 'ViewEmployeeDeduction' , 'ViewCME' ] ;
+  if (myUser &&   checkForPermissions(checkPermissions , myUser.permissions  ) )
+  {
+    let children = []; 
+    if(myUser && myUser.permissions.includes('ViewEmployee')){
+      children.push({
         title: 'List',
         path: '/company-dashboard/employee'
-      },
-      {
+      })
+    }
+    if(myUser && myUser.permissions.includes('ViewEmployeeLeave')){
+      children.push({
         title: 'Leave',
         path: '/company-dashboard/employee/leave/'
-      },
-      {
-        title: 'Deductions',
-        path: '/company-dashboard/employee/deduction/'
-      },
-      {
+      })
+    }
+    if(myUser && myUser.permissions.includes('ViewEmployeeReward')){
+      children.push({
         title: 'Rewards',
         path: '/company-dashboard/employee/rewards/'
-      },
-    ]
+      })
+    }
+    if(myUser && myUser.permissions.includes('ViewEmployeeDeduction')){
+      children.push({
+        title: 'Deductions',
+        path: '/company-dashboard/employee/deduction/'
+      })
+    }
     if(myUser && myUser.permissions.includes('ViewCME')){
       children.push({
         title :'CME',
@@ -183,68 +200,91 @@ export default async function handler(req, res) {
       ]
     })
   }
-  if (myUser && myUser.permissions.includes('ViewForm')) {
+  checkPermissions = ['ViewForm' , 'ViewFormRequest']
+  if (myUser &&  checkForPermissions(checkPermissions , myUser.permissions  ) ) {
+    let children = [];
+    if(myUser.permissions.includes('ViewForm')){
+      children.push({
+        title: 'List',
+        path: '/company-dashboard/form/'
+      })
+    }
+    if(myUser.permissions.includes('ViewFormRequest')){
+      children.push({
+        title: 'Requests',
+        path: '/company-dashboard/form-request/'
+      })
+    }
     options.push({
       title: 'Forms',
       icon: 'ri:input-cursor-move',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/form/'
-        },
-        {
-          title: 'Requests',
-          path: '/company-dashboard/form-request/'
-        }
-      ]
+      children: children
     })
   }
-  if (myUser && myUser.permissions.includes('ViewAttendance')) {
+  
+  checkPermissions = [ 'ViewAttendance' , 'ViewAttendanceShift' , 'ViewAttendanceDays'  ];
+  if (myUser && checkForPermissions(checkPermissions , myUser.permissions  )) {
+    let children = [] ;
+    if(checkForPermissions(['ViewAttendance'] , myUser.permissions)){
+      children.push({
+        title: 'List',
+        path: '/company-dashboard/attendance/list/'
+      })
+    }
+    if(checkForPermissions(['ViewAttendanceDays'] , myUser.permissions)){
+      children.push({
+        title: 'Days',
+        path: '/company-dashboard/attendance/days/'
+      })
+    }
+    if(checkForPermissions(['ViewAttendanceShift'] , myUser.permissions)){
+      children.push({
+        title: 'Shifts',
+        path: '/company-dashboard/attendance/shift/'
+      })
+    }
+
     options.push({
       title: 'Attendance',
       icon: 'material-symbols:date-range-outline-rounded',
-      children: [
-        {
-          title: 'List',
-          path: '/company-dashboard/attendance/list/'
-        },
-        {
-          title: 'Days',
-          path: '/company-dashboard/attendance/days/'
-        },
-        {
-          title: 'Shifts',
-          path: '/company-dashboard/attendance/shift/'
-        }
-      ]
+      children: children
     })
   }
-  if (myUser && myUser.permissions.includes('ViewPayroll')) {
+  checkPermissions= ['ViewPayroll' , 'ViewPayrollFormula' , 'ViewPayrollCompensation' , 'ViewPayrollDeduction'];
+  if (myUser && checkForPermissions(checkPermissions , myUser.permissions)) {
+    let children = [ ] ;
+    if(checkForPermissions(['ViewPayroll'] , myUser.permissions)){
+      children.push({
+        title: 'Payroll List',
+        path: '/company-dashboard/payroll/'
+      })
+      children.push({
+          title: 'End of service',
+          path: '/company-dashboard/payroll/endOfService/'
+      });
+    }
+    if(checkForPermissions(['ViewPayrollFormula'] , myUser.permissions)){
+      children.push({
+        title: 'Salary Formula',
+        path: '/company-dashboard/payroll/formula/'
+      });
+    }
+    if(checkForPermissions(['ViewPayrollCompensation'] , myUser.permissions)){
+      children.push({
+        title: 'Compensations',
+        path: '/company-dashboard/payroll/compensation/'
+      });
+    }
+    if(checkForPermissions(['ViewPayrollDeduction'] , myUser.permissions)){
+      children.push({
+        title: 'Deductions',
+        path: '/company-dashboard/payroll/deduction/'
+      });
+    }
     options.push({
       title: 'Payroll',
       icon: 'mdi:money',
-      children: [
-        {
-          title: 'Payroll List',
-          path: '/company-dashboard/payroll/'
-        },
-        {
-          title: 'End of service',
-          path: '/company-dashboard/payroll/endOfService/'
-        },
-        {
-          title: 'Salary Formula',
-          path: '/company-dashboard/payroll/formula/'
-        },
-        {
-          title: 'Compensations',
-          path: '/company-dashboard/payroll/compensation/'
-        },
-        {
-          title: 'Deductions',
-          path: '/company-dashboard/payroll/deduction/'
-        }
-      ]
+      children: children
     })
   }
   if (myUser && myUser.permissions.includes('ViewMail')) {
@@ -254,14 +294,14 @@ export default async function handler(req, res) {
       path: '/company-dashboard/mail'
     })
   }
-  if (myUser && myUser.permissions.includes('ViewCompanyUser')) {
+  if (myUser && myUser.permissions.includes('ViewUser')) {
     options.push({
       title: 'Users',
       icon: 'mdi:account-outline',
       path: '/company-dashboard/user'
     })
   }
-  if (myUser && myUser.permissions.includes('ViewCompanyRole')) {
+  if (myUser && myUser.permissions.includes('ViewRole')) {
     options.push({
       title: 'Roles',
       icon: 'mdi:shield-outline',
@@ -273,13 +313,14 @@ export default async function handler(req, res) {
 
   if(myUser && myUser.permissions && (myUser.permissions.includes('ViewDocumentType') || myUser.permissions.includes('ViewCompany')  )){
     let children = [];
-    if(myUser.permissions.includes('ViewDocumentType')){
+    
+    if(myUser.permissions.includes('ViewCompany')){
       children.push({
         title:'Company',
         path:'/company-dashboard/settings/company'
       });
     }
-    if(myUser.permissions.includes('ViewCompany')){
+    if(myUser.permissions.includes('ViewDocumentType')){
       children.push({
         title:'Documents',
         path:'/company-dashboard/settings/document-types'

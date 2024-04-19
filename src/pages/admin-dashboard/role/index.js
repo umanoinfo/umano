@@ -381,7 +381,7 @@ const RolesComponent = () => {
                         value={title}
                         onChange={e => {
                           setTitle(e.target.value)
-                        }}
+                                                }}
                         label='Role Name'
                         placeholder='Enter Role Name'
                       />

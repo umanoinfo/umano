@@ -53,7 +53,7 @@ const UserViewRight = ({ tab, id, permissions }) => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
-  }, [tab,activeTab])
+  }, [tab])
 
   return (
     <TabContext value={activeTab}>

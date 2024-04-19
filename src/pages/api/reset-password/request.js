@@ -2,6 +2,7 @@ import { mailOptions, transporter } from 'src/configs/nodemailer'
 import { getCsrfToken } from "next-auth/react";
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'src/configs/dbConnect'
+import { getToken } from 'next-auth/jwt'
 
 const CONTACT_MESSAGE_FIELDS = {
   name: 'Name',
@@ -62,12 +63,17 @@ const handler = async (req, res) => {
   if (req.method === 'POST') {
     const token = await getCsrfToken();
     const data = req.body
+    const authToken = await getToken({ req })
 
+    const client = await connectToDatabase()
+    const myUser = await client.db().collection('users').findOne({ email: authToken.email })
+    if(!myUser || !myUser.permissions || !myUser.permissions.includes('ChangePassword')){
+      return res.status(401).json({success: false , message : 'Not Auth'});
+    }
     if (!data || !data.email) {
       return res.status(400).send({ message: 'Bad request', success: false })
     }
 
-    const client = await connectToDatabase()
 
     const updateUsers = await client.db().collection('users').updateMany({email:data.email},{$set:{'reset_token':token}});
     const user = await client.db().collection('users').findOne({email:data.email});

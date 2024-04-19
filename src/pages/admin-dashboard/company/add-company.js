@@ -138,11 +138,28 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/user/manager-users')
-    const { data } = await res.json()
-    console.log('users' , data) ;
+    try{
+      const res = await fetch('/api/user/manager-users')
+      const { data , success , message } = await res.json()
+      if(!success){
+        throw new Error(message);
+      }
+      setUsersDataSource(data)
+
+    }
+    catch(err){
+      let message = err.toString();
+      if(message == 'Error: Not Auth'){
+        message = 'Error : failed to fetch users (you do not have permission to view users)'
+        setUsersDataSource([{
+          email : <div style={{color:'red'}}> You do not have permission to view users</div>,
+          value : undefined
+        }]);
+
+      }
+      toast.error(message , {duration : 5000 , position: 'bottom-right'});
+    }
     setIsLoading(false)
-    setUsersDataSource(data)
   }
 
   // ----------------------------- Get Countries ----------------------------------

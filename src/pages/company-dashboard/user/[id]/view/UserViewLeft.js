@@ -39,7 +39,7 @@ import UserSubscriptionDialog from 'src/views/apps/user/view/UserSubscriptionDia
 import { getInitials } from 'src/@core/utils/get-initials'
 import axios from 'axios'
 import { CircularProgress } from '@mui/material'
-import { tr } from 'date-fns/locale'
+
 
 const roleColors = {
   admin: 'error',
@@ -235,7 +235,7 @@ const UserViewLeft = ({ id }) => {
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Created at:</Typography>
                     <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                      {user.created_at}
+                      {new Date(user.created_at).toLocaleDateString()}
                     </Typography>
                   </Box>
                 </Box>

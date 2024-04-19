@@ -76,6 +76,8 @@ const CrmTable = ({data , type }) => {
   const [AllDocumentTypes , setAllDocumentTypes] = useState() ;
   const [documentTypeCategory , setDocumentTypeCategory] = useState() ; 
   const [loading, setLoading] = useState() ; 
+  const [documentTypesFetched , setDocumentTypesFetched ] = useState(false);
+
 
   const getDocumentTypes = async () =>{
     setLoading(true);
@@ -93,6 +95,7 @@ const CrmTable = ({data , type }) => {
             });
             setDocumentTypeCategory(map);
             setAllDocumentTypes(data);
+            setDocumentTypesFetched(true);
             setLoading(false);
         }
 
@@ -118,7 +121,7 @@ const CrmTable = ({data , type }) => {
         renderCell: ({ row }) => {
           let updated = row.updated_at ?? row.created_at ;
           
-return (
+        return (
           <>
               <Typography variant='body2'>{new Date(updated).toLocaleDateString()}</Typography>
   
@@ -208,7 +211,11 @@ return (
                     size='small'
                     sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
                     label={t}
-                    onClick={()=> router.push(`/company-dashboard/document/category/${documentTypeCategory[t]}/${t}`)}
+                    onClick={()=> {
+                      if(documentTypesFetched)
+                        router.push(`/company-dashboard/document/category/${documentTypeCategory[t]}/${t}`)
+                    }
+                  }
                   />
                 )
               })}

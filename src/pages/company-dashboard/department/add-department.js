@@ -57,6 +57,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [newParent, setNewParent] = useState('')
   const [newStatus, setNewStatus] = useState('active')
   const [formError, setFormError] = useState({})
+  const [notAuthorized , setNotAuthorized] = useState(false);
 
   const [formValue, setFormValue] = useState({
     name: '',
@@ -74,7 +75,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
-    getParents().then(getUsers())
+    getUsers().then(getParents())
     
   }, [])
 
@@ -103,14 +104,36 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------ Get Users ------------------------------------
 
   const getUsers = async () => {
-    const res = await fetch('/api/company-employee')
-    const { data } = await res.json()
+    setIsLoading(true)
+    try{
+      const res = await fetch('/api/company-employee')
+      const { data , message , success } = await res.json()
+      if(res.status == 401 ){
+        setNotAuthorized(true);
+        setUsersDataSource([
+          {
+            label: <div style={{color:'red'}}> You do not have Permission to view Employees </div>,
+            value: undefined ,
 
-    const users = data.map(employee => ({
-      label: employee.firstName +' '+ employee.lastName +'  (' + employee.email + ')',
-      value: employee._id
-    }))
-    setUsersDataSource(users)
+          }
+        ])
+      }
+      if(!success){
+        throw new Error('Error: Fetching Employees ( ' + message + ' )');
+      }
+  
+      const users = data.map(user => ({
+        label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
+        value: user._id
+      }))
+
+      setUsersDataSource(users)
+      
+    }
+    catch(err){
+      console.log(err);
+      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+    }
     setIsLoading(false)
   }
 
@@ -136,9 +159,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       label: 'Main',
       value: ''
     })
-    
-    
-    console.log(parents)
+      
 
     setParentsDataSource(parents)
   }

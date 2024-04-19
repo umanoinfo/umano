@@ -268,7 +268,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
-                              <strong>{data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime}</strong>
+                              <strong>{(data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toFixed(3)}</strong>
                               <small style={{paddingLeft:5}}> AED</small>
                             </Typography>
                           </MUITableCell>
@@ -279,7 +279,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
-                              <strong>{data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime}</strong>
+                              <strong>{(data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toFixed(3)}</strong>
                               <small style={{paddingLeft:5}}> AED</small>
                             </Typography>
                           </MUITableCell>
@@ -407,7 +407,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <TableCell>Early and late Hours</TableCell>
                       <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
                       <TableCell>
-                        {(+data.salaryFormulas_info[0].notJustifiedAbsenceHoure * data.hourlySalary * -1).toLocaleString("en-US")}
+                        {(+data.salaryFormulas_info[0].notJustifiedAbsenceHoure * data.hourlySalary * -1).toFixed(2).toLocaleString("en-US")}
                         <small> AED</small>
                       </TableCell>
                       <TableCell>
@@ -433,7 +433,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <TableCell>Holiday Hours</TableCell>
                       <TableCell>{data.totalholidayHours}</TableCell>
                       <TableCell>
-                        {(+data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toLocaleString("en-US")}
+                        {(+data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toFixed(3).toLocaleString("en-US")}
                         <small> AED</small>
                       </TableCell>
                       <TableCell>
@@ -446,7 +446,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <TableCell>Off Day Hours</TableCell>
                       <TableCell>{data.totalOffDayHours}</TableCell>
                       <TableCell>
-                        {(+data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toLocaleString("en-US")}
+                        {(+data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toFixed(3).toLocaleString("en-US")}
                         <small> AED</small>
                       </TableCell>
                       <TableCell>
@@ -496,11 +496,11 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <small> %</small>
                     </TableCell>
                     <TableCell>
-                      {(+deduction.totalValue * -1).toLocaleString("en-US")}
+                      {(+deduction.totalValue * -1).toFixed(3).toLocaleString("en-US")}
                       <small> AED</small>
                     </TableCell>
                     <TableCell>
-                      <strong> {(+deduction.totalValue * -1).toLocaleString("en-US")}</strong>
+                      <strong> {(+deduction.totalValue * -1).toFixed(3).toLocaleString("en-US")}</strong>
                       <small> AED</small>
                     </TableCell>
                   </TableRow>
@@ -519,7 +519,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <small> AED</small>
                     </TableCell>
                     <TableCell>
-                      <strong> {(+deduction.value * -1).toLocaleString("en-US")}</strong>
+                      <strong> {(+deduction.value * -1).toFixed(3).toLocaleString("en-US")}</strong>
                       <small> AED</small>
                     </TableCell>
                   </TableRow>

@@ -136,7 +136,7 @@ const AddFormRequest = ({ popperPlacement, id }) => {
   const [plan, setPlan] = useState('')
   const [employeeType, setEmployeeType] = useState('')
   const [value, setValue] = useState('')
-
+  const [notAuthorized , setNotAuthorized ] = useState([]);
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
   const [preparedDate, setPreparedDate] = useState(new Date().toISOString().substring(0, 10))
@@ -182,17 +182,36 @@ const AddFormRequest = ({ popperPlacement, id }) => {
 
   const getEmployees = () => {
     setLoading(true);
+    
     axios.get('/api/company-employee', {}).then(res => {
-      setallEmployees(res.data.data)
-      res.data.data.map(employee => {
-        employeesDataSource.push({
-          label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
-          value: employee._id
+        setallEmployees(res.data.data)
+        res.data.data.map(employee => {
+          employeesDataSource.push({
+            label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
+            value: employee._id
+          })
         })
+        setEmployeesDataSource(employeesDataSource)
+        setLoading(false)
+    }).catch(err=>{
+        
+          let message = err?.response?.data?.message || err.toString() ;
+          if(err.response.status == 401 ){
+            setNotAuthorized([...notAuthorized , 'ViewEmployee']) ;
+            setEmployeesDataSource([{
+              label: <div style={{color:'red'}}>
+                no permission to View Employees
+              </div>,
+              value: undefined
+            }])
+            message = 'Error : Failed to fetch employees (No Permission to view Employees';
+          }
+          toast.error(message , {duraiton : 5000 , position: 'bottom-right'}) ;
+          setLoading(false);
+
       })
-      setLoading(false)
-    })
-    setEmployeesDataSource(employeesDataSource)
+    
+    
   }
 
   const getForm = () => {
