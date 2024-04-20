@@ -114,7 +114,7 @@ const DialogAddUser = ({ id }) => {
   }
 
   const close = () => {
-    router.push('/admin-dashboard/user')
+    router.push('/company-dashboard/user')
   }
 
   return (

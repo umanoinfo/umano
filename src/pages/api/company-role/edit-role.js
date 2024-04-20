@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   
 
   role.permissions = role?.permissions?.filter((permission)=>{
-    return !permission.includes('Admin');
+    return !permission.includes('Admin') && myUser.permissions.includes(permission);
   });
 
   const newRole = await client

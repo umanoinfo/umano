@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   const user = req.body.data
   const id = user._id
 
-
+  // ------------------------- Validation for users count for the current subscription ----------------
   const curUser = await client
   .db()
   .collection('users')
@@ -67,9 +67,14 @@ export default async function handler(req, res) {
       const selectedRole = await client
         .db()
         .collection('roles')
-        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'company' }] } }])
+        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }] } }])
         .toArray()
-
+      
+      selectedRole[0].permissions.map((permission)=>{
+        if(!myUser.permissions.includes(permission) || permission.includes('Admin')){
+          return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
+        }
+      })
       if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {
         for (const permission of selectedRole[0].permissions) {
           if (!user.permissions.includes(permission)) {

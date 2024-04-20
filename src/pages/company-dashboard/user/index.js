@@ -252,7 +252,7 @@ const UserList = () => {
       handleRowOptionsClose()
     }
 
-    const handleActivation =()=>{
+    const handleActivation =(row)=>{
       activationLink(row)
     }
 
@@ -341,7 +341,7 @@ const UserList = () => {
               Send Activation Password
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('DeleteUser') && (
+          {session && session.user.permissions.includes('DeleteUser')  && session.user._id != row._id && row.type != 'manager'  && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete

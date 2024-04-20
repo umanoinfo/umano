@@ -82,8 +82,12 @@ export default async function handler(req, res) {
   }
 
   // -------------------------------- Company Dashboard -------------------------------------
-
-  if (myUser && myUser.company_id) {
+  checkPermissions = ['ViewEmployee' , 'ViewEmployeeLeave' , 'ViewEmployeeReward' , 'ViewEmployeeDeduction' ,
+   'ViewCME' , 'ViewEvent' ,'ViewPayroll' , 'ViewPayrollFormula' , 'ViewPayrollCompensation' , 'ViewPayrollDeduction',
+  'ViewAttendance' , 'ViewAttendanceShift' , 'ViewAttendanceDays','ViewForm' , 'ViewFormRequest' ,
+  'ViewDepartment','ViewDocument','ViewMail','ViewUser','ViewRole','ViewCompany','ViewDocumentType'
+  ] ;
+  if ( (myUser && myUser.company_id) || checkForPermissions(checkPermissions , myUser.permissions)) {
     options.push({ sectionTitle: 'Company Dashboard' })
   }
 

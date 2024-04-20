@@ -29,6 +29,10 @@ export default async function handler(req, res) {
 
     return
   }
+  
+  role.permissions = role?.permissions?.filter((permission)=>{
+    return myUser.permissions.includes(permission);
+  });
 
   const newRole = await client
     .db()

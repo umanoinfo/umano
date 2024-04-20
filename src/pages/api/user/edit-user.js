@@ -31,7 +31,11 @@ export default async function handler(req, res) {
         .collection('roles')
         .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'admin' }] } }])
         .toArray()
-
+        selectedRole[0].permissions.map((permission)=>{
+          if(!myUser.permissions.includes(permission) ){
+            return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
+          }
+        })
       if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {
         for (const permission of selectedRole[0].permissions) {
           if (!user.permissions.includes(permission)) {
