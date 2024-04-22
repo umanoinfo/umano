@@ -21,12 +21,17 @@ export default async function handler(req, res) {
 
   const selectedUser = req.body.selectedUser
   const id = selectedUser._id
+  if(id == myUser._id ){
+    return res.status(400).json({success: false, message: 'Bad opeartion'});
+  }
 
   const user = await client
     .db()
     .collection('users')
     .findOne({ _id: ObjectId(id) })
-
+  if(user.email == 'admin@admin.com'){
+    return res.status(400).json({success: false , message : 'You are not allowed to delete this account'});
+  }
   if (user?.deleted_at) {
     const deletUser = await client
       .db()

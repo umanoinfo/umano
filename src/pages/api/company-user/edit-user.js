@@ -48,6 +48,9 @@ export default async function handler(req, res) {
   if(!curUser){
     return res.status(404).json({success: false, message: 'User not found'});
   }
+  if(curUser._id != myUser._id ){
+    return res.status(401).json({success: false, message : 'You are not allowed to edit this account'});
+  }
 
   const usersCount = await client.db().collection('users').countDocuments({company_id: myUser.company_id , status: 'active', $or:[{deleted_at: {$exists:false}} , {deleted_at: null}]}); 
 

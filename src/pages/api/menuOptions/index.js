@@ -80,6 +80,9 @@ export default async function handler(req, res) {
     );
 
   }
+  if(myUser.type == 'admin' && !myUser.company_id ){ // if there is no active company you are visiting -> do not show company dashboard
+    return res.status(200).json({ success: true, data: options })
+  }
 
   // -------------------------------- Company Dashboard -------------------------------------
   checkPermissions = ['ViewEmployee' , 'ViewEmployeeLeave' , 'ViewEmployeeReward' , 'ViewEmployeeDeduction' ,

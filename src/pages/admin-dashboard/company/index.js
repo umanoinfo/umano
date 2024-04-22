@@ -238,7 +238,8 @@ const CompaniesList = () => {
       setLoading(true) ;
       axios
         .post('/api/user/change-company', {
-          selectedCompany
+          selectedCompany,
+          visit: true
         })
         .then(function (response) {
           dispatch(fetchData({})).then(() => {
@@ -248,7 +249,7 @@ const CompaniesList = () => {
             })
             setLoading(false) ;
             setOpenVisit(false)
-            router.replace("/login")
+            location.reload();
           })
         })
         .catch(function (error) {

@@ -207,7 +207,8 @@ const RolesComponent = () => {
       let selected = [] ;
       permissionsGroup.map((group, index ) =>{
         group.permissions.map((permission , index ) => {
-            selected.push(permission.alias);
+          if(session.user.permissions.includes(permission.alias))
+              selected.push(permission.alias);
         })
       });
       setSelectedPermissions([...selected]);
@@ -427,7 +428,6 @@ const RolesComponent = () => {
                             check={()=>allChecked()}
                             size='small'
                             onChange={ (e) => checkAll(e)}
-                            disabled={session.user.permissions.length != permissionsLength}
                         />
                         Choose all
                         {permissionsGroup &&

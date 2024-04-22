@@ -50,16 +50,18 @@ export const nextAuthOptions = (req, res) => {
               ]
           ).toArray();
           if(!user || !user[0]){
-            throw new Error('No user found!')
+            throw new Error('Wrong credentials!')
           }
           user = user[0];
           
           const isValid = await verifyPassword(credentials.password, user.password)
-
           
-
           if (!isValid) {
-            throw new Error('Password invalid!')
+            throw new Error('Wrong credentials!')
+          }
+          
+          if(user.status != 'active'){
+              throw new Error('Your account is not active');
           }
           
           if(user?.type == 'manager'){

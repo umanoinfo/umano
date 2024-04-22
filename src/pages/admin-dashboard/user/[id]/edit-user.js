@@ -39,7 +39,7 @@ import { fetchData, deleteUser } from 'src/store/apps/user'
 // ** Store Imports
 import { useDispatch } from 'react-redux'
 import { addUser } from 'src/store/apps/user'
-import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, ListItemText, Switch } from '@mui/material'
+import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, ListItemText, Radio, RadioGroup, Switch } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
@@ -77,6 +77,7 @@ const DialogAddUser = ({ id }) => {
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
   const [roles, setRoles] = useState([])
+  const [roleId , setRoleId] = useState() ;
 
   const [defaultValues, setDefaultValues] = useState({
     email: '',
@@ -99,6 +100,10 @@ const DialogAddUser = ({ id }) => {
         setEmail(response.data.data[0].email)
         setName(response.data.data[0].name);
         setRoles(response.data.data[0].roles)
+        if(response?.data?.data[0]?.type == 'manager'){
+          if(response?.data?.data[0]?.roles?.[0])
+            setRoleId(response.data.data[0].roles[0]);
+        }
         reset(response.data.data[0])
         setLoading(false)
       })
@@ -132,7 +137,7 @@ const DialogAddUser = ({ id }) => {
   useEffect(() => {
     getUser()
     getRoles()
-  }, [])
+  }, [id])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
 
@@ -162,9 +167,16 @@ const DialogAddUser = ({ id }) => {
   })
 
   const onSubmit = data => {
+    console.log(roleId);
     setLoading(true)
     data.type = type
-    data.roles = roles
+    if(type == 'admin'){
+      data.roles = roles
+    }
+    else{
+      if(roleId)
+        data.roles = [roleId] ;
+    }
     data.status = userStatus
     data.updated_at = new Date()
     axios
@@ -190,13 +202,16 @@ const DialogAddUser = ({ id }) => {
     router.push('/admin-dashboard/user')
   }
 
-  const handleChange = event => {
-    if (event.target.checked && !roles.includes(event.target.value)) {
-      roles.push(event.target.value)
-    } else {
-      var index = roles.indexOf(event.target.value)
-      if (index != -1) {
-        roles.splice(index, 1)
+  const handleChange = (event , roleId)=> {
+    
+    if(type== 'admin'){
+      if (event.target.checked && !roles.includes(event.target.value)) {
+        roles.push(event.target.value)
+      } else {
+        var index = roles.indexOf(event.target.value)
+        if (index != -1) {
+          roles.splice(index, 1)
+        }
       }
     }
     setRoles([...roles])
@@ -302,19 +317,41 @@ const DialogAddUser = ({ id }) => {
                     <FormControl fullWidth sx={{ mb: 6, mx: 1 }} size='small'>
                       <FormLabel component='legend'>Roles</FormLabel>
                       <FormGroup sx={{ mx: 6 }}>
-                        {allRoles &&
+                        {allRoles && type =='admin' &&
                           allRoles.map((role , index) => {
                             
                             return (
                               <FormControlLabel
                               key = {index}
                                 control={
-                                  <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} />
+                                  <Switch checked={roles.includes(role._id,'')} onChange={handleChange} value={role._id} />
                                 }
                                 label={role.title}
                               />
                             )
                           })}
+                        <RadioGroup sx={{ mx: 6 }}>
+                        {allRoles && type == 'manager' &&
+                          allRoles.map((role , index) => {
+                            
+                            return (
+                              <FormControlLabel
+                                  key = {index}
+                                  control={
+                                    
+                                    <Checkbox
+                                      value={role._id}
+                                      checked={role._id == roleId }
+                                      onChange={()=> setRoleId(role._id)}
+                                    />
+                                  }
+                                  label={role.title}
+                              />
+                            )
+                          })}
+
+                        {/* <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} /> */}
+                      </RadioGroup>
                       </FormGroup>
                     </FormControl>
                   </Grid>

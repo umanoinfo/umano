@@ -23,6 +23,11 @@ export default async function handler(req, res) {
   const id = user._id
   delete user._id
   user.permissions = []
+  const curUser = await client.db().collection('users').findOne({_id: ObjectId(id)}); 
+  
+  if(curUser.email == 'admin@admin.com' && curUser._id.toString() != myUser._id.toString()){
+    return res.status(401).json({success: false , message : 'You are not allowed to edit this account'});
+  }
 
   if (user.roles) {
     for (const role_id of user.roles) {
@@ -31,18 +36,26 @@ export default async function handler(req, res) {
         .collection('roles')
         .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'admin' }] } }])
         .toArray()
+        
+        let dontHavePermission = 0 ;
+        console.log(selectedRole[0]);
         selectedRole[0].permissions.map((permission)=>{
           if(!myUser.permissions.includes(permission) ){
-            return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
+              console.log(permission);
+              dontHavePermission= 1;
           }
         })
-      if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {
-        for (const permission of selectedRole[0].permissions) {
-          if (!user.permissions.includes(permission)) {
-            user.permissions.push(permission)
+        if(dontHavePermission){
+          return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
+        }
+      
+        if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {
+          for (const permission of selectedRole[0].permissions) {
+            if (!user.permissions.includes(permission)) {
+              user.permissions.push(permission)
+            }
           }
         }
-      }
     }
   }
 

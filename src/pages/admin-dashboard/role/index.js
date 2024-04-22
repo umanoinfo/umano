@@ -47,7 +47,7 @@ const RolesComponent = () => {
   const [permissionsGroup, setPermissionsGroup] = useState([])
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const [confirmation , setConfirmation] = useState('');
   const [permissionsLength , setPermissionsLength ] = useState(0) ;
   const [groupCheckboxDisabled , setGroupCheckboxDisabled ] = useState([]);
 
@@ -246,6 +246,7 @@ const RolesComponent = () => {
   }
 
   const deleteRole = () => {
+    console.log(selectedRole.title , confirmation ) ;
     setLoading(true)
     axios
       .post('/api/role/delete-role', {
@@ -514,11 +515,43 @@ const RolesComponent = () => {
                 <DialogContent>
                   <DialogContentText id='alert-dialog-description'>
                     Are you sure , you want to delete role{' '}
-                    <span className='bold'>{selectedRole && selectedRole.title}</span>
+                    <b style={{textDecoration:'bold'}}>{selectedRole && selectedRole.title}</b>
+                    <div  > 
+                      <b>
+                        Users assigned this role will be left without any permissions
+                      </b>
+                    </div>
+                    <div className=''> 
+                      <b>
+                        action cannot be undone
+                      </b>
+                    </div>
+                    <div className=''> 
+                      <b>
+                        please enter the text below to confirm:  
+                      </b>
+                    </div>
+                    
+                    
+                    <Typography className='bold' xs={3}>
+                      
+                      <b style={{color:'red'}}>
+                        {selectedRole && selectedRole.title}
+                      </b>
+                    </Typography>
+                    <TextField 
+                      type='text'
+                      onChange={(e)=>{
+                        setConfirmation(e.target.value)
+                      }}
+                      slotProps={{ textField: { size: 'small' } }} 
+                      size='sm'
+                    >
+                    </TextField>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions className='dialog-actions-dense'>
-                  <Button onClick={deleteRole}>Yes</Button>
+                  <Button onClick={deleteRole} disabled={selectedRole && selectedRole.title != confirmation} >Yes</Button>
                   <Button onClick={handleDeleteClose}>No</Button>
                 </DialogActions>
               </Dialog>
