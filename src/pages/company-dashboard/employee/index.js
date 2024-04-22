@@ -112,7 +112,7 @@ const EmployeeList = classNamec => {
   const [departmentFind, setDepartmentFind] = useState([])
   const [selectedEmployee, setSelectedEmployee] = useState()
   const [departments, setDepartments] = useState()
-
+  const [notAuthorized , setNotAuthorized] = useState([]) ; 
   const { data: session, status } = useSession()
 
   // ** Hooks
@@ -137,10 +137,24 @@ const EmployeeList = classNamec => {
   
   const getDepartments = async () => {
     setLoading(true);
-    axios.get('/api/company-department/all-company-departments', {}).then(function (response) {
-      setDepartments(response.data.data)
+    try{
+      const res = await fetch('/api/company-department/all-company-departments')
+      console.log(res);
+      const {data , success , message } = await res.json() ;
+      if(res.status == 401 ){
+          setNotAuthorized([...notAuthorized , 'departments'])
+      }
+      if(!success){
+        throw new Error( 'Error Failed to Fetch Departments ( ' + message + ' )' );
+      }
+      setDepartments(data)
       setLoading(false);
-    })
+    }
+    catch(err){
+      toast.error(err.toString() , {duration: 5000 , position: 'bottom-right'});
+      setLoading(false);
+    }
+   
   }
 
   const handleClose = () => {
@@ -365,7 +379,13 @@ const EmployeeList = classNamec => {
       headerName: 'Department',
       sortable: false,
       renderCell: ({ row }) => {
-        return (
+        if(notAuthorized.includes('departments')){
+          return <div style={{color:'red' , fontSize:'0.5rem'}}>
+            No view Department Permission
+          </div>
+        }
+        
+      return (
           <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3 } }}>
             { row.departments.length > 1 && <CustomBadge onClick={(e)=>{console.log(row)}}  badgeContent={row.departments.length - 1 +'+'} skin='light' color='primary' size='small' sx={{ marginTop:'11px'}}>
               {row.departments[0]}
@@ -639,7 +659,7 @@ const EmployeeList = classNamec => {
             pageSize={pageSize}
             disableSelectionOnClick
             rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0  } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
         </Card>

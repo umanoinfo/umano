@@ -86,7 +86,7 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const [AllDocumentTypes , setAllDocumentTypes ] = useState();
-
+  const [documentTypesFetched , setDocumentTypesFetched ] = useState(false) ;
   const { data: session, status } = useSession()
 
   // ** Hooks
@@ -96,6 +96,7 @@ const AllDocumentsList = () => {
   const router = useRouter()
 
   const documentTypes = router.query.type ;
+  const category = router.query.category  ;
 
   const getDocumentTypes = async () =>{
     setLoading(true);
@@ -108,10 +109,12 @@ const AllDocumentsList = () => {
             })
             setAllDocumentTypes(documents);
             setLoading(false);
+            setDocumentTypesFetched(true);
         }
 
     }catch(err){
         toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+
         setLoading(false);
     }
   }
@@ -144,7 +147,8 @@ const AllDocumentsList = () => {
 
   const handleClick = (data) => {
     
-    router.push(`/company-dashboard/document/category/${AllDocumentTypes[data]}/${data}`);
+    if(documentTypesFetched)
+      router.push(`/company-dashboard/document/category/${AllDocumentTypes[data]}/${data}`);
     
   }
 
@@ -414,6 +418,9 @@ const AllDocumentsList = () => {
             <Link underline='hover' color='inherit' href='/'>
               Home
             </Link>
+            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+              {category.updated_at}
+            </Typography>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
               {documentTypes} Documents List
             </Typography>

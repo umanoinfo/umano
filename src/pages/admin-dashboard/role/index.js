@@ -47,6 +47,9 @@ const RolesComponent = () => {
   const [permissionsGroup, setPermissionsGroup] = useState([])
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
+  const [confirmation , setConfirmation] = useState('');
+  const [permissionsLength , setPermissionsLength ] = useState(0) ;
+  const [groupCheckboxDisabled , setGroupCheckboxDisabled ] = useState([]);
 
   const dispatch = useDispatch()
   const store = useSelector(state => state.roles)
@@ -60,7 +63,7 @@ const RolesComponent = () => {
         q: value
       })
     ).then(setLoading(false))
-  }, [dispatch, value])
+  }, [dispatch])
 
   const handleClose = () => {
     setOpen(false)
@@ -77,12 +80,36 @@ const RolesComponent = () => {
   // ------------------------ Get Permission Group ------------------------------------
 
   const getPermissionGroup = () => {
+    setLoading(true);
     axios
       .get('/api/permission/premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
+        let count = 0 ;
+        response.data.data.map((group)=>{
+          let groupPermissionsCount =0 ;
+          group.permissions.map((permission)=>{
+            count++ ;
+            if(session.user.permissions.includes(permission.alias))
+              groupPermissionsCount++ ;
+          })
+          
+          if(groupPermissionsCount != group.permissions.length ){
+            setGroupCheckboxDisabled([...groupCheckboxDisabled , group._id]);
+          }
+        })
+
+        setPermissionsLength(count);
+        setLoading(false);
       })
-      .catch(function (error) {})
+      .catch(function (error) {
+        let message = error?.response?.data?.message || error?.toString() ; 
+        if(error.response.status == 401 ){
+          message = 'Error: failed to fetch permissions (no permission to view group permissions) ';
+        }
+        toast.error(message , {duration: 5000, position: 'bottom-right'}) ;
+        setLoading(false);
+      })
   }
 
   // ------------------------ Change Permission ------------------------------------
@@ -106,10 +133,10 @@ const RolesComponent = () => {
       if(group._id == _id ){
         
         group.permissions.map((permission , index ) => {
-          if(e.target.checked && !selectedPermissions.includes(permission.alias)){
+          if(e.target.checked && !selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)){
               selectedPermissions.push(permission.alias);
           }
-          if(!e.target.checked && selectedPermissions.includes(permission.alias)){
+          if(!e.target.checked && selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias) ){
             const index = selectedPermissions.indexOf(permission.alias);
             selectedPermissions.splice(index , 1 ) ; 
           }
@@ -219,6 +246,7 @@ const RolesComponent = () => {
   }
 
   const deleteRole = () => {
+    console.log(selectedRole.title , confirmation ) ;
     setLoading(true)
     axios
       .post('/api/role/delete-role', {
@@ -381,7 +409,7 @@ const RolesComponent = () => {
                         value={title}
                         onChange={e => {
                           setTitle(e.target.value)
-                        }}
+                                                }}
                         label='Role Name'
                         placeholder='Enter Role Name'
                       />
@@ -395,6 +423,7 @@ const RolesComponent = () => {
                             check={()=>allChecked()}
                             size='small'
                             onChange={ (e) => checkAll(e)}
+                            disabled={session.user.permissions.length != permissionsLength}
                         />
                         Choose all
                         {permissionsGroup &&
@@ -430,7 +459,8 @@ const RolesComponent = () => {
                                           label={permission.title}
                                           control={
                                             <Checkbox
-                                              checked={selectedPermissions.includes(permission.alias)}
+                                              checked={selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)}
+                                              
                                               size='small'
                                               id={permission.alias}
                                               onChange={e => changePermission(e)}
@@ -485,11 +515,43 @@ const RolesComponent = () => {
                 <DialogContent>
                   <DialogContentText id='alert-dialog-description'>
                     Are you sure , you want to delete role{' '}
-                    <span className='bold'>{selectedRole && selectedRole.title}</span>
+                    <b style={{textDecoration:'bold'}}>{selectedRole && selectedRole.title}</b>
+                    <div  > 
+                      <b>
+                        Users assigned this role will be left without any permissions
+                      </b>
+                    </div>
+                    <div className=''> 
+                      <b>
+                        action cannot be undone
+                      </b>
+                    </div>
+                    <div className=''> 
+                      <b>
+                        please enter the text below to confirm:  
+                      </b>
+                    </div>
+                    
+                    
+                    <Typography className='bold' xs={3}>
+                      
+                      <b style={{color:'red'}}>
+                        {selectedRole && selectedRole.title}
+                      </b>
+                    </Typography>
+                    <TextField 
+                      type='text'
+                      onChange={(e)=>{
+                        setConfirmation(e.target.value)
+                      }}
+                      slotProps={{ textField: { size: 'small' } }} 
+                      size='sm'
+                    >
+                    </TextField>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions className='dialog-actions-dense'>
-                  <Button onClick={deleteRole}>Yes</Button>
+                  <Button onClick={deleteRole} disabled={selectedRole && selectedRole.title != confirmation} >Yes</Button>
                   <Button onClick={handleDeleteClose}>No</Button>
                 </DialogActions>
               </Dialog>

@@ -36,6 +36,7 @@ export default async function handler(req, res) {
       }
     ])
     .toArray()
-    
+  console.log(permissions);
+
 return res.status(200).json({ success: true, data: permissions })
 }

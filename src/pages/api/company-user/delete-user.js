@@ -13,6 +13,7 @@ export default async function handler(req, res) {
   const client = await connectToDatabase()
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
+  
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('DeleteUser')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
@@ -22,7 +23,10 @@ export default async function handler(req, res) {
     .collection('users')
     .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
   if(!user){
-    return res.status(404).json({success: false, message: 'User not found'});
+    return res.status(404).json({success: false, message: 'User not found or you do not have permission to delete that user'});
+  }
+  if(user.type == 'manager' || user._id.toString() == myUser._id.toString() ){
+    return res.status(400).json({success: false , message : 'Bad request you are not allowed to do this operation !'})
   }
 
   if (user.deleted_at) {

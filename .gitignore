@@ -26,6 +26,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -38,3 +39,4 @@ yarn-error.log*
 # extra
 errors.txt
 warnings.txt
+src/pages/company-dashboard/payroll/calculate (copy).js

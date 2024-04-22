@@ -9,11 +9,38 @@ export default async function handler(req, res) {
   }
   const client = await connectToDatabase()
   const token = await getToken({ req })
-  const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser')) {
+
+  let myUser = await client.db().collection('users').aggregate(
+    [
+      {
+        $match:{
+          email: token.email
+        }
+      },
+      {
+        $lookup: {
+          from: 'subscriptions',
+          let: { company_id:  '$company_id'  },
+          pipeline: 
+          [
+            { $match: { $expr: { $eq: ['$company_id', '$$company_id'] } } },
+
+            { $sort: { created_at : -1 } },
+         ],
+          as: 'subscriptions_info'
+        }
+      }
+    ]
+  ).toArray()
+  myUser = myUser[0] ;
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditUser') || !myUser.subscriptions_info || !myUser.subscriptions_info[0]) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
+  const user = req.body.data
+  const id = user._id
+
+  // ------------------------- Validation for users count for the current subscription ----------------
   const curUser = await client
   .db()
   .collection('users')
@@ -21,11 +48,17 @@ export default async function handler(req, res) {
   if(!curUser){
     return res.status(404).json({success: false, message: 'User not found'});
   }
+  if(curUser._id != myUser._id ){
+    return res.status(401).json({success: false, message : 'You are not allowed to edit this account'});
+  }
+
+  const usersCount = await client.db().collection('users').countDocuments({company_id: myUser.company_id , status: 'active', $or:[{deleted_at: {$exists:false}} , {deleted_at: null}]}); 
+
+  if(req.body.data.status == 'active' && req.body.data.status != curUser.status && usersCount + 1 > myUser.subscriptions_info[0].availableUsers){
+    return res.status(400).json({success: false, message: `You are limited to only ${myUser.subscriptions_info[0].availableUsers} in your subscription`});
+  }
 
 
-
-  const user = req.body.data
-  const id = user._id
   user.email = user.email.toLowerCase();
   delete user._id
   user.permissions = []
@@ -37,9 +70,14 @@ export default async function handler(req, res) {
       const selectedRole = await client
         .db()
         .collection('roles')
-        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }, { type: 'company' }] } }])
+        .aggregate([{ $match: { $and: [{ _id: ObjectId(role_id) }] } }])
         .toArray()
-
+      
+      selectedRole[0].permissions.map((permission)=>{
+        if(!myUser.permissions.includes(permission) || permission.includes('Admin')){
+          return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
+        }
+      })
       if (selectedRole && selectedRole[0] && selectedRole[0].permissions) {
         for (const permission of selectedRole[0].permissions) {
           if (!user.permissions.includes(permission)) {

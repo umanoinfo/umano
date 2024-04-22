@@ -24,7 +24,8 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   const [selectedDeductions, setSelectedDeductions] = useState([])
   const [selectedSalaryFormula, setSelectedSalaryFormula] = useState()
   const [selectedSalaryFormulaID, setSelectedSalaryFormulaID] = useState()
-  const [tabValue, setTabValue] = useState('Over Time')
+  const [tabValue, setTabValue] = useState('CompensationAndDeductions')
+  const [tabs , setTabs ] = useState([])
 
 
   // ----------------------- build ------------------------------------
@@ -42,10 +43,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     let tempSalary = []
     let tempCompensations = []
     let tempDeductions = []
-
+    
     if (salaryFormula) {
       salaryFormula.map(e => {
-        tempSalary.push({ label: e.title, value: e._id })
+        tempSalary.push({ label: e.title, value: e._id , type: e.type })
       })
       setSalaryFormulaOptions(tempSalary)
       setSelectedSalaryFormula(salaryFormula.find(x => x._id == employee.salary_formula_id))
@@ -93,8 +94,22 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   }
 
   const changeSalary = e => {
-    setSelectedSalaryFormula(salaryFormula.find(x => x._id == e))
-    setSelectedSalaryFormulaID(salaryFormula.find(x => x._id == e)._id)
+    let salaryFormula_ = salaryFormula.find(x => x._id == e);
+  
+    let tabs_ =[ 
+      {value: 'EndOfService' , label: 'End of service'},
+      {value: 'Leave' , label: 'Leave'},
+      {value: 'Absence' , label: 'Absence'},
+      {value: 'Over Time' , label: 'Over Time'},
+
+    ];
+
+    if(salaryFormula_.type == 'Flexible'){
+      tabs_.push({value: 'CompensationAndDeductions' , label: 'Compensation & Deductions'});
+    }
+    setTabs(tabs_)
+    setSelectedSalaryFormula(salaryFormula_)
+    setSelectedSalaryFormulaID(salaryFormula_)
   }
 
   const changeCompensations = e => {
@@ -106,6 +121,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   }
 
   const handleChange = (event, newValue) => {
+    console.log(event , newValue) ;
     setTabValue(newValue)
   }
 
@@ -135,6 +151,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
               data={salaryFormulaOptions}
               value={selectedSalaryFormulaID}
               onChange={e => {
+            
                 changeSalary(e)
               }}
               block
@@ -143,12 +160,18 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
               <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                 <TabContext value={tabValue}>
                   <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
-                    <Tab value='Over Time' label='Over Time' />
-                    <Tab value='Absence' label='Absence' />
-                    <Tab value='Leave' label='Leave' />
-                    <Tab value='EndOfService' label='End of service' />
-                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions' />
-                    
+                    <Tab value='Over Time' label='Over Time' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
+                    <Tab value='Absence' label='Absence' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
+                    <Tab value='Leave' label='Leave' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
+                    <Tab value='EndOfService' label='End of service' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'}/>
+                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions'  />
+                   
+
+                    {/* { 
+                       tabs.map(val=>{
+                        <Tab value={val.value} label={val.label} />
+                       })
+                    } */}
                   </TabList>
                   <TabPanel value='Over Time'>
                     <Typography sx={{  mt: 5, mb:5 }}>Over Time</Typography>

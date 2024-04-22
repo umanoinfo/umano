@@ -57,6 +57,7 @@ const Home = () => {
     })
   }
 
+
   if(loading){
     return <Spinner sx={{ height: '100%' }} />
   }
@@ -73,7 +74,7 @@ const Home = () => {
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               { data && <CardStatisticsVertical
-                stats={data.employees_count}
+                stats={ data.employees_count}
                 color='primary'
                 title='Employees'
                 chipText='Last 4 Month'
@@ -82,7 +83,7 @@ const Home = () => {
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               {data && <CardStatisticsVertical
-                stats={data.users_count}
+                stats={ data.active_users_count + '/' + data.users_count  }
                 color='warning'
                 title='Users'
                 chipText='Last Six Month'
@@ -109,7 +110,11 @@ const Home = () => {
             </Grid>  */}
 
             <Grid item xs={12} md={8}>
-              <CrmTable data={data.documentsExpired} />
+              <CrmTable data={data.documentsExpired} type={'expired'}/>
+            </Grid>
+            
+            <Grid item xs={12} md={8}>
+              <CrmTable data={data.recentDocuments} type={'recent'} />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <CrmMeetingSchedule birthdays={data.birthdays}/>

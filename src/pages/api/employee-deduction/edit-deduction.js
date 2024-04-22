@@ -16,6 +16,12 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
+  const employeeDeduction = req.body.data
+  const id = employeeDeduction._id
+  employeeDeduction.date = new Date(employeeDeduction.date)
+  delete employeeDeduction._id
+  
+
   // ------------------ Edit -----------------------------------------------
 
   const ded = await client
@@ -28,10 +34,7 @@ export default async function handler(req, res) {
   }
 
 
-  const employeeDeduction = req.body.data
-  const id = employeeDeduction._id
-  employeeDeduction.date = new Date(employeeDeduction.date)
-  delete employeeDeduction._id
+
 
   if (
     !employeeDeduction.reason ||

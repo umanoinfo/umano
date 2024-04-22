@@ -202,9 +202,27 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getShifts = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/shift/')
-    const { data } = await res.json()
-    setShiftsDataSource(data)
+    try{
+      const res = await fetch('/api/shift/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+
+      setShiftsDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setShiftsDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Shifts </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch shifts (you do not have permission to view shifts)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -212,19 +230,56 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getSalaryFormula = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/salary-formula/')
-    const { data } = await res.json()
-    setSalaryFormulaDataSource(data)
+    try{
+      const res = await fetch('/api/salary-formula/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setSalaryFormulaDataSource(data)
+
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setSalaryFormulaDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Salary Formula </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch salary formula (you do not have permission to view salary formula)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+
+    }
     setIsLoading(false)
   }
 
   // ------------------------ Get Deduction -----------------------------------
 
+ 
   const getDeduction = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/deduction/')
-    const { data } = await res.json()
-    setDeductionDataSource(data)
+    try{
+      const res = await fetch('/api/deduction/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setDeductionDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setDeductionDataSource([{
+          title:   'You do not have permission to view dedutions', 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch dedutions (you do not have permission to view dedutions)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -232,9 +287,27 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getCompensation = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/compensation/')
-    const { data } = await res.json()
-    setCompensationDataSource(data)
+    try{
+      const res = await fetch('/api/compensation/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setCompensationDataSource(data)
+
+    }catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setCompensationDataSource([{
+          title :   'You do not have permission to view compensations' , 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch compensations (you do not have permission to view compensations)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
+    
     setIsLoading(false)
   }
 
@@ -378,9 +451,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
                         <InputGroup>
-                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
-                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
-                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
+                          {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
+                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> 
+                          {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
                     </Grid>
@@ -692,16 +765,20 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         placeholder='unpaid leaves'
                       />
                     </Grid>
-                    <Grid item sm={12} xs={12} md={6} mt={2}>
-                        <small>Parental Leaves over 60 (for each year)</small>
-                        <Form.Control
-                          size='sm'
-                          name='parentalLeavesBeforeAddingToSystem'
-                          controlId='parentalLeavesBeforeAddingToSystem'
-                          type='number'
-                          placeholder='parental leaves'
-                        />
-                      </Grid>
+                    {
+                      gender == 'female' && 
+                          <Grid item sm={12} xs={12} md={6} mt={2}>
+                            <small>Parental Leaves over 60 (for each year)</small>
+                            <Form.Control
+                              size='sm'
+                              name='parentalLeavesBeforeAddingToSystem'
+                              controlId='parentalLeavesBeforeAddingToSystem'
+                              type='number'
+                              placeholder='parental leaves'
+                            />
+                          </Grid>
+                    }
+                  
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                     Home Country Details
@@ -838,11 +915,17 @@ const AddEmployee = ({ popperPlacement, id }) => {
             })
           })
           .catch(function (error) {
-            console.log('error' , error);;
-            toast.error('Error : ' + error.response.data.message + ' !', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
+            let message = '' ;
+            if(error.response.status == 401 ){
+              message = 'Error : Failed fetching departments you do not have View department permission';
+            }
+            else if(error?.response?.data?.message){
+              message = 'Error : ' + error?.response?.data?.message + ' !' ;
+            }
+            else{
+              message = error.toString();
+            }
+            toast.error( message , {duration: 5000 , position: 'bottom-right'}) ;
             setLoading(false)
           })
       }

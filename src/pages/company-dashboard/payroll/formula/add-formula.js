@@ -87,7 +87,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...formValue }
-        console.log(data);
+        if(formValue.type == 'Flexible'){
+          data = { type: 'Flexible' , title : data.title } ;
+        }
         data.status = 'active'
         data.created_at = new Date()
         setLoading(true)
@@ -185,6 +187,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <small>Title</small>
                       <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
                     </Grid>
+                  {
+                    formValue.type != 'Flexible' ?
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                       <TabContext value={tabValue}>
                         <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
@@ -523,6 +527,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </TabPanel>
                       </TabContext>
                     </Grid>
+                    :
+                    <></>
+                    }
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>

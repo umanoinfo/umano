@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminDeleteDocumentType') || !myUser.permissions.includes('DeleteDocumentType')) {
+  if (!myUser || !myUser.permissions || (!myUser.permissions.includes('AdminDeleteDocumentType') && !myUser.permissions.includes('DeleteDocumentType'))) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
   let documentType ;
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   }
   else{
     documentType = await client.db().collection('documentTypes').findOne({_id: ObjectId(id) , company_id: myUser.company_id});
-    if(!documentType){
+    if(!documentType || documentType.company_id == 'general'){
         return res.status(401).json({success: false , message: 'No document type with this id'});
     }
     let toDelete = (documentType && documentType.deleted_at );
@@ -49,7 +49,10 @@ export default async function handler(req, res) {
     else{
         toDelete = date ;
     }
-    deleted = await client.db().collection('documentTypes').updateOne({_id: ObjectId(id) , company_id_id: myUser.company_id} , {$set: {deleted_at: toDelete }} , {upsert:false} );
+    documentType.deleted_at = toDelete ;
+    delete documentType._id  ;
+    deleted = await client.db().collection('documentTypes').updateOne({_id: ObjectId(id) , company_id: myUser.company_id} , {$set: documentType} , {upsert:false} );
+    console.log(deleted);
   }
 
   const logBook = await client.db().collection('logBook').insertOne({

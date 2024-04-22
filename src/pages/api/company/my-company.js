@@ -16,18 +16,13 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
-  // try {
+  // try { 
   const company = await client
     .db()
     .collection('companies')
-    .aggregate([
-      {
-        $match: {
-          _id: ObjectId(myUser.company_id)
-        }
-      }
-    ])
-    .toArray()
+    .findOne({
+        _id: ObjectId(myUser.company_id)
+    })
 
-  return res.status(200).json({ success: true, data: company })
+  return res.status(200).json({ success: true, data: [company] })
 }

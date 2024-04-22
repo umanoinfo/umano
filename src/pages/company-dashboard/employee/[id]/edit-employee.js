@@ -115,7 +115,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   const [unpaidLeaves , setUnpaidLeaves] = useState();
   const [parentalLeaves , setParentalLeaves] = useState();
   const [newEmployeeID , setNewEmployeeID] = useState() ;
-  const [companyEmployeeID , setCompanyEmployeeID] = useState() ;
+  let [companyEmployeeID , setCompanyEmployeeID] = useState() ;
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
   const { data: session, setSession } = useSession()
@@ -128,12 +128,29 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
 
   // ------------------------ Get Shifts -----------------------------------
-
   const getShifts = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/shift/')
-    const { data } = await res.json()
-    setShiftsDataSource(data)
+    try{
+      const res = await fetch('/api/shift/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+
+      setShiftsDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setShiftsDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Shifts </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch shifts (you do not have permission to view shifts)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -141,9 +158,28 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getSalaryFormula = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/salary-formula/')
-    const { data } = await res.json()
-    setSalaryFormulaDataSource(data)
+    try{
+      const res = await fetch('/api/salary-formula/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setSalaryFormulaDataSource(data)
+
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setSalaryFormulaDataSource([{
+          title: (<div style={{color:'red'}}> You do not have permission to view Salary Formula </div> ), 
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch salary formula (you do not have permission to view salary formula)'
+      }
+      
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+
+    }
     setIsLoading(false)
   }
 
@@ -151,9 +187,26 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getDeduction = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/deduction/')
-    const { data } = await res.json()
-    setDeductionDataSource(data)
+    try{
+      const res = await fetch('/api/deduction/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setDeductionDataSource(data)
+    }
+    catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setDeductionDataSource([{
+          title:   'You do not have permission to view dedutions', 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch dedutions (you do not have permission to view dedutions)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
     setIsLoading(false)
   }
 
@@ -161,9 +214,27 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getCompensation = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/compensation/')
-    const { data } = await res.json()
-    setCompensationDataSource(data)
+    try{
+      const res = await fetch('/api/compensation/')
+      const { data , message , success } = await res.json()
+      if(!success){
+        throw new Error(message) ;
+      }
+      setCompensationDataSource(data)
+
+    }catch(err){
+      let message = err.toString() ; 
+      if(err.toString() == 'Error: Not Auth'){
+        setCompensationDataSource([{
+          title :   'You do not have permission to view compensations' , 
+          type: '.',
+          _id: undefined 
+        }])
+        message = 'Error : Failed to fetch compensations (you do not have permission to view compensations)'
+      }
+      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+    }
+    
     setIsLoading(false)
   }
 
@@ -173,10 +244,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setIsLoading(true);
 
     const companyIDRes = await axios.get('/api/company/max-employee-id',{}) ;
-    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+    companyEmployeeID = companyIDRes.data.companyEmployeeID ;
     
     const res = await fetch('/api/company-employee/' + id )
     const { data } = await res.json()
+    
     setSelectedEmployee(data[0])
     setFormValue(data[0])
     setCountryID(data[0].countryID)
@@ -190,10 +262,12 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setGender(data[0].gender)
     setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
     setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
-    if(companyEmployeeID)
-      setNewEmployeeID(data[0].idNo.split(companyEmployeeID)[1]);
+    if(companyEmployeeID ||  isNaN(data[0].idNo))
+      setNewEmployeeID(Number(data[0].idNo.split(companyEmployeeID)[1]));
     else
-      setNewEmployeeID(data[0].idNo);
+      setNewEmployeeID(Number(data[0].idNo));
+    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+    console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
     if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
     setPosition(data[0].type);
     setIsLoading(false)
@@ -367,9 +441,9 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
                         <InputGroup>
-                          {companyEmployeeID && <InputGroup.Addon>{companyEmployeeID}</InputGroup.Addon>}
-                          {/* <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.'  />  */}
-                          <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} />
+                         {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
+                          { <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID}  onChange={(e)=>{setNewEmployeeID(e)}} /> }
+                          {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
                     </Grid>
@@ -685,17 +759,21 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                       onChange={(e)=>{setUnpaidLeaves(e)}}
                     />
                   </Grid>
-                  <Grid item sm={12} xs={12} md={6} mt={2}>
-                      <small>Parental Leaves over 60 (for each year) </small>
-                      <Form.Control
-                        size='sm'
-                        name='parentalLeavesBeforeAddingToSystem'
-                        controlId='parentalLeavesBeforeAddingToSystem'
-                        type='number'
-                        placeholder='parental leaves'
-                        onChange={(e)=>{setParentalLeaves(e)}}
-                      />
-                    </Grid>
+                  {
+                    gender == 'female' &&
+                      <Grid item sm={12} xs={12} md={6} mt={2}>
+                          <small>Parental Leaves over 60 (for each year) </small>
+                          <Form.Control
+                            size='sm'
+                            name='parentalLeavesBeforeAddingToSystem'
+                            controlId='parentalLeavesBeforeAddingToSystem'
+                            type='number'
+                            placeholder='parental leaves'
+                            onChange={(e)=>{setParentalLeaves(e)}}
+                          />
+                      </Grid>
+                  }
+                 
                 </Grid>
                 <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                   Home Country Details
@@ -815,7 +893,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         data.updated_at = new Date()
         data.parentalLeavesBeforeAddingToSystem = parentalLeaves ;
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
-        data.newEmployeeID = companyEmployeeID + String(newEmployeeID);
+        data.idNo = `${companyEmployeeID}${String(newEmployeeID)}`;
         data.type = position ; 
 
         axios

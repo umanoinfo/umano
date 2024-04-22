@@ -34,7 +34,7 @@ import Icon from 'src/@core/components/icon'
 import axios from 'axios'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
+import { fetchData, deleteUser } from 'src/store/apps/company-user'
 
 // ** Store Imports
 import { useDispatch } from 'react-redux'
@@ -161,12 +161,12 @@ const DialogAddUser = () => {
                         label='Name'
                         onChange={onChange}
                         placeholder='userName'
-                        error={Boolean(errors.usernnameme)}
+                        error={Boolean(errors.name)}
                       />
                     )}
                   />
-                  {errors.username && (
-                    <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+                  {errors.name && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>
                   )}
                 </FormControl>
 

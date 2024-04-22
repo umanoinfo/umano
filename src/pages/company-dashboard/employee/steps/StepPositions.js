@@ -60,6 +60,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Actions Imports
 import { fetchData } from 'src/store/apps/employeePosition'
 import { DataGrid } from '@mui/x-data-grid'
+import Loading from 'src/views/loading'
 
 const { StringType } = Schema.Types
 
@@ -123,7 +124,7 @@ const Steppositions = ({ handleNext, employee }) => {
 
   const [endChangeType, setEndChangeType] = useState('onPosition')
   const [endChangeDate, setEndChangeDate] = useState(new Date().toISOString().substring(0, 10))
-
+  const [notAuthorized , setNotAuthorized] = useState([]) ; 
   const dispatch = useDispatch()
 
   const store = useSelector(state => state.employeePosition)
@@ -159,7 +160,7 @@ const Steppositions = ({ handleNext, employee }) => {
       ).then(setLoading(false))
       setEndChangeType('onPosition')
     }
-  }, [dispatch, employeeId, userStatus, value , employee ])
+  }, [dispatch, employeeId, userStatus, value  ])
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -175,6 +176,23 @@ const Steppositions = ({ handleNext, employee }) => {
       if(response.data.data && response.data.data.length > 0 )
         setDepartment(response.data.data[0]._id)
         setLoading(false);
+    }).catch((err)=>{
+      let message = '' ; 
+      if(err.response.status == 401 ){
+        message = 'Error: You do not have permission to View Departments' ;
+        setNotAuthorized([...notAuthorized , 'ViewDepartment']);
+        setDepartmentsDataSource([{
+          label: <div style={{color:'red'}}> You do not have permission to View Departments </div>
+          , value: undefined 
+        }]);
+      }
+      else if(err?.response?.data?.message ){
+        message = err.response.data.message; 
+      }
+      else {
+        message = err.toString();
+      }
+      toast.error(message , {duration: 5000 , position: 'bottom-right'}) ;
     })
 
     const positionChangeStartTypes = PositionChangeStartTypes.map(type => ({
@@ -517,6 +535,9 @@ const Steppositions = ({ handleNext, employee }) => {
   if (!employee) {
     return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
   }
+  if(loading){
+    return <Loading header='Please Wait' description='Positions are loading'/>
+  }
 
   return (
     <Grid spacing={6}>
@@ -576,7 +597,8 @@ const Steppositions = ({ handleNext, employee }) => {
                   model={validateMmodel}
                 >
                   <Grid container sx={{ mt: 3, px: 5 }}>
-                    {departmentsDataSource && (
+                  
+                    {departmentsDataSource   && (
                       <Grid item sm={12} xs={12} mt={2}>
                         <small>Department</small>
                         <SelectPicker

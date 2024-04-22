@@ -361,7 +361,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.total.toLocaleString("en-US") ? row.total.toLocaleString("en-US") : 0}
+              {row?.total?.toLocaleString("en-US") ??  0}
               <small> AED </small>
             </Typography>
           </Box>
@@ -440,7 +440,7 @@ const PayrollList = classNamec => {
 
   if (loading) return <Loading header='Please Wait' description='Employee are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewEmployee')) {
+  if (session && session.user && !session.user.permissions.includes('ViewPayroll')) {
     return <NoPermission header='No Permission' description='No permission to View Employees'></NoPermission>
   }
 

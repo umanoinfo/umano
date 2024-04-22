@@ -6,6 +6,12 @@ export default async function handler(req, res) {
     if(req.method != 'POST'){
     return res.status(405).json({success: false , message: 'Method is not allowed'});
   }
+  const employee = req.body.data
+  const id = employee._id
+  delete employee._id
+  employee.dateOfBirth = new Date(employee.dateOfBirth)
+  employee.joiningDate = new Date(employee.joiningDate)
+
 
   const client = await connectToDatabase()
 
@@ -24,11 +30,6 @@ export default async function handler(req, res) {
 
   // ------------------ Edit -------------------
 
-  const employee = req.body.data
-  const id = employee._id
-  delete employee._id
-  employee.dateOfBirth = new Date(employee.dateOfBirth)
-  employee.joiningDate = new Date(employee.joiningDate)
 
   if (!employee.firstName || !employee.lastName) {
     return res.status(422).json({

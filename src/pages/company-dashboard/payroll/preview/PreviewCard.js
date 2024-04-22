@@ -54,7 +54,30 @@ const renderClient = employee => {
   }
 }
 
-const PreviewCard = ({ data, fromDate, toDate }) => {
+const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
+  let totalSalary = 0 ;
+  if(data.flexible ){
+     totalSalary =(( 
+      Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) -
+      Number(data.totalDeductions) +
+      Number(data.totalCompensations) -
+      Number(data.totalEmployeeDeductions) +
+      Number(data.totalEmployeeRewards)).toFixed(3)).toLocaleString('en-US');
+  }else{
+    totalSalary =  (+(
+      Number(data.totalOffDayValue) +
+      Number(data.totalholidayValue) +
+      Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) +
+      Number(data.totalEarlyValue) -
+      Number(data.totalDeductions) +
+      Number(data.totalCompensations) -
+      Number(data.totalEmployeeDeductions) +
+      Number(data.totalEmployeeRewards)-
+      Number(data.totalLeave)+
+      Number(data.totalLateOverTimeValue)+
+      Number(data.totalEarlyOverTimeValue)
+    ).toFixed(3)).toLocaleString("en-US") ;
+  }
 
   // ** Hook
   const theme = useTheme()
@@ -137,22 +160,25 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         </Typography>
                       </MUITableCell>
                     </TableRow>
+                    {
+                      !data.flexible &&
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Shift:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2'>
+                              {data.shift_info[0].times[0].timeIn} - {data.shift_info[0].times[0].timeOut}
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                    }
                     <TableRow>
                       <MUITableCell>
-                        <Typography variant='body2'>Shift:</Typography>
+                        <Typography variant='body2'>Working Days: </Typography>
                       </MUITableCell>
                       <MUITableCell>
-                        <Typography variant='body2'>
-                          {data.shift_info[0].times[0].timeIn} - {data.shift_info[0].times[0].timeOut}
-                        </Typography>
-                      </MUITableCell>
-                    </TableRow>
-                    <TableRow>
-                      <MUITableCell>
-                        <Typography variant='body2'>Days:</Typography>
-                      </MUITableCell>
-                      <MUITableCell>
-                        <Typography variant='body2'>{data.totalWorkingDaysCount}</Typography>
+                        <Typography variant='body2'> {data.totalWorkingDaysCount.toFixed(2)}</Typography>
                       </MUITableCell>
                     </TableRow>
                   </TableBody>
@@ -163,185 +189,192 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
         </CardContent>
 
         <Divider />
+      {
+        !data.flexible ?
+            <CardContent>
+            <Grid container>
+              <Grid item xs={12} sm={4} sx={{ display: 'flex' }}>
+                <div>
+                  <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
+                    Salary (AED):
+                  </Typography>
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Basic Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Daily Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.dailySalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        {}
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Hourly Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.hourlySalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4} px={4} sx={{ display: 'flex' }}>
+                <div>
+                  {/* <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
+                    Salary (Hourly/AED):
+                  </Typography> */}
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                        <Typography variant='body2' sx={{pt:10}}></Typography>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Over Time:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(data.hourlySalary * data.salaryFormulas_info[0].firstOverTime).toFixed(2)}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Holiday:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toFixed(3)}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Weekend:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toFixed(3)}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4} sx={{ display: 'flex' }}>
+                <div>
+                  <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
+                  Yearly Leaves ({new Date().getFullYear()}):
+                  </Typography>
+                  <TableContainer>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Paid Leaves:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>
+                                {data.yearlyTakenPaidLeaves.toFixed(1)}/{data.availablePaidLeave}
+                              </strong>
+                              <small style={{paddingLeft:5}}> Day</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Unpaid Leaves:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>
+                                {data.yearlyTakenUnpaidLeaves.toFixed(1)}/{data.availableUnpaidLeave}
+                              </strong>
+                              <small style={{paddingLeft:5}}> Day</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Sick Leave:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>
+                                {data.yearlyTakenSickLeaves.toFixed(1)}/{data.availableSickLeave}
+                              </strong>
+                              <small style={{paddingLeft:5}}> Day</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        { data.gender == 'female' && <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Parental Leave:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>
+                                {data.yearlyTakenParentalLeaves.toFixed(1)}/{data.availableParentalLeave}
+                              </strong>
+                              <small style={{paddingLeft:5}}> Day</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        }
 
-        <CardContent>
-          <Grid container>
-            <Grid item xs={12} sm={4} sx={{ display: 'flex' }}>
-              <div>
-                <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
-                  Salary (AED):
-                </Typography>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Basic Salary:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Daily Salary:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{(+data.dailySalary).toLocaleString("en-US")}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      {}
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Hourly Salary:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{(+data.hourlySalary).toLocaleString("en-US")}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
+                        {/* { data.gender == 'female' && <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Maternity Leave:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>
+                                {data.takenMaternityLeaves}/{data.availableMaternityLeave}
+                              </strong>
+                              <small style={{paddingLeft:5}}> Day</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>} */}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={4} px={4} sx={{ display: 'flex' }}>
-              <div>
-                {/* <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
-                  Salary (Hourly/AED):
-                </Typography> */}
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                      <Typography variant='body2' sx={{pt:10}}></Typography>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Over Time:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.hourlySalary * data.salaryFormulas_info[0].firstOverTime}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Holiday:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Weekend:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>{data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime}</strong>
-                            <small style={{paddingLeft:5}}> AED</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </Grid>
-            <Grid item xs={12} sm={4} sx={{ display: 'flex' }}>
-              <div>
-                <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
-                Yearly Leaves ({new Date().getFullYear()}):
-                </Typography>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Paid Leaves:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>
-                              {data.takenPaidLeaves}/{data.availablePaidLeave}
-                            </strong>
-                            <small style={{paddingLeft:5}}> Day</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Unpaid Leaves:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>
-                              {data.takenUnpaidLeaves}/{data.availableUnpaidLeave}
-                            </strong>
-                            <small style={{paddingLeft:5}}> Day</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Sick Leave:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>
-                              {data.takenSickLeaves}/{data.availableSickLeave}
-                            </strong>
-                            <small style={{paddingLeft:5}}> Day</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>
-                      { data.gender == 'male' && <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Parental Leave:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>
-                              {data.takenParentalLeaves}/{data.availableParentalLeave}
-                            </strong>
-                            <small style={{paddingLeft:5}}> Day</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>}
-                      { data.gender == 'female' && <TableRow>
-                        <MUITableCell>
-                          <Typography variant='body2'>Maternity Leave:</Typography>
-                        </MUITableCell>
-                        <MUITableCell>
-                          <Typography variant='body2' px={5}>
-                            <strong>
-                              {data.takenMaternityLeaves}/{data.availableMaternityLeave}
-                            </strong>
-                            <small style={{paddingLeft:5}}> Day</small>
-                          </Typography>
-                        </MUITableCell>
-                      </TableRow>}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
+      :
+      <></>
+      }
+        
 
         <Divider sx={{ mt: theme => `${theme.spacing(6.5)} !important`, mb: '0 !important' }} />
 
@@ -358,67 +391,75 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
             <TableBody>
               <TableRow>
                 <TableCell>Monthly Lumpy Salary</TableCell>
-                <TableCell>1</TableCell>
+                <TableCell> {(data.totalWorkingDaysCount / 30).toFixed(2)} </TableCell>
                 <TableCell>
                   {(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")}</strong>
+                  <strong>{((+data.salaries_info[0].lumpySalary).toLocaleString("en-US") * (data.totalWorkingDaysCount / 30)).toFixed(2)}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>
+              {
+                !data.flexible ?
+                <>
+                      <TableRow>
+                      <TableCell>Early and late Hours</TableCell>
+                      <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
+                      <TableCell>
+                        {(+data.salaryFormulas_info[0].notJustifiedAbsenceHoure * data.hourlySalary * -1).toFixed(2).toLocaleString("en-US")}
+                        <small> AED</small>
+                      </TableCell>
+                      <TableCell>
+                        <strong>{(+data.totalEarlyValue).toLocaleString("en-US")}</strong>
+                        <small> AED</small>
+                      </TableCell>
+                    </TableRow>
 
-              <TableRow>
-                <TableCell>Early and late Hours</TableCell>
-                <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
-                <TableCell>
-                  {(+data.salaryFormulas_info[0].notJustifiedAbsenceHoure * data.hourlySalary * -1).toLocaleString("en-US")}
-                  <small> AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{(+data.totalEarlyValue).toLocaleString("en-US")}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
+                    <TableRow>
+                      <TableCell>Early and late OverTime Hours</TableCell>
+                      <TableCell>{data.totalEarlyOverTimeHours + data.totalLateOverTimeHours}</TableCell>
+                      <TableCell>
+                        {((+data.salaryFormulas_info[0].firstOverTime * data.hourlySalary).toFixed(3) ).toLocaleString("en-US")}
+                        <small> AED</small>
+                      </TableCell>
+                      <TableCell>
+                        <strong>{(+(Number(data.totalLateOverTimeValue) + Number(data.totalEarlyOverTimeValue)).toFixed(3)).toLocaleString("en-US")}</strong>
+                        <small> AED</small>
+                      </TableCell>
+                    </TableRow>
 
-              <TableRow>
-                <TableCell>Early and late OverTime Hours</TableCell>
-                <TableCell>{data.totalEarlyOverTimeHours + data.totalLateOverTimeHours}</TableCell>
-                <TableCell>
-                  {(+data.salaryFormulas_info[0].firstOverTime * data.hourlySalary * -1).toLocaleString("en-US")}
-                  <small> AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{(+(Number(data.totalLateOverTimeValue) + Number(data.totalEarlyOverTimeValue)).toFixed(3)).toLocaleString("en-US")}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
+                    <TableRow>
+                      <TableCell>Holiday Hours</TableCell>
+                      <TableCell>{data.totalholidayHours}</TableCell>
+                      <TableCell>
+                        {(+data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toFixed(3).toLocaleString("en-US")}
+                        <small> AED</small>
+                      </TableCell>
+                      <TableCell>
+                        <strong>{(+data.totalholidayValue).toLocaleString("en-US")}</strong>
+                        <small> AED</small>
+                      </TableCell>
+                    </TableRow>
 
-              <TableRow>
-                <TableCell>Holiday Hours</TableCell>
-                <TableCell>{data.totalholidayHours}</TableCell>
-                <TableCell>
-                  {(+data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toLocaleString("en-US")}
-                  <small> AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{(+data.totalholidayValue).toLocaleString("en-US")}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
+                    <TableRow>
+                      <TableCell>Off Day Hours</TableCell>
+                      <TableCell>{data.totalOffDayHours}</TableCell>
+                      <TableCell>
+                        {(+data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toFixed(3).toLocaleString("en-US")}
+                        <small> AED</small>
+                      </TableCell>
+                      <TableCell>
+                        <strong>{(+data.totalOffDayValue).toLocaleString("en-US")}</strong>
+                        <small> AED</small>
+                      </TableCell>
+                    </TableRow>
+                  </>
+              :
+              <></>
 
-              <TableRow>
-                <TableCell>Off Day Hours</TableCell>
-                <TableCell>{data.totalOffDayHours}</TableCell>
-                <TableCell>
-                  {(+data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toLocaleString("en-US")}
-                  <small> AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{(+data.totalOffDayValue).toLocaleString("en-US")}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
+              }
+             
 
               {data.compensations_array.map((comp, index) => {
                 return (
@@ -455,11 +496,11 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       <small> %</small>
                     </TableCell>
                     <TableCell>
-                      {(+deduction.totalValue * -1).toLocaleString("en-US")}
+                      {(+deduction.totalValue * -1).toFixed(3).toLocaleString("en-US")}
                       <small> AED</small>
                     </TableCell>
                     <TableCell>
-                      <strong> {(+deduction.totalValue * -1).toLocaleString("en-US")}</strong>
+                      <strong> {(+deduction.totalValue * -1).toFixed(3).toLocaleString("en-US")}</strong>
                       <small> AED</small>
                     </TableCell>
                   </TableRow>
@@ -478,7 +519,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       <small> AED</small>
                     </TableCell>
                     <TableCell>
-                      <strong> {(+deduction.value * -1).toLocaleString("en-US")}</strong>
+                      <strong> {(+deduction.value * -1).toFixed(3).toLocaleString("en-US")}</strong>
                       <small> AED</small>
                     </TableCell>
                   </TableRow>
@@ -503,8 +544,8 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </TableRow>
                 )
               })}
-
-              {data.leaves_info.map((leave, index) => {
+              
+              {!data.flexible && data.leaves_info.map((leave, index) => {
                 return (
                   <TableRow key={index}>
                     <TableCell>
@@ -516,8 +557,8 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       <small> %</small>
                     </TableCell>
                     <TableCell>
-                      { leave.type == 'hourly' && <strong> - {(((leave.time * data.hourlySalary) * (100 - leave.paidValue))/100).toFixed(3)}</strong>}
-                      { leave.type == 'daily' && <strong> - {( ((leave.days* data.dailySalary * (100 - leave.paidValue))/100).toFixed(3)) }</strong>}
+                      { leave.type == 'hourly' && <strong> - {Number(((Number(leave.time) * data.hourlySalary) * (100 - Number(leave.paidValue)))/100).toFixed(3)}</strong>}
+                      { leave.type == 'daily' && <strong> - {( Number((Number(leave.days)* data.dailySalary * (100 - Number(leave.paidValue)))/100).toFixed(3)) }</strong>}
                       <small> AED</small>
                     </TableCell>
                   </TableRow>
@@ -539,19 +580,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Subtotal:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                  {(+(
-                    Number(data.totalOffDayValue) +
-                    Number(data.totalholidayValue) +
-                    Number(data.salaries_info[0].lumpySalary) +
-                    Number(data.totalEarlyValue) -
-                    Number(data.totalDeductions) +
-                    Number(data.totalCompensations) -
-                    Number(data.totalEmployeeDeductions) +
-                    Number(data.totalEmployeeRewards)-
-                    Number(data.totalLeave)+
-                    Number(data.totalLateOverTimeValue)+
-                    Number(data.totalEarlyOverTimeValue)
-                  ).toFixed(3)).toLocaleString("en-US")}
+                  {totalSalary}
                 </Typography>
               </CalcWrapper>
               <CalcWrapper>
@@ -566,17 +595,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                  {(+(
-                    Number(data.totalOffDayValue) +
-                    Number(data.totalholidayValue) +
-                    Number(data.salaries_info[0].lumpySalary) +
-                    Number(data.totalEarlyValue) -
-                    Number(data.totalDeductions) +
-                    Number(data.totalCompensations) -
-                    Number(data.totalEmployeeDeductions) +
-                    Number(data.totalEmployeeRewards)-
-                    Number(data.totalLeave)
-                  ).toFixed(3)).toLocaleString("en-US")}
+                  {totalSalary}
                 </Typography>
               </CalcWrapper>
             </Grid>

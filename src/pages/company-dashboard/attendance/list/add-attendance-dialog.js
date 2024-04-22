@@ -27,18 +27,20 @@ import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import de from 'date-fns/locale/de'; 
+import en from 'date-fns/locale/en-US';
+import de from 'date-fns/locale/en-US'; 
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogAddAttendance = ({ open, setOpen }) => {
+const DialogAddAttendance = ({ open, setOpen , dataSource}) => {
   const statusData = [{ label: 'active', value: 'active' }]
 
   // ** States
   const [date, setDate] = useState(new Date())
-  const [dataSource, setDataSource] = useState([])
+
+  // const [dataSource, setDataSource] = useState([])
   const [employee, setEmployee] = useState(null)
   const [timeIn, setTimeIn] = useState(new Date())
   const [timeOut, setTimeOut] = useState(new Date())
@@ -49,26 +51,26 @@ const DialogAddAttendance = ({ open, setOpen }) => {
     setDate(newDate);
   };
   useEffect(() => {
-    getEmployees()
+    // getEmployees()
   }, [])
   if (!open) {
     return <></>
   }
 
-  const getEmployees = () => {
-    setLoading(true)
-    axios.get('/api/company-employee', {}).then(res => {
-      let arr = []
-      res.data.data.map(employee => {
-        arr.push({
-          label: employee.firstName + ' ' + employee.lastName,
-          value: employee.idNo
-        })
-      })
-      setDataSource(arr)
-      setLoading(false)
-    })
-  }
+  // const getEmployees = () => {
+  //   setLoading(true)
+  //   axios.get('/api/company-employee', {}).then(res => {
+  //     let arr = []
+  //     res.data.data.map(employee => {
+  //       arr.push({
+  //         label: employee.firstName + ' ' + employee.lastName,
+  //         value: employee.idNo
+  //       })
+  //     })
+  //     setDataSource(arr)
+  //     setLoading(false)
+  //   })
+  // }
 
   const handleSubmit = () => {
     if (!employee) {
@@ -148,11 +150,12 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                 <Grid item xs={6} mb={3} >
                   <FormControl fullWidth>
                     <InputLabel>Employee</InputLabel>
+                    
                     <Select
                       value={employee}
                       onChange={e => setEmployee(e.target.value)}
                     >
-                        {dataSource.map(option => (
+                        {dataSource && dataSource.map(option => (
                           <MenuItem key={option.value} value={option.value}>
                             {option.label}
                           </MenuItem>
@@ -181,6 +184,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                         value={timeIn }
                         onChange={e => setTimeIn(e)}
                         fullWidth
+                        ampm={false}
                       />
                   </LocalizationProvider>
                 </Grid>
@@ -192,6 +196,7 @@ const DialogAddAttendance = ({ open, setOpen }) => {
                       value={timeOut }
                       onChange={e => setTimeOut(e) }
                       fullWidth
+                      ampm={false}
                     />
                   </LocalizationProvider>
                 </Grid>

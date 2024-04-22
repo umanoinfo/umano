@@ -28,7 +28,7 @@ import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 
-const { StringType } = Schema.Types
+const { StringType, NumberType, DateType, ArrayType } = Schema.Types
 
 import { TabContext, TabPanel } from '@mui/lab'
 
@@ -72,7 +72,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const validateMmodel = Schema.Model({
     title: StringType().isRequired('This field is required.'),
-    type: StringType().isRequired('This field is required.')
+    type: StringType().isRequired('This field is required.'),
+    fixedValue: NumberType().min(0).isRequired('The field is required'),
+    percentageValue: NumberType().min(0).isRequired('The field is required'),
+    
   })
 
   // ------------------------------- Submit --------------------------------------

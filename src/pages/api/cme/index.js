@@ -38,15 +38,15 @@ export default async function handler(req, res) {
     [
       {
         $match:{
-          $or: [
+          $and: [
             {
-                  employee_id: { $in: ids  }
+              employee_id: { $in: ids  }
             }
             ,
             {
               date : {
-                $gte: (req.body.from_date ? new Date(req.body.from_date)?.toISOString() : new Date(0).toISOString()),
-                $lte: (req.body.to_date ? new Date(req.body.to_date)?.toISOString() :  new Date().toISOString() )
+                $gte: (req.body.from_date ? new Date(req.body.from_date): new Date(0)),
+                $lte: (req.body.to_date ? new Date(req.body.to_date):  new Date() )
               }
             }
             ]

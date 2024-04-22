@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditCompany')) {
+  if (!myUser || !myUser.permissions || ( !myUser.permissions.includes('AdminEditCompany') && !myUser.permissions.includes('EditCompany') )) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -27,29 +27,41 @@ export default async function handler(req, res) {
       message: 'Invalid input'
     })
   }
+  const currentCompany = await client.db().collection('companies').findOne({_id: ObjectId(id)});
+  if(myUser.type != 'admin' && (!currentCompany || id != myUser.company_id) ){
+    return res.status(401).json({success: false , message: 'Not Auth'});
+  }
  
   // when done set the (oldCompany.user_id to null)
+  if(myUser.type == 'admin'){
+    const newManager = await client.db().collection('users').findOne({_id: ObjectId(company.user_id) , type:'manager' , company_id: {$exists:true}} );
+    
+    if(ObjectId(newManager.company_id).toString() != ObjectId(id).toString() ){
+      if(newManager){
+        return res.status(402).json({
+          success: false,
+          message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to fake@company.com or new user and try again)'
+        });
+      }
   
-  const newManager = await client.db().collection('users').findOne({_id: ObjectId(company.user_id) , type:'manager' , company_id: {$exists:true}} );
-  
-  if(ObjectId(newManager.company_id).toString() != ObjectId(id).toString() ){
-    if(newManager){
-      return res.status(402).json({
-        success: false,
-        message:'User is already a manger of another company ( if You want to make him a manager of The current company then assign his company to fake@company.com or new user and try again)'
-      });
     }
 
-  }
+    // updating old manager info
+    const oldManager = await client.db().collection('users').findOne({company_id:id , type:'manager'});
+    if(oldManager){
+      delete oldManager.company_id ;
+      const oldManagerId = oldManager._id;
+      delete oldManager.company_info;  
+      const updatedOldManager = await client.db().collection('users').replaceOne({_id:oldManagerId} , oldManager);
+    }
+    
+  }  
 
-  // updating old manager info
-  const oldManager = await client.db().collection('users').findOne({company_id:id , type:'manager'});
-  
-  if(oldManager){
-    delete oldManager.company_id ;
-    const oldManagerId = oldManager._id;
-    delete oldManager.company_info;  
-    const updatedOldManager = await client.db().collection('users').replaceOne({_id:oldManagerId} , oldManager);
+  if(myUser.type != 'admin'){
+    delete company.start_at ; // if you want to edit subscrption (if entered add new subscription to the subscriptoins collection)
+    delete company.end_at ;
+    delete company.status ;
+    delete company.user_info;
   }
 
   const newCompany = await client
@@ -57,22 +69,24 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(id) }, { $set: company }, { upsert: false })
 
-  // --------------------- Update Manager --------------------------------------
+  if(myUser.type == 'admin'){
+    // --------------------- Update Manager --------------------------------------
+  
+    const user = await client
+      .db()
+      .collection('users')
+      .findOne({ _id: ObjectId(company.user_id) })
+  
+    const user_id = company.user_id
+    user.company_id = id
+    delete user._id
+  
+    const newUser = await client
+      .db()
+      .collection('users')
+      .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
 
-  const user = await client
-    .db()
-    .collection('users')
-    .findOne({ _id: ObjectId(company.user_id) })
-
-  const user_id = company.user_id
-  user.company_id = id
-  delete user._id
-
-  const newUser = await client
-    .db()
-    .collection('users')
-    .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
-
+  }  
   
 
   //------------------------ Holidy Event -------------------------

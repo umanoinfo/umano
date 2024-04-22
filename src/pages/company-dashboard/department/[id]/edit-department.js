@@ -57,6 +57,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [newParent, setNewParent] = useState('')
   const [newStatus, setNewStatus] = useState('active')
   const [formError, setFormError] = useState({})
+  const [notAuthorized , setNotAuthorized] = useState(false);
 
   const [formValue, setFormValue] = useState({
     name: ''
@@ -105,14 +106,31 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    const res = await fetch('/api/company-employee')
-    const { data } = await res.json()
-
-    const users = data.map(employee => ({
-      label: employee.firstName +' '+ employee.lastName +'  (' + employee.email + ')',
-      value: employee._id
-    }))
-    setUsersDataSource(users)
+    try{
+      const res = await fetch('/api/company-employee')
+      const { data , message , success } = await res.json()
+      if(res.status == 401 ){
+        setNotAuthorized(true);
+        setUsersDataSource([{
+          label: <div style={{color:'red'}}> You do not have Permission to View Employees</div>,
+          value: undefined
+        }])
+      }
+      if(!success){
+        throw new Error('Error: Fetching Employees ( ' + message + ' )');
+      }
+  
+      const users = data.map(user => ({
+        label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
+        value: user._id
+      }))
+      setUsersDataSource(users)
+      
+    }
+    catch(err){
+      console.log(err);
+      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+    }
     setIsLoading(false)
   }
 

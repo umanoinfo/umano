@@ -85,21 +85,23 @@ const AppCalendar = () => {
         ...(skin === 'bordered' && { border: theme => `1px solid ${theme.palette.divider}` })
       }}
     >
-      <SidebarLeft
-        store={store}
-        mdAbove={mdAbove}
-        dispatch={dispatch}
-        calendarsColor={calendarsColor}
-        leftSidebarOpen={leftSidebarOpen}
-        leftSidebarWidth={leftSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        handleAllCalendars={handleAllCalendars}
-        handleCalendarsUpdate={handleCalendarsUpdate}
-        handleLeftSidebarToggle={handleLeftSidebarToggle}
-        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        setParams={setParams}
-        params={params}
-      />
+      {
+        <SidebarLeft
+          store={store}
+          mdAbove={mdAbove}
+          dispatch={dispatch}
+          calendarsColor={calendarsColor}
+          leftSidebarOpen={leftSidebarOpen}
+          leftSidebarWidth={leftSidebarWidth}
+          handleSelectEvent={handleSelectEvent}
+          handleAllCalendars={handleAllCalendars}
+          handleCalendarsUpdate={handleCalendarsUpdate}
+          handleLeftSidebarToggle={handleLeftSidebarToggle}
+          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          setParams={setParams}
+          params={params}
+        />
+      }
       <Box
         sx={{
           px: 5,
@@ -127,20 +129,24 @@ const AppCalendar = () => {
           setUpdateEvent={setUpdateEvent}
         />
       </Box>
-      <AddEventSidebar
-        store={store}
-        dispatch={dispatch}
-        addEvent={addEvent}
-        updateEvent={updateEvent}
-        deleteEvent={deleteEvent}
-        calendarApi={calendarApi}
-        drawerWidth={addEventSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        addEventSidebarOpen={addEventSidebarOpen}
-        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        UpdateEvent={UpdateEvent}
-        setUpdateEvent={setUpdateEvent}
-      />
+      {
+        session && session.user && session.user.permissions.includes('AddEvent') &&
+        <AddEventSidebar
+          store={store}
+          dispatch={dispatch}
+          addEvent={addEvent}
+          updateEvent={updateEvent}
+          deleteEvent={deleteEvent}
+          calendarApi={calendarApi}
+          drawerWidth={addEventSidebarWidth}
+          handleSelectEvent={handleSelectEvent}
+          addEventSidebarOpen={addEventSidebarOpen}
+          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          UpdateEvent={UpdateEvent}
+          setUpdateEvent={setUpdateEvent}
+          fetchEvents={fetchEvents}
+        />
+      }
     </CalendarWrapper>
   )
 }

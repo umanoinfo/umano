@@ -74,7 +74,7 @@ const UserViewOverview = ({ id }) => {
     {
       flex: 0.2,
       minWidth: 230,
-      field: 'user',
+      field: 'name',
       headerName: 'User',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -93,6 +93,7 @@ const UserViewOverview = ({ id }) => {
       minWidth: 60,
       field: 'roles',
       headerName: 'Roles',
+      sortable:  false,
       renderCell: ({ row }) => {
         return row.roles_info.map((e, index) => {
           return (

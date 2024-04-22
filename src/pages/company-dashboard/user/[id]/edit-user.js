@@ -74,7 +74,8 @@ const DialogAddUser = ({ id }) => {
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
   const [roles, setRoles] = useState([])
-
+  const [notAuthorized , setNotAuthorized] = useState([])
+  
   const [defaultValues, setDefaultValues] = useState({
     email: '',
     password: '',
@@ -127,6 +128,12 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
       .catch(function (error) {
+        let message = error?.response?.data?.message  || error?.toString();
+        if(error.response.status == 401 ){
+          setNotAuthorized([...notAuthorized , 'ViewRole']);
+          message = 'Error : Failed to fetch Roles (No Permission to view Roles)';
+        } 
+        toast.error(message , {duration : 5000 , position: 'bottom-right'}) ;
         setLoading(false)
       })
   }

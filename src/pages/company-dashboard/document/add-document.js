@@ -94,7 +94,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [files, setFiles] = useState([])
   const [selectedDocument, setSelectedDocument] = useState()  
   const [tags , setTags ] = useState([]) ; 
-
+  const [notAuthorized , setNotAuthorized ] = useState([]);
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
   const [issueDate, setIssueDate] = useState(new Date().toISOString().substring(0, 10))
@@ -131,8 +131,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
         }
 
     }catch(err){
-        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
-
+      let message = err.toString() ; 
+      if(err.response.status== 401 ){
+          message = 'Error : Failed to fetch Document type (No Permission to View Document Types)';
+          setAllDocumentTypes([{
+            label : 'You do not have permission to view Document types' , 
+            value: undefined 
+          }])
+          setNotAuthorized([...notAuthorized , 'ViewDocumentTypes']) ;
+      }
+      toast.error(message , {duration:5000 , position:'bottom-right' });
+      setLoading(false);
     }
   }
 
@@ -153,7 +162,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   })
 
   const handleTagsChange = (e)=>{
- 
+    if(notAuthorized.includes('ViewDocumentTypes')) ; 
+    {
+
+      return ;
+    }
+    
     let categories = new Set(e?.map((type)=>{
         
       return documentTypeCategory[type];
@@ -165,6 +179,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------- Submit --------------------------------------
   
   const handleSubmit = () => {
+    if(notAuthorized.includes('ViewDocumentTypes'))
+      return ;
+    
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = {}
@@ -449,7 +466,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
 
                           <Grid item sm={12} xs={12} mt={5}>
-                          <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+                          <strong pt={5} className='px-5 pt-4'>Person In-Charge of renewing licenses informations</strong >
 
                             <div className='flex d-flex row-flex'>
                               <small>Name</small>

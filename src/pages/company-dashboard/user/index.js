@@ -252,7 +252,7 @@ const UserList = () => {
       handleRowOptionsClose()
     }
 
-    const handleActivation =()=>{
+    const handleActivation =(row)=>{
       activationLink(row)
     }
 
@@ -341,7 +341,7 @@ const UserList = () => {
               Send Activation Password
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('DeleteUser') && (
+          {session && session.user.permissions.includes('DeleteUser')  && session.user._id != row._id && row.type != 'manager'  && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
@@ -477,7 +477,7 @@ const UserList = () => {
   const deleteUser = () => {
     setLoading(true)
     axios
-      .post('/api/user/delete-user', {
+      .post('/api/company-user/delete-user', {
         selectedUser
       })
       .then(function (response) {
@@ -487,7 +487,7 @@ const UserList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
-          setLoading(falsedelete);
+          setLoading(false);
         })
       })
       .catch(function (error) {

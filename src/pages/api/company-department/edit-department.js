@@ -7,6 +7,9 @@ export default async function handler(req, res) {
     return res.status(405).json({success: false , message: 'Method is not allowed'});
   }
   const client = await connectToDatabase()
+  
+  const departmen = req.body.data
+  const id = departmen._id
 
   // ---------------- Token ----------------
 
@@ -24,8 +27,7 @@ export default async function handler(req, res) {
     return res.status(404).json({success: false, message: 'Department not found'});
   }
 
-  const departmen = req.body.data
-  const id = departmen._id
+
 
   if(departmen.parent == ""){
     departmen.parent =null

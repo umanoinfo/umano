@@ -60,10 +60,10 @@ const CompanyViewSubscriptions = ({ id }) => {
       field: 'progressValue',
       renderCell: ({ row }) => (
         <Box sx={{ width: '100%' }}>
-          <Typography variant='body2'>{(row.daysToNow / row.subscriptionDays) * 100}%</Typography>
+          <Typography variant='body2'>{((row.daysToNow / row.subscriptionDays) * 100).toFixed(2)}%</Typography>
           <LinearProgress
             variant='determinate'
-            value={(row.daysToNow / row.subscriptionDays) * 100}
+            value={((row.daysToNow / row.subscriptionDays) * 100).toFixed(2)}
             color={row.progressColor}
             sx={{ height: 6, mt: 1, borderRadius: '5px' }}
           />

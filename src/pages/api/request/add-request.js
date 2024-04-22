@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const max_no = await client.db().collection('requests').find().sort({ no: -1 }).limit(1).toArray()
+  const max_no = await client.db().collection('forms').find().sort({ no: -1 }).limit(1).toArray()
 
   request.company_id = myUser.company_id
   request.user_id = myUser._id

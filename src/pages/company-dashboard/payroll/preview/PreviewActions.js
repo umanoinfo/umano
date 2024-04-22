@@ -38,36 +38,49 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.joiningDate = employee.joiningDate
     data.totalCompensations = employee.totalCompensations
     data.totalDeductions = employee.totalDeductions
-    data.totalEarlyHours = employee.totalEarlyHours
-    data.totalEarlyValue = employee.totalEarlyValue
     data.lumpySalary = employee.salaries_info[0].lumpySalary
     data.totalEmployeeDeductions = employee.totalEmployeeDeductions
     data.totalEmployeeRewards = employee.totalEmployeeRewards
-    data.totalLateHours = employee.totalLateHours
-    data.totalLeave = employee.totalLeave
-    data.totalOffDayHours = employee.totalOffDayHours
-    data.totalOffDayValue = employee.totalOffDayValue
     data.totalWorkingDaysCount = employee.totalWorkingDaysCount
-    data.totalholidayHours = employee.totalholidayHours
-    data.totalholidayValue = employee.totalholidayValue
-    data.totalLateOverTimeValue = employee.totalLateOverTimeValue
-    data.totalEarlyOverTimeValue = employee.totalEarlyOverTimeValue
-    data.totalEarlyOverTimeHours = employee.totalEarlyOverTimeHours
-    data.totalLateOverTimeHours = employee.totalLateOverTimeHours
+    data.flexible = employee.flexible; 
+    if(!data.flexible){
+      data.totalEarlyHours = employee.totalEarlyHours
+      data.totalLateHours = employee.totalLateHours
+      data.totalEarlyValue = employee.totalEarlyValue
+      data.totalLeave = employee.totalLeave
+      data.totalOffDayHours = employee.totalOffDayHours
+      data.totalOffDayValue = employee.totalOffDayValue
+      data.totalholidayHours = employee.totalholidayHours
+      data.totalholidayValue = employee.totalholidayValue
+      data.totalLateOverTimeValue = employee.totalLateOverTimeValue
+      data.totalEarlyOverTimeValue = employee.totalEarlyOverTimeValue
+      data.totalEarlyOverTimeHours = employee.totalEarlyOverTimeHours
+      data.totalLateOverTimeHours = employee.totalLateOverTimeHours
+    }
+    if(employee.flexible){
+      data.total = ((
+        Number(data.lumpySalary * (data.totalWorkingDaysCount / 30 )) -
+        Number(data.totalDeductions) +
+        Number(data.totalCompensations) -
+        Number(data.totalEmployeeDeductions) +
+        Number(data.totalEmployeeRewards)).toFixed(3)).toLocaleString('en-US');
+    }
+    else{
+      data.total  = 
+      Number(employee.totalOffDayValue) +
+        Number(employee.totalholidayValue) +
+          Number(employee.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) +
+            Number(employee.totalEarlyValue) -
+              Number(employee.totalDeductions) +
+                Number(employee.totalCompensations) -
+                  Number(employee.totalEmployeeDeductions) +
+                    Number(employee.totalEmployeeRewards) -
+                      Number(employee.totalLeave)+
+                        Number(employee.totalLateOverTimeValue)+
+                          Number(employee.totalEarlyOverTimeValue)
+      
 
-    data.total  = 
-    Number(employee.totalOffDayValue) +
-      Number(employee.totalholidayValue) +
-        Number(employee.salaries_info[0].lumpySalary) +
-          Number(employee.totalEarlyValue) -
-            Number(employee.totalDeductions) +
-              Number(employee.totalCompensations) -
-                Number(employee.totalEmployeeDeductions) +
-                  Number(employee.totalEmployeeRewards) -
-                    Number(employee.totalLeave)+
-                      Number(employee.totalLateOverTimeValue)+
-                        Number(employee.totalEarlyOverTimeValue)
-
+    }
     axios.post('/api/payroll/add-payroll', data).then((res)=>{
       router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
       toast.success('Payroll (' + res.data.data.name + ') Inserted Successfully.', {

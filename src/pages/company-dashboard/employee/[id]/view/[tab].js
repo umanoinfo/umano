@@ -22,7 +22,8 @@ const DialogAddUser = ({ tab, id }) => {
       .post('/api/company-employee/full-employee/', { data })
       .then(function (response) {
         setIsLoading(false)
-        setEmployee(response.data.data[0])
+        let employee = response.data.data[0] ;
+        setEmployee(employee)
       })
       .catch(function (error) {
         setIsLoading(false)

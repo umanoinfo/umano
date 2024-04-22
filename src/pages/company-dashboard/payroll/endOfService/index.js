@@ -245,13 +245,13 @@ const PayrollList = classNamec => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          {session && session.user.permissions.includes('ViewEmployee') && (
+          {session && session.user.permissions.includes('ViewPayroll') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('DeleteEmployee') && (
+          {session && session.user.permissions.includes('DeletePayroll') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
@@ -411,9 +411,10 @@ const PayrollList = classNamec => {
 
   const deleteEmployee = () => {
     setLoading(true)
+    console.log(selectedEmployee)
     axios
-      .post('/api/payroll/delete-payroll', {
-        selectedPayroll: { ...selectedEmployee }
+      .post('/api/end-of-service/delete-payroll', {
+        selectedEndOfService: { ...selectedEmployee }
       })
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
@@ -438,7 +439,7 @@ const PayrollList = classNamec => {
 
   if (loading) return <Loading header='Please Wait' description='Employee are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewEmployee')) {
+  if (session && session.user && !session.user.permissions.includes('ViewPayroll')) {
     return <NoPermission header='No Permission' description='No permission to View Employees'></NoPermission>
   }
 

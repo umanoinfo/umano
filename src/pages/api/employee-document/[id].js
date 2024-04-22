@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewDocument')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewEmployee')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 

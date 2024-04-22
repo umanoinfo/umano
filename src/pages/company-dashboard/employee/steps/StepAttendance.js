@@ -183,8 +183,9 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
       })
 
       setShiftsOptions(tempShift)
+      console.log(shifts);
       setSelectedShift(shifts.find(x => x._id == employee.shift_id))
-      if (employee.shift_id) {
+      if (employee.shift_id && shifts && shifts?.find && shifts[0]  && shifts[0]._id != undefined) {
         setSelectedShiftID(employee.shift_id)
         setSelectedTimes(shifts.find(x => x._id == employee.shift_id).times[0])
         setFormValue({

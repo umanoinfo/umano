@@ -52,6 +52,7 @@ import { useRouter } from 'next/router'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 import { Breadcrumbs } from '@mui/material'
+import MenuTransition from 'src/views/components/menu/MenuTransition'
 
 // ** Vars
 const companyTypeObj = {
@@ -194,6 +195,7 @@ const DepartmentList = ({ apiData }) => {
       setSelectedDepartment(row)
       setOpen(true)
     }
+    console.log(session.user.permissions);
 
     return (
       <>
@@ -221,12 +223,13 @@ const DepartmentList = ({ apiData }) => {
               View
             </MenuItem>
           )} */}
-          {session && session.user && session.user.permissions.includes('EditDepartment') && (
+
+          {session && session.user && session.user.permissions.includes('EditDepartment') && 
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
               Edit
             </MenuItem>
-          )}
+          }
           {session && session.user && session.user.permissions.includes('DeleteDepartment') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />

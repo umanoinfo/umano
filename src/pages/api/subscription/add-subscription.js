@@ -25,6 +25,12 @@ export default async function handler(req, res) {
       message: 'Invalid input'
     })
   }
+  const usersCount = await client.db().collection('users').countDocuments({company_id : subscription.company_id , status: 'active' , $or: [{deleted_at: {$exists: false} } , {deleted_at: null }]});
+  if(usersCount > subscription.availableUsers){
+    return res.status(400).json({success: false, message: `The current active users in that company is (${usersCount}) 
+    which excceeds the specified avaiable users value ${subscription.availableUsers} 
+    disable/delete some accounts or increase the available users`})
+  }
   const newSubscription = await client.db().collection('subscriptions').insertOne(subscription)
 
   // ------------------ update company  -----------------------------------------
@@ -34,8 +40,8 @@ export default async function handler(req, res) {
     .collection('companies')
     .findOne({ _id: ObjectId(subscription.company_id) })
 
-  company.end_at = subscription.end_at
-
+  // company.end_at = subscription.end_at
+  
   const newCompany = await client
     .db()
     .collection('companies')

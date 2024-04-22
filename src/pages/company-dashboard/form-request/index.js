@@ -313,7 +313,7 @@ const AllDocumentsList = () => {
 
   if (loading) return <Loading header='Please Wait' description='Requests are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewDocument'))
+  if (session && session.user && !session.user.permissions.includes('ViewFormRequest'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>
 
   return (

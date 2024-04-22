@@ -244,7 +244,11 @@ const UserList = () => {
         else{
           throw new Error(res.message) ;
         }
-        dispatch(fetchData({}));
+        dispatch(fetchData({
+          type,
+          userStatus,
+          q: value
+        }));
       }
       catch(err){
         toast.error(err ,  {duration: 5000 , position: 'bottom-right'} ) ;
@@ -318,19 +322,16 @@ const UserList = () => {
               View
             </MenuItem>
           )}
-           {row.deleted_at && session && session.user.permissions.includes('AdminEditUser') && (
-            <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
-              Restore
-            </MenuItem>
-          )}
-          {!row.deleted_at && session && session.user.permissions.includes('AdminEditUser') && (
+  
+          {!row.deleted_at && session && session.user.permissions.includes('AdminEditUser') 
+          && ((row.email == 'admin@admin.com' && session.user.email == 'admin@admin.com') || (row.email != 'admin@admin.com') ) && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
               Edit
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('AdminChangePassword') && (
+          {session && session.user.permissions.includes('AdminChangePassword') 
+          && ((row.email == 'admin@admin.com' && session.user.email == 'admin@admin.com') || (row.email != 'admin@admin.com') ) && (
             <MenuItem onClick={handlePassword} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:key-outline' fontSize={20} />
               Change Password
@@ -342,7 +343,24 @@ const UserList = () => {
               Send Activation Password
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('AdminDeleteUser') && (
+          {row.deleted_at && session && session.user.permissions.includes('AdminDeleteUser') && (
+            <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:replay' fontSize={20} />
+              Restore
+            </MenuItem>
+          )}
+          {/* if(row.email == 'admin@admin.com' ){
+            if(session.user.email == 'admin@admin.com'){
+              return true ;
+            }
+            return false
+          }
+          else{
+            return true ;
+          } */}
+          {!row.deleted_at && session && 
+          ((row.email == 'admin@admin.com' && session.user.email == 'admin@admin.com') || (row.email != 'admin@admin.com') ) &&
+           session.user.permissions.includes('AdminDeleteUser') && row._id != session.user._id && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
@@ -462,7 +480,11 @@ const UserList = () => {
         selectedUser
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          type,
+          userStatus,
+          q: value
+        })).then(() => {
           toast.success('User (' + selectedUser.name + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
@@ -485,7 +507,7 @@ const UserList = () => {
   if (loading) return <Loading header='Please Wait' description='Users are loading'></Loading>
 
   if (session && !session.user && session.user.permissions.includes('AdminViewUser'))
-    return <NoPermission header='No Permission' description='No permission to View Users'></NoPermission>
+    return <NoPermission header='No Permission' description='No permission to  View Users'></NoPermission>
 
   return (
     <Grid container spacing={6}>

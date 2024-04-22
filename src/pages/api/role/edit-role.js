@@ -29,6 +29,10 @@ export default async function handler(req, res) {
 
     return
   }
+  
+  role.permissions = role?.permissions?.filter((permission)=>{
+    return myUser.permissions.includes(permission);
+  });
 
   const newRole = await client
     .db()
@@ -52,15 +56,18 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+  // deleting permissions 
   for (const user of users) {
     user.permissions = []
     const user_id = user._id
 
+    // itterating over the updated roles of that user and adding them to his list of permissions.
     for (const role_id of user.roles) {
       const selectedRole = await client
         .db()
         .collection('roles')
         .findOne({ _id: ObjectId(role_id) })
+      
       if (selectedRole && selectedRole.permissions) {
         for (const permission of selectedRole.permissions) {
           if (!user.permissions.includes(permission)) {
@@ -71,11 +78,56 @@ export default async function handler(req, res) {
     }
 
     delete user._id
-    
+
+    // updating the permissions list
     const updatedUser = await client
       .db()
       .collection('users')
       .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
+    if(user.type != 'admin'){     
+          /* query roles for that company */ 
+          const roles = await client.db().collection('roles').find({
+            company_id: user.company_id
+          }).toArray();
+      
+          /* itterating over all the roles that was created by this manager and removing all permissions that are higher in
+           privilages than the updated permissions that are being assigned
+          */
+          for(let role of roles ){
+            const id = role._id ; 
+            delete role._id ;
+            let permissions = [] ; 
+            for(const permission of role.permissions ){
+              if(updatedRole.permissions.includes(permission)){ // if the new assigned role does have that permission then add it to that role
+                permissions.push(permission);
+              }
+            }
+            role.permissions = permissions ; 
+            const updated = await client.db().collection('roles').updateOne({_id : ObjectId(id) } , {$set : role } , {upsert: false});
+          }
+          
+          /* query users for that company */
+          const companyUsers = await client.db().collection('users').find({
+            company_id: user.company_id
+          }).toArray();
+
+          for(let companyUser of companyUsers ){
+            let id = companyUser._id ;
+            delete companyUser._id;
+            let permissions = [] ;
+
+            /* itterating over the permissions of the users in that company and removing all permissions that are higher in
+              privilages than the updated permissions that are being assigned */
+            for(const permission of companyUser.permissions ){
+              if(updatedRole.permissions.includes(permission)){ // if the new assigned role does have that permission then add it to that user
+                permissions.push(permission);
+              }
+            }
+            companyUser.permissions = permissions ;
+
+            const updated = await client.db().collection('users').updateOne({_id : ObjectId(id) } , {$set : companyUser } , {upsert: false});
+          }
+    }
   }
 
   // ---------------- logBook ----------------

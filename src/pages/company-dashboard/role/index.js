@@ -51,7 +51,8 @@ const RolesComponent = () => {
   const [permissionsGroup, setPermissionsGroup] = useState([])
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const [permissionsLength , setPermissionsLength ] = useState(0) ;
+  const [groupCheckboxDisabled , setGroupCheckboxDisabled ] = useState([]);
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyRole)
   const { data: session, status } = useSession()
@@ -86,6 +87,21 @@ const RolesComponent = () => {
       .get('/api/permission/company-premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
+        let count = 0 ;
+        response.data.data.map((group)=>{
+          let groupPermissionsCount =0 ;
+          group.permissions.map((permission)=>{
+            count++ ;
+            if(session.user.permissions.includes(permission.alias))
+              groupPermissionsCount++ ;
+          })
+          console.log(group._id , groupPermissionsCount , group.permission.length ) ;
+          if(groupPermissionsCount != group.permissions.length ){
+            setGroupCheckboxDisabled([...groupCheckboxDisabled , group._id]);
+          }
+        })
+
+        setPermissionsLength(count);
         setLoading(false);
       })
       .catch(function (error) {
@@ -93,6 +109,7 @@ const RolesComponent = () => {
       })
   }
 
+ 
   // ------------------------ Change Permission ------------------------------------
 
   const changePermission = e => {
@@ -152,6 +169,72 @@ const RolesComponent = () => {
         })
         setLoading(false)
       })
+  }
+
+  const changeGroupPermissions = (e , _id ) => {
+    permissionsGroup.map((group, index ) =>{
+       
+      if(group._id == _id ){
+        
+        group.permissions.map((permission , index ) => {
+          if(e.target.checked && !selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)){
+              selectedPermissions.push(permission.alias);
+          }
+          if(!e.target.checked && selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias) ){
+            const index = selectedPermissions.indexOf(permission.alias);
+            selectedPermissions.splice(index , 1 ) ; 
+          }
+        })
+        setSelectedPermissions([...selectedPermissions]);
+      }
+    });
+    
+  }
+
+  const allChecked = ()=>{
+    let count = 0 ;
+    permissionsGroup.map((group, index ) =>{
+        group.permissions.map((permission , index ) => {
+            count++;
+        })
+    });
+
+    return count == selectedPermissions.length ;
+  }
+
+  const checkAll = (e)=>{
+    if(e.target.checked){
+      let selected = [] ;
+      permissionsGroup.map((group, index ) =>{
+        group.permissions.map((permission , index ) => {
+          if(session.user.permissions.includes(permission.alias))
+              selected.push(permission.alias);
+        })
+      });
+      setSelectedPermissions([...selected]);
+    }
+    else{
+      setSelectedPermissions([]) ;
+    }
+  }
+  
+  const groupPermissionsSelected = (_id) =>{
+    permissionsGroup.map((group, index ) =>{
+      if(group._id == _id ){
+        let count = 0 ;
+        group.permissions.map((permission , index ) => {
+          if(selectedPermissions.includes(permission.alias)){
+              count++ ;
+          }
+         
+        })
+        if(count == permissionsGroup.permissions.length ){
+          return true ;
+        }
+      }
+    });
+
+    return false ;
   }
 
   // ------------------------ Delete Role ------------------------------------
@@ -341,6 +424,12 @@ const RolesComponent = () => {
                     <Table size='small'>
                       <TableHead></TableHead>
                       <TableBody>
+                      <Checkbox 
+                            check={()=>allChecked()}
+                            size='small'
+                            onChange={ (e) => checkAll(e)}
+                        />
+                        Choose all
                         {permissionsGroup &&
                           permissionsGroup.map((group, index) => {
                             return (
@@ -355,6 +444,14 @@ const RolesComponent = () => {
                                     color: theme => `${theme.palette.text.primary} !important`
                                   }}
                                 >
+                                  <Checkbox 
+                                    check={()=>groupPermissionsSelected(group._id)}
+                                    size='small'
+
+                                    // disabled={groupCheckboxDisabled.includes(group._id)}
+                                    id={group._id}
+                                    onChange={e => changeGroupPermissions(e , group._id)}
+                                  />
                                   {group._id}
                                 </TableCell>
 
@@ -367,8 +464,9 @@ const RolesComponent = () => {
                                           label={permission.title}
                                           control={
                                             <Checkbox
-                                              checked={selectedPermissions.includes(permission.alias)}
+                                              checked={selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)}
                                               size='small'
+                                              disabled={!session.user.permissions.includes(permission.alias)}
                                               id={permission.alias}
                                               onChange={e => changePermission(e)}
                                             />

@@ -162,14 +162,27 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setLoading(true)
-    const res = await fetch('/api/user/manager-users')
-    const { data } = await res.json()
+    try{
+      const res = await fetch('/api/user/manager-users')
+      const { data , success , message } = await res.json()
+      if(!success){
+        throw new Error(message);
+      }
+      setUsersDataSource(data)
 
-    const users = data.map(user => ({
-      label: user.name + '  (' + user.email + ')',
-      value: user._id
-    }))
-    setUsersDataSource(users)
+    }
+    catch(err){
+      let message = err.toString();
+      if(message == 'Error: Not Auth'){
+        message = 'Error : failed to fetch users (you do not have permission to view users)'
+        setUsersDataSource([{
+          label : <div style={{color:'red'}}> You do not have permission to view users</div>,
+          value : undefined
+        }]);
+
+      }
+      toast.error(message , {duration : 5000 , position: 'bottom-right'});
+    }
     setLoading(false)
   }
 
@@ -305,7 +318,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   if (loading) return <Loading header='Please Wait' description='Company is loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('AdminAddCompany'))
+  if (session && session.user && !session.user.permissions.includes('AdminEditCompany'))
     return <NoPermission header='No Permission' description='No permission to add companies'></NoPermission>
 
   return (
@@ -432,7 +445,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={2} mt={1}>
-                    {formValue.start_at && (
+                    {/* {formValue.start_at && (
                       <Grid item sm={4} xs={12}>
                         <small>Subscription start</small>
                         <Form.Control
@@ -464,7 +477,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                           block
                         />
                       </Grid>
-                    )}
+                    )} */}
 
                     <Grid item sm={4} xs={12}>
                       <small>Select status</small>

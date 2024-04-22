@@ -65,7 +65,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     type: StringType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
     employee_id: StringType().isRequired('This field is required.'),
-    value: NumberType().isRequired('This field is required.'),
+    value: NumberType().min(1).isRequired('This field is required.'),
     date: DateType().isRequired('This field is required.')
   })
 

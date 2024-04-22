@@ -21,9 +21,13 @@ export default async function handler(req, res) {
   user.password = hashedPassword
   const id = req.body.user._id
   delete user._id
+  const curUser = await client.db().collection('users').findOne({_id: ObjectId(id)});
+  if(curUser.email == 'admin@admin.com' && curUser._id != myUser._id) {
+    return res.status(401).json({success: false, message:'You are not allowed to change password'});
+  }
 
   try {
-    const client = await connectToDatabase()
+    
     
     const newUser = await client
       .db()

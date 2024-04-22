@@ -52,6 +52,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Actions Imports
 import { fetchData, deleteUser } from 'src/store/apps/employeeSalary'
 import { DataGrid } from '@mui/x-data-grid'
+import Loading from 'src/views/loading'
 
 const { StringType } = Schema.Types
 
@@ -384,6 +385,18 @@ const StepSalary = ({ handleNext, employee }) => {
       </>
       )
     },
+    {
+      flex: 0.3,
+      minWidth: 100,
+      field: 'total_salary',
+      headerName: 'Total Salary',
+      renderCell: ({ row }) => ( 
+      <>
+        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>
+          {row.totalSalary ??  '-' }  
+        </Typography>
+        </>)
+    },
 
     // {
     //   flex: 0.3,
@@ -462,7 +475,10 @@ const StepSalary = ({ handleNext, employee }) => {
 
   if (!employee) {
     return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
-  } 
+  }
+  if(loading){
+    return <Loading header='Please Wait' description='Salaries is loading' />
+  }
 
   return (
     <Grid spacing={6}>
