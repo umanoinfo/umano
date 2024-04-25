@@ -454,12 +454,13 @@ export default ForgetPassword
 
 
 export async function getServerSideProps(context) {
-  const providers = await getProviders();
+  const providers = await getProviders() || null ;
+  console.log(context , providers) ; 
 
   return {
     props: {
-      query: context.query,
-      csrfToken: await getCsrfToken(context),
+      query: context.query || null,
+      csrfToken: await getCsrfToken(context) || null,
       providers,
     },
   };

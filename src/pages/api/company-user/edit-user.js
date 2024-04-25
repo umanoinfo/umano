@@ -48,7 +48,7 @@ export default async function handler(req, res) {
   if(!curUser){
     return res.status(404).json({success: false, message: 'User not found'});
   }
-  if(curUser._id != myUser._id ){
+  if(curUser.company_id != myUser.company_id ){
     return res.status(401).json({success: false, message : 'You are not allowed to edit this account'});
   }
 

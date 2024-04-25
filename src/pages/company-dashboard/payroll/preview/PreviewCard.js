@@ -181,6 +181,14 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <Typography variant='body2'> {data.totalWorkingDaysCount.toFixed(2)}</Typography>
                       </MUITableCell>
                     </TableRow>
+                       <TableRow>
+                      <MUITableCell>
+                        <Typography variant='body2'>Absense Days: </Typography>
+                      </MUITableCell>
+                      <MUITableCell>
+                        <Typography variant='body2'> {data.absenseDays.toFixed(2)}</Typography>
+                      </MUITableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </Box>
@@ -418,7 +426,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
 
                     <TableRow>
                       <TableCell>Early and late OverTime Hours</TableCell>
-                      <TableCell>{data.totalEarlyOverTimeHours + data.totalLateOverTimeHours}</TableCell>
+                      <TableCell>{(data.totalEarlyOverTimeHours + data.totalLateOverTimeHours).toFixed(2)}</TableCell>
                       <TableCell>
                         {((+data.salaryFormulas_info[0].firstOverTime * data.hourlySalary).toFixed(3) ).toLocaleString("en-US")}
                         <small> AED</small>

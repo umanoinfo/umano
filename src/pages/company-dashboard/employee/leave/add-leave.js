@@ -402,7 +402,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(formValue.date_to  - date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
       setDaysDeurtion(diffDays)
     }
     if(data.type == 'hourly'){
@@ -418,7 +418,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(date_to  - formValue.date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
       setDaysDeurtion(diffDays)
     }
     if(data.type == 'hourly'){
@@ -611,8 +611,8 @@ const AddLeave = ({ popperPlacement, id }) => {
         setLoadingDescription('leave is inserting')
 
         let newData = { ...data_request }
-        newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
-        newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
+        newData.date_from = new Date(data_request.date_from) 
+        newData.date_to = new Date(data_request.date_to) 
 
         axios
           .post('/api/employee-leave/add-leave', {

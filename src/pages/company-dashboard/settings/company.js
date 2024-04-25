@@ -267,7 +267,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         data.end_at = new Date(formValue.end_at).toISOString().substring(0, 10)
         data.updated_at = new Date()
         axios
-          .post('/api/company/edit-company', {
+          .post('/api/company/edit-my-company', {
             data
           })
           .then(function (response) {

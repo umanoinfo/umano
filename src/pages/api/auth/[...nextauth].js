@@ -23,7 +23,7 @@ export const nextAuthOptions = (req, res) => {
         async authorize(credentials) {
 
           client = await connectToDatabase()
-          
+          credentials.email = credentials.email.toLowerCase();
 
           let user = await client.db().collection('users').aggregate([
             {
@@ -67,7 +67,10 @@ export const nextAuthOptions = (req, res) => {
           if(user?.type == 'manager'){
           
             if(user?.company_id){
-              let company = await client.db().collection('companies').findOne({_id: ObjectId( user?.company_id) } );
+              let company = await client.db().collection('companies').findOne({
+                _id: ObjectId( user?.company_id) ,
+                $or: [{deleted_at: {$exists: false}} , {deleted_at: null }]
+              } );
           
 
               // if company is (pending or blocked)

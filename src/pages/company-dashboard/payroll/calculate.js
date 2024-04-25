@@ -179,15 +179,17 @@ const AllDocumentsList = () => {
         return val
       }
     })
+    console.log('1',rangePaidLeave);
 
     let totalMinutes = range1.reduce((acc, cu) => {
       return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
     }, 0)
-
+    console.log('2',totalMinutes);
     employee.takenPaidLeaves += +(
       1 -
       (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave)) / totalMinutes
     ).toFixed(2)
+    console.log(employee.takenPaidLeaves);
 
     // Unpaid Leave
 
@@ -341,7 +343,7 @@ const AllDocumentsList = () => {
    
     return val.map(val => {
       if (val.type == 'daily') {
-        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))+1
         const diffDays =  (diffTime / (1000 * 60 * 60 * 24))
         let curDate = new Date( val.date_from ) ;
         let totalDays =0  ;
@@ -431,7 +433,9 @@ const AllDocumentsList = () => {
       // .then(res => 
         // checked: daily salary , taken leaves , 
         // not checked:
+        let error = 0 ;
         if(!res.data?.data || res.status != 200 ){
+          error = 1 ;
           toast.error(res.data.message , {duration:5000, position:'bottom-right'});
           
           return ;
@@ -444,9 +448,9 @@ const AllDocumentsList = () => {
             
          }
         
-        if(!employee.flexible && (!employee.salaries_info || employee.salaries_info.length == 0)){
-            throw new Error('Add salary first (no salary defined!)')
-        }
+        // if(!employee.flexible && (!employee.salaries_info || employee.salaries_info.length == 0)){
+        //     throw new Error('Add salary first (no salary defined!)')
+        // }
         
 
         //   ----------------------- Assume Leave -------------------------------
@@ -467,6 +471,7 @@ const AllDocumentsList = () => {
         setDone(true);
     }
     catch(err){
+      // console.log(err?.response?.data?.message , err.toString());
       if(err?.response?.data?.message)
       {
         err.response.data.message.map((msg)=>{

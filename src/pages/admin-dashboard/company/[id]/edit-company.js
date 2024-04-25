@@ -168,7 +168,12 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       if(!success){
         throw new Error(message);
       }
-      setUsersDataSource(data)
+
+      const users = data.map(user => ({
+        label: user.name + '  (' + user.email + ')',
+        value: user._id
+      }))
+      setUsersDataSource(users)
 
     }
     catch(err){

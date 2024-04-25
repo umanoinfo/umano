@@ -82,7 +82,7 @@ const handler = async (req, res) => {
           data.name=user.name;
           data.subject='Password reset information';
           data.message='to reset password please click on link below:';
-          data.link='https://www.umano-si9k.vercel.app/forgot-password/?email='+data.email+'&token='+token;
+          data.link='http://localhost:3001/forgot-password/?email='+data.email+'&token='+token;
           try {
             await transporter
               .sendMail({

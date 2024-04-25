@@ -59,7 +59,7 @@ export default async function handler(req, res) {
   //     message: 'This email has already been registered'
   //   })
   // }
-
+  user.email = user.email.toLowerCase();
   const creatingUser = await client.db().collection('users').findOne({ email: user.email })
   if (creatingUser) {
     return  res.status(402).json({ success: false, message: 'This email has already been registered' })

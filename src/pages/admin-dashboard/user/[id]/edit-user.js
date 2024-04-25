@@ -278,6 +278,7 @@ const DialogAddUser = ({ id }) => {
 
                 <Grid container>
                   <Grid item sm={6} xs={12}>
+                  { session.user._id != id &&
                     <FormControl fullWidth sx={{ mb: 6, pr: 2 }} size='small'>
                       <InputLabel id='status-select'>Select Status</InputLabel>
                       <Select
@@ -294,6 +295,7 @@ const DialogAddUser = ({ id }) => {
                         <MenuItem value='blocked'>Blocked</MenuItem>
                       </Select>
                     </FormControl>
+                    }
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <FormControl fullWidth sx={{ mb: 6 }} size='small'>

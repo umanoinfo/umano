@@ -160,7 +160,7 @@ const DialogAddUser = () => {
                         value={value}
                         label='Name'
                         onChange={onChange}
-                        placeholder='userName'
+                        placeholder='Name'
                         error={Boolean(errors.name)}
                       />
                     )}

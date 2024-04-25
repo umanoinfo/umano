@@ -34,7 +34,7 @@ import Icon from 'src/@core/components/icon'
 import axios from 'axios'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
+import { fetchData, deleteUser } from 'src/store/apps/company-user'
 
 // ** Store Imports
 import { useDispatch } from 'react-redux'
@@ -73,9 +73,10 @@ const DialogAddUser = ({ id }) => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
-  const [roles, setRoles] = useState([])
+  let [roles, setRoles] = useState([])
   const [notAuthorized , setNotAuthorized] = useState([])
-  
+  const [roleId , setRoleId ] = useState() ;
+
   const [defaultValues, setDefaultValues] = useState({
     email: '',
     password: '',
@@ -91,7 +92,9 @@ const DialogAddUser = ({ id }) => {
       .then(function (response) {
         setStatus(response.data.data[0].status)
         setType(response.data.data[0].type)
-        setRoles(response.data.data[0].roles)
+        if(response.data.data[0]?.roles?.[0]){
+          setRoleId(response.data.data[0].roles[0]);
+        }
         reset(response.data.data[0])
         setLoading(false)
       })
@@ -157,6 +160,10 @@ const DialogAddUser = ({ id }) => {
   const onSubmit = data => {
     setLoading(true)
     data.type = type
+    if(roleId)
+      roles = [roleId] ;
+    else 
+      roles = [];
     data.roles = roles
     data.status = status
     data.updated_at = new Date()
@@ -292,9 +299,16 @@ const DialogAddUser = ({ id }) => {
                           allRoles.map((role, index) => {
                             return (
                               <FormControlLabel
-                                key={role.id}
+                                key={role._id}
                                 control={
-                                  <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} />
+                                  <Checkbox checked={role._id == roleId} onChange={(e)=> {
+                                    if(!e.target.checked)
+                                      setRoleId(undefined)
+                                    else{
+                                      setRoleId(role._id);
+                                    }
+                                  }
+                                  } value={role._id} />
                                 }
                                 label={role.title}
                               />

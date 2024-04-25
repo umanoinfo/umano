@@ -69,7 +69,12 @@ export default async function handler(req, res) {
       }
     ])
     .toArray()
-
-  return res.status(200).json({ success: true, data: companies })
+    companies.map((company)=>{
+      if(company?.subscriptions_info?.[0] ){
+        company.end_at = company?.subscriptions_info?.[0].end_at ; 
+      }
+    })
+  
+return res.status(200).json({ success: true, data: companies })
   
 }

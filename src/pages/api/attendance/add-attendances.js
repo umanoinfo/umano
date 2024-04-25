@@ -22,9 +22,11 @@ export default async function handler(req, res) {
 
   let index = 1 ;
   let existingAttendances = [ ] ;
-  for (const attendance of attendances) {
+  
+  let attendancesQuery = [ ] ;
+  for(const attendance of attendances ){
     const is12Format = (str)=>{
-      return str.toUppserCase().includes('AM') || str.toUppserCase().includes('PM') ;
+      return String(str).toUpperCase().includes('AM') || str.toUpperCase().includes('PM') ;
     };
     if(is12Format(attendance.timeIn ) ||  is12Format(attendance.timeOut)){
       attendance.timeIn = new Date('2000-1-1 ' + attendance.timeIn ).toLocaleTimeString('en-US' , {hour12: false}) ;
@@ -35,14 +37,29 @@ export default async function handler(req, res) {
     attendance.user_id = myUser._id
     attendance.created_at = new Date()
     attendance.status = 'active'
-    const existing = await client.db().collection('attendances').findOne({date: attendance.date , employee_no: attendance.employee_no , $or:[{deleted_at:{$exists:false} , deleted_at: null}]});
-    if(!existing){
-      const newAttendance = await client.db().collection('attendances').insertOne(attendance)
+    attendancesQuery.push({date: attendance.date , employee_no: attendance.employee_no , $or:[{deleted_at:{$exists:false} , deleted_at: null}]});
+  }
+
+  const curAttendances = await client.db().collection('attendances').find({$or: attendancesQuery}).toArray();
+  const nonExistingAttendances = [] ; 
+  for(const attendance of attendances)
+  {
+    const existing = curAttendances.filter((att)=> {
+      return att.employee_no == attendance.employee_no && 
+      new Date(att.date).toLocaleDateString() == new Date(attendance.date).toLocaleDateString() ;
+    })
+    console.log(existing , attendance);
+    if(!existing || existing?.length == 0){
+      nonExistingAttendances.push(attendance);
     }
     else{
       existingAttendances.push(index+1);
     }
-    index++ ;
+    index++;
+  }
+
+  if(nonExistingAttendances.length > 0){
+    const insertedAttendances = await client.db().collection('attendances').insertMany(nonExistingAttendances);
   }
 
   // -------------------- logBook ------------------------------------------

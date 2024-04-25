@@ -53,22 +53,25 @@ export default async function handler(req, res) {
     }))
 
     
-    if(company.holidays)
-      company.holidays.map((day)=>{
-        let event ={}
-        event.title = day.name
-        event.allDay = true
-        event.description = day.name
-        event.startDate = new Date (day.date)
-        event.endDate = new Date (day.date)
-        event.type = 'Holiday'
-        event.users = []
-        event.status = 'active'
-        event.created_at = new Date ()
-        event.company_id = myUser.company_id
-        event.user_id = myUser._id
-        const newEvent = client.db().collection('events').insertOne(event)
-      })
+    if(company.holidays){
+        await Promise.all(
+            company.holidays.map( async (day)=>{
+              let event ={}
+              event.title = day.name
+              event.allDay = true
+              event.description = day.name
+              event.startDate = new Date (day.date)
+              event.endDate = new Date (day.date)
+              event.type = 'Holiday'
+              event.users = []
+              event.status = 'active'
+              event.created_at = new Date ()
+              event.company_id = myUser.company_id
+              event.user_id = myUser._id
+              const newEvent = await client.db().collection('events').insertOne(event)
+            })
+        )
+    }
 
 
   // -------------------------- logBook ---------------------------

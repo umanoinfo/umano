@@ -133,7 +133,9 @@ const UserViewLeft = ({ id }) => {
                     fontWeight: 600,
                     borderRadius: '5px',
                     fontSize: '0.875rem',
-                    textTransform: 'capitalize',
+                    
+                    // textTransform: 'capitalize',  
+
                     '& .MuiChip-label': { mt: -0.25 }
                   }}
                 />
@@ -234,7 +236,7 @@ const UserViewLeft = ({ id }) => {
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Created at:</Typography>
                     <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                      {user.created_at}
+                      {new Date(user.created_at).toLocaleDateString()}
                     </Typography>
                   </Box>
                 </Box>

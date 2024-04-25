@@ -423,7 +423,6 @@ const RolesComponent = () => {
                             check={()=>allChecked()}
                             size='small'
                             onChange={ (e) => checkAll(e)}
-                            disabled={session.user.permissions.length != permissionsLength}
                         />
                         Choose all
                         {permissionsGroup &&

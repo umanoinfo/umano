@@ -39,6 +39,7 @@ export default async function handler(req, res) {
             { status: { $regex: req.query.userStatus } },
             { type: { $regex: req.query.type } },
             { name: { $regex: req.query.q , '$options' : 'i' } },
+            { email:{ $ne: 'admin@admin.com'}}
             
             // { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]

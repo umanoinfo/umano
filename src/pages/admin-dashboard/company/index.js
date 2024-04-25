@@ -364,7 +364,7 @@ const CompaniesList = () => {
             {
               row.deleted_at && session && session.user && session.user.permissions.includes('AdminEditCompany') && (
               <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
-                <Icon icon='mdi:pencil-outline' fontSize={20} />
+                <Icon icon='mdi:replay' fontSize={20} />
                 Restore
               </MenuItem>
             )}
@@ -378,7 +378,7 @@ const CompaniesList = () => {
             )}
           
           
-          {session && session.user && session.user.permissions.includes('AdminDeleteCompany') && (
+          {!row.deleted_at && session && session.user && session.user.permissions.includes('AdminDeleteCompany') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete

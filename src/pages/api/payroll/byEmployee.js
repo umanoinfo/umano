@@ -191,11 +191,24 @@ export default async function handler(req, res) {
   }
   employee = employee[0] ; 
 
-  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
+  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0] || (!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)) || ((!company?.working_days || company?.working_days?.length == 0 ) )){
     let message = [] ;
-    message.push('Error: define Sarlary Formula for this employee first');
-
-    return res.status(400).json({success: false, message: message }); 
+    if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info?.[0]){
+      message.push('Error: define Sarlary Formula for this employee first');
+    }
+    console.log(employee?.shift_info,!employee?.shift_info);
+    if(!employee?.shift_info || !employee?.shift_info?.[0] ){
+      message.push('Error: define Shift info for this employee first');
+    }
+    
+    if(!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)){
+      message.push('Error: Add salary first (no salary defined)!');
+    }
+    if(!company?.working_days || company?.working_days?.length == 0 ){
+      message.push('Error: define working days for your company');
+    }
+    
+return res.status(400).json({success: false, message: message }); 
   }
 
   let lumpySalary = 0;
@@ -282,17 +295,7 @@ export default async function handler(req, res) {
     return res.status(200).json({success: true , data : [employee] }) ;
   }
   
-  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0]  ){
-    let message = [] ;
-    if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
-      message.push('Error: define Sarlary Formula for this employee first');
-    }
-    if(!employee?.shift_info || !employee?.shift_info[0] ){
-      message.push('Error: define Shift info for this employee first');
-    }  
-    
-    return res.status(400).json({success: false, message: message }); 
-  }
+ 
 
   let start = new Date(fromDate)
   let end = toDate
@@ -307,7 +310,8 @@ export default async function handler(req, res) {
       return holidayDate[0] + '/' + holidayDate[1] ;      
     })
   }
-
+  employee.absenseDays = 0;
+  let totalWorkingDaysCount =0 ;
   if (employee)
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
 
@@ -390,6 +394,7 @@ export default async function handler(req, res) {
 
 
       // -------------------------------------------------------------
+      
       if(employee?.attendances_info){
         if(!leaveDay){
             employee.attendances_info?.map(att => {
@@ -452,7 +457,10 @@ export default async function handler(req, res) {
             })
           }
         }
-      
+      totalWorkingDaysCount++ ;
+      if(workingDay && !_in && !leaveDay){
+        employee.absenseDays++ ;
+      }
       attendances.push({
         day: weekday[day],
         workingDay: workingDay,
@@ -512,7 +520,7 @@ export default async function handler(req, res) {
     +employee.salaryFormulas_info[0].firstOverTime
   )
 
-  let totalWorkingDaysCount =0 ;
+  
   let totalholidayHours = 0
   let totalEarlyHours = 0 // lateness hours (morning)
   let totalLateHours = 0 // lateness hours (evening)
@@ -520,9 +528,7 @@ export default async function handler(req, res) {
 
   //   ----------------------- Assume Early & Late Hours -------------------------------
   attendances.map(att => {
-    if (att._in) {
-      totalWorkingDaysCount++
-    }
+    
     totalEarlyHours = totalEarlyHours + Number(att.earlyHours)
     totalLateHours = totalLateHours + Number(att.lateHours)
     if (att.holidayDay) {
