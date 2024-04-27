@@ -468,10 +468,11 @@ const AllDocumentsList = () => {
         setSelectedEmployee(employee)
         if(!employee.flexible)
           setAttendances(res.data.attendances)
-        setDone(true);
+        setDone(2);
     }
     catch(err){
       // console.log(err?.response?.data?.message , err.toString());
+      console.log('err');
       if(err?.response?.data?.message)
       {
         err.response.data.message.map((msg)=>{
@@ -886,6 +887,7 @@ const AllDocumentsList = () => {
                   // value={selectedEmployee.firstName}
                   // valueKey={selectedEmployee?.firstName}
                   onChange={e => {
+                    setSelectedEmployeeID(e.id);
                     calculate(e)
                   }}
                 />
@@ -946,7 +948,7 @@ const AllDocumentsList = () => {
               variant='contained'
               onClick={() => {
                 if(selectedEmployeeID)
-                calculate(selectedEmployeeID)
+                  calculate({id:selectedEmployeeID})
               }}
             >
               Calculate

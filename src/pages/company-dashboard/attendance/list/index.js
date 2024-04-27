@@ -490,7 +490,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'noId',
+      field: 'employee_no',
       headerName: 'Id',
       renderCell: ({ row }) => {
         return (

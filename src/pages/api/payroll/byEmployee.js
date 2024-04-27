@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayroll')) {
-    return  res.status(401).json({ success: false, message: 'Not Auth' })
+    return  res.status(401).json({ success: false, message: ['Not Auth'] })
   }
 
   const company = await client
@@ -187,7 +187,7 @@ export default async function handler(req, res) {
     ])
     .toArray()
   if(!employee || !employee[0] ){
-    return res.status(404).json({success: false, message : 'No employee with this ID'});
+    return res.status(404).json({success: false, message : ['No employee with this ID']});
   }
   employee = employee[0] ; 
 
@@ -208,7 +208,7 @@ export default async function handler(req, res) {
       message.push('Error: define working days for your company');
     }
     
-return res.status(400).json({success: false, message: message }); 
+    return res.status(400).json({success: false, message: message }); 
   }
 
   let lumpySalary = 0;

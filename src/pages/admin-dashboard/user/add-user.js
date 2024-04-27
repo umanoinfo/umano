@@ -39,7 +39,7 @@ import { fetchData, deleteUser } from 'src/store/apps/user'
 // ** Store Imports
 import { useDispatch } from 'react-redux'
 import { addUser } from 'src/store/apps/user'
-import { Divider } from '@mui/material'
+import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, RadioGroup, Switch } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
@@ -78,6 +78,9 @@ const DialogAddUser = () => {
   const [loading, setLoading] = useState(false)
   const [userStatus, userUserStatus] = useState('active')
   const [type, setType] = useState('manager')
+  const [roles, setRoles] = useState([])
+  const [allRoles ,setAllRoles] = useState([]);
+  const [roleId , setRoleId] = useState() ;
   const router = useRouter()
 
   const { data: session, status } = useSession()
@@ -103,12 +106,41 @@ const DialogAddUser = () => {
     resolver: yupResolver(schema)
   })
 
+  const getRoles = () => {
+    setLoading(true)
+    axios
+      .get('/api/role/', {})
+      .then(function (response) {
+        setAllRoles(response.data.data)
+        setLoading(false)
+      })
+      .catch(function (error) {
+        setLoading(false)
+        console.log(error);
+        let message = error?.response?.data?.message || error.toString();
+        if(message == 'Not Auth'){
+          message = 'Error : failed to fetch roles (you do not have permission to view roles)';
+        }
+        toast.error(message , {duration: 5000 , position:'bottom-right'}) ;
+
+      })
+    }
+  
+  useEffect(()=>{
+    getRoles();
+  }, [])
+
   const onSubmit = data => {
     setLoading(true)
     data.type = type
     data.status = userStatus
     data.permissions = []
-    data.roles = []
+    if(type == 'admin'){
+      data.roles = roles ;
+    }
+    else{
+      data.roles = [roleId] ; 
+    }
     data.created_at = new Date()
     axios
       .post('/api/user/add-user', {
@@ -244,6 +276,48 @@ const DialogAddUser = () => {
                         <MenuItem value='admin'>Admin</MenuItem>
                         <MenuItem value='manager'>Manager</MenuItem>
                       </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <FormControl fullWidth sx={{ mb: 6, mx: 1 }} size='small'>
+                      <FormLabel component='legend'>Roles</FormLabel>
+                      <FormGroup sx={{ mx: 6 }}>
+                        {allRoles && type =='admin' &&
+                          allRoles.map((role , index) => {
+                            
+                            return (
+                              <FormControlLabel
+                              key = {index}
+                                control={
+                                  <Switch checked={roles.includes(role._id,'')} onChange={handleChange} value={role._id} />
+                                }
+                                label={role.title}
+                              />
+                            )
+                          })}
+                        <RadioGroup sx={{ mx: 6 }}>
+                        {allRoles && type == 'manager' &&
+                          allRoles.map((role , index) => {
+                            
+                            return (
+                              <FormControlLabel
+                                  key = {index}
+                                  control={
+                                    
+                                    <Checkbox
+                                      value={role._id}
+                                      checked={role._id == roleId }
+                                      onChange={()=> setRoleId(role._id)}
+                                    />
+                                  }
+                                  label={role.title}
+                              />
+                            )
+                          })}
+
+                        {/* <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} /> */}
+                      </RadioGroup>
+                      </FormGroup>
                     </FormControl>
                   </Grid>
                 </Grid>
