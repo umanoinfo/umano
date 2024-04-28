@@ -86,7 +86,7 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
-  const getUser =  async  () => {
+  const getUser =  async  (resolve) => {
     axios
       .get('/api/company-user/' + id, {})
       .then(function (response) {
@@ -96,19 +96,20 @@ const DialogAddUser = ({ id }) => {
           setRoleId(response.data.data[0].roles[0]);
         }
         reset(response.data.data[0])
+        resolve()
       })
       .catch(function (error) {
       })
   }
 
 
-  useEffect(() => {
+  useEffect(async () => {
     setLoading(true);
-    getUser().then(()=>{
-      getRoles().then(()=>{
-        setLoading(false);
-      })
-    })
+    await new Promise((resolve,reject)=>getUser(resolve))
+    await new Promise((resolve,reject)=>  getRoles(resolve) )
+    setLoading(false);
+      
+  
   }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
@@ -124,11 +125,12 @@ const DialogAddUser = ({ id }) => {
     setChecked(newChecked)
   }
 
-  const getRoles = async () => {
+  const getRoles = async (resolve) => {
     axios
       .get('/api/company-role/', {})
       .then(function (response) {
         setAllRoles(response.data.data)
+        resolve()
       })
       .catch(function (error) {
         let message = error?.response?.data?.message  || error?.toString();

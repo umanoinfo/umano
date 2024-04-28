@@ -89,9 +89,8 @@ const DialogAddUser = ({ id }) => {
   const { data: session, status } = useSession()
 
   
-  const getUser =  () => {
-    setLoading(true)
-    axios
+  const getUser =  async (resolve) => {
+     axios
       .get('/api/user/' + id, {})
       .then(function (response) {
         console.log(response.data.data[0]);
@@ -106,19 +105,21 @@ const DialogAddUser = ({ id }) => {
         }
         reset(response.data.data[0])
         setLoading(false)
+        resolve()
       })
       .catch(function (error) {
         setLoading(false)
       })
   }   ;
 
-  const getRoles = () => {
-    setLoading(true)
+  const getRoles = async (resolve) => {
+    
     axios
       .get('/api/role/', {})
       .then(function (response) {
         setAllRoles(response.data.data)
-        setLoading(false)
+        resolve()
+
       })
       .catch(function (error) {
         setLoading(false)
@@ -134,9 +135,11 @@ const DialogAddUser = ({ id }) => {
 
 
 
-  useEffect(() => {
-    getUser()
-    getRoles()
+  useEffect(async () => {
+    setLoading(true);
+    await new Promise((resolve,reject)=>getUser(resolve))
+    await new Promise((resolve,reject)=>getRoles(resolve))
+    setLoading(false);
   }, [id])
 
   const [checked, setChecked] = useState(['wifi', 'location'])

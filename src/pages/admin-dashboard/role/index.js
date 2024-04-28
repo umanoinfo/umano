@@ -62,9 +62,7 @@ const RolesComponent = () => {
         q: value
       })
     ).then( () => {
-      getPermissionGroup().then(()=>{
-        setLoading(false)
-      })
+      getPermissionGroup()
     })
   }, [dispatch])
 

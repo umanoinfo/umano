@@ -94,6 +94,7 @@ const RolesComponent = () => {
 
         setPermissionsLength(count);
         setLoading(false);
+        resolve()
       })
       .catch(function (error) {
         setLoading(false);
@@ -108,9 +109,7 @@ const RolesComponent = () => {
         q: value
       })
     ).then( () =>{
-      getPermissionGroup().then(()=>{
-        setLoading(false)
-      })
+      getPermissionGroup()
     })
   }, [dispatch, value])
 

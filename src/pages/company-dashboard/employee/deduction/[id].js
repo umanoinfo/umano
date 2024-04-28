@@ -71,7 +71,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = async () => {
+  const getEmployees = async (resolve) => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -81,11 +81,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
       })
       setEmployeesDataSource(arr)
+      resolve()
     })
-    setLoading(false)
   }
 
-  const getDeduction = async   () => {
+  const getDeduction = async   (resolve) => {
     setLoading(true)
     axios
       .get('/api/employee-deduction/' + id, {})
@@ -95,19 +95,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
         val.date = new Date(val.date)
         setFormValue({ ...val })
+        resolve()
       })
       .catch(function (error) {
         setLoading(false)
       })
   } ;
 
-  useEffect(() => {
+  useEffect(async () => {
     setLoading(true);
-    getEmployees().then(()=>{
-      getDeduction().then(()=>{
-        setLoading(false);
-      })
-    })
+    await new Promise((resolve,reject)=>getEmployees(resolve) )
+    await new Promise((resolve,reject)=>getDeduction(resolve) )
+    setLoading(false);
   }, [ ])
 
   // ------------------------------- Submit --------------------------------------

@@ -63,10 +63,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState(default_value)
 
   useEffect(() => {
-    setLoading(true);
-    getEmployees().then(()=>{
-      setLoading(false);
-    })
+    getEmployees()
+
   }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
@@ -82,6 +80,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getEmployees = async () => {
+    setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -91,6 +90,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
       })
       setEmployeesDataSource(arr)
+      setLoading(false);
     })
   }
 

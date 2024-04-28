@@ -131,11 +131,11 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         companyStatus,
         q: value
       })
-    ).then(()=> {
-      getUsers()
-        .then(()=>getCountries()
-        .then(()=>getCompany()
-        .then(()=> setLoading(false))))  
+    ).then(async ()=> {
+      await getUsers()
+      getCountries()
+      getCompany()
+      
     })
     
   }, [dispatch, type, companyStatus, value ])

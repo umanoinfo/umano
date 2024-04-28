@@ -64,9 +64,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState({ title: '', times: [{ ...default_value }] })
 
   const getShift =   () => {
+    setLoading(true);
     axios.get('/api/shift/' + id, {}).then(res => {
       setFormValue(res.data.data[0])
       setNewStatus(res.data.data[0].status)
+      setLoading(false);
     })
   } 
 

@@ -125,7 +125,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   })
 
   useEffect(() => {
-    getUsers().then(getCountries())
+    getUsers().then(()=>getCountries())
   }, [])
 
   // ------------------------------ Get Users ------------------------------------
@@ -144,11 +144,11 @@ const DialogAddUser = ({ popperPlacement }) => {
     setIsLoading(true)
     const res = await fetch('/api/country')
     const { data } = await res.json()
-    setIsLoading(false)
     setCountriesDataSource(data)
     const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
     setCountryIndex(index)
     setCountry(data[index])
+    setIsLoading(false)
   }
 
   const uploadImage = async event => {

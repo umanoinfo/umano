@@ -90,7 +90,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Company ------------------------------------
 
   const getCompany =
-  async () => {
+  async (resolve) => {
       setLoading(true)
       axios
         .get('/api/company/my-company/' , {})
@@ -115,8 +115,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
             value: state.name
           }))
           setStates(statesDS)
-          setLoading(false)
-
+          resolve()
         })
         .catch(function (error) {
           setLoading(false)
@@ -142,14 +141,13 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         companyStatus,
         q: value
       })
-    ).then(()=>{
-      getCountries().then(()=>{
-        getCompany().then(()=>{
-          setLoading(false);
-        })
+    ).then(async ()=>{
+      await new Promise((resolve,reject)=> getCompany(resolve))
+      getCountries()
+      setLoading(false);
+ 
       }
-      )
-    })
+    )
   }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {

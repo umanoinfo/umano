@@ -75,7 +75,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
-    getUsers().then(getParents())
+    getUsers().then(()=>getParents())
     
   }, [])
 
