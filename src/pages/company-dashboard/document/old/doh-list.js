@@ -100,7 +100,7 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, type, documentStatus, value])
 
   // ----------------------- Handle ------------------------------

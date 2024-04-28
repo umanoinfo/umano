@@ -104,7 +104,7 @@ const FormulaList = () => {
         formulaStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, formulaType, formulaStatus, value])
 
   // ----------------------- Handle ------------------------------

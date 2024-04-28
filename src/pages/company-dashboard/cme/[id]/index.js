@@ -90,7 +90,7 @@ const EmployeeCmes = ({}) => {
       setLoading(true) ; 
       dispatch(fetchData({
         employee_id: id
-      })).then(setLoading(false));
+      })).then( () => setLoading(false));
     }
 
   }, [dispatch , id ])

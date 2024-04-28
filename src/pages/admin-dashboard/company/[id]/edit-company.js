@@ -124,14 +124,20 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     }
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type1,
         companyStatus,
         q: value
+      }).then(()=> {
+        getUsers()
+          .then(()=>getCountries()
+          .then(()=>getCompany()
+          .then(()=> setLoading(false))))  
       })
     )
-    getUsers().then(getCountries()).then(getCompany())
+    
   }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {

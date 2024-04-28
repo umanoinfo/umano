@@ -98,7 +98,7 @@ const CompensationsList = () => {
         compensationStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, compensationType, compensationStatus, value])
 
   // ----------------------- Handle ------------------------------

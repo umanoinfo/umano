@@ -90,7 +90,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Company ------------------------------------
 
   const getCompany =
-    () => {
+  async () => {
       setLoading(true)
       axios
         .get('/api/company/my-company/' , {})
@@ -135,14 +135,19 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     } 
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type1,
         companyStatus,
         q: value
       })
-    )
-    getCountries().then(getCompany())
+    ).then(()=>{
+      getCountries().then(()=>getCompany().then(()=>{
+        setLoading(false);
+      }))
+
+    })
   }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {

@@ -111,7 +111,7 @@ const CMEList = () => {
         from_date: startDate,
         to_date: endDate
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, value , startDate , endDate])
 
   const exportToExcel = () => {

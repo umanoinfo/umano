@@ -31,6 +31,7 @@ import {
   handleCalendarsUpdate
 } from 'src/store/apps/calendar'
 import NoPermission from 'src/views/noPermission'
+import Loading from 'src/views/loading'
 
 // ** CalendarColors
 const calendarsColor = {
@@ -50,6 +51,7 @@ const AppCalendar = () => {
 
   const [params, setParams] = useState('Meet,Task,Document,Holiday')
   const [UpdateEvent, setUpdateEvent] = useState(null)
+  const [loading , setLoading] = useState() ;
 
   // ** Hooks
   const { settings } = useSettings()
@@ -63,8 +65,12 @@ const AppCalendar = () => {
   const { skin, direction } = settings
   const mdAbove = useMediaQuery(theme => theme.breakpoints.up('md'))
   useEffect(() => {
-    dispatch(fetchEvents(store.selectedCalendars))
-  }, [dispatch, store.selectedCalendars])
+    setLoading(true);
+    dispatch(fetchEvents(store.selectedCalendars)).then(()=>{
+      setLoading(false);
+      console.log('done' , store.selectedCalendars);
+    })
+  }, [dispatch])
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
   const handleAddEventSidebarToggle = () => {
@@ -73,7 +79,9 @@ const AppCalendar = () => {
       setClose(!close)
     }
   }
-
+  if(loading){
+    return <Loading header={'Please Wait'} description={'Events are loading'}/>
+  }
   if (session && session.user && !session.user.permissions.includes('ViewEvent'))
     return <NoPermission header='No Permission' description='No permission to view events'></NoPermission>
 

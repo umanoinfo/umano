@@ -131,7 +131,7 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then( setLoading(false) )
+    ).then( () => setLoading(false) )
 
   }, [dispatch, Types, documentStatus, value , AllDocumentTypes != '' ])
 

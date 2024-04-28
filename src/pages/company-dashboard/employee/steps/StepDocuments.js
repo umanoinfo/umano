@@ -80,16 +80,19 @@ const StepDocuments = ({ handleNext, employee }) => {
 
   useEffect(() => {
     if (employee) {
-          getDepartments()
-    setEmployeeId(employee._id)
-    setLoading(true);
-    dispatch(
-      fetchData({
-        employeeId: employeeId,
-        userStatus,
-        q: value
-      })
-    ).then(setLoading(false))
+        setEmployeeId(employee._id)
+        setLoading(true);
+        dispatch(
+          fetchData({
+            employeeId: employeeId,
+            userStatus,
+            q: value
+          })
+        ).then(()=>{
+          getDepartments().then(()=>{
+            setLoading(false)
+          })
+        })
     }
     else{
       <Typography

@@ -130,7 +130,7 @@ const EmployeeList = classNamec => {
         employeeType,
         q: value
       })
-    ).then(  getDepartments()  )
+    ).then( ()=>  getDepartments()  )
   }, [dispatch, type, employeeType, value ])
 
 

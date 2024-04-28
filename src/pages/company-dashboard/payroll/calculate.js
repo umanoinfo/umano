@@ -125,7 +125,6 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
-    getEmployees();
     setLoading(true);
       dispatch(
         fetchData({
@@ -133,7 +132,11 @@ const AllDocumentsList = () => {
           toDate: toDate,
           employee_no: value
         })
-      ).then(setLoading(false))
+      ).then( () => {
+        getEmployees().then(()=>{
+          setLoading(false)
+        })
+      })
   }, [dispatch, fromDate, toDate, value])
 
   //   ----------------------------------------------------------------------------------
@@ -329,7 +332,7 @@ const AllDocumentsList = () => {
         message = 'Error : Failed to fetch employeees ( not Permissin'
       }
       toast.error(message , {duration : 5000 , position: 'bottom-right'}) ; 
-
+      setLoading(false);
     })
   }
 

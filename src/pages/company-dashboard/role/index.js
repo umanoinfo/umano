@@ -57,15 +57,6 @@ const RolesComponent = () => {
   const store = useSelector(state => state.companyRole)
   const { data: session, status } = useSession()
 
-  useEffect(() => {
-    getPermissionGroup()
-    setLoading(true);
-    dispatch(
-      fetchData({
-        q: value
-      })
-    ).then(setLoading(false))
-  }, [dispatch, value])
 
   const handleClose = () => {
     setOpen(false)
@@ -81,7 +72,7 @@ const RolesComponent = () => {
 
   // ------------------------ Get Permission Group ------------------------------------
 
-  const getPermissionGroup = () => {
+  const getPermissionGroup = async () => {
     setLoading(true);
     axios
       .get('/api/permission/company-premission-group', {})
@@ -108,6 +99,20 @@ const RolesComponent = () => {
         setLoading(false);
       })
   }
+
+  useEffect(() => {
+
+    setLoading(true);
+    dispatch(
+      fetchData({
+        q: value
+      })
+    ).then( () =>{
+      getPermissionGroup().then(()=>{
+        setLoading(false)
+      })
+    })
+  }, [dispatch, value])
 
  
   // ------------------------ Change Permission ------------------------------------

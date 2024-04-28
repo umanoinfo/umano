@@ -127,7 +127,7 @@ const UserList = () => {
         userStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, type, userStatus, value])
 
   const handleClickOpen = () => {
@@ -271,12 +271,12 @@ const UserList = () => {
           type,
           userStatus,
           q: value
-        }));
+        })).then(()=> setLoading(false))
       }
       catch(err){
+        setLoading(false) ;
         toast.error(err ,  {duration: 5000 , position: 'bottom-right'} ) ;
       }
-      setLoading(false) ;
     }
 
       //----------------- Request mail ------------------------------

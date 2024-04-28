@@ -130,7 +130,7 @@ const PayrollList = classNamec => {
         no,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, no, year, month, value])
 
   const handleClose = () => {

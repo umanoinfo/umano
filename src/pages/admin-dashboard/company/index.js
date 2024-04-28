@@ -187,7 +187,7 @@ const CompaniesList = () => {
         companyStatus,
         q: searchValue
       })
-    ).then(setLoading(false) )
+    ).then(()=>setLoading(false) )
 
   }, [dispatch, type, companyStatus, searchValue])
 
@@ -304,7 +304,7 @@ const CompaniesList = () => {
         else{
           throw new Error(res.message) ;
         }
-        dispatch(fetchData({}));
+        dispatch(fetchData({})).then(()=> setLoading(false));
 
       }
       catch(err){

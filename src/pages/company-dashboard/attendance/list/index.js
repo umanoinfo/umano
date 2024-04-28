@@ -128,7 +128,7 @@ const AllDocumentsList = () => {
         toDate: toDate,
         employee_no: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, fromDate, toDate, value])
 
   const getEmployees = () => {
@@ -462,13 +462,15 @@ const AllDocumentsList = () => {
   }
 
   const updateData = data => {
+    setLoading(true);
     dispatch(
       fetchData({
         fromDate: fromDate,
         toDate: toDate,
         employee_no: value
       })
-    )
+    ).then(()=> setLoading(false))
+    
   }
 
   // ------------------------------- Table columns --------------------------------------------

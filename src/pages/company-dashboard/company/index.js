@@ -59,6 +59,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { useSession } from 'next-auth/react'
 import TableHeader from 'src/views/apps/permissions/TableHeader'
 import { useRouter } from 'next/router'
+import Loading from 'src/views/loading'
 
 // ** Vars
 const companyTypeObj = {
@@ -137,13 +138,14 @@ const UserList = () => {
   const router = useRouter()
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type,
         companyStatus,
         q: value
       })
-    )
+    ).then(()=> setLoading(false))
   }, [dispatch, type, companyStatus, value])
 
   const handleClickOpen = () => {
@@ -401,6 +403,7 @@ const UserList = () => {
   }
 
   const deleteCompany = () => {
+    setLoading(true);
     axios
       .post('/api/company/delete-company', {
         selectedCompany
@@ -412,6 +415,7 @@ const UserList = () => {
             position: 'bottom-right'
           })
           setOpen(false)
+          setLoading(false);
         })
       })
       .catch(function (error) {
@@ -424,8 +428,11 @@ const UserList = () => {
   }
 
   //   -------------------------------------------------------------------------
-
-  return (
+  if(loading){
+    return <Loading header='Please Wait' description={'company is loading'} />
+  }
+  
+return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>

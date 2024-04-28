@@ -148,7 +148,7 @@ const Steppositions = ({ handleNext, employee }) => {
 
   useEffect(() => {
     if (employee) {
-      getDepartments()
+      
       setLoading(true);
       setEmployeeId(employee._id)
         dispatch(
@@ -157,7 +157,11 @@ const Steppositions = ({ handleNext, employee }) => {
           userStatus,
           q: value
         })
-      ).then(setLoading(false))
+      ).then( () => {
+        getDepartments().then(()=>{
+          setLoading(false)
+        })
+      })
       setEndChangeType('onPosition')
     }
   }, [dispatch, employeeId, userStatus, value  ])

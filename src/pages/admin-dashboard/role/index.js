@@ -57,12 +57,15 @@ const RolesComponent = () => {
 
   useEffect(() => {
     setLoading(true);
-    getPermissionGroup()
     dispatch(
       fetchData({
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => {
+      getPermissionGroup().then(()=>{
+        setLoading(false)
+      })
+    })
   }, [dispatch])
 
   const handleClose = () => {
@@ -79,7 +82,7 @@ const RolesComponent = () => {
 
   // ------------------------ Get Permission Group ------------------------------------
 
-  const getPermissionGroup = () => {
+  const getPermissionGroup =async () => {
     setLoading(true);
     axios
       .get('/api/permission/premission-group', {})

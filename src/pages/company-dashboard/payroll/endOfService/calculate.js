@@ -127,7 +127,7 @@ const AllDocumentsList = () => {
           toDate: toDate,
           employee_no: value
         })
-      ).then(setLoading(false))
+      ).then( () => setLoading(false))
   }, [dispatch, fromDate, toDate, value])
 
 

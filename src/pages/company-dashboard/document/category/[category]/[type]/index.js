@@ -127,8 +127,8 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then(setLoading(false))
-    getDocumentTypes();
+    ).then( () =>  getDocumentTypes() )
+   
   }, [dispatch, type, documentStatus, value , documentTypes])
 
   // ----------------------- Handle ------------------------------

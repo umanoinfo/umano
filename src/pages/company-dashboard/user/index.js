@@ -157,7 +157,7 @@ const UserList = () => {
         userStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, type, userStatus, value])
 
   const handleClickOpen = () => {
