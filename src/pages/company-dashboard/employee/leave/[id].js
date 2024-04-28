@@ -91,7 +91,13 @@ const EditLeave = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState(default_value)
 
   useEffect(() => {
-    getEmployees(), getMyCompany()
+    setLoading(true);
+    getEmployees().then(()=>{
+      getMyCompany().then(()=>{
+        setLoading(false);
+      })
+
+    })
        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -141,7 +147,7 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getMyCompany = () => {
+  const getMyCompany = async () => {
     axios.get('/api/company/my-company', {}).then(res => {
       let val = res.data.data[0]
 
@@ -385,7 +391,7 @@ const EditLeave = ({ popperPlacement, id }) => {
    
   }
 
-  const getEmployees = () => {
+  const getEmployees = async () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data

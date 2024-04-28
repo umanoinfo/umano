@@ -150,9 +150,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
       parents.push({
       label: departmen.name,
       value: departmen._id
+      })
+      if(!departmen.parent){containMain = true}
     })
-    if(!departmen.parent){containMain = true}
-  })
 
     if(!containMain )
     parents.push({
@@ -160,7 +160,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       value: ''
     })
       
-
+    setIsLoading(false);
     setParentsDataSource(parents)
   }
 
@@ -186,6 +186,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
     console.log(formValue , parent)
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        if(parentsDataSource.length > 0 && newParent == ''){
+          toast.error('Core department is required' , {duration: 5000 , position:'bottom-right'});
+          
+          return ;
+        }
+
+        // if(parentsDataSource.length > 0 && newParent == '')
         let data = {}
         setLoading(true)
         data = formValue

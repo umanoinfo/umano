@@ -179,7 +179,6 @@ const Steppositions = ({ handleNext, employee }) => {
       setDepartmentsDataSource(arr)
       if(response.data.data && response.data.data.length > 0 )
         setDepartment(response.data.data[0]._id)
-        setLoading(false);
     }).catch((err)=>{
       let message = '' ; 
       if(err.response.status == 401 ){
@@ -219,7 +218,8 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const validateMmodel = Schema.Model({
-    positionTitle: StringType().isRequired('Position Title is required')
+    positionTitle: StringType().isRequired('Position Title is required'),
+
   })
 
   // ------------------------------- Submit --------------------------------------
@@ -227,6 +227,11 @@ const Steppositions = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        if(!department){
+          toast.error('Department is a required field', {duration: 5000 , position:'bottom-right'});
+          
+          return ;
+        }
         setLoading(true)
         let data = {formValue}
         data.positionTitle = formValue.positionTitle
@@ -608,6 +613,7 @@ const Steppositions = ({ handleNext, employee }) => {
                         <SelectPicker
                           size='sm'
                           name='department'
+                          controlId='department'
                           onChange={e => {
                             setDepartment(e)
                           }}

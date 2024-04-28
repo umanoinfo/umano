@@ -90,7 +90,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Company ------------------------------------
 
   const getCompany =
-    () => {
+    async () => {
       setLoading(true)
       axios
         .get('/api/company/' + id, {})
@@ -130,13 +130,13 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         type1,
         companyStatus,
         q: value
-      }).then(()=> {
-        getUsers()
-          .then(()=>getCountries()
-          .then(()=>getCompany()
-          .then(()=> setLoading(false))))  
       })
-    )
+    ).then(()=> {
+      getUsers()
+        .then(()=>getCountries()
+        .then(()=>getCompany()
+        .then(()=> setLoading(false))))  
+    })
     
   }, [dispatch, type, companyStatus, value ])
 
@@ -206,7 +206,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Countries ----------------------------------
 
-  const getCountries =   () => {
+  const getCountries = async  () => {
 
       const countriesDataSource = countries.map(country => ({
         label: country.name,

@@ -71,7 +71,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = () => {
+  const getEmployees = async () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       res.data.data.map(employee => {
@@ -85,7 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setLoading(false)
   }
 
-  const getDeduction =    () => {
+  const getDeduction = async   () => {
     setLoading(true)
     axios
       .get('/api/employee-deduction/' + id, {})
@@ -102,7 +102,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   } ;
 
   useEffect(() => {
-    getEmployees(), getDeduction()
+    setLoading(true);
+    getEmployees().then(()=>{
+      getDeduction().then(()=>{
+        setLoading(false);
+      })
+    })
   }, [ ])
 
   // ------------------------------- Submit --------------------------------------

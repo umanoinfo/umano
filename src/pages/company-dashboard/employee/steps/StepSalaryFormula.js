@@ -513,9 +513,9 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
 
         
             <Box sx={{ display: 'flex', alignItems: 'right', minHeight: 40, mt: 8 }}>
-              {!loading && (
+              {!loading &&  (
                 <>
-                  <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
+                  <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }} disabled={!selectedSalaryFormula?._id}  >
                     Save
                   </Button>
                 </>

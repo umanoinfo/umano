@@ -41,6 +41,7 @@ import { useDispatch } from 'react-redux'
 import { addUser } from 'src/store/apps/user'
 import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, ListItemText, Switch } from '@mui/material'
 import { useRouter } from 'next/router'
+import Loading from 'src/views/loading'
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -85,8 +86,7 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
-  const getUser =   () => {
-    setLoading(true)
+  const getUser =  async  () => {
     axios
       .get('/api/company-user/' + id, {})
       .then(function (response) {
@@ -96,17 +96,19 @@ const DialogAddUser = ({ id }) => {
           setRoleId(response.data.data[0].roles[0]);
         }
         reset(response.data.data[0])
-        setLoading(false)
       })
       .catch(function (error) {
-        setLoading(false)
       })
   }
 
 
   useEffect(() => {
-    getUser()
-    getRoles()
+    setLoading(true);
+    getUser().then(()=>{
+      getRoles().then(()=>{
+        setLoading(false);
+      })
+    })
   }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
@@ -122,13 +124,11 @@ const DialogAddUser = ({ id }) => {
     setChecked(newChecked)
   }
 
-  const getRoles = () => {
-    setLoading(true)
+  const getRoles = async () => {
     axios
       .get('/api/company-role/', {})
       .then(function (response) {
         setAllRoles(response.data.data)
-        setLoading(false)
       })
       .catch(function (error) {
         let message = error?.response?.data?.message  || error?.toString();
@@ -137,7 +137,6 @@ const DialogAddUser = ({ id }) => {
           message = 'Error : Failed to fetch Roles (No Permission to view Roles)';
         } 
         toast.error(message , {duration : 5000 , position: 'bottom-right'}) ;
-        setLoading(false)
       })
   }
 
@@ -201,7 +200,10 @@ const DialogAddUser = ({ id }) => {
     }
     setRoles([...roles])
   }
-
+  if(loading){
+    return <Loading header={'please wait'} description={'user info is loading'} />
+  }
+  
   return (
     <>
       <Grid container spacing={6}>

@@ -127,12 +127,15 @@ const AddEventSidebar = props => {
   }, [UpdateEvent ])
 
   const handleDeleteEvent = () => {
+    setIsLoading(true);
     axios
       .post('/api/event/delete-event', { selectedForm: values })
       .then(function (response) {
         sendEmails(response.data.data._id  ,  values.type + ' ' + values.title + ' Canceled').then(()=>{
           handleSidebarClose().then(()=>{
             setSendingEmails(false), setIsLoading(false)
+            setIsLoading(false);
+            handleAddEventSidebarToggle();
           })
         })
       })
@@ -161,7 +164,6 @@ const AddEventSidebar = props => {
       
     }
     catch(err){
-      console.log(err);
       toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
     }
     setIsLoading(false)
@@ -277,6 +279,8 @@ const AddEventSidebar = props => {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
       }).then(res => {
+        setSendingEmails(false);
+
         return res.json()
       })
     } else {
@@ -369,7 +373,7 @@ const AddEventSidebar = props => {
         </Box>
       )}
 
-      {isloading && (
+      {sendingEmails && (
         <Box>
           <Box
             className='sidebar-header'

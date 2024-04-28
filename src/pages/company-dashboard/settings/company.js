@@ -143,10 +143,12 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         q: value
       })
     ).then(()=>{
-      getCountries().then(()=>getCompany().then(()=>{
-        setLoading(false);
-      }))
-
+      getCountries().then(()=>{
+        getCompany().then(()=>{
+          setLoading(false);
+        })
+      }
+      )
     })
   }, [dispatch, type, companyStatus, value ])
 

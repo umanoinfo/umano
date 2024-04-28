@@ -64,13 +64,14 @@ const AppCalendar = () => {
   const addEventSidebarWidth = 400
   const { skin, direction } = settings
   const mdAbove = useMediaQuery(theme => theme.breakpoints.up('md'))
-  useEffect(() => {
-    setLoading(true);
-    dispatch(fetchEvents(store.selectedCalendars)).then(()=>{
-      setLoading(false);
-      console.log('done' , store.selectedCalendars);
-    })
-  }, [dispatch])
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   dispatch(fetchEvents(store.selectedCalendars)).then(()=>{
+  //     setLoading(false);
+  //     console.log('done' , store.selectedCalendars);
+  //   })
+  // }, [dispatch])
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
   const handleAddEventSidebarToggle = () => {

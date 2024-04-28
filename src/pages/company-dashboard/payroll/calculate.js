@@ -300,7 +300,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = () => {
+  const getEmployees = async () => {
     setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
