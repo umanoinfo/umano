@@ -78,6 +78,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     data.salary_formula_id = selectedSalaryFormula._id
     data.deductions = selectedDeductions
     data.compensations = selectedCompensations
+    setLoading(true);
     axios
       .post('/api/company-employee/edit-salary-formula/', {
         data

@@ -186,7 +186,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     console.log(formValue , parent)
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        if(parentsDataSource.length > 0 && newParent == ''){
+        if(parentsDataSource.length > 1 && newParent == ''){
           toast.error('Core department is required' , {duration: 5000 , position:'bottom-right'});
           
           return ;

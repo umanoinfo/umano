@@ -387,14 +387,15 @@ const AddLeave = ({ popperPlacement, id }) => {
         let employees = res.data.data
         employees = employees.map((employee , index) => {
      
-          if (employee?.shift_info[0]) {
+          // if (employee?.shift_info[0]) {
             arr.push({
               label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
               value: employee._id
             })
-            
-            return calcLeaves(employee)
-          }
+            if(employee?.shift_info?.[0])
+              return calcLeaves(employee)
+
+          // }
         })
         employees.filter(employee => employee != undefined ) ;
   
@@ -811,12 +812,17 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   const changeEmployee = e => {
     
-    fillTable(e)
-
+    
     const employee = employeesFullInfo.find(val => {
-      return val._id == e
+      return val?._id == e
     })
+    
+    if(!employee?.shift_info?.[0]){
+      toast.error('Error: Shift is not defined for this employee', {duration: 5000 , position:'bottom-right'});
 
+      return 
+    }
+    fillTable(e)
     let temp_reasons = []
 
     if (employee.takenPaidLeaves < +employee.availablePaidLeave) {

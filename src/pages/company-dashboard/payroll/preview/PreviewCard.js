@@ -399,12 +399,12 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
             <TableBody>
               <TableRow>
                 <TableCell>Monthly Lumpy Salary</TableCell>
-                <TableCell> {(data.totalWorkingDaysCount / 30).toFixed(2)} </TableCell>
+                <TableCell> {(Number(data.totalWorkingDaysCount )/ 30).toFixed(2)} </TableCell>
                 <TableCell>
                   {(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{((+data.salaries_info[0].lumpySalary).toLocaleString("en-US") * (data.totalWorkingDaysCount / 30)).toFixed(2)}</strong>
+                  <strong>{((+data.salaries_info[0].lumpySalary) * (data.totalWorkingDaysCount / 30)).toFixed(2)}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>

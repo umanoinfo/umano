@@ -137,7 +137,7 @@ const AllDocumentsList = () => {
           setLoading(false)
         })
       })
-  }, [dispatch, fromDate, toDate, value])
+  }, [dispatch, value])
 
   //   ----------------------------------------------------------------------------------
 

@@ -97,10 +97,20 @@ export default async function handler(req, res) {
     salaries[size-1].lumpySalary = Number( salaries[size-1].lumpySalary) ;
     salaries[size-1].totalSalary = Number( salaries[size-1].lumpySalary) ;
     employee[0].compensations_array.map((comp)=>{
+      if(comp.type == 'Daily')
+      {
+        comp.fixedValue *= 30;
+        comp.percentageValue*= 30 ; 
+      }
       salaries[size-1].totalSalary += Number(comp.fixedValue) ;
       salaries[size-1].totalSalary += (Number(comp.percentageValue)/100) * salaries[size-1].lumpySalary ;
     })
     employee[0].deductions_array.map((deduction )=>{
+      if(deduction.type == 'Daily')
+      {
+        deduction.fixedValue *= 30;
+        deduction.percentageValue*= 30 ; 
+      }
       salaries[size-1].totalSalary -= Number(deduction.fixedValue) ;
       salaries[size-1].totalSalary -= Number(( Number(deduction.percentageValue)/100 )* salaries[size-1].lumpySalary) ;
     })
