@@ -22,6 +22,7 @@ import Icon from 'src/@core/components/icon'
 import { signOut } from 'next-auth/react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { LinearProgress } from '@mui/material'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -38,6 +39,7 @@ const UserDropdown = props => {
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
+  const [loading , setLoading] = useState();
 
   // ** Hooks
   const router = useRouter()
@@ -60,6 +62,7 @@ const UserDropdown = props => {
   const [roles , setRoles ] = useState([]);
 
   const getRoles = async ()=>{
+    setLoading(true);
     try{
       let res = await axios.get('/api/user/roles');
       
@@ -68,12 +71,14 @@ const UserDropdown = props => {
         if(Array.isArray(roles) && roles && roles?.toString()){
           setRoles(roles) ; 
         }
-        
+        setLoading(false);
       }
     }
     catch(err){
-      toast.error(err , {delay:1000 , position:'bottom-right'});
+      toast.error(err.toString() , {delay:1000 , position:'bottom-right'});
+      setLoading(false);
     }
+
   }
 
   useEffect( ()=>{
@@ -102,7 +107,10 @@ const UserDropdown = props => {
       signOut()
     })
   }
-
+  if(loading){
+    return <LinearProgress></LinearProgress>
+  }
+  
   return (
     <Fragment>
       <Badge

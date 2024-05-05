@@ -28,6 +28,8 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
+import * as XLSX from 'xlsx'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -125,7 +127,7 @@ const UserList = () => {
         userStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, type, userStatus, value])
 
   const handleClickOpen = () => {
@@ -192,6 +194,27 @@ const UserList = () => {
     setUserStatus(e.target.value)
   }, [])
 
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    let ex = [...store.data]
+    
+    ex = ex.map(val => {
+      let c = {
+        'Username' : val.name,
+        'Email': val.email ,
+        'Company': val?.company_info?.[0]?.name ,
+        'Type': val.type ,
+        'Status': val.status 
+      };
+      
+      return c
+    })
+
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.book_append_sheet(wb, ws, 'CME')
+    XLSX.writeFile(wb, 'users.xlsx')
+  }
+
   // ------------------------ Row Options -----------------------------------------
 
   const RowOptions = ({ row }) => {
@@ -248,12 +271,12 @@ const UserList = () => {
           type,
           userStatus,
           q: value
-        }));
+        })).then(()=> setLoading(false))
       }
       catch(err){
+        setLoading(false) ;
         toast.error(err ,  {duration: 5000 , position: 'bottom-right'} ) ;
       }
-      setLoading(false) ;
     }
 
       //----------------- Request mail ------------------------------
@@ -576,6 +599,7 @@ const UserList = () => {
               color='secondary'
               variant='outlined'
               startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+              onClick={exportToExcel}
             >
               Export
             </Button>

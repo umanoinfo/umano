@@ -107,7 +107,7 @@ const LeaveList = () => {
         leaveStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, leaveType, leaveStatus, value])
 
   // ----------------------- Handle ------------------------------

@@ -102,7 +102,7 @@ const AllDocumentsList = () => {
         formStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, formType, formStatus, value])
 
   // ----------------------- Handle ------------------------------

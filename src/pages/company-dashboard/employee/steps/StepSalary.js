@@ -133,7 +133,7 @@ const StepSalary = ({ handleNext, employee }) => {
           userStatus,
           q: value
         })
-      ).then(setLoading(false))
+      ).then( () => setLoading(false))
     }else{
       return (
         <>

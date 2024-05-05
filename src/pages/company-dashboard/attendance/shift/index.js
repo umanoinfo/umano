@@ -101,7 +101,7 @@ const ShiftList = () => {
         shiftStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, ShiftType, shiftStatus, value])
 
   // ----------------------- Handle ------------------------------

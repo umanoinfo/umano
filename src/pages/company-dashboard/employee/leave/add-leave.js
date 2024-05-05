@@ -97,9 +97,13 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(() => {
-    getEmployees(), getMyCompany()
-       // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    setLoading(true);
+    await getEmployees()
+    await getMyCompany()
+    setLoading(false);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
@@ -117,33 +121,37 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getMyCompany = () => {
-    axios.get('/api/company/my-company', {}).then(res => {
-      let val = res.data.data[0]
-
-      if (!val.working_days) {
-        val.working_days = []
-      }
-      if (!val.holidays) {
-        val.holidays = []
-      } else {
-        let temp_holydays = []
-        val.holidays = val.holidays.map(h => {
-          let v = { ...h, date: new Date(h.date) }
-          temp_holydays.push(v.date.toDateString())
-
-          return v
+  const getMyCompany = async () => {
+    return new Promise( (resolve , reject )=>
+      axios.get('/api/company/my-company', {}).then(res => {
+        let val = res.data.data[0]
+  
+        if (!val.working_days) {
+          val.working_days = []
+        }
+        if (!val.holidays) {
+          val.holidays = []
+        } else {
+          let temp_holydays = []
+          val.holidays = val.holidays.map(h => {
+            let v = { ...h, date: new Date(h.date) }
+            temp_holydays.push(v.date.toDateString())
+  
+            return v
+          })
+          setholyDays(temp_holydays)
+        }
+        let temp = []
+        val.working_days = val.working_days.map(h => {
+          temp.push(weekDays.indexOf(h))
+  
+          return h
         })
-        setholyDays(temp_holydays)
-      }
-      let temp = []
-      val.working_days = val.working_days.map(h => {
-        temp.push(weekDays.indexOf(h))
-
-        return h
+        setDays(temp)
+        console.log('com' , loading) ; 
+        resolve();
       })
-      setDays(temp)
-    })
+    )
   }
 
   const calcDeffTime = val => {
@@ -372,27 +380,30 @@ const AddLeave = ({ popperPlacement, id }) => {
    
   }
 
-  const getEmployees = () => {
-    axios.get('/api/company-employee', {}).then(res => {
-      let arr = []
-      let employees = res.data.data
-      employees = employees.map((employee , index) => {
-   
-        if (employee?.shift_info[0]) {
-          arr.push({
-            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
-            value: employee._id
-          })
-          
-          return calcLeaves(employee)
-        }
-      })
-      employees.filter(employee => employee != undefined ) ;
+  const getEmployees = async () => {
+    return new Promise((resolve, reject)=>
+      axios.get('/api/company-employee', {}).then(res => {
+        let arr = []
+        let employees = res.data.data
+        employees = employees.map((employee , index) => {
+     
+          // if (employee?.shift_info[0]) {
+            arr.push({
+              label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
+              value: employee._id
+            })
+            if(employee?.shift_info?.[0])
+              return calcLeaves(employee)
 
-      setEmployeesDataSource(arr)
-      setEmployeesFullInfo(employees)
-      setLoading(false)
-    })
+          // }
+        })
+        employees.filter(employee => employee != undefined ) ;
+  
+        setEmployeesDataSource(arr)
+        setEmployeesFullInfo(employees)
+        resolve();
+       })
+    )
   }
 
   const [daysDuration , setDaysDeurtion] = useState(0)
@@ -402,7 +413,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(formValue.date_to  - date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
       setDaysDeurtion(diffDays)
     }
     if(data.type == 'hourly'){
@@ -418,7 +429,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     let data = { ...formValue }
     if(data.type != 'hourly'){
       const diffTime = Math.abs(date_to  - formValue.date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
       setDaysDeurtion(diffDays)
     }
     if(data.type == 'hourly'){
@@ -611,8 +622,8 @@ const AddLeave = ({ popperPlacement, id }) => {
         setLoadingDescription('leave is inserting')
 
         let newData = { ...data_request }
-        newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
-        newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
+        newData.date_from = new Date(data_request.date_from) 
+        newData.date_to = new Date(data_request.date_to) 
 
         axios
           .post('/api/employee-leave/add-leave', {
@@ -801,12 +812,17 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   const changeEmployee = e => {
     
-    fillTable(e)
-
+    
     const employee = employeesFullInfo.find(val => {
-      return val._id == e
+      return val?._id == e
     })
+    
+    if(!employee?.shift_info?.[0]){
+      toast.error('Error: Shift is not defined for this employee', {duration: 5000 , position:'bottom-right'});
 
+      return 
+    }
+    fillTable(e)
     let temp_reasons = []
 
     if (employee.takenPaidLeaves < +employee.availablePaidLeave) {

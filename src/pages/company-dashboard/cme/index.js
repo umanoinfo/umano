@@ -111,7 +111,7 @@ const CMEList = () => {
         from_date: startDate,
         to_date: endDate
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, value , startDate , endDate])
 
   const exportToExcel = () => {
@@ -152,16 +152,23 @@ const CMEList = () => {
   },[])
 
   const getRequiredCME =  async ()=>{
-      const res = await axios.get('/api/cme/required' ); 
-      const data = res.data.data ;
-      let required = new Map() ;
-      let types = [ ] ; 
-      data.map((val)=>{
-        required.set(val.type , val.amount) ;
-        types.push(val.type) ;
-      })
-      setCMETypes(types) ;
-      setRequiredCME(required);
+      setLoading(true);
+      try{
+        const res = await axios.get('/api/cme/required' ); 
+        const data = res.data.data ;
+        let required = new Map() ;
+        let types = [ ] ; 
+        data.map((val)=>{
+          required.set(val.type , val.amount) ;
+          types.push(val.type) ;
+        })
+        setCMETypes(types) ;
+        setRequiredCME(required);
+      }
+      catch(err){
+        toast.error(err.toString() , {duraiton: 5000 , position:'bottom-right'})  ;
+      }
+      setLoading(false);
   }
 
   useEffect(()=>{

@@ -119,7 +119,6 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
-    getEmployees();
     setLoading(true);
       dispatch(
         fetchData({
@@ -127,14 +126,18 @@ const AllDocumentsList = () => {
           toDate: toDate,
           employee_no: value
         })
-      ).then(setLoading(false))
+      ).then( () => {
+        getEmployees().then(()=>{
+          setLoading(false)
+        })
+      })
   }, [dispatch, fromDate, toDate, value])
 
 
 
   // ------------------------------- Get Employees --------------------------------------
 
-  const getEmployees = () => {
+  const getEmployees = async () => {
     setLoading(true);
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []

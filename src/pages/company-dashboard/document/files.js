@@ -123,7 +123,7 @@ const AllDocumentsList = () => {
         fileStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
     getDocumentTypes();
 
   }, [dispatch, fileTypes , fileStatus, value])

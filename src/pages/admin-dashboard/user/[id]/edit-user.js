@@ -89,9 +89,8 @@ const DialogAddUser = ({ id }) => {
   const { data: session, status } = useSession()
 
   
-  const getUser =  () => {
-    setLoading(true)
-    axios
+  const getUser =  async (resolve) => {
+     axios
       .get('/api/user/' + id, {})
       .then(function (response) {
         console.log(response.data.data[0]);
@@ -106,19 +105,21 @@ const DialogAddUser = ({ id }) => {
         }
         reset(response.data.data[0])
         setLoading(false)
+        resolve()
       })
       .catch(function (error) {
         setLoading(false)
       })
   }   ;
 
-  const getRoles = () => {
-    setLoading(true)
+  const getRoles = async (resolve) => {
+    
     axios
       .get('/api/role/', {})
       .then(function (response) {
         setAllRoles(response.data.data)
-        setLoading(false)
+        resolve()
+
       })
       .catch(function (error) {
         setLoading(false)
@@ -134,9 +135,11 @@ const DialogAddUser = ({ id }) => {
 
 
 
-  useEffect(() => {
-    getUser()
-    getRoles()
+  useEffect(async () => {
+    setLoading(true);
+    await new Promise((resolve,reject)=>getUser(resolve))
+    await new Promise((resolve,reject)=>getRoles(resolve))
+    setLoading(false);
   }, [id])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
@@ -278,6 +281,7 @@ const DialogAddUser = ({ id }) => {
 
                 <Grid container>
                   <Grid item sm={6} xs={12}>
+                  { session.user._id != id &&
                     <FormControl fullWidth sx={{ mb: 6, pr: 2 }} size='small'>
                       <InputLabel id='status-select'>Select Status</InputLabel>
                       <Select
@@ -294,6 +298,7 @@ const DialogAddUser = ({ id }) => {
                         <MenuItem value='blocked'>Blocked</MenuItem>
                       </Select>
                     </FormControl>
+                    }
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <FormControl fullWidth sx={{ mb: 6 }} size='small'>

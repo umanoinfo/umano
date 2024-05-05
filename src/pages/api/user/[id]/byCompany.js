@@ -24,7 +24,8 @@ export default async function handler(req, res) {
     .aggregate([
       {
         $match: {
-          $and: [{ company_id : id }, { $and: [{ $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }] }]
+          $and: [{ company_id : id , type:{$ne:'admin'}}, 
+          { $and: [{ $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }] }]
         }
       },
       {

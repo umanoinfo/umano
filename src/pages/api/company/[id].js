@@ -47,5 +47,16 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-  return res.status(200).json({ success: true, data: company })
+    const employeesCount = await client.db().collection('employees').countDocuments({
+      company_id: (id) , 
+      $or: [{deleted_at : {$exists: false }} , { deleted_at: null }]
+    });
+
+    const usersCount = await client.db().collection('users').countDocuments({
+      company_id: (id),
+      $or: [{deleted_at : {$exists: false }} , { deleted_at: null }]
+    }) ;
+    console.log(id , employeesCount, usersCount);
+
+  return res.status(200).json({ success: true, data: company , employeesCount , usersCount})
 }

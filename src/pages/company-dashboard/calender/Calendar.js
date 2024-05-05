@@ -78,7 +78,7 @@ const Calendar = props => {
         eventStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then(()=>setLoading(false))
   }, [dispatch, eventStatus, value, close, params])
 
   //   {

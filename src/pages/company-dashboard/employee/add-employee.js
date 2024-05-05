@@ -146,7 +146,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const value = ''
   const type1 = ''
 
-  useEffect(() => {
+  useEffect( () => {
     getCountries()
     getShifts()
     getSalaryFormula()
@@ -431,7 +431,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const getStepContent = step => {
     switch (step) {
       case 0:
-        return (
+        return  (
           <>
             <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>
               Main Information

@@ -80,7 +80,7 @@ const DocumentsTable = () => {
       fetchData({
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, value])
 
   const handleFilter = useCallback(val => {

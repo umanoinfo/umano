@@ -81,7 +81,7 @@ const EmailAppLayout = ({ folder, label }) => {
         mailType: MailType,
         q: query
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [mailStatus, MailType, query,dispatch])
 
   // useEffect(() => {

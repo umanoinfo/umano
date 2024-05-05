@@ -197,8 +197,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
   useEffect(() => {
     getDepartment()
       .then(() => {
-        getUsers()
-        getParents()
+        getUsers().then(()=>{
+          getParents()
+        })
       })
   }, [    ])
 

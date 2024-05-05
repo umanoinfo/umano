@@ -72,6 +72,8 @@ const UserViewLeft = ({ id }) => {
   // ** States
   const [loading, setLoading] = useState(true)
   const [company, setCompany] = useState()
+  const [usersCount , setUsersCount ] = useState(0);
+  const [employeesCount, setEmployeesCount] = useState(0) ;
 
   // ------------------------------ Get Company ------------------------------------------------
 
@@ -81,6 +83,9 @@ const UserViewLeft = ({ id }) => {
     .get('/api/company/' + id, {})
     .then(function (response) {
       setCompany(response.data.data[0])
+      console.log('v',response.data);
+      setUsersCount(response.data.usersCount) ;
+      setEmployeesCount(response.data.employeesCount);
       setLoading(false)
     })
     .catch(function (error) {
@@ -141,24 +146,24 @@ const UserViewLeft = ({ id }) => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                      <Icon icon='mdi:check' />
+                      <Icon icon='mdi:person' />
                     </CustomAvatar>
                     <div>
                       <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                        1.23k
+                        {usersCount}
                       </Typography>
-                      <Typography variant='body2'>Card Done</Typography>
+                      <Typography variant='body2'>Users </Typography>
                     </div>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                      <Icon icon='mdi:briefcase-variant-outline' />
+                      <Icon icon='mdi:people' />
                     </CustomAvatar>
                     <div>
                       <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                        5680
+                        {employeesCount}
                       </Typography>
-                      <Typography variant='body2'>Activity</Typography>
+                      <Typography variant='body2'>Employees</Typography>
                     </div>
                   </Box>
                 </Box>

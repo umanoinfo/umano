@@ -57,12 +57,13 @@ const RolesComponent = () => {
 
   useEffect(() => {
     setLoading(true);
-    getPermissionGroup()
     dispatch(
       fetchData({
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => {
+      getPermissionGroup()
+    })
   }, [dispatch])
 
   const handleClose = () => {
@@ -79,7 +80,7 @@ const RolesComponent = () => {
 
   // ------------------------ Get Permission Group ------------------------------------
 
-  const getPermissionGroup = () => {
+  const getPermissionGroup =async () => {
     setLoading(true);
     axios
       .get('/api/permission/premission-group', {})
@@ -423,7 +424,6 @@ const RolesComponent = () => {
                             check={()=>allChecked()}
                             size='small'
                             onChange={ (e) => checkAll(e)}
-                            disabled={session.user.permissions.length != permissionsLength}
                         />
                         Choose all
                         {permissionsGroup &&

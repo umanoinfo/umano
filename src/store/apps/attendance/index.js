@@ -14,6 +14,7 @@ export const fetchData = createAsyncThunk('appAttendance/fetchData', async param
     let timeStart = new Date('01/01/2007 ' + e.timeIn)
     let timeEnd = new Date('01/01/2007 ' + e.timeOut)
     e.time  = ((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2) ;
+    e.name = e.employee_info?.[0]?.firstName + ' ' + e.employee_info?.[0]?.lastName ;
   })
 
   return response.data

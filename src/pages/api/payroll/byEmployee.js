@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayroll')) {
-    return  res.status(401).json({ success: false, message: 'Not Auth' })
+    return  res.status(401).json({ success: false, message: ['Not Auth'] })
   }
 
   const company = await client
@@ -187,35 +187,35 @@ export default async function handler(req, res) {
     ])
     .toArray()
   if(!employee || !employee[0] ){
-    return res.status(404).json({success: false, message : 'No employee with this ID'});
+    return res.status(404).json({success: false, message : ['No employee with this ID']});
   }
   employee = employee[0] ; 
 
-  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
-    let message = [] ;
-    message.push('Error: define Sarlary Formula for this employee first');
-
-    return res.status(400).json({success: false, message: message }); 
-  }
+  
 
   let lumpySalary = 0;
+  employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / ( 1000 * 60 * 60 * 24  ));
   if(employee && employee.salaryFormulas_info && employee.salaryFormulas_info[0]  && employee.salaryFormulas_info[0].type == 'Flexible'){
     employee.flexible = true ;
     lumpySalary = Number(req.body.data.lumpySalary) ;
     employee.salaries_info = [ { lumpySalary: lumpySalary } ] ;
-    employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / ( 1000 * 60 * 60 * 24  ));
   }
   else if(employee && employee.salaries_info && employee.salaries_info[0] && employee.salaries_info[0].lumpySalary){
     lumpySalary = employee.salaries_info[0].lumpySalary;
   }
-  employee.dailySalary = lumpySalary / 30 ;
+  lumpySalary= Number(lumpySalary);
+  employee.dailySalary =Number(lumpySalary / 30) ;
 
   //   -------------------------- Assume Compensations -----------------------------------------
-
+  
   if (employee.compensations_array) {
           let totalCompensations = 0
+          console.log('b' , employee.compensations_array);
           employee.compensations_array.map(comp => {
             let totalValue = 0
+            comp.fixedValue = Number(comp.fixedValue);
+            comp.percentageValue = Number(comp.percentageValue);
+            employee.totalWorkingDaysCount = Number(employee.totalWorkingDaysCount)
             
             if (comp.type == 'Monthly') {
               totalValue = totalValue + Number(comp.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30))
@@ -223,15 +223,14 @@ export default async function handler(req, res) {
             }
             if (comp.type == 'Daily') {
               totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
-              totalValue =
-                totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
+              totalValue = totalValue + Number((comp.percentageValue * employee.totalWorkingDaysCount * employee.dailySalary) / 100)
             }
-            comp.totalValue = totalValue
+            comp.totalValue = Number(totalValue)
             totalCompensations = totalCompensations + totalValue
           })
-  
           employee.totalCompensations = totalCompensations
   }
+  
   
         //   -------------------------- Assume Deduction ----------------------------------------------
   
@@ -239,7 +238,9 @@ export default async function handler(req, res) {
           let totalDeductions = 0
           employee.deductions_array.map(deduction => {
             let totalValue = 0
-  
+            deduction.fixedValue = Number(deduction.fixedValue);
+            deduction.percentageValue = Number(deduction.percentageValue);
+            employee.totalWorkingDaysCount = Number(employee.totalWorkingDaysCount)
             if (deduction.type == 'Monthly') {
               totalValue = totalValue + Number(deduction.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30));
               totalValue = totalValue + Number((deduction.percentageValue * lumpySalary) / 100) * Math.ceil((employee.totalWorkingDaysCount/ 30))
@@ -278,21 +279,32 @@ export default async function handler(req, res) {
 
   /// -------------------------- Validation ----------------------------------------------------
   // console.log(employee.totalEmployeeDeductions , employee.totalEmployeeRewards , employee.totalCompensations , employee.totalDeductions , lumpySalary);
+  employee.absenseDays =0  ;
   if(employee.flexible){
     return res.status(200).json({success: true , data : [employee] }) ;
   }
   
-  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0]  ){
+  // this here because of flexible
+  if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]|| !employee?.shift_info || !employee?.shift_info[0] || (!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)) || ((!company?.working_days || company?.working_days?.length == 0 ) )){
     let message = [] ;
-    if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info[0]){
+    if(!employee.salaryFormulas_info || ! employee.salaryFormulas_info?.[0]){
       message.push('Error: define Sarlary Formula for this employee first');
     }
-    if(!employee?.shift_info || !employee?.shift_info[0] ){
+    console.log(employee?.shift_info,!employee?.shift_info);
+    if(!employee?.shift_info || !employee?.shift_info?.[0] ){
       message.push('Error: define Shift info for this employee first');
-    }  
+    }
+    
+    if(!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)){
+      message.push('Error: Add salary first (no salary defined)!');
+    }
+    if(!company?.working_days || company?.working_days?.length == 0 ){
+      message.push('Error: define working days for your company');
+    }
     
     return res.status(400).json({success: false, message: message }); 
   }
+ 
 
   let start = new Date(fromDate)
   let end = toDate
@@ -307,7 +319,8 @@ export default async function handler(req, res) {
       return holidayDate[0] + '/' + holidayDate[1] ;      
     })
   }
-
+  employee.absenseDays = 0;
+  let totalWorkingDaysCount =0 ;
   if (employee)
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
 
@@ -390,6 +403,7 @@ export default async function handler(req, res) {
 
 
       // -------------------------------------------------------------
+      
       if(employee?.attendances_info){
         if(!leaveDay){
             employee.attendances_info?.map(att => {
@@ -452,7 +466,10 @@ export default async function handler(req, res) {
             })
           }
         }
-      
+      totalWorkingDaysCount++ ;
+      if(workingDay && !_in && !leaveDay){
+        employee.absenseDays++ ;
+      }
       attendances.push({
         day: weekday[day],
         workingDay: workingDay,
@@ -512,7 +529,7 @@ export default async function handler(req, res) {
     +employee.salaryFormulas_info[0].firstOverTime
   )
 
-  let totalWorkingDaysCount =0 ;
+  
   let totalholidayHours = 0
   let totalEarlyHours = 0 // lateness hours (morning)
   let totalLateHours = 0 // lateness hours (evening)
@@ -520,9 +537,7 @@ export default async function handler(req, res) {
 
   //   ----------------------- Assume Early & Late Hours -------------------------------
   attendances.map(att => {
-    if (att._in) {
-      totalWorkingDaysCount++
-    }
+    
     totalEarlyHours = totalEarlyHours + Number(att.earlyHours)
     totalLateHours = totalLateHours + Number(att.lateHours)
     if (att.holidayDay) {

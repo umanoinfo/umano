@@ -87,7 +87,7 @@ const DeductionsList = () => {
         deductionStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, deductionType, deductionStatus, value])
 
   // ----------------------- Handle ------------------------------

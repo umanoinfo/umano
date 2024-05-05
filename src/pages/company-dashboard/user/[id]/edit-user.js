@@ -34,13 +34,14 @@ import Icon from 'src/@core/components/icon'
 import axios from 'axios'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
+import { fetchData, deleteUser } from 'src/store/apps/company-user'
 
 // ** Store Imports
 import { useDispatch } from 'react-redux'
 import { addUser } from 'src/store/apps/user'
 import { Checkbox, Divider, FormControlLabel, FormGroup, FormLabel, ListItemText, Switch } from '@mui/material'
 import { useRouter } from 'next/router'
+import Loading from 'src/views/loading'
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -73,9 +74,10 @@ const DialogAddUser = ({ id }) => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [type, setType] = useState('manager')
-  const [roles, setRoles] = useState([])
+  let [roles, setRoles] = useState([])
   const [notAuthorized , setNotAuthorized] = useState([])
-  
+  const [roleId , setRoleId ] = useState() ;
+
   const [defaultValues, setDefaultValues] = useState({
     email: '',
     password: '',
@@ -84,26 +86,30 @@ const DialogAddUser = ({ id }) => {
 
   const router = useRouter()
 
-  const getUser =   () => {
-    setLoading(true)
+  const getUser =  async  (resolve) => {
     axios
       .get('/api/company-user/' + id, {})
       .then(function (response) {
         setStatus(response.data.data[0].status)
         setType(response.data.data[0].type)
-        setRoles(response.data.data[0].roles)
+        if(response.data.data[0]?.roles?.[0]){
+          setRoleId(response.data.data[0].roles[0]);
+        }
         reset(response.data.data[0])
-        setLoading(false)
+        resolve()
       })
       .catch(function (error) {
-        setLoading(false)
       })
   }
 
 
-  useEffect(() => {
-    getUser()
-    getRoles()
+  useEffect(async () => {
+    setLoading(true);
+    await new Promise((resolve,reject)=>getUser(resolve))
+    await new Promise((resolve,reject)=>  getRoles(resolve) )
+    setLoading(false);
+      
+  
   }, [])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
@@ -119,13 +125,12 @@ const DialogAddUser = ({ id }) => {
     setChecked(newChecked)
   }
 
-  const getRoles = () => {
-    setLoading(true)
+  const getRoles = async (resolve) => {
     axios
       .get('/api/company-role/', {})
       .then(function (response) {
         setAllRoles(response.data.data)
-        setLoading(false)
+        resolve()
       })
       .catch(function (error) {
         let message = error?.response?.data?.message  || error?.toString();
@@ -134,7 +139,6 @@ const DialogAddUser = ({ id }) => {
           message = 'Error : Failed to fetch Roles (No Permission to view Roles)';
         } 
         toast.error(message , {duration : 5000 , position: 'bottom-right'}) ;
-        setLoading(false)
       })
   }
 
@@ -157,6 +161,10 @@ const DialogAddUser = ({ id }) => {
   const onSubmit = data => {
     setLoading(true)
     data.type = type
+    if(roleId)
+      roles = [roleId] ;
+    else 
+      roles = [];
     data.roles = roles
     data.status = status
     data.updated_at = new Date()
@@ -194,7 +202,10 @@ const DialogAddUser = ({ id }) => {
     }
     setRoles([...roles])
   }
-
+  if(loading){
+    return <Loading header={'please wait'} description={'user info is loading'} />
+  }
+  
   return (
     <>
       <Grid container spacing={6}>
@@ -292,9 +303,16 @@ const DialogAddUser = ({ id }) => {
                           allRoles.map((role, index) => {
                             return (
                               <FormControlLabel
-                                key={role.id}
+                                key={role._id}
                                 control={
-                                  <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} />
+                                  <Checkbox checked={role._id == roleId} onChange={(e)=> {
+                                    if(!e.target.checked)
+                                      setRoleId(undefined)
+                                    else{
+                                      setRoleId(role._id);
+                                    }
+                                  }
+                                  } value={role._id} />
                                 }
                                 label={role.title}
                               />

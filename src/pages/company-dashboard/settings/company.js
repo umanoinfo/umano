@@ -90,7 +90,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Company ------------------------------------
 
   const getCompany =
-    () => {
+  async (resolve) => {
       setLoading(true)
       axios
         .get('/api/company/my-company/' , {})
@@ -115,8 +115,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
             value: state.name
           }))
           setStates(statesDS)
-          setLoading(false)
-
+          resolve()
         })
         .catch(function (error) {
           setLoading(false)
@@ -135,14 +134,20 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     } 
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type1,
         companyStatus,
         q: value
       })
+    ).then(async ()=>{
+      await new Promise((resolve,reject)=> getCompany(resolve))
+      getCountries()
+      setLoading(false);
+ 
+      }
     )
-    getCountries().then(getCompany())
   }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {
@@ -267,7 +272,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
         data.end_at = new Date(formValue.end_at).toISOString().substring(0, 10)
         data.updated_at = new Date()
         axios
-          .post('/api/company/edit-company', {
+          .post('/api/company/edit-my-company', {
             data
           })
           .then(function (response) {

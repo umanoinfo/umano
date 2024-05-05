@@ -125,8 +125,12 @@ const DepartmentList = ({ apiData }) => {
       delete c['parent']
       delete c['updated_at']
       delete c['user_id']
+      delete c['index']
+      delete c['id']
+      delete c['manager']
+
       c.manager = c.user_info.map(v => {
-        return v.name
+      return v.firstName + ' ' + v.lastName 
       })
       c.manager = c.manager.toString()
       delete c['user_info']
@@ -154,7 +158,7 @@ const DepartmentList = ({ apiData }) => {
         departmentStatus,
         q: value
       })
-    ).then( setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, type, departmentStatus, value  ])
 
   const handleClose = () => {

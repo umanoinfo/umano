@@ -127,10 +127,17 @@ const AddEventSidebar = props => {
   }, [UpdateEvent ])
 
   const handleDeleteEvent = () => {
+    setIsLoading(true);
     axios
       .post('/api/event/delete-event', { selectedForm: values })
       .then(function (response) {
-        sendEmails(response.data.data._id  ,  values.type + ' ' + values.title + ' Canceled'), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
+        sendEmails(response.data.data._id  ,  values.type + ' ' + values.title + ' Canceled').then(()=>{
+          handleSidebarClose().then(()=>{
+            setSendingEmails(false), setIsLoading(false)
+            setIsLoading(false);
+            handleAddEventSidebarToggle();
+          })
+        })
       })
       .catch(function (error) {
         // handle error
@@ -157,7 +164,6 @@ const AddEventSidebar = props => {
       
     }
     catch(err){
-      console.log(err);
       toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
     }
     setIsLoading(false)
@@ -196,6 +202,7 @@ const AddEventSidebar = props => {
   const onSubmitUpdate = data => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        setIsLoading(true);
         let data = {}
         data = values
         data.updated_at = new Date()
@@ -208,14 +215,22 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
-            dispatch(fetchEvents())
-            sendEmails(response.data.data._id  , 'Update ' + values.type + ' ' + values.title), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
+            dispatch(fetchEvents()).then(()=>{
+              sendEmails(response.data.data._id  , 'Update ' + values.type + ' ' + values.title).then(()=>{
+
+                handleSidebarClose().then(()=>{
+                  setSendingEmails(false); setIsLoading(false)
+                })
+              })
+
+            })
           })
           .catch(function (error) {
             toast.error('Error : ' + error.response.data.message + ' !', {
               delay: 3000,
               position: 'bottom-right'
             })
+            setIsLoading(false);
           })
       }
     })
@@ -264,6 +279,8 @@ const AddEventSidebar = props => {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
       }).then(res => {
+        setSendingEmails(false);
+
         return res.json()
       })
     } else {
@@ -356,7 +373,7 @@ const AddEventSidebar = props => {
         </Box>
       )}
 
-      {isloading && (
+      {sendingEmails && (
         <Box>
           <Box
             className='sidebar-header'

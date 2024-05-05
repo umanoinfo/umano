@@ -90,7 +90,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Company ------------------------------------
 
   const getCompany =
-    () => {
+    async () => {
       setLoading(true)
       axios
         .get('/api/company/' + id, {})
@@ -124,14 +124,20 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     }
 
   useEffect(() => {
+    setLoading(true);
     dispatch(
       fetchData({
         type1,
         companyStatus,
         q: value
       })
-    )
-    getUsers().then(getCountries()).then(getCompany())
+    ).then(async ()=> {
+      await getUsers()
+      getCountries()
+      getCompany()
+      
+    })
+    
   }, [dispatch, type, companyStatus, value ])
 
   function asyncCheckUsername(name) {
@@ -168,7 +174,12 @@ const DialogAddUser = ({ popperPlacement, id }) => {
       if(!success){
         throw new Error(message);
       }
-      setUsersDataSource(data)
+
+      const users = data.map(user => ({
+        label: user.name + '  (' + user.email + ')',
+        value: user._id
+      }))
+      setUsersDataSource(users)
 
     }
     catch(err){
@@ -195,7 +206,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   // ----------------------------- Get Countries ----------------------------------
 
-  const getCountries =   () => {
+  const getCountries = async  () => {
 
       const countriesDataSource = countries.map(country => ({
         label: country.name,

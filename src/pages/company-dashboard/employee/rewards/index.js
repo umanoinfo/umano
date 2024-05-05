@@ -88,7 +88,7 @@ const DeductionsList = () => {
         rewardStatus: rewardStatus,
         q: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, rewardType, rewardStatus, value])
 
   // ----------------------- Handle ------------------------------

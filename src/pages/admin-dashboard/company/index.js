@@ -143,22 +143,32 @@ const CompaniesList = () => {
     let ex = [...store.data]
 
     ex = ex.map(val => {
-      let c = { ...val }
-      delete c['user_id']
-      delete c['subscriptions_info']
-      delete c['created_at']
-      delete c['country_id']
-      delete c['updated_at']
-      delete c['_id']
-      delete c['logo']
-      delete c['country_info']
+      let c = { 
+        'Name': val.name,
+        'Type': val.type ,
+        'Manager name': val?.user_info?.[0]?.name ,  
+        'Manager email': val?.user_info?.[0]?.email ,
+        'End subscription': val.end_at ,
+        'Status': val.status , 
+        'Deleted' : val.deleted_at ? true : false
+      };
 
-      c['manager name'] = c.user_info.map(v => {
-        return v.name
-      })
-      c['manager name'] = c['manager name'].toString()
+      // delete c['user_id']
+      // delete c['subscriptions_info']
+      // delete c['created_at']
+      // delete c['country_id']
+      // delete c['updated_at']
+      // delete c['_id']
+      // delete c['logo']
+      // delete c['country_info']
 
-      delete c['user_info']
+      // c['manager name'] = c.cuser_info.map(v => {
+      //   return v.name
+      // })
+      // c['manager name'] = c['manager name'].toString()
+
+      // delete c['user_info']
+      
 
       return c
     })
@@ -177,7 +187,7 @@ const CompaniesList = () => {
         companyStatus,
         q: searchValue
       })
-    ).then(setLoading(false) )
+    ).then(()=>setLoading(false) )
 
   }, [dispatch, type, companyStatus, searchValue])
 
@@ -294,7 +304,7 @@ const CompaniesList = () => {
         else{
           throw new Error(res.message) ;
         }
-        dispatch(fetchData({}));
+        dispatch(fetchData({})).then(()=> setLoading(false));
 
       }
       catch(err){
@@ -364,7 +374,7 @@ const CompaniesList = () => {
             {
               row.deleted_at && session && session.user && session.user.permissions.includes('AdminEditCompany') && (
               <MenuItem onClick={handleRestoreRowOptions} sx={{ '& svg': { mr: 2 } }}>
-                <Icon icon='mdi:pencil-outline' fontSize={20} />
+                <Icon icon='mdi:replay' fontSize={20} />
                 Restore
               </MenuItem>
             )}
@@ -378,7 +388,7 @@ const CompaniesList = () => {
             )}
           
           
-          {session && session.user && session.user.permissions.includes('AdminDeleteCompany') && (
+          {!row.deleted_at && session && session.user && session.user.permissions.includes('AdminDeleteCompany') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete

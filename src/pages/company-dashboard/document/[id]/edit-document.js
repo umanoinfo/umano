@@ -85,6 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
             setDocumentTypeCategory(map);
             setAllDocumentTypes(data);
             setLoading(false);
+            resolve()
         }
 
     }catch(err){
@@ -93,8 +94,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  useEffect(()=>{
-    getDocumentTypes();
+  useEffect(async ()=>{
+    await new Promise((resolve,reject)=>getDocumentTypes(resolve));
+    await new Promise((resolve,reject)=>getDocument(resolve));
   },[])
 
   const goToIndex = () => {
@@ -105,7 +107,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ Get Document ------------------------------------
 
-  const getDocument = () => {
+  const getDocument = async (resolve) => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       if (response.data.data[0]) {
@@ -129,15 +131,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
         setFiles(tempArr)
         setFormValue(response.data.data[0])
+        resolve()
       }
 
       setLoading(false)
     })
   } ;
   
-  useEffect(() => {
-    getDocument()
-  }, [ ])
+ 
 
   // ------------------------------ validate Mmodel ------------------------------------
 

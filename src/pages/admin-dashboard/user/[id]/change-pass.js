@@ -67,7 +67,7 @@ const DialogAddUser = ({ id }) => {
         setLoading(false)
       })
       .catch(function (error) {
-        // setLoading(false)
+        setLoading(false)
       })
   } 
 

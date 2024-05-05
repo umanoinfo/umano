@@ -128,7 +128,7 @@ const AllDocumentsList = () => {
         toDate: toDate,
         employee_no: value
       })
-    ).then(setLoading(false))
+    ).then( () => setLoading(false))
   }, [dispatch, fromDate, toDate, value])
 
   const getEmployees = () => {
@@ -462,13 +462,15 @@ const AllDocumentsList = () => {
   }
 
   const updateData = data => {
+    setLoading(true);
     dispatch(
       fetchData({
         fromDate: fromDate,
         toDate: toDate,
         employee_no: value
       })
-    )
+    ).then(()=> setLoading(false))
+    
   }
 
   // ------------------------------- Table columns --------------------------------------------
@@ -490,7 +492,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'noId',
+      field: 'employee_no',
       headerName: 'Id',
       renderCell: ({ row }) => {
         return (
@@ -584,7 +586,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
