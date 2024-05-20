@@ -54,7 +54,7 @@ const Home = () => {
     }).then((data)=>{
       setLoading(false)
       setData(data?.data?.data)
-    })
+    }).catch((err)=>{})
   }
 
 

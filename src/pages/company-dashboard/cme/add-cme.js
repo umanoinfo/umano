@@ -86,7 +86,7 @@ const AddCME = ({  }) => {
       employees.filter(employee => employee != undefined ) ;
       setEmployeesDataSource(arr)
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }
 
   const changeEmployee = (e)=>{

@@ -29,11 +29,11 @@ export default async function handler(req, res) {
       },
       {
         $sort: {
-          created_at: -1
+          end_at: -1
         }
       }
     ])
     .toArray()
 
-    return res.status(200).json({ success: true, data: subscriptions })
+  return res.status(200).json({ success: true, data: subscriptions })
 }

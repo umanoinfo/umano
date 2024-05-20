@@ -217,7 +217,7 @@ const AddFormRequest = ({ popperPlacement, id }) => {
   const getForm = () => {
     axios.get('/api/form/' + id, {}).then(res => {
       setSelectedForm(res.data.data[0])
-    })
+    }).catch((err)=>{})
   }
 
   const handleClose = () => {

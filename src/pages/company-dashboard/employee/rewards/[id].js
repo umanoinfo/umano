@@ -79,7 +79,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
       })
       setEmployeesDataSource(arr)
-    })
+    }).catch((err)=>{})
     setLoading(false)
   }  ;
 

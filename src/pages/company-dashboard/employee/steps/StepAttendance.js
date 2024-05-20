@@ -233,7 +233,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
           })
           setLoading(false)
         })
-      })
+      }).catch((err)=>{})
   }
 
   const changeShift = e => {

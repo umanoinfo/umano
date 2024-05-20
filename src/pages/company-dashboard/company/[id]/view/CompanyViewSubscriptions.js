@@ -114,7 +114,7 @@ const CompanyViewSubscriptions = ({ id }) => {
           q: value
         }
       })
-      .then(res => setData(res.data))
+      .then(res => setData(res.data)).catch((err)=>{})
   }, [value])
 
   // useEffect(() => {

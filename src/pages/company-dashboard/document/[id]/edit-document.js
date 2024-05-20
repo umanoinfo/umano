@@ -135,7 +135,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       }
 
       setLoading(false)
-    })
+    }).catch((err)=>{})
   } ;
   
  
@@ -223,8 +223,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     })
                     .then(res => {
                       
-                    })
-                })
+                    }).catch((err)=>{})
+                }).catch((err)=>{})
               }
               goToIndex()
             })
@@ -265,7 +265,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   
 
   const removeFile = e => {
-    axios.post('/api/file/delete-file', e).then(response => {})
+    axios.post('/api/file/delete-file', e).then(response => {}).catch((err)=>{})
   }
 
   // ------------------------------ View ---------------------------------

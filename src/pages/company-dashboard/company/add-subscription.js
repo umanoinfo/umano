@@ -146,6 +146,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/country')
     const { data } = await res.json()
@@ -154,6 +155,10 @@ const DialogAddUser = ({ popperPlacement }) => {
     const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
     setCountryIndex(index)
     setCountry(data[index])
+    }
+    catch(err){
+        
+    }
   }
 
   const uploadImage = async event => {

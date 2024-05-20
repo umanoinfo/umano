@@ -52,7 +52,7 @@ const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
         position: 'bottom-right'
       })
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }
 
   const handleClose = ()=>{

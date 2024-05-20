@@ -11,7 +11,7 @@ const ServerSideNavItems = () => {
     axios.get('/api/vertical-nav/data').then(response => {
       const menuArray = response.data
       setMenuItems(menuArray)
-    })
+    }).catch((err)=>{})
   }, [])
 
   return { menuItems }

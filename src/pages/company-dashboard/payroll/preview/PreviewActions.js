@@ -88,7 +88,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
         position: 'bottom-right'
       })
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }
 
   if (loading) return <Loading header='Please Wait' description="Payroll Inserting"></Loading>

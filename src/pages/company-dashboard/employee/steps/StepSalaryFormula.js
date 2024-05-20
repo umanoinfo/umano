@@ -91,7 +91,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
           })
           setLoading(false)
         })
-      })
+      }).catch((err)=>{})
   }
 
   const changeSalary = e => {

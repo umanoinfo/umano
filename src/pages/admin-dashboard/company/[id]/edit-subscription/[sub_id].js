@@ -1,7 +1,6 @@
 // ** React Imports
 import { useState, forwardRef, useEffect, useRef, useCallback } from 'react'
 
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -51,6 +50,7 @@ import { useRouter } from 'next/router'
 
 // ** Data
 import { companiesTypes } from 'src/local-db'
+import Loading from 'src/views/loading'
 
 const DialogAddUser = ({ id }) => {
   // ** States
@@ -64,32 +64,48 @@ const DialogAddUser = ({ id }) => {
   const [remarks, setRemarks] = useState()
   const [availableUsers, setAvailableUsers] = useState(1)
   const [formError, setFormError] = useState({})
-  const [formValue, setFormValue] = useState({ availableUsers: 1 })
+  const [formValue, setFormValue] = useState({ availableUsers: 0 })
 
   const dispatch = useDispatch()
   const formRef = useRef()
+  const { sub_id } = router.query
 
   // ---------------------- Get Company ------------------------------------
 
   const getCompany = () => {
-      setLoading(true)
-      axios
-        .get('/api/company/' + id, {})
-        .then(function (response) {
-          setCompany(response.data.data[0])
-          setLoading(false)
-        })
-        .catch(function (error) {
-          setLoading(false)
-        })
-    } 
-  
+    setLoading(true)
+    axios
+      .get('/api/company/' + id, {})
+      .then(function (response) {
+        setCompany(response.data.data[0])
+        setLoading(false)
+      })
+      .catch(function (error) {
+        setLoading(false)
+      })
+  }
 
+  const getSubscription = () => {
+    setLoading(true)
+
+    axios.get('/api/subscription/' + sub_id).then(response => {
+      let subscription = response.data.data
+      setFormValue({
+        start_at: subscription.start_at,
+        end_at: subscription.end_at,
+        availableUsers: subscription.availableUsers,
+        cost: subscription.cost,
+        remarks: subscription.remarks
+      })
+      setStart_at(subscription.start_at);
+      setEnd_at(subscription.end_at);
+      setLoading(false);
+    }).catch((err)=>{})
+  }
   useEffect(() => {
     getCompany()
-  }, [ ])
-  
-
+    getSubscription()
+  }, [])
 
   // ---------------------- Submit ------------------------------------
 
@@ -97,11 +113,12 @@ const DialogAddUser = ({ id }) => {
     setLoading(true)
     let data = formValue
     data.company_id = id
+    data._id = sub_id ;
     data.start_at = start_at
     data.end_at = end_at
-    data.created_at = new Date()
+    data.updated_at = new Date()
     axios
-      .post('/api/subscription/add-subscription', {
+      .post('/api/subscription/' + id + '/edit-subscription' , {
         data
       })
       .then(function (response) {
@@ -123,18 +140,21 @@ const DialogAddUser = ({ id }) => {
   }
 
   const close = () => {
-    router.push('/admin-dashboard/company')
+    router.push('/admin-dashboard/company/' + id + '/view/subscriptions/')
   }
 
   // ---------------------- View ------------------------------------
-
-  return (
+  if(loading){
+    return <Loading description={'subscription is loading'} header={'please wait'}></Loading>
+  }
+  
+return (
     <>
       <Grid item xs={12} sm={7} lg={7}></Grid>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Add Subscription' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
+            <CardHeader title='Edit Subscription' sx={{ pb: 1, '& .MuiCardHeader-title': { letterSpacing: '.1px' } }} />
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 5 }}>
                 <Avatar alt='Avatar' src={company.logo} sx={{ width: 50, height: 50, mr: 2 }} />
@@ -188,13 +208,7 @@ const DialogAddUser = ({ id }) => {
                       <Form.Group controlId='input-group'>
                         <small>Available users</small>
                         <InputGroup size='lg'>
-                          <Form.Control
-                            name='availableUsers'
-                            min='1'
-                            max='100'
-                            type='number'
-                            size='lg'
-                          />
+                          <Form.Control name='availableUsers' min='1' max='100' type='number' size='lg' />
                         </InputGroup>
                       </Form.Group>
                     </Grid>

@@ -56,11 +56,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------ Get Employee -----------------------------------
 
   const getCompensation = async () => {
+    try{
     setLoading(true)
     const res = await fetch('/api/compensation/' + id)
     const { data } = await res.json()
     setFormValue(data[0])
     setLoading(false)
+    
+    }
+    catch(err){
+      
+    }
   }   ;
 
   useEffect(() => {

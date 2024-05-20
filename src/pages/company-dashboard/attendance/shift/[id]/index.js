@@ -69,7 +69,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setFormValue(res.data.data[0])
       setNewStatus(res.data.data[0].status)
       setLoading(false);
-    })
+    }).catch((err)=>{})
   } 
 
   useEffect(() => {

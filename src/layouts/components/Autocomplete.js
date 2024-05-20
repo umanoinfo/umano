@@ -360,7 +360,7 @@ const AutocompleteComponent = ({ hidden, settings }) => {
         } else {
           setOptions([])
         }
-      })
+      }).catch(()=>{})
   }, [searchValue])
   useEffect(() => {
     if (!openDialog) {

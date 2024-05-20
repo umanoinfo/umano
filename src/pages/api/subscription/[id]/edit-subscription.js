@@ -45,6 +45,8 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(company._id) }, { $set: company }, { upsert: false })
 
+    const updated_sub = await client.db().collection('subscriptions').updateOne({_id: ObjectId(id)} , {$set: subscription} , {upsert: false });
+
   // ------------------ logBook ---------------------------------------------------
 
   let log = {

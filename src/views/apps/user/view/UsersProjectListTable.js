@@ -85,7 +85,7 @@ const InvoiceListTable = () => {
           q: value
         }
       })
-      .then(res => setData(res.data))
+      .then(res => setData(res.data)).catch((err)=>{})
   }, [value])
 
   return (

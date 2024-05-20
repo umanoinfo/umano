@@ -26,7 +26,7 @@ const Slip = ({ id }) => {
     axios.get('/api/end-of-service/' + id, {}).then(res => {
       setPayroll(res.data.data[0])
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }, [id] ) ;
 
   useEffect(() => {

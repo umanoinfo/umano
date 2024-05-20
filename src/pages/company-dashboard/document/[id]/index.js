@@ -148,7 +148,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       })
       setSelectedFiles(files)
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }  ;
 
   

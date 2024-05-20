@@ -27,11 +27,16 @@ const AutocompleteAsynchronousRequest = () => {
     }
 
     const fetchData = async () => {
-      const response = await axios.get('/forms/autocomplete')
-      await sleep(1000)
-      const top100Films = await response.data
-      if (active) {
-        setOptions(Object.keys(top100Films).map(key => top100Films[key]))
+      try{
+
+        const response = await axios.get('/forms/autocomplete')
+        await sleep(1000)
+        const top100Films = await response.data
+        if (active) {
+          setOptions(Object.keys(top100Films).map(key => top100Films[key]))
+        }
+      }catch(err){
+        
       }
     }
     fetchData()

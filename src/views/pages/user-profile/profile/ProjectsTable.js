@@ -135,7 +135,7 @@ const ProfileTable = () => {
   useEffect(() => {
     axios.get('/pages/profile-table', { params: { q: value } }).then(response => {
       setData(response.data)
-    })
+    }).catch((err)=>{})
   }, [value])
 
   const handleFilter = val => {
