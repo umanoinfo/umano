@@ -173,7 +173,7 @@ const EditLeave = ({ popperPlacement, id }) => {
         return h
       })
       setDays(temp)
-    })
+    }).catch((err)=>{})
   }
 
   const calcDeffTime = val => {
@@ -410,7 +410,7 @@ const EditLeave = ({ popperPlacement, id }) => {
       setEmployeesFullInfo(employees)
 
       return employees
-    }).then(function(employees) { if(employees){console.log(employees) ; getLeaves(employees)}})
+    }).then(function(employees) { if(employees){console.log(employees) ; getLeaves(employees)}}).catch((err)=>{})
     setLoading(false)
   }
 

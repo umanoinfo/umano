@@ -211,6 +211,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
   // ------------------------------ Get Users ------------------------------------
 
   const getUsers = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/user')
     const { data } = await res.json()
@@ -221,12 +222,17 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     }))
     setUsersDataSource(users)
     setIsLoading(false)
+    }
+    catch(err){
+      
+    }
   }
 
 
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/country')
     const { data } = await res.json()
@@ -244,6 +250,10 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
     setCompanyTypesDataSource(types)
     setCountriesDataSource(countriesDataSource)
+    }
+    catch(err){
+      
+    }
   }
 
   const uploadImage = async event => {

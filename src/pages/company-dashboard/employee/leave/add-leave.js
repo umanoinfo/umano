@@ -150,7 +150,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         setDays(temp)
         console.log('com' , loading) ; 
         resolve();
-      })
+      }).catch((err)=>{})
     )
   }
 
@@ -402,7 +402,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         setEmployeesDataSource(arr)
         setEmployeesFullInfo(employees)
         resolve();
-       })
+       }).catch((err)=>{})
     )
   }
 

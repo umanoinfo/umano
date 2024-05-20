@@ -34,9 +34,7 @@ const CompanyViewSubscriptions = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const handleEditRowOptions = (row) => {
-
-  }
+  const handleEditRowOptions = row => {}
 
   const columns = [
     {
@@ -99,9 +97,9 @@ const CompanyViewSubscriptions = ({ id }) => {
       headerName: '',
       renderCell: ({ row }) => (
         <>
-          {/* <IconButton size='small'  >
-            <Icon icon='mdi:pencil-outline'  fontSize={18} />
-          </IconButton> */}
+          <IconButton size='small'>
+            <Icon icon='mdi:pencil-outline' fontSize={18} onClick={() => routeToEditSubscription(row.id)} />
+          </IconButton>
           {/* <IconButton size='small'>
             <Icon icon='mdi:delete-outline' fontSize={18} />
           </IconButton> */}
@@ -113,10 +111,11 @@ const CompanyViewSubscriptions = ({ id }) => {
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(7)
   const [data, setData] = useState([])
- 
-   // ------------------------------ Get Users ------------------------------------
 
-   const getSubscriptions =   async () => {
+  // ------------------------------ Get Users ------------------------------------
+
+  const getSubscriptions = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/subscription/' + id + '/byCompany')
     const { data } = await res.json()
@@ -129,26 +128,27 @@ const CompanyViewSubscriptions = ({ id }) => {
       e.daysToNow =
         Math.floor((new Date() - new Date(e.start_at)) / 1000 / 24 / 3600) != 0
           ? Math.floor((new Date() - new Date(e.start_at)) / 1000 / 24 / 3600)
-          : 1;
-      e.progressValue = (e.daysToNow / e.subscriptionDays) * 100 ; 
+          : 1
+      e.progressValue = (e.daysToNow / e.subscriptionDays) * 100
     })
     setSubscriptionsDataSource(data)
     setIsLoading(false)
+    }
+    catch(err){
+      
+    }
   }
-   
-
 
   useEffect(() => {
     getSubscriptions()
-  }, [ ])
-  
- 
+  }, [])
+
   const addSubscription = () => {
     router.push('/admin-dashboard/company/' + id + '/add-subscription')
   }
 
-  const routeToEditSubscription = () => {
-    router.push('/admin-dashboard/company/' + id + '/edit-subscription')
+  const routeToEditSubscription = id_ => {
+    router.push('/admin-dashboard/company/' + id + '/edit-subscription/' + id_)
   }
 
   return (
@@ -165,20 +165,19 @@ const CompanyViewSubscriptions = ({ id }) => {
           </Typography>
         </Box>
       </CardContent>
-      {
-        isLoading ?
-        <Loading header='Please Wait' description='Subscriptions are loading'/> :
+      {isLoading ? (
+        <Loading header='Please Wait' description='Subscriptions are loading' />
+      ) : (
         <DataGrid
-        autoHeight
-        rows={subscriptionsDataSource}
-        columns={columns}
-        pageSize={pageSize}
-        disableSelectionOnClick
-        rowsPerPageOptions={[7, 10, 25, 50]}
-        onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-      />
-      }
-     
+          autoHeight
+          rows={subscriptionsDataSource}
+          columns={columns}
+          pageSize={pageSize}
+          disableSelectionOnClick
+          rowsPerPageOptions={[7, 10, 25, 50]}
+          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+        />
+      )}
     </Card>
   )
 }

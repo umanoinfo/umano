@@ -148,7 +148,7 @@ const TableServerSide = () => {
         .then(res => {
           setTotal(res.data.total)
           setRows(loadServerRows(page, res.data.data))
-        })
+        }).catch((err)=>{})
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [page, pageSize]

@@ -87,7 +87,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setFormValue({ working_days: val.working_days, holidays: val.holidays })
       setMyCompany(val)
       setLoading(false);
-    })
+    }).catch((err)=>{})
   }
 
   const default_newHoliday = {

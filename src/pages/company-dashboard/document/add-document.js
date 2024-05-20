@@ -257,8 +257,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     .post('/api/file/add-file', {
                       data
                     })
-                    .then(res => {})
-                })
+                    .then(res => {}).catch((err)=>{})
+                }).catch((err)=>{})
                 goToIndex()
               })
 

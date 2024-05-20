@@ -32,7 +32,7 @@ const UserProfileHeader = () => {
   useEffect(() => {
     axios.get('/pages/profile-header').then(response => {
       setData(response.data)
-    })
+    }).catch((err)=>{})
   }, [])
   const designationIcon = data?.designationIcon || 'mdi:briefcase-outline'
 

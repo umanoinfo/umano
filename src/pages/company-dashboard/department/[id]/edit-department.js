@@ -137,6 +137,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ----------------------------- Get Department ----------------------------------
 
   const getDepartment =   async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/company-department/' + id)
     const { data } = await res.json()
@@ -161,12 +162,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setNewStatus(data[0].status)
     setSelectedDepartment(data)
     setIsLoading(false)
-    } 
+    }
+    catch(err){
+      
+    }
+  } 
 
 
   // ----------------------------- Get Parents ----------------------------------
 
   const getParents =  async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
@@ -192,6 +198,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
     
     setParentsDataSource(parents)
     setIsLoading(false)
+    }
+    catch(err){
+      
+    }
   }  
 
   useEffect(() => {

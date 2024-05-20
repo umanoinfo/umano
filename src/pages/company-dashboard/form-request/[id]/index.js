@@ -102,7 +102,7 @@ const ViewFormRequest = ({ popperPlacement, id }) => {
     axios.get('/api/request/' + id, {}).then(res => {
       setSelectedForm(res.data.data[0])
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }  ;
 
   useEffect(() => {

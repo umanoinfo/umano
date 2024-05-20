@@ -294,7 +294,7 @@ const UserList = () => {
             }
         
             setLoading(false);
-          });
+          }).catch(err=>{});
       };
 
     return (

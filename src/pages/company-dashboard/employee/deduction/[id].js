@@ -82,7 +82,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       })
       setEmployeesDataSource(arr)
       resolve()
-    })
+    }).catch((err)=>{})
   }
 
   const getDeduction = async   (resolve) => {

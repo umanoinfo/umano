@@ -80,7 +80,7 @@ const AddCME = ({  }) => {
       formValue.date = new Date(cme.date) ; 
       setTempFile(cme.url) ;
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }
 
   const changeEmployee = (e)=>{

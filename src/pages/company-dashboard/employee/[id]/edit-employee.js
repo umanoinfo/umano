@@ -242,35 +242,39 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
   const getEmployee = async (tab) => {
     setIsLoading(true);
+    try{
+      const companyIDRes = await axios.get('/api/company/max-employee-id',{}) ;
+      companyEmployeeID = companyIDRes.data.companyEmployeeID ;
+      
+      const res = await fetch('/api/company-employee/' + id )
+      const { data } = await res.json()
+      
+      setSelectedEmployee(data[0])
+      setFormValue(data[0])
+      setCountryID(data[0].countryID)
+      setDateOfBirth(data[0].dateOfBirth)
+      setJoiningDate(data[0].joiningDate)
+      setSourceOfHire(data[0].sourceOfHire)
+      setEmployeeType(data[0].employeeType)
+      setMaritalStatus(data[0].maritalStatus)
+      setAddress(data[0].address)
+      setNewLogo(data[0].logo)
+      setGender(data[0].gender)
+      setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
+      setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
+      if(companyEmployeeID ||  isNaN(data[0].idNo))
+        setNewEmployeeID(Number(data[0].idNo.split(companyEmployeeID)[1]));
+      else
+        setNewEmployeeID(Number(data[0].idNo));
+      setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+      console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
+      if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
+      setPosition(data[0].type);
+      setIsLoading(false)
+    }
+    catch(err){
 
-    const companyIDRes = await axios.get('/api/company/max-employee-id',{}) ;
-    companyEmployeeID = companyIDRes.data.companyEmployeeID ;
-    
-    const res = await fetch('/api/company-employee/' + id )
-    const { data } = await res.json()
-    
-    setSelectedEmployee(data[0])
-    setFormValue(data[0])
-    setCountryID(data[0].countryID)
-    setDateOfBirth(data[0].dateOfBirth)
-    setJoiningDate(data[0].joiningDate)
-    setSourceOfHire(data[0].sourceOfHire)
-    setEmployeeType(data[0].employeeType)
-    setMaritalStatus(data[0].maritalStatus)
-    setAddress(data[0].address)
-    setNewLogo(data[0].logo)
-    setGender(data[0].gender)
-    setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
-    setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
-    if(companyEmployeeID ||  isNaN(data[0].idNo))
-      setNewEmployeeID(Number(data[0].idNo.split(companyEmployeeID)[1]));
-    else
-      setNewEmployeeID(Number(data[0].idNo));
-    setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
-    console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
-    if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
-    setPosition(data[0].type);
-    setIsLoading(false)
+    }
   }
  
   const getMaxEmployeeId = async () => {
@@ -278,7 +282,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
 
     const res = await axios.get('/api/company/max-employee-id',{}).then(function (response) {
       setCompanyEmployeeID(response.data?.companyEmployeeID)
-    })
+    }).catch((err)=>{})
    
     setIsLoading(false)
   }
@@ -306,6 +310,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
   // ----------------------------- Get Options ----------------------------------
 
   const getCountries = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/country')
     const { data } = await res.json()
@@ -342,6 +347,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
     setSourceOfHireDataSource(sourceOfHire)
     setHealthInsuranceTypeDataSource(healthInsuranceTypes)
     setIsLoading(false);
+    
+    }
+    catch(err){
+      
+    }
   }
 
   function asyncCheckUsername(name) {

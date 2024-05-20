@@ -97,7 +97,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       })
       setEmployeesDataSource(arr)
       setLoading(false)
-    })
+    }).catch((err)=>{})
   }
 
   // ------------------------------- Submit --------------------------------------

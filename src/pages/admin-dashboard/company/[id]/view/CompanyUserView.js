@@ -40,6 +40,7 @@ const UserViewOverview = ({ id }) => {
 
   const getUsers =  
       async () => {
+        try{
         setIsLoading(true)
         const res = await fetch('/api/user/' + id + '/byCompany')
         const { data } = await res.json()
@@ -55,6 +56,10 @@ const UserViewOverview = ({ id }) => {
         })
         setUsersDataSource(data)
         setIsLoading(false)
+      }
+      catch(err){
+        
+      }
       } 
   
 

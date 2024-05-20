@@ -140,6 +140,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ----------------------------- Get Parents ----------------------------------
 
   const getParents = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/company-department/')
     const { data } = await res.json()
@@ -162,6 +163,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
       
     setIsLoading(false);
     setParentsDataSource(parents)
+    }
+    catch(err){
+      
+    }
   }
 
   // -------------------------------- Changes -----------------------------------------------

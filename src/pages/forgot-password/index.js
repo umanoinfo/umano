@@ -159,7 +159,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
             setBadtoken(true);
             setError(data.message);
           }
-        });
+        }).catch(err=>{});
     }
        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -188,7 +188,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
         {
             setError(data.message);
         }
-      });
+      }).catch(err=>{});
     } else {
       setErrorReset("Passwords don't matched! or Passwords length 5 character at least");
     }
@@ -215,7 +215,7 @@ const ForgetPassword = ({ csrfToken, providers, query }) => {
         if (data.success) {
           setmailsent(true);
         }
-      });
+      }).catch(err=>{});
   };
 
   // -----------------------------------------------------

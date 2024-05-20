@@ -171,21 +171,27 @@ const AddEmployee = ({ popperPlacement, id }) => {
         else{
           setNewEmployeeID(1)
         }
-      })
+        setIsLoading(false)
+      }).catch((err)=>{})
 
       // setNewEmployeeID()
 
-      setIsLoading(false)
     }
 
   // ------------------------ Get Employee -----------------------------------
 
   const getEmployee = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/company-employee/' + selectedEmployee._id)
     const { data } = await res.json()
     setSelectedEmployee(data[0])
     setIsLoading(false)
+    
+    }
+    catch(err){
+      
+    }
   }
 
   // ----------------------------- Change Country ----------------------------------
@@ -314,6 +320,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
+    try{
     setIsLoading(true)
     const res = await fetch('/api/country')
     const { data } = await res.json()
@@ -350,6 +357,11 @@ const AddEmployee = ({ popperPlacement, id }) => {
     setCountriesDataSource(countriesDataSource)
     setSourceOfHireDataSource(sourceOfHire)
     setHealthInsuranceTypeDataSource(healthInsuranceTypes)
+      
+    }
+    catch(err){
+      
+    }
   }
 
   function asyncCheckUsername(name) {

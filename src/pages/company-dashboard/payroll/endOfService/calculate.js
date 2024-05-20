@@ -247,7 +247,7 @@ const AllDocumentsList = () => {
           setFromDate(res?.data?.data[0]?.joiningDate.toString());
       }
       setLoading(false);
-    })
+    }).catch((err)=>{})
   }
 
   const handleClose = () => {
