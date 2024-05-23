@@ -464,7 +464,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <small>ID No.</small>
                         <InputGroup>
                           {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
-                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> 
+                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e)}} /> 
                           {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
