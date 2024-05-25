@@ -162,7 +162,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
       const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
         setMaxId(response.data?.max)
-        
+        console.log(response.data?.companyEmployeeID);
+        console.log(response?.data?.max);
         setCompanyEmployeeID(response.data?.companyEmployeeID)
         if(response.data?.max){
           const s =  ((response.data?.max)+1)
@@ -899,7 +900,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         let data = {}
         setLoading(true)
         data = formValue
-        data.idNo = companyEmployeeID+newEmployeeID
+        data.idNo = newEmployeeID
         data.countryID = countryID
         data.dateOfBirth = new Date(dateOfBirth)
         data.joiningDate = new Date(joiningDate)
