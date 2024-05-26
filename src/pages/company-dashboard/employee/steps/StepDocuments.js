@@ -158,6 +158,8 @@ const StepDocuments = ({ handleNext, employee }) => {
                 })
                 setForm(false)
                 setLoading(false)
+                setSelectedFile(null);
+                setTempFile(null);
               })
             })
             .catch(function (error) {

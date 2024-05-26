@@ -40,8 +40,8 @@ export default async function handler(req, res) {
   const employeesIds  = [] 
 
   company[0].employees_info.map((emp)=>{
-    if(company[0].employeeID){
-      const newId = emp.idNo.replace(company[0].employeeID, '');
+    if(company?.[0]?.employeeID){
+      const newId = emp.idNo;
       employeesIds.push(+newId)
     }
     else{

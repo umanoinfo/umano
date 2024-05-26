@@ -262,12 +262,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
       setGender(data[0].gender)
       setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
       setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
-      if(companyEmployeeID ||  isNaN(data[0].idNo))
-        setNewEmployeeID(Number(data[0].idNo.split(companyEmployeeID)[1]));
-      else
-        setNewEmployeeID(Number(data[0].idNo));
+      setNewEmployeeID(String(data[0].idNo));
+      
       setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
-      console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
+
+      // console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
       if(tab){setActiveStep(Number(tab))}else{setActiveStep(0)}
       setPosition(data[0].type);
       setIsLoading(false)
@@ -889,6 +888,11 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         setLoading(true)
         
         data = formValue
+        if( isNaN( Number(data.idNo) )){
+          toast.error('Id No must be a number' , {duration:1000 , position:'bottom-right'});
+
+          return ;
+        }
         data._id = id
         data.countryID = countryID
         data.healthType = healthType
@@ -903,7 +907,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
         data.updated_at = new Date()
         data.parentalLeavesBeforeAddingToSystem = parentalLeaves ;
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
-        data.idNo = `${companyEmployeeID}${String(newEmployeeID)}`;
+        data.idNo =  newEmployeeID ;
         data.type = position ; 
 
         axios
