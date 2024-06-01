@@ -52,6 +52,11 @@ export default async function handler(req, res) {
       .db()
       .collection('employeePositions')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
+    console.log(selectedEmployeePosition.isManager);
+    if(selectedEmployeePosition.isManager) {
+      console.log('in')
+      const department = await client.db().collection('departments').updateOne({_id: ObjectId(selectedEmployeePosition.department_id)} , {$set: {user_id : null }} , {upsert: false });
+    }
 
     // ---------------- logBook ----------------
 

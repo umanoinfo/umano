@@ -405,7 +405,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                     />
                   </FormControl>
 
-                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  {/* <FormControl fullWidth sx={{ mb: 3 }}>
                   <Controller
                       name='employeeID'
                       control={control}
@@ -422,7 +422,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                         />
                       )}
                     />
-                  </FormControl>
+                  </FormControl> */}
                   
                   <FormControl fullWidth sx={{ mb: 3 }}>
                     <Controller

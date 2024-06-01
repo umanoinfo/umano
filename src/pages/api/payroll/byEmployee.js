@@ -66,7 +66,7 @@ export default async function handler(req, res) {
           pipeline: [
             
             { $match: {$and:[{ $expr: { $eq: ['$employee_id', '$$employee_id'] } }]} },
-            { $sort: { startChangeDate: -1 } }
+            { $sort: { created_at: -1 } }
           ],
           as: 'salaries_info'
         }
@@ -207,7 +207,7 @@ export default async function handler(req, res) {
   employee.dailySalary =Number(lumpySalary / 30) ;
 
   //   -------------------------- Assume Compensations -----------------------------------------
-  
+  employee.totalSalary = lumpySalary ;
   if (employee.compensations_array) {
           let totalCompensations = 0
           console.log('b' , employee.compensations_array);
@@ -230,7 +230,7 @@ export default async function handler(req, res) {
           })
           employee.totalCompensations = totalCompensations
   }
-  
+  employee.totalSalary += employee.totalCompensations;
   
         //   -------------------------- Assume Deduction ----------------------------------------------
   
@@ -256,8 +256,9 @@ export default async function handler(req, res) {
           })
   
           employee.totalDeductions = totalDeductions
-  }
-  
+  }                                                       
+  employee.totalSalary -= employee.totalDeductions                                                                              ;
+
   //   -------------------------- Assume Employee Deduction -------------------------------------
   let totalEmployeeDeductions = 0
   if (employee.employee_deductions_info) {
@@ -593,7 +594,7 @@ export default async function handler(req, res) {
                   if(cur >= fromDate && cur <= toDate ){
                     intersectedDays++ ;
                   }
-                  cur.setDate(cur.getDay() + 1 ) ;
+                  cur = new Date(cur.getTime() + 1000 * 60 * 60 * 24 ) ;
                 }
                 
                 leave.time = (((shift_out - shift_in)*intersectedDays) / 3600000) 

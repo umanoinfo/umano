@@ -379,11 +379,13 @@ const AllDocumentsList = () => {
               index: index + 1
             }
           })
+         
 
           let ids = employeesList.map(val => {
-            return val.idNo
+            return  String(val.idNo)
           })
-          
+
+
           let unValid = d.filter(val => {
             let i = !val['Emp No.']
             let i2 = !val['Date']
@@ -392,6 +394,7 @@ const AllDocumentsList = () => {
             let i4 = !val['Clock In'] 
             let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM') ;
             let j = !ids.includes(val['Emp No.'].toString())
+            console.log(val['Emp No.'] , ids , ids.includes(val['Emp No.'].toString()));
             let k5 = val['Clock In'] > val['Clock Out'] ;
             val.reasons = []
             val.reasons = i ? [...val.reasons, 'Emp No.'] : val.reasons
@@ -510,7 +513,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.employee_info[0].firstName + ' ' + row.employee_info[0].lastName}
+            {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName}
           </Typography>
         )
       }
@@ -518,7 +521,7 @@ const AllDocumentsList = () => {
     {
       flex: 0.11,
       minWidth: 120,
-      field: 'date',
+      field: 'date',  
       headerName: 'Date',
       renderCell: ({ row }) => {
         return <>{new Date(row.date).toISOString().substring(0, 10)}</>

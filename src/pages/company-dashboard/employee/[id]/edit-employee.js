@@ -546,7 +546,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                     />
                   </Grid>
                   <Grid item sm={6} xs={12} md={6} mt={2}>
-                      <small>Type </small>
+                      <small>CME type </small>
                       <Form.Group
                           controlId='type'
                         >
@@ -753,7 +753,7 @@ const EditEmployee = ({ popperPlacement, id , tab}) => {
                   </Grid>
                 </Grid>
                 <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
-                        Leaves before adding to system:
+                    Remaining Leave Balance:
                   </Typography>
                 <Grid container spacing={3}>
 

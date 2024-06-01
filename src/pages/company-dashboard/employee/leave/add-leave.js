@@ -165,7 +165,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         for(let i =0  ;i < diffDays ;i++){
           if(curDate.getFullYear() == new Date().getFullYear())
             totalDays++;
-          curDate.setDate(curDate.getDay() + 1 ) ; 
+          curDate = new Date(curDate.getDay() + 1 ) ; 
         }
         
         return { ...val, leave_value: totalDays }

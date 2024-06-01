@@ -243,6 +243,17 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Total Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.totalSalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -476,9 +487,18 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       {comp.title} <small> ( {comp.type} )</small>
                     </TableCell>
                     <TableCell>
-                      {(+comp.fixedValue).toLocaleString("en-US")}
-                      <small> AED</small> + {comp.percentageValue}
-                      <small> %</small>
+                      {
+                        comp.fixedValue &&
+                      (+comp.fixedValue).toLocaleString("en-US")
+                      }
+                      {
+                        comp.percentageValue && (<>
+                        <small> AED</small> + {comp.percentageValue}
+                        <small> %</small>
+                        </>
+                        )
+                      }
+                      
                     </TableCell>
                     <TableCell>
                       {(+comp.totalValue).toLocaleString("en-US")}

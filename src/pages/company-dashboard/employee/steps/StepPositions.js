@@ -22,6 +22,7 @@ import { styled } from '@mui/material/styles'
 import {
   Card,
   CardActions,
+  Checkbox,
   Chip,
   Dialog,
   DialogActions,
@@ -139,6 +140,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const [formValue, setFormValue] = useState({})
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
+  const [isManager , SetIsManager] = useState(0);
 
   const inputFile = useRef(null)
 
@@ -232,14 +234,18 @@ const Steppositions = ({ handleNext, employee }) => {
           
           return ;
         }
+        
         setLoading(true)
-        let data = {formValue}
+        let data = {...formValue}
+        console.log(data);
         data.positionTitle = formValue.positionTitle
         data.startChangeType = startChangeType
         data.endChangeType = endChangeType
+        data.isManager = isManager;
         data.department_id = department
         data.startChangeDate = startChangeDate
         data.employee_id = employee._id
+        SetIsManager(0);
         if (endChangeType != 'onPosition') {
           data.endChangeDate = endChangeDate
         } else {
@@ -623,7 +629,7 @@ const Steppositions = ({ handleNext, employee }) => {
                         />
                       </Grid>
                     )}
-                    <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                    <Grid item sm={6} md={6} sx={{ mt: 2 }}>
                       <small>Position Title</small>
                       <Form.Control
                         controlId='positionTitle'
@@ -631,6 +637,20 @@ const Steppositions = ({ handleNext, employee }) => {
                         name='positionTitle'
                         placeholder='position Title'
                       />
+            
+                    </Grid>
+                    <Grid item sm={6} md={6} sx={{ mt:8}}>
+                      <small style={{paddingLeft:'0.3rem'}}> Manager </small>
+                      <Form.Control
+                        controlId='manager'
+                        name='manager'
+                        type='checkbox'
+                        checked={isManager}
+                        onChange={(e)=>{SetIsManager(!isManager) ; console.log(isManager)}}
+                        placeholder='manager'
+                      />
+  
+                     
                     </Grid>
 
                     <Grid container spacing={3}>

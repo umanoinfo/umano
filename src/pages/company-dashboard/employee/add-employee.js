@@ -464,7 +464,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       <Form.Group controlId='idNo'>
                         <small>ID No.</small>
                         <InputGroup>
-                          {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> }
+                          {/* {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> } */}
                           <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e)}} /> 
                           {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
@@ -506,6 +506,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         value={new Date(dateOfBirth)}
                         block
                       />
+                      {/* </MuiLocalizationProvider> */}
                     </Grid>
                     <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
                       <Grid item sm={12} xs={12}>
@@ -558,7 +559,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       />
                     </Grid>
                     <Grid item sm={6} xs={12} md={6} mt={2}>
-                      <small>Type </small>
+                      <small>CME type </small>
                       <Form.Group
                           controlId='type'
                         >
@@ -733,7 +734,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <Form.Control
                           size='sm'
                           oneTap
-                          accepter={DatePicker}
+
+                          // accepter={DatePicker}
                           name='joiningDate'
                           onChange={e => {
                             setJoiningDate(e.toISOString().substring(0, 10))
@@ -764,7 +766,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
-                        Leaves before adding to system:
+                      Remaining Leave Balance:
                   </Typography>
                   <Grid container spacing={3}>
 

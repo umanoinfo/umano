@@ -360,7 +360,7 @@ const AllDocumentsList = () => {
               totalDays++; 
             }
           }
-          curDate.setDate(curDate.getDay() + 1 ) ; 
+          curDate= new Date(curDate.getTime() + 1000 * 60 * 60 * 24 ) ; 
         }
         
         return { ...val, leave_value: totalDays }

@@ -282,7 +282,7 @@ const PayrollList = classNamec => {
       flex: 0.02,
       minWidth: 100,
       field: 'idNo',
-      headerName: 'No.',
+      headerName: 'ID NO  .',
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>

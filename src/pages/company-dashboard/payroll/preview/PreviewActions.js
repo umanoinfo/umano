@@ -32,7 +32,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.email = employee.email
     data.idNo = employee.idNo
     data.employeePositions_info = employee.employeePositions_info
-    data.name = employee.firstName + "" + employee.firstName
+    data.name = employee.firstName + " " + employee.lastName
     data.mobilePhone = employee.mobilePhone
     data.company_id = employee.company_id
     data.joiningDate = employee.joiningDate

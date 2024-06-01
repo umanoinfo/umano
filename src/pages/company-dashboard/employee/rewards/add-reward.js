@@ -91,7 +91,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       let arr = []
       res.data.data.map(employee => {
         arr.push({
-          label: employee.firstName + ' ' + employee.lastName +  '  :  ' + employee.idNo,
+          label: '( ' + employee.idNo + ') ' + employee.firstName + ' ' + employee.lastName ,
           value: employee._id
         })
       })
