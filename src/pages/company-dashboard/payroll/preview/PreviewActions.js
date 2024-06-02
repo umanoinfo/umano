@@ -59,7 +59,9 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     }
     if(employee.flexible){
       data.total = ((
-        Number(data.lumpySalary * (data.totalWorkingDaysCount / 30 )) -
+
+        // Number(data.lumpySalary * (data.totalWorkingDaysCount / 30 )) - old payroll technique
+        Number(data.lumpySalary * (1)) -
         Number(data.totalDeductions) +
         Number(data.totalCompensations) -
         Number(data.totalEmployeeDeductions) +
@@ -69,7 +71,9 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
       data.total  = 
       Number(employee.totalOffDayValue) +
         Number(employee.totalholidayValue) +
-          Number(employee.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) +
+
+          // Number(employee.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) + old payroll technique
+          Number(employee.salaries_info[0].lumpySalary * (1)) +
             Number(employee.totalEarlyValue) -
               Number(employee.totalDeductions) +
                 Number(employee.totalCompensations) -

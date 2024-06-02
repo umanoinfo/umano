@@ -102,8 +102,8 @@ const AllDocumentsList = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false)
   const [SelectedEditRow, setSelectedEditRow] = useState()
 
-  const [fromDate, setFromDate] = useState(new Date())
-  const [toDate, setToDate] = useState(new Date())
+  let [fromDate, setFromDate] = useState(new Date())
+  let [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
 
@@ -419,8 +419,15 @@ const AllDocumentsList = () => {
   const calculate = async (e) => {
     let data = {}
     data._id = e.id
-    data.fromDate = fromDate
-    data.toDate = toDate
+    let from_date = new Date(fromDate.getFullYear() , fromDate.getMonth() , 1 ) ;
+    fromDate = from_date ;
+    setFromDate(from_date);
+    data.fromDate = from_date ;
+    let to_date = new Date(fromDate.getFullYear() , fromDate.getMonth() + 1, 0 );
+    toDate = to_date; 
+    setToDate(to_date);
+    data.toDate = to_date;
+    console.log(fromDate, toDate);
     data.lumpySalary = lumpySalary ;
     if(e.salaryFormulaType == 'Flexible' && lumpySalary == 0 ){
       setSelectedEmployeeID(e);
@@ -905,9 +912,13 @@ const AllDocumentsList = () => {
                   onChange={e => {
                     setFromDate(e)
                   }}
+                  format='MMM/yyyy'
+                  
                 />
               </FormControl>
             </Grid>
+            {/*
+              old payroll technique
             <Grid item sm={2} xs={6}>
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date To</small>
@@ -920,7 +931,7 @@ const AllDocumentsList = () => {
                   }}
                 />
               </FormControl>
-            </Grid>
+            </Grid> */}
           
             {
               done == 1?
