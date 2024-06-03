@@ -21,6 +21,7 @@ const propTypes = {
   onClickChart: PropTypes.func
 }
 
+
 const defaultProps = {
   pan: false,
   zoom: false,
@@ -312,13 +313,16 @@ const ChartContainer = forwardRef(
               collapsible={collapsible}
               multipleSelect={multipleSelect}
               changeHierarchy={changeHierarchy}
-              onClickNode={onClickNode}
+              onClickNode={onClickNode} 
             />
+            
           </ul>
         </div>
+        
         <a className='oc-download-btn hidden' ref={downloadButton} href={dataURL} download={download}>
           &nbsp;
         </a>
+   
     
         <div className={`oc-mask ${exporting ? '' : 'hidden'}`}>
           <i className='oci oci-spinner spinner'></i>

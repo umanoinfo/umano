@@ -91,6 +91,24 @@ export default async function handler(req, res) {
           ]
         }
       },
+      { 
+        $lookup:{ 
+          from:'employees' , 
+          let:{employee_id:{$toObjectId:'$employee_id'}    }, 
+          pipeline:[
+            {
+              $match:
+              {
+                $expr:{
+                  $eq:['$$employee_id','$_id']
+                },
+                $or: [{deleted_at: { $exists: false } } , { deleted_at: null}]
+              }
+            }],
+            as:'employee'     
+        }
+      },
+ 
       {
         $sort: {
           created_at: -1
@@ -99,11 +117,14 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
+
     departments.map((department)=>{
       let  employeesCount = 0
+      department.employees = [] ;
       employees.map((employee)=>{
         if(employee.department_id == department._id){
           employeesCount ++
+          department.employees.push(employee?.employee);
         }
       })
       department.employeesCount = employeesCount

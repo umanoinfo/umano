@@ -78,7 +78,7 @@ const PermissionsTable = () => {
       fetchData({
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, value])
 
   const handleFilter = useCallback(val => {
@@ -211,7 +211,7 @@ const PermissionsTable = () => {
 
   const handleDialogDeleteToggle = () => setDeleteDialogOpen(!deleteDialogOpen)
 
-  const handleAdminRestorePermission  = permission =>{
+  const handleAdminRestorePermission = permission => {
     setDeleteValue(permission)
     setOldTitle(permission.title)
     deletePernission(1);
@@ -233,14 +233,13 @@ const PermissionsTable = () => {
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
           let message = '';
-          if(type == 1  )
-          {
+          if (type == 1) {
             message = 'Permission (' + deleteValue.title + ') Restored Successfully.';
           }
-          else{
+          else {
             message = 'Permission (' + deleteValue.title + ') Deleted Successfully.';
           }
-          toast.success(message , {
+          toast.success(message, {
             delay: 3000,
             position: 'bottom-right'
           })
@@ -254,9 +253,9 @@ const PermissionsTable = () => {
           position: 'bottom-right'
         })
         setLoading(false)
-        
+
       })
-      
+
   }
 
   // -------------------------- Edit Permission ----------------------------------------
@@ -328,7 +327,7 @@ const PermissionsTable = () => {
 
     return <NoPermission header='No Permission' description='No permission to View permissions'></NoPermission>
   }
-  
+
   return (
     <>
       <Grid container spacing={6}>
@@ -551,7 +550,7 @@ const PermissionsTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button onClick={()=>deletePernission(0)}>Yes</Button>
+          <Button onClick={() => deletePernission(0)}>Yes</Button>
           <Button onClick={handleDialogDeleteToggle}>No</Button>
         </DialogActions>
       </Dialog>

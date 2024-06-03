@@ -1,7 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { dragNodeService, selectNodeService } from './service'
-import { Avatar, Box, Card, CardActions, CardContent, Typography } from '@mui/material'
+import {  AccordionDetails, AccordionSummary, Avatar, Box, Card, CardActions, CardContent, Icon, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import MuiAccordion from '@mui/material/Accordion'
+
+const Accordion = styled(MuiAccordion)(({ theme }) => ({
+  boxShadow: 'blue !important',
+  width:'10rem',
+
+  // backgroundColor: '#189ab4' ,
+  // color:'white',
+  border: `1px solid ${theme.palette.divider}`,
+  '&:not(:last-of-type)': {
+    borderBottom: 0
+  },
+  '&:before': {
+    display: 'none',
+    width:'13rem'
+  },
+  '&.Mui-expanded': {
+    // margin: 'auto',
+    // 
+  },
+  '&:first-of-type': {
+    '& .MuiButtonBase-root': {
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8
+    }
+  },
+  '&:last-of-type': {
+    '& .MuiAccordionSummary-root:not(.Mui-expanded)': {
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8
+    }
+  }
+}))
 
 const propTypes = {
   datasource: PropTypes.object,
@@ -30,6 +64,9 @@ const ChartNode = ({
 }) => {
   const node = useRef()
 
+  // const expandIcon = value =>
+  console.log(datasource);
+  
   const [isChildrenCollapsed, setIsChildrenCollapsed] = useState(false)
   const [topEdgeExpanded, setTopEdgeExpanded] = useState()
   const [rightEdgeExpanded, setRightEdgeExpanded] = useState()
@@ -232,6 +269,7 @@ const ChartNode = ({
         ) : (
 
           <Card sx={{ border: 0, boxShadow: 0, color: 'common.white', backgroundColor: '#189ab4' }}>
+            
           <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
             <Typography
               variant='h6'
@@ -241,7 +279,7 @@ const ChartNode = ({
           
             </Typography>
            <Typography  sx={{ color: '#D8D8D8' }}>
-             <small>{datasource.employeesCount} Employees</small> 
+             <small>{datasource.employeesCount ?? 0} Employees</small> 
               </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
@@ -250,8 +288,32 @@ const ChartNode = ({
                   {datasource.mng}
                 </Typography>
               </Box>
-
+            
             </Box>
+            <Accordion slotProps={{textField:{size: 'small', fullWidth: false } }} expandIcon={ '+' }
+            >
+              <AccordionSummary>
+                Employees
+              </AccordionSummary>
+              <AccordionDetails>
+              <Typography>
+                <ul>
+                  {
+                    datasource.employees && 
+                    datasource.employees.map((employee)=>{
+                      employee = employee?.[0];
+
+                      return (
+                        <li key={employee?.id}>
+                          {employee?.firstName + " " + employee?.lastName}
+                        </li>
+                      )
+                    })
+                  }
+                </ul>
+              </Typography>
+            </AccordionDetails>
+            </Accordion>
           </CardContent>
         </Card>
 
