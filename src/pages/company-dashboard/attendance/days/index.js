@@ -55,7 +55,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession()
   const formRef = useRef()
   const [formError, setFormError] = useState()
-
+  
   // --------------forms values--------------------------------
 
   const default_value = {
@@ -92,7 +92,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const default_newHoliday = {
     name: '',
-    date: null
+    fromDate: null ,
+    toDate: null 
   }
   const [NewHoliday, setNewHoliday] = useState({ ...default_newHoliday })
 
@@ -143,8 +144,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
 
   const addHoliday = () => {
-    if (NewHoliday.name && NewHoliday.date) {
-      setFormValue({ ...formValue, holidays: [...formValue.holidays, { ...NewHoliday }] })
+    console.log(NewHoliday);
+    if (NewHoliday.name && NewHoliday.fromDate && NewHoliday.toDate) {
+      let from = new Date(NewHoliday.fromDate);
+      
+      let dates = [];
+      while(from.getTime() <= (new Date(NewHoliday.toDate)).getTime() ){
+        dates.push({date: from , name: NewHoliday.name });
+        console.log(from);
+        from= new Date(from.getTime() + 1000 * 60 * 60 * 24);
+        console.log(from);
+      }
+      setFormValue({ ...formValue, holidays: [...formValue.holidays, ...dates] })
       setNewHoliday({ ...default_newHoliday })
     }
   }
@@ -209,11 +220,22 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                             <DatePicker
                               
-                              value={NewHoliday.date}
+                              value={NewHoliday.fromDate}
                               onChange={e => {
-                                setNewHoliday({ ...NewHoliday, date: e })
+                                setNewHoliday({ ...NewHoliday, fromDate : e })
                               }}
                               views={[ 'month' ,'day' ]}
+                              
+                              slotProps={{ textField: { size: 'small' , fullWidth: true }  }}
+                            />
+                            <DatePicker
+                              
+                              value={NewHoliday.toDate}
+                              onChange={e => {
+                                setNewHoliday({ ...NewHoliday, toDate : e })
+                              }}
+                              views={[ 'month' ,'day' ]}
+                              
                               slotProps={{ textField: { size: 'small' , fullWidth: true }  }}
                             />
                             </LocalizationProvider>
@@ -223,7 +245,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               value={NewHoliday.name}
                               style={{ marginRight: 3, marginLeft: 3 , height:'2.5rem'}}
                               onChange={e => {
-                                setNewHoliday({ ...NewHoliday, name: e })
+                                setNewHoliday({ ...NewHoliday, name : e })
                               }}
                             />
                             <Button variant='outlined' size='small' style={{height:'2.5rem'}} onClick={addHoliday}>

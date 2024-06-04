@@ -31,6 +31,11 @@ export default async function handler(req, res) {
   employeeposition.company_id = myUser.company_id
 
   const newEmployeepositions = await client.db().collection('employeePositions').insertOne(employeeposition)
+  if(employeeposition.isManager){
+    
+    const department = await client.db().collection('departments').updateOne({_id:ObjectId(employeeposition.department_id)} , {$set: {user_id : employeeposition.employee_id }}, {upsert: false });
+    
+  }
   
   const insertedEmployee = await client
     .db()

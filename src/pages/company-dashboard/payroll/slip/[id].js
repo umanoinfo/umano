@@ -354,7 +354,7 @@ return data
             <div style={{ width: '100%', padding: '5px' }} xs={12} md={6}>
               <div style={{ width: '100%', display: 'flex', border: '1px solid black' }}>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>Total</div>
-                <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>{payroll.total} AED</div>
+                <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>{payroll.total.toFixed(2)} AED</div>
               </div>
             </div>
           </div>

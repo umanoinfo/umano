@@ -425,10 +425,10 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                   </Grid>
                   <Grid container spacing={3} mt={1}>
                     <Grid item sm={12} xs={12}>
-                      <Form.Group>
+                      {/* <Form.Group>
                         <small>Employee ID</small>
                         <Form.Control rows={2} name='employeeID' />
-                      </Form.Group>
+                      </Form.Group> */}
                     </Grid>
                   </Grid>
                   <Grid container spacing={3} mt={1}>

@@ -3,8 +3,8 @@ import { useState } from 'react'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
 import MuiAccordion from '@mui/material/Accordion'
+import Typography from '@mui/material/Typography'
 import MuiAccordionSummary from '@mui/material/AccordionSummary'
 import MuiAccordionDetails from '@mui/material/AccordionDetails'
 
@@ -14,15 +14,18 @@ import Icon from 'src/@core/components/icon'
 // Styled component for Accordion component
 const Accordion = styled(MuiAccordion)(({ theme }) => ({
   boxShadow: 'none !important',
+  width:'10rem',
   border: `1px solid ${theme.palette.divider}`,
   '&:not(:last-of-type)': {
     borderBottom: 0
   },
   '&:before': {
-    display: 'none'
+    display: 'none',
+    width:'10rem'
   },
   '&.Mui-expanded': {
-    margin: 'auto'
+    // margin: 'auto',
+    width:'10rem'
   },
   '&:first-of-type': {
     '& .MuiButtonBase-root': {

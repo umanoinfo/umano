@@ -32,7 +32,7 @@ const AccordionSimple = () => {
           aria-controls='panel-content-2'
           expandIcon={<Icon icon='mdi:chevron-down' />}
         >
-          <Typography>Accordion 2</Typography>
+          <Typography>Accordion 2</Typography >
         </AccordionSummary>
         <AccordionDetails>
           <Typography>

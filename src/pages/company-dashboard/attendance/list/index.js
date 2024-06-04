@@ -96,7 +96,7 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedAttendance, setSelectedAttendance] = useState()
   const { data: session, status } = useSession()
-  const [dialogEmployeesList , setDialogEmployeesList] = useState([]);
+  const [dialogEmployeesList, setDialogEmployeesList] = useState([]);
   const myRef = createRef()
 
   const [openEditDialog, setOpenEditDialog] = useState(false)
@@ -107,7 +107,7 @@ const AllDocumentsList = () => {
   const [toDate, setToDate] = useState(new Date())
 
   const [employeesList, setEmployeesList] = useState([])
-  const [notAuthorized , setNotAuthorized] = useState([]) ;
+  const [notAuthorized, setNotAuthorized] = useState([]);
 
   // ** Hooks
 
@@ -128,31 +128,31 @@ const AllDocumentsList = () => {
         toDate: toDate,
         employee_no: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, fromDate, toDate, value])
 
   const getEmployees = () => {
-    
+
     axios.get('/api/company-employee', {}).then(res => {
       setEmployeesList(res.data.data)
       let arr = []
-          res.data.data.map(employee => {
-            arr.push({
-              label: employee.firstName + ' ' + employee.lastName,
-              value: employee.idNo
-            })
-          })
+      res.data.data.map(employee => {
+        arr.push({
+          label: employee.firstName + ' ' + employee.lastName,
+          value: employee.idNo
+        })
+      })
       setDialogEmployeesList(arr)
 
-    }).catch(err=>{
+    }).catch(err => {
       let message = err?.response?.data?.message || err?.toString();
-      if(err.response.status == 401 ) {
-        setNotAuthorized([...notAuthorized , 'ViewEmployee']) ; 
+      if (err.response.status == 401) {
+        setNotAuthorized([...notAuthorized, 'ViewEmployee']);
         message = 'Error: Failed to fetch employees : (No Permission to View Employees';
       }
-      toast.error(message , {duration : 5000 , position: 'bottom-right' }  ) ; 
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
       setDialogEmployeesList([{
-        label: <div style={{color:'red'}}> You do not have permission to view Employees </div> ,
+        label: <div style={{ color: 'red' }}> You do not have permission to view Employees </div>,
         value: undefined
       }])
     })
@@ -244,7 +244,7 @@ const AllDocumentsList = () => {
     }
 
     const handleEditClose = () => {
-  
+
     }
 
     const handleRowView = () => {
@@ -331,18 +331,18 @@ const AllDocumentsList = () => {
     return time
       ? daytime
       : new Date(0, 0, excel_date, 0, -new Date(0).getTimezoneOffset(), 0).toLocaleDateString(navigator.language, {}) +
-          ' ' +
-          daytime
+      ' ' +
+      daytime
   }
 
   const onFileChange = event => {
     /* wire up file reader */
-    if(notAuthorized.includes('ViewEmployee')){
-      toast.error('You do not have permission to view Employees' , {
-        duration:5000 , position:'bottom-right'
+    if (notAuthorized.includes('ViewEmployee')) {
+      toast.error('You do not have permission to view Employees', {
+        duration: 5000, position: 'bottom-right'
       });
-      
-      return ;
+
+      return;
     }
     const target = event.target
 
@@ -367,41 +367,45 @@ const AllDocumentsList = () => {
           let d = data.map((val, index) => {
             let timeOut = excelDateToJSDate(val['Clock Out']);
             let timeIn = excelDateToJSDate(val['Clock In']);
-            
-            timeOut = new Date(timeOut).toLocaleTimeString('en-US' , {hour12: false});
-            timeIn =  new Date(timeIn).toLocaleTimeString('en-US' , {hour12: false});
-            
+
+            timeOut = new Date(timeOut).toLocaleTimeString('en-US', { hour12: false });
+            timeIn = new Date(timeIn).toLocaleTimeString('en-US', { hour12: false });
+            console.log(val['Date'], new Date(val['Date']), ExcelDateToJSDate(val['Date']));
+
             return {
               'Emp No.': val['Emp No.'],
-              'Date': new Date(val['Date']),
-              'Clock Out': timeOut ,
-              'Clock In': timeIn ,
+              'Date': ExcelDateToJSDate(val['Date']),
+              'Clock Out': timeOut,
+              'Clock In': timeIn,
               index: index + 1
             }
           })
 
+
           let ids = employeesList.map(val => {
-            return val.idNo
+            return String(val.idNo)
           })
-          
+
+
           let unValid = d.filter(val => {
             let i = !val['Emp No.']
             let i2 = !val['Date']
-            let i3 = !val['Clock Out'] 
-            let k3 = val['Clock Out'].toUpperCase().includes('AM') || val['Clock Out'].toUpperCase().includes('PM') 
-            let i4 = !val['Clock In'] 
-            let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM') ;
+            let i3 = !val['Clock Out']
+            let k3 = val['Clock Out'].toUpperCase().includes('AM') || val['Clock Out'].toUpperCase().includes('PM')
+            let i4 = !val['Clock In']
+            let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM');
             let j = !ids.includes(val['Emp No.'].toString())
-            let k5 = val['Clock In'] > val['Clock Out'] ;
+            console.log(val['Emp No.'], ids, ids.includes(val['Emp No.'].toString()));
+            let k5 = val['Clock In'] > val['Clock Out'];
             val.reasons = []
             val.reasons = i ? [...val.reasons, 'Emp No.'] : val.reasons
             val.reasons = i2 ? [...val.reasons, 'Date'] : val.reasons
             val.reasons = i3 ? [...val.reasons, 'Clock Out'] : val.reasons
             val.reasons = i4 ? [...val.reasons, 'Clock In'] : val.reasons
             val.reasons = j ? [...val.reasons, 'not in the system'] : val.reasons
-            val.reasons = k3 ? [...val.reasons , 'Clock out should be in 24 hour format'] : val.reasons ;
-            val.reasons = k4 ? [...val.reasons , 'Clock In should be in 24 hour format'] : val.reasons ;
-            val.reasons = k5 ? [...val.reasons , 'Clock In should be smaller than clock out (double check its 24 hour format)'] : val.reasons;
+            val.reasons = k3 ? [...val.reasons, 'Clock out should be in 24 hour format'] : val.reasons;
+            val.reasons = k4 ? [...val.reasons, 'Clock In should be in 24 hour format'] : val.reasons;
+            val.reasons = k5 ? [...val.reasons, 'Clock In should be smaller than clock out (double check its 24 hour format)'] : val.reasons;
 
             return i || i2 || i3 || i4 || j || k3 || k4
           })
@@ -417,15 +421,15 @@ const AllDocumentsList = () => {
     }
   }
 
-  const downloadExcel = ()=>{
-      const link = document.getElementById('attendanceTemplate');
-      link.href = '/attendance.xlsx' ;
-      link.setAttribute('download' , 'attendance-template.xlsx');
-      link.click();
+  const downloadExcel = () => {
+    const link = document.getElementById('attendanceTemplate');
+    link.href = '/attendance.xlsx';
+    link.setAttribute('download', 'attendance-template.xlsx');
+    link.click();
   }
 
   const handleSubmit = data => {
-    data = data.map(({ reasons, index, Name, ...item }) => {      
+    data = data.map(({ reasons, index, Name, ...item }) => {
       return {
         date: new Date(item.Date),
         timeOut: item['Clock Out'],
@@ -444,11 +448,11 @@ const AllDocumentsList = () => {
           delay: 3000,
           position: 'bottom-right'
         })
-        
-        if(response.data.existing && response.data.existing.length > 0){
-          let attendances = new Array(response.data.existing );
+
+        if (response.data.existing && response.data.existing.length > 0) {
+          let attendances = new Array(response.data.existing);
           let str = (attendances.toString());
-          toast.success(`the following attendances already exists at lines: ` + str, {duration:5000 , position:'bottom-right',icon: 'ℹ️', });
+          toast.success(`the following attendances already exists at lines: ` + str, { duration: 5000, position: 'bottom-right', icon: 'ℹ️', });
         }
         setLoading(false)
       })
@@ -469,8 +473,8 @@ const AllDocumentsList = () => {
         toDate: toDate,
         employee_no: value
       })
-    ).then(()=> setLoading(false))
-    
+    ).then(() => setLoading(false))
+
   }
 
   // ------------------------------- Table columns --------------------------------------------
@@ -510,7 +514,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.employee_info[0].firstName + ' ' + row.employee_info[0].lastName}
+            {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName}
           </Typography>
         )
       }
@@ -553,7 +557,7 @@ const AllDocumentsList = () => {
         // var timeEnd = new Date('01/01/2007 ' + row.timeOut)
 
         // return <>{((timeEnd - timeStart) / 60 / 60 / 1000).toFixed(2)}</>
-        return <>{ row.time } </>
+        return <>{row.time} </>
       }
     },
 
@@ -660,7 +664,7 @@ const AllDocumentsList = () => {
                   >
                     Download template
                   </Button>
-                  <a style={{display:'hidden'}} id='attendanceTemplate' />
+                  <a style={{ display: 'hidden' }} id='attendanceTemplate' />
                   <Button type='button' variant='contained' size='small' sx={{ mt: 2 }} onClick={() => importExcel()}>
                     Import
                   </Button>
@@ -740,14 +744,14 @@ const AllDocumentsList = () => {
       ) : null}
       {openAddDialog ? (
         <DialogAddAttendance
-          sx={{zIndex: -1}}
+          sx={{ zIndex: -1 }}
           open={openAddDialog}
           setOpen={setOpenAddDialog}
           attendance={SelectedEditRow}
           updateData={updateData}
           setupdate={setupdate}
           dataSource={dialogEmployeesList}
-          onClose ={(e=>{ console.log("55555")})}
+          onClose={(e => { console.log("55555") })}
         />
       ) : null}
     </Grid>

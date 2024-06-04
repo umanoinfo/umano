@@ -58,7 +58,10 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
   let totalSalary = 0 ;
   if(data.flexible ){
      totalSalary =(( 
-      Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) -
+
+      // Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) -  old payroll technique
+
+      Number(data.salaries_info[0].lumpySalary * ( 1 )) -
       Number(data.totalDeductions) +
       Number(data.totalCompensations) -
       Number(data.totalEmployeeDeductions) +
@@ -67,7 +70,9 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
     totalSalary =  (+(
       Number(data.totalOffDayValue) +
       Number(data.totalholidayValue) +
-      Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) +
+      
+      // Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) + old payroll technique
+      Number(data.salaries_info[0].lumpySalary * ( 1 )) +
       Number(data.totalEarlyValue) -
       Number(data.totalDeductions) +
       Number(data.totalCompensations) -
@@ -243,6 +248,17 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Total Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.totalSalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -399,12 +415,12 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
             <TableBody>
               <TableRow>
                 <TableCell>Monthly Lumpy Salary</TableCell>
-                <TableCell> {(Number(data.totalWorkingDaysCount )/ 30).toFixed(2)} </TableCell>
+                <TableCell> {(1).toFixed(2)} </TableCell>
                 <TableCell>
                   {(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{((+data.salaries_info[0].lumpySalary) * (data.totalWorkingDaysCount / 30)).toFixed(2)}</strong>
+                  <strong>{((+data.salaries_info[0].lumpySalary) * (1)).toFixed(2)}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>
@@ -476,9 +492,18 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       {comp.title} <small> ( {comp.type} )</small>
                     </TableCell>
                     <TableCell>
-                      {(+comp.fixedValue).toLocaleString("en-US")}
-                      <small> AED</small> + {comp.percentageValue}
-                      <small> %</small>
+                      {
+                        comp.fixedValue &&
+                      (+comp.fixedValue).toLocaleString("en-US")
+                      }
+                      {
+                        comp.percentageValue && (<>
+                        <small> AED</small> + {comp.percentageValue}
+                        <small> %</small>
+                        </>
+                        )
+                      }
+                      
                     </TableCell>
                     <TableCell>
                       {(+comp.totalValue).toLocaleString("en-US")}
