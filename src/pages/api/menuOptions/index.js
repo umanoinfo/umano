@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
 
-  if( !token || !token.email ){
+  if (!token || !token.email) {
 
     return res.status(206).json({ success: false, message: 'Not Auth' })
 
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
   const myUser = await client.db().collection('users').findOne({ email: token.email })
 
-  if (!myUser || !myUser.permissions ) {
+  if (!myUser || !myUser.permissions) {
     return res.status(206).json({ success: false, message: 'Not Auth' })
   }
 
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   const options = []
 
   // -------------------------------- Admin Dashboard -------------------------------------
-  let checkPermissions = [] ;
+  let checkPermissions = [];
   if (myUser && myUser.type == 'admin') {
     options.push({ sectionTitle: 'Admin Dashboard' })
   }
@@ -43,25 +43,25 @@ export default async function handler(req, res) {
     })
   }
 
-  const checkForPermissions = (array , permissions )=>{
+  const checkForPermissions = (array, permissions) => {
 
-    return array.map((val)=> permissions.includes(val)).filter((val)=> val == true).length > 0 ; 
+    return array.map((val) => permissions.includes(val)).filter((val) => val == true).length > 0;
   }
 
-  checkPermissions = ['AdminViewRole' , 'AdminViewPermission'] ;
-  
-  if (myUser &&  myUser.type == 'admin' &&  checkForPermissions(checkPermissions , myUser.permissions  )) {
+  checkPermissions = ['AdminViewRole', 'AdminViewPermission'];
+
+  if (myUser && myUser.type == 'admin' && checkForPermissions(checkPermissions, myUser.permissions)) {
     let children = [];
-    if(myUser.permissions.includes('AdminViewPermission')){
+    if (myUser.permissions.includes('AdminViewPermission')) {
       children.push({
         title: 'Permissions',
         path: '/admin-dashboard/permission'
       });
     }
-    if(myUser.permissions.includes('AdminViewRole')){
+    if (myUser.permissions.includes('AdminViewRole')) {
       children.push({
-          title: 'Roles',
-          path: '/admin-dashboard/role'
+        title: 'Roles',
+        path: '/admin-dashboard/role'
       });
     }
     options.push({
@@ -70,27 +70,27 @@ export default async function handler(req, res) {
       children: children
     })
   }
-  if(myUser && myUser.type == 'admin' && (myUser.permissions.includes('AdminViewDocumentType'))){
+  if (myUser && myUser.type == 'admin' && (myUser.permissions.includes('AdminViewDocumentType'))) {
     options.push(
       {
-        title:'Documents',
-        icon:'mdi:checkbox-multiple-blank-outline',
-        path:'/admin-dashboard/documents'
+        title: 'Documents',
+        icon: 'mdi:checkbox-multiple-blank-outline',
+        path: '/admin-dashboard/documents'
       }
     );
 
   }
-  if(myUser.type == 'admin' && !myUser.company_id ){ // if there is no active company you are visiting -> do not show company dashboard
+  if (myUser.type == 'admin' && !myUser.company_id) { // if there is no active company you are visiting -> do not show company dashboard
     return res.status(200).json({ success: true, data: options })
   }
 
   // -------------------------------- Company Dashboard -------------------------------------
-  checkPermissions = ['ViewEmployee' , 'ViewEmployeeLeave' , 'ViewEmployeeReward' , 'ViewEmployeeDeduction' ,
-   'ViewCME' , 'ViewEvent' ,'ViewPayroll' , 'ViewPayrollFormula' , 'ViewPayrollCompensation' , 'ViewPayrollDeduction',
-  'ViewAttendance' , 'ViewAttendanceShift' , 'ViewAttendanceDays','ViewForm' , 'ViewFormRequest' ,
-  'ViewDepartment','ViewDocument','ViewMail','ViewUser','ViewRole','ViewCompany','ViewDocumentType'
-  ] ;
-  if ( (myUser && myUser.company_id) || checkForPermissions(checkPermissions , myUser.permissions)) {
+  checkPermissions = ['ViewEmployee', 'ViewEmployeeLeave', 'ViewEmployeeReward', 'ViewEmployeeDeduction',
+    'ViewCME', 'ViewEvent', 'ViewPayroll', 'ViewPayrollFormula', 'ViewPayrollAllowance', 'ViewPayrollDeduction',
+    'ViewAttendance', 'ViewAttendanceShift', 'ViewAttendanceDays', 'ViewForm', 'ViewFormRequest',
+    'ViewDepartment', 'ViewDocument', 'ViewMail', 'ViewUser', 'ViewRole', 'ViewCompany', 'ViewDocumentType'
+  ];
+  if ((myUser && myUser.company_id) || checkForPermissions(checkPermissions, myUser.permissions)) {
     options.push({ sectionTitle: 'Company Dashboard' })
   }
 
@@ -118,38 +118,37 @@ export default async function handler(req, res) {
       ]
     })
   }
-  checkPermissions = ['ViewEmployee' , 'ViewEmployeeLeave' , 'ViewEmployeeReward' , 'ViewEmployeeDeduction' , 'ViewCME' ] ;
-  if (myUser &&   checkForPermissions(checkPermissions , myUser.permissions  ) )
-  {
-    let children = []; 
-    if(myUser && myUser.permissions.includes('ViewEmployee')){
+  checkPermissions = ['ViewEmployee', 'ViewEmployeeLeave', 'ViewEmployeeReward', 'ViewEmployeeDeduction', 'ViewCME'];
+  if (myUser && checkForPermissions(checkPermissions, myUser.permissions)) {
+    let children = [];
+    if (myUser && myUser.permissions.includes('ViewEmployee')) {
       children.push({
         title: 'List',
         path: '/company-dashboard/employee'
       })
     }
-    if(myUser && myUser.permissions.includes('ViewEmployeeLeave')){
+    if (myUser && myUser.permissions.includes('ViewEmployeeLeave')) {
       children.push({
         title: 'Leave',
         path: '/company-dashboard/employee/leave/'
       })
     }
-    if(myUser && myUser.permissions.includes('ViewEmployeeReward')){
+    if (myUser && myUser.permissions.includes('ViewEmployeeReward')) {
       children.push({
         title: 'Rewards',
         path: '/company-dashboard/employee/rewards/'
       })
     }
-    if(myUser && myUser.permissions.includes('ViewEmployeeDeduction')){
+    if (myUser && myUser.permissions.includes('ViewEmployeeDeduction')) {
       children.push({
         title: 'Deductions',
         path: '/company-dashboard/employee/deduction/'
       })
     }
-    if(myUser && myUser.permissions.includes('ViewCME')){
+    if (myUser && myUser.permissions.includes('ViewCME')) {
       children.push({
-        title :'CME',
-        path:'/company-dashboard/cme'
+        title: 'CME',
+        path: '/company-dashboard/cme'
       })
     }
 
@@ -157,44 +156,47 @@ export default async function handler(req, res) {
       title: 'Employees',
       icon: 'mdi:badge-account-horizontal-outline',
       children: children
-     
+
     })
   }
 
 
   const documents = await client.db().collection('documentTypes')
-        .find({$or:[{company_id:'general' , 
-              $or: [{deleted_at: {$exists:false}} , {deleted_at: null }] },
-              {company_id: myUser.company_id}]
-        }).toArray();
+    .find({
+      $or: [{
+        company_id: 'general',
+        $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }]
+      },
+      { company_id: myUser.company_id }]
+    }).toArray();
 
-  if (myUser &&( myUser.permissions.includes('ViewDocument')  )) {
-    const children = documents.map((document)=>{
-      return {title:document.name , category: document.category , path: `/company-dashboard/document/category/${document.category}/${document.name}`}
+  if (myUser && (myUser.permissions.includes('ViewDocument'))) {
+    const children = documents.map((document) => {
+      return { title: document.name, category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}` }
     });
-    
+
     options.push({
       title: 'Documents',
       icon: 'mdi:checkbox-multiple-blank-outline',
       children: [
         {
           title: 'Third Party Contracts',
-          children: children.filter(val=>val.category == 'Third Party Contracts')
+          children: children.filter(val => val.category == 'Third Party Contracts')
 
         },
         {
           title: 'Entity Documents',
-          children: children.filter(val=>val.category == 'Entity Documents')
+          children: children.filter(val => val.category == 'Entity Documents')
 
         },
         {
           title: 'Ownership Documents',
-          children: children.filter(val=>val.category == 'Ownership Documents')
+          children: children.filter(val => val.category == 'Ownership Documents')
 
         },
         {
           title: 'Vendors',
-          children: children.filter(val=>val.category == 'Vendors')
+          children: children.filter(val => val.category == 'Vendors')
         },
         {
           title: 'All Documents',
@@ -207,16 +209,16 @@ export default async function handler(req, res) {
       ]
     })
   }
-  checkPermissions = ['ViewForm' , 'ViewFormRequest']
-  if (myUser &&  checkForPermissions(checkPermissions , myUser.permissions  ) ) {
+  checkPermissions = ['ViewForm', 'ViewFormRequest']
+  if (myUser && checkForPermissions(checkPermissions, myUser.permissions)) {
     let children = [];
-    if(myUser.permissions.includes('ViewForm')){
+    if (myUser.permissions.includes('ViewForm')) {
       children.push({
         title: 'List',
         path: '/company-dashboard/form/'
       })
     }
-    if(myUser.permissions.includes('ViewFormRequest')){
+    if (myUser.permissions.includes('ViewFormRequest')) {
       children.push({
         title: 'Requests',
         path: '/company-dashboard/form-request/'
@@ -228,23 +230,23 @@ export default async function handler(req, res) {
       children: children
     })
   }
-  
-  checkPermissions = [ 'ViewAttendance' , 'ViewAttendanceShift' , 'ViewAttendanceDays'  ];
-  if (myUser && checkForPermissions(checkPermissions , myUser.permissions  )) {
-    let children = [] ;
-    if(checkForPermissions(['ViewAttendance'] , myUser.permissions)){
+
+  checkPermissions = ['ViewAttendance', 'ViewAttendanceShift', 'ViewAttendanceDays'];
+  if (myUser && checkForPermissions(checkPermissions, myUser.permissions)) {
+    let children = [];
+    if (checkForPermissions(['ViewAttendance'], myUser.permissions)) {
       children.push({
         title: 'List',
         path: '/company-dashboard/attendance/list/'
       })
     }
-    if(checkForPermissions(['ViewAttendanceDays'] , myUser.permissions)){
+    if (checkForPermissions(['ViewAttendanceDays'], myUser.permissions)) {
       children.push({
         title: 'Days',
         path: '/company-dashboard/attendance/days/'
       })
     }
-    if(checkForPermissions(['ViewAttendanceShift'] , myUser.permissions)){
+    if (checkForPermissions(['ViewAttendanceShift'], myUser.permissions)) {
       children.push({
         title: 'Shifts',
         path: '/company-dashboard/attendance/shift/'
@@ -257,32 +259,32 @@ export default async function handler(req, res) {
       children: children
     })
   }
-  checkPermissions= ['ViewPayroll' , 'ViewPayrollFormula' , 'ViewPayrollCompensation' , 'ViewPayrollDeduction'];
-  if (myUser && checkForPermissions(checkPermissions , myUser.permissions)) {
-    let children = [ ] ;
-    if(checkForPermissions(['ViewPayroll'] , myUser.permissions)){
+  checkPermissions = ['ViewPayroll', 'ViewPayrollFormula', 'ViewPayrollAllowance', 'ViewPayrollDeduction'];
+  if (myUser && checkForPermissions(checkPermissions, myUser.permissions)) {
+    let children = [];
+    if (checkForPermissions(['ViewPayroll'], myUser.permissions)) {
       children.push({
         title: 'Payroll List',
         path: '/company-dashboard/payroll/'
       })
       children.push({
-          title: 'End of service',
-          path: '/company-dashboard/payroll/endOfService/'
+        title: 'End of service',
+        path: '/company-dashboard/payroll/endOfService/'
       });
     }
-    if(checkForPermissions(['ViewPayrollFormula'] , myUser.permissions)){
+    if (checkForPermissions(['ViewPayrollFormula'], myUser.permissions)) {
       children.push({
         title: 'Salary Formula',
         path: '/company-dashboard/payroll/formula/'
       });
     }
-    if(checkForPermissions(['ViewPayrollCompensation'] , myUser.permissions)){
+    if (checkForPermissions(['ViewPayrollAllowance'], myUser.permissions)) {
       children.push({
-        title: 'Compensations',
+        title: 'Allowances',
         path: '/company-dashboard/payroll/compensation/'
       });
     }
-    if(checkForPermissions(['ViewPayrollDeduction'] , myUser.permissions)){
+    if (checkForPermissions(['ViewPayrollDeduction'], myUser.permissions)) {
       children.push({
         title: 'Deductions',
         path: '/company-dashboard/payroll/deduction/'
@@ -318,28 +320,28 @@ export default async function handler(req, res) {
 
   // Settings
 
-  if(myUser && myUser.permissions && (myUser.permissions.includes('ViewDocumentType') || myUser.permissions.includes('ViewCompany')  )){
+  if (myUser && myUser.permissions && (myUser.permissions.includes('ViewDocumentType') || myUser.permissions.includes('ViewCompany'))) {
     let children = [];
-    
-    if(myUser.permissions.includes('ViewCompany')){
+
+    if (myUser.permissions.includes('ViewCompany')) {
       children.push({
-        title:'Company',
-        path:'/company-dashboard/settings/company'
+        title: 'Company',
+        path: '/company-dashboard/settings/company'
       });
     }
-    if(myUser.permissions.includes('ViewDocumentType')){
+    if (myUser.permissions.includes('ViewDocumentType')) {
       children.push({
-        title:'Documents',
-        path:'/company-dashboard/settings/document-types'
+        title: 'Documents',
+        path: '/company-dashboard/settings/document-types'
       })
     }
     options.push({
-      title:'Settings',
-      icon:'mdi:settings-outline',
+      title: 'Settings',
+      icon: 'mdi:settings-outline',
       children: children
     })
   }
-  
+
   return res.status(200).json({ success: true, data: options })
 
 }

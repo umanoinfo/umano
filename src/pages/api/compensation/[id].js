@@ -11,10 +11,10 @@ export default async function handler(req, res) {
   const client = await connectToDatabase()
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayrollCompensation')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayrollAllowance')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
-  
+
   const compensations = await client
     .db()
     .collection('compensations')

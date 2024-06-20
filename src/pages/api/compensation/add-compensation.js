@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddPayrollCompensation')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('AddPayrollAllowance')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   compensation.status = 'active'
 
   const newCompensation = await client.db().collection('compensations').insertOne(compensation)
-  
+
   const insertedCompensation = await client
     .db()
     .collection('compensations')

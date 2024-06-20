@@ -306,11 +306,11 @@ const AddEmployee = ({ popperPlacement, id }) => {
       let message = err.toString();
       if (err.toString() == 'Error: Not Auth') {
         setCompensationDataSource([{
-          title: 'You do not have permission to view compensations',
+          title: 'You do not have permission to view allowances',
           type: '.',
           _id: undefined
         }])
-        message = 'Error : Failed to fetch compensations (you do not have permission to view compensations)'
+        message = 'Error : Failed to fetch allowances (you do not have permission to view Allowances)'
       }
       toast.error(message, { duration: 5000, position: 'bottom-right' });
     }

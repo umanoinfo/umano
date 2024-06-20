@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayrollCompensation')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('ViewPayrollAllowance')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { company_id: myUser.company_id },
-            { title: { $regex: req.query.q , '$options' : 'i' } },
+            { title: { $regex: req.query.q, '$options': 'i' } },
             { type: { $regex: req.query.compensationType } },
             { status: { $regex: req.query.compensationStatus } },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
@@ -47,5 +47,5 @@ export default async function handler(req, res) {
     ])
     .toArray()
 
-    return res.status(200).json({ success: true, data: compensations })
+  return res.status(200).json({ success: true, data: compensations })
 }

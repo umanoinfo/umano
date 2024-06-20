@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || !myUser.permissions.includes('DeletePayrollCompensation')) {
+  if (!myUser || !myUser.permissions || !myUser.permissions.includes('DeletePayrollAllowance')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -25,11 +25,11 @@ export default async function handler(req, res) {
   const selectedCompensation = await client
     .db()
     .collection('compensations')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() })
-  if(!selectedCompensation){
-    return res.status(404).json({success: false, message: 'Compensation not found'}); 
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
+  if (!selectedCompensation) {
+    return res.status(404).json({ success: false, message: 'Compensation not found' });
   }
-  
+
   if (selectedCompensation && selectedCompensation.deleted_at) {
     const deleteCompensation = await client
       .db()

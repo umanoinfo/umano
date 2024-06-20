@@ -70,7 +70,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       if (!result.hasError) {
         let data = { ...formValue }
         setLoading(true)
-        setLoadingDescription('Compensations is inserting')
+        setLoadingDescription('Allowance is inserting')
         axios
           .post('/api/compensation/add-compensation', {
             data
@@ -102,7 +102,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // -------------------------------- Routes -----------------------------------------------
 
   const close = () => {
-    router.push('/company-dashboard/payroll/formula/')
+    router.push('/company-dashboard/payroll/compensation/')
   }
 
   const addToFiles = e => {
@@ -117,8 +117,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   if (loading) return <Loading header='Please Wait' description={loadingDescription}></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('AddPayrollCompensation'))
-    return <NoPermission header='No Permission' description='No permission to add payroll compensation'></NoPermission>
+  if (session && session.user && !session.user.permissions.includes('AddPayrollAllowance'))
+    return <NoPermission header='No Permission' description='No permission to add payroll Allowance'></NoPermission>
 
   return (
     <>
@@ -127,16 +127,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/payroll/compensation/'>
-            Compensations
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-            Add Compensation
-            </Typography>
-          </Breadcrumbs>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/payroll/compensation/'>
+                Allowances
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Allowance
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
