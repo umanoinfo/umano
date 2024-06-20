@@ -22,16 +22,16 @@ const Slip = ({ id }) => {
 
 
 
-  const getPayroll = useCallback ( () => {
+  const getPayroll =  () => {
     axios.get('/api/end-of-service/' + id, {}).then(res => {
       setPayroll(res.data.data[0])
       setLoading(false)
     }).catch((err)=>{})
-  }, [id] ) ;
+  } ;
 
   useEffect(() => {
     getPayroll()
-  }, [getPayroll])
+  }, [id])
 
   async function saveCapture() {
     const elemente = printRef.current

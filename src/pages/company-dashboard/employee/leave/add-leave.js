@@ -948,7 +948,7 @@ const AddLeave = ({ popperPlacement, id }) => {
           </Box>
           <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-              {daysDuration  && <> Duration : <> <strong>{daysDuration}</strong> Day</></>}
+              {daysDuration && formValue.date_from && formValue.date_to  && <> Duration : <> <strong>{daysDuration}</strong> Day</></>}
             </Typography>
           </Box>
 

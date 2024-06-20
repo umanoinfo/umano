@@ -758,7 +758,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                 <Grid container spacing={3}>
 
                   <Grid item sm={12} xs={12} md={6} mt={2}>
-                    <small> Unpaid Leaves</small>
+                    {/* <small> Unpaid Leaves</small> */}
                     <Form.Control
                       size='sm'
                       name='unpaidLeavesBeforeAddingToSystem'

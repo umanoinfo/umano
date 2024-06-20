@@ -311,7 +311,7 @@ const AllDocumentsList = () => {
         if(employee?.salaryFormulas_info[0]?.type )
           salaryFormulaType =  employee.salaryFormulas_info[0].type;
         arr.push({
-          label: employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
+          label: employee.idNo + ' - ' + employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
           value: {id: employee._id , salaryFormulaType }
         })
 
