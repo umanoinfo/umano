@@ -97,11 +97,14 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
   const [formValue, setFormValue] = useState(default_value)
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    await getEmployees()
-    await getMyCompany()
-    setLoading(false);
+    getEmployees().then(()=>{
+      getMyCompany().then(()=>{
+        setLoading(false);
+      })
+
+    })
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

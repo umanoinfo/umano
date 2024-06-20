@@ -94,9 +94,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  useEffect(async ()=>{
-    await new Promise((resolve,reject)=>getDocumentTypes(resolve));
-    await new Promise((resolve,reject)=>getDocument(resolve));
+  useEffect( ()=>{
+    (new Promise((resolve,reject)=>getDocumentTypes(resolve))).then(()=>{
+       (new Promise((resolve,reject)=>getDocument(resolve))).then(()=>{
+        
+       })
+
+    })
   },[])
 
   const goToIndex = () => {

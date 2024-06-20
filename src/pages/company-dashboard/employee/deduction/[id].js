@@ -102,11 +102,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
       })
   } ;
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    await new Promise((resolve,reject)=>getEmployees(resolve) )
-    await new Promise((resolve,reject)=>getDeduction(resolve) )
-    setLoading(false);
+    (new Promise((resolve,reject)=>getEmployees(resolve) )).then(()=>{
+      ( new Promise((resolve,reject)=>getDeduction(resolve) )).then(()=>{
+        setLoading(false);
+      })
+    })
   }, [ ])
 
   // ------------------------------- Submit --------------------------------------

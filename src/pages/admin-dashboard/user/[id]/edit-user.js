@@ -135,11 +135,13 @@ const DialogAddUser = ({ id }) => {
 
 
 
-  useEffect(async () => {
+  useEffect( () => {
     setLoading(true);
-    await new Promise((resolve,reject)=>getUser(resolve))
-    await new Promise((resolve,reject)=>getRoles(resolve))
-    setLoading(false);
+    (new Promise((resolve,reject)=>getUser(resolve))).then(()=>{
+      new Promise((resolve,reject)=>getRoles(resolve)).then(()=>{
+        setLoading(false);
+      })
+    })
   }, [id])
 
   const [checked, setChecked] = useState(['wifi', 'location'])
