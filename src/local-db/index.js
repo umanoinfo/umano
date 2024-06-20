@@ -59,7 +59,8 @@ export const SalaryChange = [
   { title: 'Financial increment', value: 'Financial increment' },
   { title: 'Violations', value: 'Violations' },
   { title: 'Fines', value: 'Fines' },
-  { title: 'other', value: 'other' }
+  { title: 'other', value: 'other' },
+  { title:'Joining Salary' , value:'Joining Salary'}
 ]
 
 export const EventType = [

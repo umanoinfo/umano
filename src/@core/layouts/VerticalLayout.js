@@ -112,7 +112,8 @@ const VerticalLayout = props => {
               </Typography>
               <Spinner sx={{ height: '100%' }} />
             </Box>
-          </Box>}
+          </Box>
+      }
 
       {status == 'unauthenticated' && (
         <>

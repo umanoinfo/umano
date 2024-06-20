@@ -177,7 +177,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
                 {grossSalary > 0 && (
                   <Box sx={{ display: 'flex', mb: 2.7 }}>
                     <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                      lumpy salary:
+                      Basic salary:
                     </Typography>
                     <Typography variant='body2'>{employee?.salaries_info[0]?.lumpySalary} AED</Typography>
                   </Box>

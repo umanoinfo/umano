@@ -38,7 +38,7 @@ const EmployeeViewSalary = ({ employee }) => {
       flex: 0.15,
       minWidth: 100,
       field: 'lumpySalary',
-      headerName: 'Lumpy',
+      headerName: 'Basic Salary',
       renderCell: ({ row }) => (
         <Typography variant='body2'>{new Intl.NumberFormat().format(row.lumpySalary)} AED</Typography>
       )

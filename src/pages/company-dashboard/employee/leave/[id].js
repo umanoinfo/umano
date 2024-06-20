@@ -130,7 +130,7 @@ const EditLeave = ({ popperPlacement, id }) => {
           let employee = employees.find(emp => emp._id == response.data.data[0].employee_id)
           setSelectedEmployee({ ...employee })
 
-          setFormValue({ ...val })
+          setFormValue({ ...val , date_to: val.date_to , date_from: val.date_from });
 
           val = employee.leaves_info.map(e => {
             e.id = e._id

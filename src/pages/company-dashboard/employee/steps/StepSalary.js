@@ -232,7 +232,7 @@ const StepSalary = ({ handleNext, employee }) => {
 
   const validateMmodel = Schema.Model({
     // overtimeSalary: StringType().isRequired('Overtime Salary is required.'),
-    lumpySalary: StringType().isRequired('lumpy Salary is required.')
+    lumpySalary: StringType().isRequired('Basic Salary is required.')
   })
 
   // ------------------------------- Submit --------------------------------------
@@ -530,7 +530,7 @@ const StepSalary = ({ handleNext, employee }) => {
                 )}
                 {action == 'edit' && (
                   <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
-                    Edit Position
+                    Edit Salary
                   </Typography>
                 )}
                 <Form
@@ -581,7 +581,7 @@ const StepSalary = ({ handleNext, employee }) => {
                           }}
                           value={salaryChange}
                           data={salaryChanges}
-                          defaultValue={'other'}
+                          defaultValue={'Joining Salary'}
                           block
                         />
                       </Grid>

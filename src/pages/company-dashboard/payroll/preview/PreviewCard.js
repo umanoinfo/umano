@@ -414,7 +414,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>Monthly Lumpy Salary</TableCell>
+                <TableCell>Monthly Basic Salary</TableCell>
                 <TableCell> {(1).toFixed(2)} </TableCell>
                 <TableCell>
                   {(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")} <small>AED</small>
@@ -610,21 +610,21 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
 
             </Grid>
             <Grid item xs={12} sm={5} lg={3} sx={{ mb: { sm: 0, xs: 4 }, order: { sm: 2, xs: 1 } }}>
-              <CalcWrapper>
+              {/* <CalcWrapper>
                 <Typography variant='body2'>Subtotal:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
                   {totalSalary}
                 </Typography>
-              </CalcWrapper>
-              <CalcWrapper>
+              </CalcWrapper> */}
+              {/* <CalcWrapper>
                 <Typography variant='body2'>Tax:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
                   0%
                 </Typography>
-              </CalcWrapper>
-              <Divider
+              </CalcWrapper> */}
+              {/* <Divider
                 sx={{ mt: theme => `${theme.spacing(5)} !important`, mb: theme => `${theme.spacing(3)} !important` }}
-              />
+              /> */}
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>

@@ -937,7 +937,7 @@ const AllDocumentsList = () => {
               done == 1?
                   <Grid item sm={2} xs={12}>
                     <FormControl  size='sm' sx={{ mt: 0 }}>
-                      <small>Lumpy Salary </small>
+                      <small>Basic Salary </small>
                       <TextField
                         value={lumpySalary}
                         onChange={e => {
