@@ -133,8 +133,8 @@ const StepSalary = ({ handleNext, employee }) => {
           userStatus,
           q: value
         })
-      ).then( () => setLoading(false))
-    }else{
+      ).then(() => setLoading(false))
+    } else {
       return (
         <>
           <Typography
@@ -154,8 +154,8 @@ const StepSalary = ({ handleNext, employee }) => {
         </>
       )
     }
-    
-  }, [dispatch, employeeId, userStatus, value,employee])
+
+  }, [dispatch, employeeId, userStatus, value, employee])
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -192,11 +192,11 @@ const StepSalary = ({ handleNext, employee }) => {
       .then(response => {
         let data = {}
         data = {}
-        data = {...selectedSalary}
+        data = { ...selectedSalary }
         data.updated_at = new Date()
         data.file = response.data
         delete data.department_info
-        
+
         axios
           .post('/api/employee-salary/edit-salary', {
             data
@@ -216,17 +216,17 @@ const StepSalary = ({ handleNext, employee }) => {
               delay: 3000,
               position: 'bottom-right'
             })
-              setLoading(false)
-              })
-              setFileLoading(false)
-            })
-            .catch(function (error) {
-              toast.error('Error : ' + error.response + ' !', {
-                delay: 3000,
-                position: 'bottom-right'
-              })
-            })
-      }
+            setLoading(false)
+          })
+        setFileLoading(false)
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+      })
+  }
 
   //-------------------------- validate -----------------------------------
 
@@ -242,7 +242,7 @@ const StepSalary = ({ handleNext, employee }) => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
-        data = {...formValue}
+        data = { ...formValue }
         console.log(startChangeDate)
         data.startChangeDate = new Date(startChangeDate)
         data.employee_id = employee._id
@@ -301,20 +301,20 @@ const StepSalary = ({ handleNext, employee }) => {
     })
   }
 
-  const colorChip =(data)=>{
-    if(data > 0)
-    return 'success'
-    if(data < 0)
-    return 'error'
+  const colorChip = (data) => {
+    if (data > 0)
+      return 'success'
+    if (data < 0)
+      return 'error'
   }
 
-  const labelChip =(data)=>{
-    if(data > 0)
-    return (data + '%')
-    if(data < 0)
-    return (data + '%')
-    if(data == '-')
-    return ('-')
+  const labelChip = (data) => {
+    if (data > 0)
+      return (data + '%')
+    if (data < 0)
+      return (data + '%')
+    if (data == '-')
+      return ('-')
   }
 
   const handleAdd = () => {
@@ -372,17 +372,17 @@ const StepSalary = ({ handleNext, employee }) => {
       field: 'lumpySalary',
       headerName: 'Basic Salary',
       renderCell: ({ row }) => (
-      <>
-        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>{Number((Number(row.lumpySalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
-        <CustomChip
+        <>
+          <Typography variant='body2' sx={{ fontWeight: 900, fontSize: '0.85rem' }}>{Number((Number(row.lumpySalary)).toFixed(2)).toLocaleString("en-US")}</Typography>
+          <CustomChip
             skin='light'
             size='small'
             label={labelChip(row.lumpySalaryPercentageChange)}
             color={colorChip(row.lumpySalaryPercentageChange)}
             sx={{ ml: 4.5, height: 20, fontSize: '0.65rem', fontWeight: 500 }}
           />
-          
-      </>
+
+        </>
       )
     },
     {
@@ -390,11 +390,11 @@ const StepSalary = ({ handleNext, employee }) => {
       minWidth: 100,
       field: 'total_salary',
       headerName: 'Total Salary',
-      renderCell: ({ row }) => ( 
-      <>
-        <Typography variant='body2' sx={{ fontWeight: 900 , fontSize: '0.85rem'}}>
-          {row.totalSalary ??  '-' }  
-        </Typography>
+      renderCell: ({ row }) => (
+        <>
+          <Typography variant='body2' sx={{ fontWeight: 900, fontSize: '0.85rem' }}>
+            {Number(row.totalSalary).toLocaleString() ?? '-'}
+          </Typography>
         </>)
     },
 
@@ -420,8 +420,8 @@ const StepSalary = ({ handleNext, employee }) => {
       minWidth: 100,
       field: 'date',
       headerName: 'Date',
-      renderCell: ({ row }) => 
-      <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString()}</Typography>
+      renderCell: ({ row }) =>
+        <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString()}</Typography>
     },
     {
       flex: 0.15,
@@ -437,46 +437,46 @@ const StepSalary = ({ handleNext, employee }) => {
           )}
 
           {!fileLoading && (<span>
-          <IconButton
-            size='small'
-            onClick={e => {
-              handleEdit(row)
-            }}
-          >
-            <Icon icon='mdi:pencil-outline' fontSize={18} />
-          </IconButton>
-          <IconButton
-            size='small'
-            onClick={e => {
-              handleDelete(row)
-            }}
-          >
-            <Icon icon='mdi:delete-outline' fontSize={18} />
-          </IconButton>
-          {row.file && (
-            <IconButton size='small' onClick={() => open_file(row.file)}>
-              <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
+            <IconButton
+              size='small'
+              onClick={e => {
+                handleEdit(row)
+              }}
+            >
+              <Icon icon='mdi:pencil-outline' fontSize={18} />
             </IconButton>
-          )}
-          <IconButton
-            size='small'
-            onClick={e => {
-              openUploadFile(row)
-            }}
-          >
-            <Icon icon='mdi:upload-outline' fontSize={18} />
-          </IconButton>
+            <IconButton
+              size='small'
+              onClick={e => {
+                handleDelete(row)
+              }}
+            >
+              <Icon icon='mdi:delete-outline' fontSize={18} />
+            </IconButton>
+            {row.file && (
+              <IconButton size='small' onClick={() => open_file(row.file)}>
+                <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
+              </IconButton>
+            )}
+            <IconButton
+              size='small'
+              onClick={e => {
+                openUploadFile(row)
+              }}
+            >
+              <Icon icon='mdi:upload-outline' fontSize={18} />
+            </IconButton>
 
-        </span>)}
+          </span>)}
         </>
       )
     }
   ]
 
   if (!employee) {
-    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+    return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
-  if(loading){
+  if (loading) {
     return <Loading header='Please Wait' description='Salaries is loading' />
   }
 
@@ -487,19 +487,19 @@ const StepSalary = ({ handleNext, employee }) => {
           {/* --------------------------- Emirates  View ------------------------------------ */}
 
           <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
-            <Box 
-               sx={{
-                  mb: 2.5,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}>
-                <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Salary</Typography>
-                <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+            <Box
+              sx={{
+                mb: 2.5,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+              <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Salary</Typography>
+              <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
                 Add Employee Salary
-                </Button>
-              </Box>
+              </Button>
+            </Box>
 
             <Card xs={12} md={12} lg={12}>
               <DataGrid
@@ -542,11 +542,16 @@ const StepSalary = ({ handleNext, employee }) => {
                       <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                         <small>Monthly Basic Salary</small>
                         <Form.Control
-                          type='number'
+                          type='text'
                           controlId='lumpySalary'
                           size='lg'
                           name='lumpySalary'
                           placeholder='Basic Salary'
+                          onChange={(e) => {
+                            e = String(e).replaceAll(',', '');
+                            e = Number(e);
+                            setFormValue({ ...formValue, lumpySalary: Number(e).toLocaleString() })
+                          }}
                         />
                       </Grid>
                       {/* <Grid item sm={12} md={6} sx={{ mt: 2 }}>
@@ -667,17 +672,17 @@ const StepSalary = ({ handleNext, employee }) => {
         </Grid>
       </Grid>
       <input
-          id='file'
-          ref={inputFile}
-          hidden
-          type='file'
-          onChange={e => {
-            uploadFile(e)
-          }}
-          name='file'
-        />
+        id='file'
+        ref={inputFile}
+        hidden
+        type='file'
+        onChange={e => {
+          uploadFile(e)
+        }}
+        name='file'
+      />
     </Grid>
-    
+
   )
 }
 

@@ -125,13 +125,13 @@ const Steppositions = ({ handleNext, employee }) => {
 
   const [endChangeType, setEndChangeType] = useState('onPosition')
   const [endChangeDate, setEndChangeDate] = useState(new Date().toISOString().substring(0, 10))
-  const [notAuthorized , setNotAuthorized] = useState([]) ; 
+  const [notAuthorized, setNotAuthorized] = useState([]);
   const dispatch = useDispatch()
 
   const store = useSelector(state => state.employeePosition)
   const departmentStore = useSelector(state => state.companyDepartment)
   const [department, setDepartment] = useState()
-  const [openFileDialog , setOpenFileDialog] = useState(false)
+  const [openFileDialog, setOpenFileDialog] = useState(false)
 
   const [tempFile, setTempFile] = useState()
   const newinputFile = useRef(null)
@@ -140,33 +140,33 @@ const Steppositions = ({ handleNext, employee }) => {
   const [formValue, setFormValue] = useState({})
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
-  const [isManager , SetIsManager] = useState(0);
+  const [isManager, SetIsManager] = useState(0);
 
   const inputFile = useRef(null)
 
-  
+
 
   // ----------------------- bulid -------------------------------------------
 
   useEffect(() => {
     if (employee) {
-      
+
       setLoading(true);
       setEmployeeId(employee._id)
-        dispatch(
+      dispatch(
         fetchData({
           employeeId: employee._id,
           userStatus,
           q: value
         })
-      ).then( () => {
-        getDepartments().then(()=>{
+      ).then(() => {
+        getDepartments().then(() => {
           setLoading(false)
         })
       })
       setEndChangeType('onPosition')
     }
-  }, [dispatch, employeeId, userStatus, value  ])
+  }, [dispatch, employeeId, userStatus, value])
 
   // ----------------------------- Get Options ----------------------------------
 
@@ -179,25 +179,25 @@ const Steppositions = ({ handleNext, employee }) => {
       }))
 
       setDepartmentsDataSource(arr)
-      if(response.data.data && response.data.data.length > 0 )
+      if (response.data.data && response.data.data.length > 0)
         setDepartment(response.data.data[0]._id)
-    }).catch((err)=>{
-      let message = '' ; 
-      if(err.response.status == 401 ){
-        message = 'Error: You do not have permission to View Departments' ;
-        setNotAuthorized([...notAuthorized , 'ViewDepartment']);
+    }).catch((err) => {
+      let message = '';
+      if (err.response.status == 401) {
+        message = 'Error: You do not have permission to View Departments';
+        setNotAuthorized([...notAuthorized, 'ViewDepartment']);
         setDepartmentsDataSource([{
-          label: <div style={{color:'red'}}> You do not have permission to View Departments </div>
-          , value: undefined 
+          label: <div style={{ color: 'red' }}> You do not have permission to View Departments </div>
+          , value: undefined
         }]);
       }
-      else if(err?.response?.data?.message ){
-        message = err.response.data.message; 
+      else if (err?.response?.data?.message) {
+        message = err.response.data.message;
       }
       else {
         message = err.toString();
       }
-      toast.error(message , {duration: 5000 , position: 'bottom-right'}) ;
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
     })
 
     const positionChangeStartTypes = PositionChangeStartTypes.map(type => ({
@@ -213,7 +213,7 @@ const Steppositions = ({ handleNext, employee }) => {
       value: type.value
     }))
 
-    positionChangeEndTypes.push({label: 'On Position',value: 'onPosition' })
+    positionChangeEndTypes.push({ label: 'On Position', value: 'onPosition' })
 
     setPositionChangeEndTypes(positionChangeEndTypes)
     setEndChangeType(positionChangeEndTypes[0].value)
@@ -229,14 +229,14 @@ const Steppositions = ({ handleNext, employee }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        if(!department){
-          toast.error('Department is a required field', {duration: 5000 , position:'bottom-right'});
-          
-          return ;
+        if (!department) {
+          toast.error('Department is a required field', { duration: 5000, position: 'bottom-right' });
+
+          return;
         }
-        
+
         setLoading(true)
-        let data = {...formValue}
+        let data = { ...formValue }
         console.log(data);
         data.positionTitle = formValue.positionTitle
         data.startChangeType = startChangeType
@@ -251,7 +251,7 @@ const Steppositions = ({ handleNext, employee }) => {
         } else {
           delete data.endChangeDate
         }
-        
+
         if (action == 'add') {
           data.file = tempFile
           data.created_at = new Date()
@@ -307,6 +307,7 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const handleAdd = () => {
+    setEndChangeType('onPosition');
     setSelectedPosition(null)
     setSelectedPosition({})
     setFormValue({})
@@ -360,11 +361,11 @@ const Steppositions = ({ handleNext, employee }) => {
       .then(response => {
         let data = {}
         data = {}
-        data = {...selectedPosition}
+        data = { ...selectedPosition }
         data.updated_at = new Date()
         data.file = response.data
         delete data.department_info
-        
+
         axios
           .post('/api/employee-position/edit-position', {
             data
@@ -384,16 +385,16 @@ const Steppositions = ({ handleNext, employee }) => {
               delay: 3000,
               position: 'bottom-right'
             })
-              setLoading(false)
-              })
-              setFileLoading(false)
-            })
-            .catch(function (error) {
-              toast.error('Error : ' + error.response + ' !', {
-                delay: 3000,
-                position: 'bottom-right'
-              })
-            })
+            setLoading(false)
+          })
+        setFileLoading(false)
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+      })
   }
 
   const uploadNewFile = async event => {
@@ -456,37 +457,37 @@ const Steppositions = ({ handleNext, employee }) => {
     setOpenFileDialog(true)
   }
 
-  const deleteFile =()=>{
+  const deleteFile = () => {
 
     setLoading(true)
-  
-    let data = {...formValue}
-      delete data.file
-      data._id = selectedPosition._id
-      data.updated_at = new Date()
-      axios
-        .post('/api/employee-position/delete-positionFile', {
-          data
-        })
-        .then(function (response) {
-          dispatch(fetchData({ employeeId: employee._id })).then(() => {
-            toast.success('Position (' + data.positionTitle + ') deleted file successfully.', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
-            setForm(false)
-            setOpenFileDialog(false)
-            setLoading(false)
-          })
-        })
-        .catch(function (error) {
-          toast.error('Error : ' + error.response.data.message + ' !', {
+
+    let data = { ...formValue }
+    delete data.file
+    data._id = selectedPosition._id
+    data.updated_at = new Date()
+    axios
+      .post('/api/employee-position/delete-positionFile', {
+        data
+      })
+      .then(function (response) {
+        dispatch(fetchData({ employeeId: employee._id })).then(() => {
+          toast.success('Position (' + data.positionTitle + ') deleted file successfully.', {
             delay: 3000,
             position: 'bottom-right'
           })
+          setForm(false)
+          setOpenFileDialog(false)
           setLoading(false)
         })
-        
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response.data.message + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+        setLoading(false)
+      })
+
   }
 
   const columns = [
@@ -521,26 +522,26 @@ const Steppositions = ({ handleNext, employee }) => {
         <>
           <span>
             <IconButton
-            size='small'
-            onClick={e => {
-              handleEdit(row)
-            }}
-          >
-            <Icon icon='mdi:pencil-outline' fontSize={18} />
-          </IconButton>
-          <IconButton
-            size='small'
-            onClick={e => {
-              handleDelete(row)
-            }}
-          >
-            <Icon icon='mdi:delete-outline' fontSize={18} />
-          </IconButton>
-          {row.file && (
-                <IconButton size='small' onClick={() => open_file(row.file)}>
-                  <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
-                </IconButton>
-              )}
+              size='small'
+              onClick={e => {
+                handleEdit(row)
+              }}
+            >
+              <Icon icon='mdi:pencil-outline' fontSize={18} />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={e => {
+                handleDelete(row)
+              }}
+            >
+              <Icon icon='mdi:delete-outline' fontSize={18} />
+            </IconButton>
+            {row.file && (
+              <IconButton size='small' onClick={() => open_file(row.file)}>
+                <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
+              </IconButton>
+            )}
           </span>
         </>
       )
@@ -548,10 +549,10 @@ const Steppositions = ({ handleNext, employee }) => {
   ]
 
   if (!employee) {
-    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+    return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
-  if(loading){
-    return <Loading header='Please Wait' description='Positions are loading'/>
+  if (loading) {
+    return <Loading header='Please Wait' description='Positions are loading' />
   }
 
   return (
@@ -563,28 +564,28 @@ const Steppositions = ({ handleNext, employee }) => {
 
           <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
 
-              <Box 
-               sx={{
-                  mb: 2.5,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}>
-                <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
-                <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+            <Box
+              sx={{
+                mb: 2.5,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+              <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
+              <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
                 Add Employee Position
-                </Button>
-              </Box>
-              <DataGrid
-                autoHeight
-                rows={store.data}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[7, 10, 25, 50]}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-              />
+              </Button>
+            </Box>
+            <DataGrid
+              autoHeight
+              rows={store.data}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[7, 10, 25, 50]}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
 
           </Grid>
 
@@ -595,12 +596,12 @@ const Steppositions = ({ handleNext, employee }) => {
               <Card xs={12} md={12} lg={12} sx={{ px: 1, pb: 8 }}>
                 {action == 'add' && (
                   <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
-                    Add New Position 
+                    Add New Position
                   </Typography>
                 )}
                 {action == 'edit' && (
                   <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
-                    Edit Position 
+                    Edit Position
                   </Typography>
                 )}
                 <Form
@@ -612,8 +613,8 @@ const Steppositions = ({ handleNext, employee }) => {
                   model={validateMmodel}
                 >
                   <Grid container sx={{ mt: 3, px: 5 }}>
-                  
-                    {departmentsDataSource   && (
+
+                    {departmentsDataSource && (
                       <Grid item sm={12} xs={12} mt={2}>
                         <small>Department</small>
                         <SelectPicker
@@ -637,20 +638,20 @@ const Steppositions = ({ handleNext, employee }) => {
                         name='positionTitle'
                         placeholder='position Title'
                       />
-            
+
                     </Grid>
-                    <Grid item sm={6} md={6} sx={{ mt:8}}>
-                      <small style={{paddingLeft:'0.3rem'}}> Manager </small>
+                    <Grid item sm={6} md={6} sx={{ mt: 8 }}>
+                      <small style={{ paddingLeft: '0.3rem' }}> Manager </small>
                       <Form.Control
                         controlId='manager'
                         name='manager'
                         type='checkbox'
                         checked={isManager}
-                        onChange={(e)=>{SetIsManager(!isManager) ; console.log(isManager)}}
+                        onChange={(e) => { SetIsManager(!isManager); console.log(isManager) }}
                         placeholder='manager'
                       />
-  
-                     
+
+
                     </Grid>
 
                     <Grid container spacing={3}>
@@ -690,6 +691,7 @@ const Steppositions = ({ handleNext, employee }) => {
                           size='sm'
                           name='endChangeType'
                           onChange={e => {
+                            console.log(e)
                             setEndChangeType(e)
                           }}
                           value={endChangeType}
@@ -714,20 +716,20 @@ const Steppositions = ({ handleNext, employee }) => {
                         </Grid>
                       )}
 
-                      
+
                     </Grid>
 
                     <Grid item sm={12} xs={12} mt={4} mb={10}>
-                          <Typography sx={{ pt: 6 }}>
-                            File :
-                            {tempFile && action=="add" && !fileLoading &&(<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
-                            {tempFile && action=="add" && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {selectedPosition?.file && !fileLoading && (<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(selectedPosition?.file)} >{selectedPosition?.file}</a></span>)}
-                            {selectedPosition?.file && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {selectedPosition && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
-                            {!fileLoading && action=="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openNewUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
-                            {fileLoading && <small style={{paddingLeft:'20px' , fontStyle:'italic' , color:'blue'}}>Uploading ...</small>}
-                          </Typography>
+                      <Typography sx={{ pt: 6 }}>
+                        File :
+                        {tempFile && action == "add" && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
+                        {tempFile && action == "add" && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
+                        {selectedPosition?.file && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(selectedPosition?.file)} >{selectedPosition?.file}</a></span>)}
+                        {selectedPosition?.file && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
+                        {selectedPosition && !fileLoading && action != "add" && <Chip label='Upload' variant='outlined' size="small" color='primary' sx={{ mx: 2 }} onClick={() => openUploadFile()} icon={<Icon icon='mdi:upload-outline' />} />}
+                        {!fileLoading && action == "add" && <Chip label='Upload' variant='outlined' size="small" color='primary' sx={{ mx: 2 }} onClick={() => openNewUploadFile()} icon={<Icon icon='mdi:upload-outline' />} />}
+                        {fileLoading && <small style={{ paddingLeft: '20px', fontStyle: 'italic', color: 'blue' }}>Uploading ...</small>}
+                      </Typography>
                     </Grid>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 3 }}>
@@ -754,7 +756,7 @@ const Steppositions = ({ handleNext, employee }) => {
                           </Button>
                         </>
                       )}
-                      {loading &&<LinearProgress />}
+                      {loading && <LinearProgress />}
                     </Box>
                   </Grid>
                 </Form>
@@ -763,26 +765,26 @@ const Steppositions = ({ handleNext, employee }) => {
           </Grid>
 
           <input
-              id='file'
-              ref={inputFile}
-              hidden
-              type='file'
-              onChange={e => {
-                uploadFile(e)
-              }}
-              name='file'
-            />
+            id='file'
+            ref={inputFile}
+            hidden
+            type='file'
+            onChange={e => {
+              uploadFile(e)
+            }}
+            name='file'
+          />
 
-              <input
-              id='newfile'
-              ref={newinputFile}
-              hidden
-              type='file'
-              onChange={e => {
-                uploadNewFile(e)
-              }}
-              name='file'
-            />
+          <input
+            id='newfile'
+            ref={newinputFile}
+            hidden
+            type='file'
+            onChange={e => {
+              uploadNewFile(e)
+            }}
+            name='file'
+          />
 
           {/* -------------------------- Clinician  ------------------------------------- */}
           <Dialog
@@ -810,28 +812,28 @@ const Steppositions = ({ handleNext, employee }) => {
           </Dialog>
 
           <Dialog
-              open={openFileDialog}
-              disableEscapeKeyDown
-              aria-labelledby='alert-dialog-title'
-              aria-describedby='alert-dialog-description'
-              onClose={(event, reason) => {
-                if (reason !== 'backdropClick') {
-                  handleClose()
-                }
-              }}
-            >
-              <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
-              <DialogContent>
-                <DialogContentText id='alert-dialog-description'>
-                  Are you sure , you want to delete file{' '}
-                  <span className='bold'>{selectedPosition?.file && selectedPosition?.file}</span>
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions className='dialog-actions-dense'>
-                <Button onClick={deleteFile}>Yes</Button>
-                <Button onClick={() => setOpenFileDialog(false)}>No</Button>
-              </DialogActions>
-            </Dialog>
+            open={openFileDialog}
+            disableEscapeKeyDown
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+            onClose={(event, reason) => {
+              if (reason !== 'backdropClick') {
+                handleClose()
+              }
+            }}
+          >
+            <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you sure , you want to delete file{' '}
+                <span className='bold'>{selectedPosition?.file && selectedPosition?.file}</span>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions className='dialog-actions-dense'>
+              <Button onClick={deleteFile}>Yes</Button>
+              <Button onClick={() => setOpenFileDialog(false)}>No</Button>
+            </DialogActions>
+          </Dialog>
 
         </Grid>
       </Grid>

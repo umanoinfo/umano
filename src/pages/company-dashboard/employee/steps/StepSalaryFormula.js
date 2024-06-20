@@ -25,7 +25,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   const [selectedSalaryFormula, setSelectedSalaryFormula] = useState()
   const [selectedSalaryFormulaID, setSelectedSalaryFormulaID] = useState()
   const [tabValue, setTabValue] = useState('CompensationAndDeductions')
-  const [tabs , setTabs ] = useState([])
+  const [tabs, setTabs] = useState([])
 
 
   // ----------------------- build ------------------------------------
@@ -34,7 +34,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     if (employee) {
       getOptions()
     }
-       // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ----------------------------- Get Options ----------------------------------
@@ -43,10 +43,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     let tempSalary = []
     let tempCompensations = []
     let tempDeductions = []
-    
+
     if (salaryFormula) {
       salaryFormula.map(e => {
-        tempSalary.push({ label: e.title, value: e._id , type: e.type })
+        tempSalary.push({ label: e.title, value: e._id, type: e.type })
       })
       setSalaryFormulaOptions(tempSalary)
       setSelectedSalaryFormula(salaryFormula.find(x => x._id == employee.salary_formula_id))
@@ -91,22 +91,22 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
           })
           setLoading(false)
         })
-      }).catch((err)=>{})
+      }).catch((err) => { })
   }
 
   const changeSalary = e => {
     let salaryFormula_ = salaryFormula.find(x => x._id == e);
-  
-    let tabs_ =[ 
-      {value: 'EndOfService' , label: 'End of service'},
-      {value: 'Leave' , label: 'Leave'},
-      {value: 'Absence' , label: 'Absence'},
-      {value: 'Over Time' , label: 'Over Time'},
+
+    let tabs_ = [
+      { value: 'EndOfService', label: 'End of service' },
+      { value: 'Leave', label: 'Leave' },
+      { value: 'Absence', label: 'Absence' },
+      { value: 'Over Time', label: 'Over Time' },
 
     ];
 
-    if(salaryFormula_.type == 'Flexible'){
-      tabs_.push({value: 'CompensationAndDeductions' , label: 'Compensation & Deductions'});
+    if (salaryFormula_.type == 'Flexible') {
+      tabs_.push({ value: 'CompensationAndDeductions', label: 'Compensation & Deductions' });
     }
     setTabs(tabs_)
     setSelectedSalaryFormula(salaryFormula_)
@@ -122,14 +122,14 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   }
 
   const handleChange = (event, newValue) => {
-    console.log(event , newValue) ;
+    console.log(event, newValue);
     setTabValue(newValue)
   }
 
   // ------------------------------- handle Edit --------------------------------------
 
   if (!employee) {
-    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+    return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
 
   return (
@@ -138,8 +138,8 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
         <Grid container spacing={1}>
           {/* --------------------------- View ------------------------------------ */}
           <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}
-            onClick={()=>router.push('/company-dashboard/payroll/formula')}
-            style={{cursor:'pointer'}}
+            onClick={() => router.push('/company-dashboard/payroll/formula')}
+            style={{ cursor: 'pointer' }}
           >
             Salary Formula
           </Typography>
@@ -150,9 +150,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
             <small >Change Salary Formula</small>
             <SelectPicker
               data={salaryFormulaOptions}
-              value={selectedSalaryFormulaID}
+
+              // value={selectedSalaryFormulaID}
               onChange={e => {
-            
+
                 changeSalary(e)
               }}
               block
@@ -164,9 +165,9 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     <Tab value='Over Time' label='Over Time' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
                     <Tab value='Absence' label='Absence' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
                     <Tab value='Leave' label='Leave' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
-                    <Tab value='EndOfService' label='End of service' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'}/>
-                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions'  />
-                   
+                    <Tab value='EndOfService' label='End of service' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
+                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions' />
+
 
                     {/* { 
                        tabs.map(val=>{
@@ -175,7 +176,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     } */}
                   </TabList>
                   <TabPanel value='Over Time'>
-                    <Typography sx={{  mt: 5, mb:5 }}>Over Time</Typography>
+                    <Typography sx={{ mt: 5, mb: 5 }}>Over Time</Typography>
                     <Grid item sm={12} md={4}>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                         <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
@@ -185,7 +186,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.firstOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                        Hour/s
+                          Hour/s
                         </Typography>
                       </Box>
                       {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -219,7 +220,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.holidayOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                        Hour/s
+                          Hour/s
                         </Typography>
                       </Box>
                       <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -230,7 +231,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                           <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.weekendOverTime}</Typography>
                         )}
                         <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                        Hour/s
+                          Hour/s
                         </Typography>
                       </Box>
                     </Grid>
@@ -239,7 +240,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='Absence'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={6}>
-                        <Typography sx={{ mt: 5, mb:5 }}>Absence Days</Typography>
+                        <Typography sx={{ mt: 5, mb: 5 }}>Absence Days</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Justified :
@@ -250,7 +251,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Day/s
+                            Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -263,10 +264,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Day/s
+                            Day/s
                           </Typography>
                         </Box>
-                        
+
                       </Grid>
                       <Grid item sm={12} md={6}>
                         <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
@@ -280,7 +281,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Hour/s
+                            Hour/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -293,7 +294,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Hour/s
+                            Hour/s
                           </Typography>
                         </Box>
                       </Grid>
@@ -304,11 +305,11 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='Leave'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={6}>
-                        <Typography sx={{ mt: 5, mb:5 }}>Leave</Typography>
-     
+                        <Typography sx={{ mt: 5, mb: 5 }}>Leave</Typography>
+
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Paid Leave :
+                            Paid Leave :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.paidLeave && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -316,12 +317,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Unpaid Leave :
+                            Unpaid Leave :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.unpaidLeave && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -329,17 +330,17 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Sick Leaves :
+                            Sick Leaves :
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          &emsp;&emsp; From 1 to 15
+                            &emsp;&emsp; From 1 to 15
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom1To15 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -347,12 +348,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          &emsp;&emsp; From 16 to 30
+                            &emsp;&emsp; From 16 to 30
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom16To30 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -360,12 +361,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          &emsp; &emsp; From 31 to 90
+                            &emsp; &emsp; From 31 to 90
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.sickLeaveFrom31To90 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -373,7 +374,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -391,12 +392,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         </Box> */}
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Parental Leaves :
+                            Parental Leaves :
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                           &emsp;&emsp; From 1 to 45
+                            &emsp;&emsp; From 1 to 45
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom1To45 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -404,12 +405,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          &emsp;&emsp; From 46 to 60
+                            &emsp;&emsp; From 46 to 60
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom46To60 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -417,12 +418,12 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          &emsp;&emsp; From 61 to 105
+                            &emsp;&emsp; From 61 to 105
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.parentalLeaveFrom61To105 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -430,7 +431,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          %
+                            %
                           </Typography>
                         </Box>
                       </Grid>
@@ -442,7 +443,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='EndOfService'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
-                        <Typography sx={{ mt: 5, mb:5 }}>End of service compensation</Typography>
+                        <Typography sx={{ mt: 5, mb: 5 }}>End of service compensation</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             From 1 to 5 Hour/s :
@@ -453,7 +454,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Day/s
+                            Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -466,7 +467,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                             </Typography>
                           )}
                           <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                          Day/s
+                            Day/s
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -512,9 +513,9 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
               </Grid>
             )}
 
-        
+
             <Box sx={{ display: 'flex', alignItems: 'right', minHeight: 40, mt: 8 }}>
-              {!loading &&  (
+              {!loading && (
                 <>
                   <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }} disabled={!selectedSalaryFormula?._id}  >
                     Save

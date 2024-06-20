@@ -70,7 +70,7 @@ import StepDocuments from './steps/StepDocuments'
 import StepPositions from './steps/StepPositions'
 import StepAttendance from './steps/StepAttendance'
 import StepSalaryFormula from './steps/StepSalaryFormula'
-import {EmployeesPositions} from 'src/local-db';
+import { EmployeesPositions } from 'src/local-db';
 
 // ** Styled Components
 import StepperWrapper from 'src/@core/styles/mui/stepper'
@@ -115,12 +115,12 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [healthType, setHealthType] = useState()
   const [newLogo, setNewLogo] = useState()
   const [dateOfBirth, setDateOfBirth] = useState(new Date().toISOString().substring(0, 10))
-  const [joiningDate , setJoiningDate] = useState(new Date().toISOString().substring(0, 10))
+  const [joiningDate, setJoiningDate] = useState(new Date().toISOString().substring(0, 10))
   const [newStatus, setNewStatus] = useState('active')
   const [maritalStatus, setMaritalStatus] = useState()
   const [employeeType, setEmployeeType] = useState()
   const [sourceOfHire, setSourceOfHire] = useState()
-  const [position , setPosition] = useState('Dentist') 
+  const [position, setPosition] = useState('Dentist')
 
   const [gender, setGender] = useState('male')
   const [formError, setFormError] = useState({})
@@ -129,7 +129,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [companyEmployeeID, setCompanyEmployeeID] = useState()
   const [newEmployeeID, setNewEmployeeID] = useState()
   const formRef = useRef()
-  const idNoRef = useRef() ;
+  const idNoRef = useRef();
 
   const [deductionDataSource, setDeductionDataSource] = useState()
   const [compensationDataSource, setCompensationDataSource] = useState()
@@ -146,7 +146,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const value = ''
   const type1 = ''
 
-  useEffect( () => {
+  useEffect(() => {
     getCountries()
     getShifts()
     getSalaryFormula()
@@ -157,41 +157,41 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   // ------------------------ Get MaxEmployeeId -----------------------------------
 
-    const getMaxEmployeeId = async () => {
-      setIsLoading(true)
+  const getMaxEmployeeId = async () => {
+    setIsLoading(true)
 
-      const res = axios.get('/api/company/max-employee-id',{}).then(function (response) {
-        setMaxId(response.data?.max)
-        console.log(response.data?.companyEmployeeID);
-        console.log(response?.data?.max);
-        setCompanyEmployeeID(response.data?.companyEmployeeID)
-        if(response.data?.max){
-          const s =  ((response.data?.max)+1)
-          setNewEmployeeID(s)
-        }
-        else{
-          setNewEmployeeID(1)
-        }
-        setIsLoading(false)
-      }).catch((err)=>{})
+    const res = axios.get('/api/company/max-employee-id', {}).then(function (response) {
+      setMaxId(response.data?.max)
+      console.log(response.data?.companyEmployeeID);
+      console.log(response?.data?.max);
+      setCompanyEmployeeID(response.data?.companyEmployeeID)
+      if (response.data?.max) {
+        const s = ((response.data?.max) + 1)
+        setNewEmployeeID(s)
+      }
+      else {
+        setNewEmployeeID(1)
+      }
+      setIsLoading(false)
+    }).catch((err) => { })
 
-      // setNewEmployeeID()
+    // setNewEmployeeID()
 
-    }
+  }
 
   // ------------------------ Get Employee -----------------------------------
 
   const getEmployee = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/company-employee/' + selectedEmployee._id)
-    const { data } = await res.json()
-    setSelectedEmployee(data[0])
-    setIsLoading(false)
-    
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/company-employee/' + selectedEmployee._id)
+      const { data } = await res.json()
+      setSelectedEmployee(data[0])
+      setIsLoading(false)
+
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
@@ -209,26 +209,26 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getShifts = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/shift/')
-      const { data , message , success } = await res.json()
-      if(!success){
-        throw new Error(message) ;
+      const { data, message, success } = await res.json()
+      if (!success) {
+        throw new Error(message);
       }
 
       setShiftsDataSource(data)
     }
-    catch(err){
-      let message = err.toString() ; 
-      if(err.toString() == 'Error: Not Auth'){
+    catch (err) {
+      let message = err.toString();
+      if (err.toString() == 'Error: Not Auth') {
         setShiftsDataSource([{
-          title: (<div style={{color:'red'}}> You do not have permission to view Shifts </div> ), 
-          _id: undefined 
+          title: (<div style={{ color: 'red' }}> You do not have permission to view Shifts </div>),
+          _id: undefined
         }])
         message = 'Error : Failed to fetch shifts (you do not have permission to view shifts)'
       }
-      
-      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
@@ -237,26 +237,26 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getSalaryFormula = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/salary-formula/')
-      const { data , message , success } = await res.json()
-      if(!success){
-        throw new Error(message) ;
+      const { data, message, success } = await res.json()
+      if (!success) {
+        throw new Error(message);
       }
       setSalaryFormulaDataSource(data)
 
     }
-    catch(err){
-      let message = err.toString() ; 
-      if(err.toString() == 'Error: Not Auth'){
+    catch (err) {
+      let message = err.toString();
+      if (err.toString() == 'Error: Not Auth') {
         setSalaryFormulaDataSource([{
-          title: (<div style={{color:'red'}}> You do not have permission to view Salary Formula </div> ), 
-          _id: undefined 
+          title: (<div style={{ color: 'red' }}> You do not have permission to view Salary Formula </div>),
+          _id: undefined
         }])
         message = 'Error : Failed to fetch salary formula (you do not have permission to view salary formula)'
       }
-      
-      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
 
     }
     setIsLoading(false)
@@ -264,28 +264,28 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   // ------------------------ Get Deduction -----------------------------------
 
- 
+
   const getDeduction = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/deduction/')
-      const { data , message , success } = await res.json()
-      if(!success){
-        throw new Error(message) ;
+      const { data, message, success } = await res.json()
+      if (!success) {
+        throw new Error(message);
       }
       setDeductionDataSource(data)
     }
-    catch(err){
-      let message = err.toString() ; 
-      if(err.toString() == 'Error: Not Auth'){
+    catch (err) {
+      let message = err.toString();
+      if (err.toString() == 'Error: Not Auth') {
         setDeductionDataSource([{
-          title:   'You do not have permission to view dedutions', 
+          title: 'You do not have permission to view dedutions',
           type: '.',
-          _id: undefined 
+          _id: undefined
         }])
         message = 'Error : Failed to fetch dedutions (you do not have permission to view dedutions)'
       }
-      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
@@ -294,74 +294,74 @@ const AddEmployee = ({ popperPlacement, id }) => {
 
   const getCompensation = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/compensation/')
-      const { data , message , success } = await res.json()
-      if(!success){
-        throw new Error(message) ;
+      const { data, message, success } = await res.json()
+      if (!success) {
+        throw new Error(message);
       }
       setCompensationDataSource(data)
 
-    }catch(err){
-      let message = err.toString() ; 
-      if(err.toString() == 'Error: Not Auth'){
+    } catch (err) {
+      let message = err.toString();
+      if (err.toString() == 'Error: Not Auth') {
         setCompensationDataSource([{
-          title :   'You do not have permission to view compensations' , 
+          title: 'You do not have permission to view compensations',
           type: '.',
-          _id: undefined 
+          _id: undefined
         }])
         message = 'Error : Failed to fetch compensations (you do not have permission to view compensations)'
       }
-      toast.error(message  , {duration:5000 , position: 'bottom-right'} );
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
     }
-    
+
     setIsLoading(false)
   }
 
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/country')
-    const { data } = await res.json()
-    setAllCountries(data)
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/country')
+      const { data } = await res.json()
+      setAllCountries(data)
 
-    const countriesDataSource = data.map(country => ({
-      label: country.name,
-      value: country._id
-    }))
+      const countriesDataSource = data.map(country => ({
+        label: country.name,
+        value: country._id
+      }))
 
-    const employeesTypes = EmployeesTypes.map(type => ({
-      label: type.title,
-      value: type.value
-    }))
-    setEmployeeType(employeesTypes[0].value)
+      const employeesTypes = EmployeesTypes.map(type => ({
+        label: type.title,
+        value: type.value
+      }))
+      setEmployeeType(employeesTypes[0].value)
 
-    const maritalStatus = MaritalStatus.map(type => ({
-      label: type.title,
-      value: type.value
-    }))
+      const maritalStatus = MaritalStatus.map(type => ({
+        label: type.title,
+        value: type.value
+      }))
 
-    const sourceOfHire = SourceOfHire.map(type => ({
-      label: type.title,
-      value: type.value
-    }))
+      const sourceOfHire = SourceOfHire.map(type => ({
+        label: type.title,
+        value: type.value
+      }))
 
-    const healthInsuranceTypes = HealthInsuranceTypes.map(type => ({
-      label: type.title,
-      value: type.value
-    }))
+      const healthInsuranceTypes = HealthInsuranceTypes.map(type => ({
+        label: type.title,
+        value: type.value
+      }))
 
-    setMaritalStatusDataSource(maritalStatus)
-    setEmployeeTypesDataSource(employeesTypes)
-    setCountriesDataSource(countriesDataSource)
-    setSourceOfHireDataSource(sourceOfHire)
-    setHealthInsuranceTypeDataSource(healthInsuranceTypes)
-      
+      setMaritalStatusDataSource(maritalStatus)
+      setEmployeeTypesDataSource(employeesTypes)
+      setCountriesDataSource(countriesDataSource)
+      setSourceOfHireDataSource(sourceOfHire)
+      setHealthInsuranceTypeDataSource(healthInsuranceTypes)
+
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
@@ -444,7 +444,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const getStepContent = step => {
     switch (step) {
       case 0:
-        return  (
+        return (
           <>
             <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>
               Main Information
@@ -465,7 +465,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <small>ID No.</small>
                         <InputGroup>
                           {/* {companyEmployeeID && <Grid mt={1.5}><span >{companyEmployeeID}</span></Grid> } */}
-                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e)}} /> 
+                          <Form.Control size='sm' type='number' checkAsync name='idNo' placeholder='ID No.' value={newEmployeeID} onChange={(e) => { setNewEmployeeID(e) }} />
                           {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
@@ -561,14 +561,14 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     <Grid item sm={6} xs={12} md={6} mt={2}>
                       <small>CME type </small>
                       <Form.Group
-                          controlId='type'
-                        >
+                        controlId='type'
+                      >
                         <SelectPicker
                           size='sm'
                           name='type'
                           controlId='type'
                           onChange={e => {
-                              setPosition(e)
+                            setPosition(e)
                           }}
                           checkAsync
                           defaultValue='Dentist'
@@ -627,7 +627,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={3}>
-                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                    <Grid item sm={12} md={4} xs={12} mt={2}>
                       <Form.Group>
                         <small>Emergency Contact Name</small>
                         <Form.Control
@@ -640,7 +640,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         />
                       </Form.Group>
                     </Grid>
-                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                    <Grid item sm={12} md={4} xs={12} mt={2}>
                       <Form.Group>
                         <small>Emergency Contact Mobile</small>
                         <Form.Control
@@ -653,7 +653,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         />
                       </Form.Group>
                     </Grid>
-                    <Grid item sm={12}  md={4} xs={12} mt={2}>
+                    <Grid item sm={12} md={4} xs={12} mt={2}>
                       <Form.Group>
                         <small>Emergency Contact Relationship</small>
                         <Form.Control
@@ -682,36 +682,36 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       </Form.Group>
                     </Grid>
                     <Grid item sm={12} md={4} xs={12} mt={2}>
-                    <FormControl fullWidth sx={{ alignItems: 'center', mb: 6, height: '100%' }}>
-                      <Box
-                        sx={{
-                          pt: 8,
-                          display: 'inline-block',
-                          alignItems: 'center',
-                          flexDirection: 'column'
-                        }}
-                      >
-                        <input
-                          id='logo'
-                          ref={inputFile}
-                          type='file'
-                          hidden
-                          onChange={e => {
-                            uploadImage(e)
+                      <FormControl fullWidth sx={{ alignItems: 'center', mb: 6, height: '100%' }}>
+                        <Box
+                          sx={{
+                            pt: 8,
+                            display: 'inline-block',
+                            alignItems: 'center',
+                            flexDirection: 'column'
                           }}
-                          name='logo'
-                          onClick={() => openUpload()}
-                        />
-                        {newLogo && <img alt='...' width='100px' src={newLogo} onClick={() => openUpload()} />}
-                        {!newLogo && (
-                          <img alt='...' width='100px' src='/images/pages/avatar.jpg' onClick={() => openUpload()} />
-                        )}
-                        <br></br>
-                        {/* <Button onClick={() => openUpload()} endIcon={<Icon icon='mdi:image' />}>
+                        >
+                          <input
+                            id='logo'
+                            ref={inputFile}
+                            type='file'
+                            hidden
+                            onChange={e => {
+                              uploadImage(e)
+                            }}
+                            name='logo'
+                            onClick={() => openUpload()}
+                          />
+                          {newLogo && <img alt='...' width='100px' src={newLogo} onClick={() => openUpload()} />}
+                          {!newLogo && (
+                            <img alt='...' width='100px' src='/images/pages/avatar.jpg' onClick={() => openUpload()} />
+                          )}
+                          <br></br>
+                          {/* <Button onClick={() => openUpload()} endIcon={<Icon icon='mdi:image' />}>
                             Upload Logo
                           </Button> */}
-                      </Box>
-                    </FormControl>
+                        </Box>
+                      </FormControl>
                     </Grid>
                   </Grid>
 
@@ -730,20 +730,20 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       />
                     </Grid>
                     <Grid item sm={5} xs={12} md={5} mt={2}>
-                        <small>Joining Date</small>
-                        <Form.Control
-                          size='sm'
-                          oneTap
+                      <small>Joining Date</small>
+                      <Form.Control
+                        size='sm'
+                        oneTap
 
-                          // accepter={DatePicker}
-                          name='joiningDate'
-                          onChange={e => {
-                            setJoiningDate(e.toISOString().substring(0, 10))
-                          }}
-                          value={new Date(joiningDate)}
-                          block
-                        />
-                      </Grid>
+                        accepter={DatePicker}
+                        name='joiningDate'
+                        onChange={e => {
+                          setJoiningDate(e.toISOString().substring(0, 10))
+                        }}
+                        value={new Date(joiningDate)}
+                        block
+                      />
+                    </Grid>
                   </Grid>
 
                   <Grid container spacing={3}>
@@ -766,7 +766,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
-                      Remaining Leave Balance:
+                    Remaining Leave Balance:
                   </Typography>
                   <Grid container spacing={3}>
 
@@ -781,19 +781,19 @@ const AddEmployee = ({ popperPlacement, id }) => {
                       />
                     </Grid>
                     {
-                      gender == 'female' && 
-                          <Grid item sm={12} xs={12} md={6} mt={2}>
-                            <small>Parental Leaves over 60 (for each year)</small>
-                            <Form.Control
-                              size='sm'
-                              name='parentalLeavesBeforeAddingToSystem'
-                              controlId='parentalLeavesBeforeAddingToSystem'
-                              type='number'
-                              placeholder='parental leaves'
-                            />
-                          </Grid>
+                      gender == 'female' &&
+                      <Grid item sm={12} xs={12} md={6} mt={2}>
+                        <small>Parental Leaves over 60 (for each year)</small>
+                        <Form.Control
+                          size='sm'
+                          name='parentalLeavesBeforeAddingToSystem'
+                          controlId='parentalLeavesBeforeAddingToSystem'
+                          type='number'
+                          placeholder='parental leaves'
+                        />
+                      </Grid>
                     }
-                  
+
                   </Grid>
                   <Typography sx={{ mt: 9, mb: 5, fontWeight: 600, fontSize: 15, color: 'blue' }}>
                     Home Country Details
@@ -831,7 +831,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
                 </Grid>
-          
+
               </Grid>
 
               <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
@@ -913,7 +913,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         data.logo = newLogo
         data.status = newStatus
         data.created_at = new Date()
-        data.type = position ; 
+        data.type = position;
         axios
           .post('/api/company-employee/add-employee', {
             data
@@ -930,17 +930,17 @@ const AddEmployee = ({ popperPlacement, id }) => {
             })
           })
           .catch(function (error) {
-            let message = '' ;
-            if(error.response.status == 401 ){
+            let message = '';
+            if (error.response.status == 401) {
               message = 'Error : Failed fetching departments you do not have View department permission';
             }
-            else if(error?.response?.data?.message){
-              message = 'Error : ' + error?.response?.data?.message + ' !' ;
+            else if (error?.response?.data?.message) {
+              message = 'Error : ' + error?.response?.data?.message + ' !';
             }
-            else{
+            else {
               message = error.toString();
             }
-            toast.error( message , {duration: 5000 , position: 'bottom-right'}) ;
+            toast.error(message, { duration: 5000, position: 'bottom-right' });
             setLoading(false)
           })
       }
@@ -1073,14 +1073,14 @@ const AddEmployee = ({ popperPlacement, id }) => {
   }))
 
   const renderContent = () => {
-   
-    if(selectedEmployee){
+
+    if (selectedEmployee) {
       return getStepContent(activeStep)
     }
-    if(!selectedEmployee && activeStep == 0){
+    if (!selectedEmployee && activeStep == 0) {
       return getStepContent(activeStep)
     }
-    if(!selectedEmployee && [1,2,3,4,5].includes(activeStep)){
+    if (!selectedEmployee && [1, 2, 3, 4, 5].includes(activeStep)) {
       toast.error('You must insert employee ..', {
         delay: 1000,
         position: 'bottom-right'
