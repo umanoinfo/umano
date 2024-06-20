@@ -15,7 +15,7 @@ const AuthGuard = props => {
   useEffect(
     () => {
       if (!router.isReady) {
-        return
+        // return
       }
     },
 
