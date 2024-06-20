@@ -429,7 +429,7 @@ const UserList = () => {
 
   //   -------------------------------------------------------------------------
   if(loading){
-    return <Loading header='Please Wait' description={'company is loading'} />
+    // return <Loading header='Please Wait' description={'company is loading'} />
   }
   
 return (
@@ -520,7 +520,10 @@ return (
 
           {/* ------------------------------- Table --------------------------------- */}
 
-          {1 && (
+          {
+            loading ? 
+            <Loading header='Please Wait' description={'company is loading'} />:
+          (
             <DataGrid
               autoHeight
               rows={store.data}

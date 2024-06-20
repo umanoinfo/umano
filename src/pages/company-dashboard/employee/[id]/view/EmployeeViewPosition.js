@@ -81,6 +81,7 @@ const EmployeeViewPosition = ({ id, employee }) => {
       <Divider sx={{ m: '0 !important' }} />
 
       {employee && employee.employeePositions_info && (
+        
         <DataGrid
           autoHeight
           rows={employee.employeePositions_info}

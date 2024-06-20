@@ -350,7 +350,7 @@ const FormulaList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Salary Formulas are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Salary Formulas are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewPayrollFormula'))
     return <NoPermission header='No Permission' description='No permission to view salary Formula'></NoPermission>
@@ -445,6 +445,9 @@ const FormulaList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{
+          loading ? 
+          <Loading header='Please Wait' description='Attendances are loading'></Loading>:
           <DataGrid
             autoHeight
             rows={store.data}
@@ -455,6 +458,7 @@ const FormulaList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+}          
         </Card>
       </Grid>
 

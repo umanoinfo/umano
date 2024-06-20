@@ -317,7 +317,7 @@ const EmployeeCmes = ({}) => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Employee CMEs Records are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Employee CMEs Records are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewCME'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>
@@ -409,6 +409,10 @@ const EmployeeCmes = ({}) => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{         
+          loading ?
+          <Loading header='Please Wait' description='Employee CMEs Records are loading'></Loading>
+          :
           <DataGrid
             autoHeight
             rows={store.data}
@@ -419,6 +423,8 @@ const EmployeeCmes = ({}) => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+}
+
         </Card>
       </Grid>
 

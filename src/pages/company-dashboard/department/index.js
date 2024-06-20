@@ -385,7 +385,7 @@ const DepartmentList = ({ apiData }) => {
 
   // ------------------------------ View ---------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Departments are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Departments are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDepartment'))
     return <NoPermission header='No Permission' description='No permission to view departments'></NoPermission>
@@ -445,6 +445,8 @@ const DepartmentList = ({ apiData }) => {
           {/* ------------------------------- Table --------------------------------- */}
 
           {store.data.length > 0 && (
+            loading ? 
+              <Loading header='Please Wait' description='Departments are loading'></Loading>:
             <DataGrid
               autoHeight
               rows={store.data}

@@ -322,7 +322,7 @@ const PermissionsTable = () => {
 
   // ----------------------------  Columns -----------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Permissions is loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Permissions is loading'></Loading>
   if (session && session.user && !session.user.permissions.includes('AdminViewPermission')) {
 
     return <NoPermission header='No Permission' description='No permission to View permissions'></NoPermission>
@@ -354,16 +354,20 @@ const PermissionsTable = () => {
                   </Button>
                 )}
               </Box>
-              <DataGrid
-                autoHeight
-                rows={store.data}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-              />
+              {
+                  loading ?
+                  <Loading header='Please Wait' description='Permissions is loading'></Loading>:
+                  <DataGrid
+                    autoHeight
+                    rows={store.data}
+                    columns={columns}
+                    pageSize={pageSize}
+                    disableSelectionOnClick
+                    rowsPerPageOptions={[10, 25, 50]}
+                    onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                    sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                  />
+              }
             </Grid>
           </Card>
         </Grid>
@@ -399,7 +403,7 @@ const PermissionsTable = () => {
               <MenuItem value='Attendance'>Attendance</MenuItem>
               <MenuItem value='Payroll'>Payroll</MenuItem>
               <MenuItem value='PayrollFormula'>Payroll Formula</MenuItem>
-              <MenuItem value='PayrollCompensation'>Payroll Compensation</MenuItem>
+              <MenuItem value='PayrollCompensation'>Payroll Allowance</MenuItem>
               <MenuItem value='PayrollDeduction'>Payroll Deduction</MenuItem>
               <MenuItem value='CompanyUser'>CompanyUser</MenuItem>
               <MenuItem value='CompanyRole'>CompanyRole</MenuItem>
@@ -477,7 +481,7 @@ const PermissionsTable = () => {
               <MenuItem value='Attendance'>Attendance</MenuItem>
               <MenuItem value='Payroll'>Payroll</MenuItem>
               <MenuItem value='PayrollFormula'>Payroll Formula</MenuItem>
-              <MenuItem value='PayrollCompensation'>Payroll Compensation</MenuItem>
+              <MenuItem value='PayrollCompensation'>Payroll Allowance</MenuItem>
               <MenuItem value='PayrollDeduction'>Payroll Deduction</MenuItem>
               <MenuItem value='CompanyUser'>CompanyUser</MenuItem>
               <MenuItem value='CompanyRole'>CompanyRole</MenuItem>

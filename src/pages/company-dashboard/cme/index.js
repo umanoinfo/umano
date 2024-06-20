@@ -344,7 +344,7 @@ const CMEList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='CMEs are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='CMEs are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewCME'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>
@@ -423,6 +423,10 @@ const CMEList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{          
+          loading ? 
+          <Loading header='Please Wait' description='CMEs are loading'></Loading>
+          :
           <DataGrid
             autoHeight
             rows={store.data}
@@ -433,7 +437,8 @@ const CMEList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
-        </Card>
+
+}        </Card>
       </Grid>
 
       {/* -------------------------- Delete Dialog -------------------------------------- */}

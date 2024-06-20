@@ -100,7 +100,7 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, type, documentStatus, value])
 
   // ----------------------- Handle ------------------------------
@@ -119,7 +119,7 @@ const AllDocumentsList = () => {
 
   const handleClick = (data) => {
 
-    switch (data){
+    switch (data) {
       case 'DOH':
         router.push('/company-dashboard/document/doh-list')
         break;
@@ -133,8 +133,8 @@ const AllDocumentsList = () => {
         router.push('/company-dashboard/document/mcc-list')
         break;
       case 'Tasneef':
-      router.push('/company-dashboard/document/tasneef-list')
-      break;
+        router.push('/company-dashboard/document/tasneef-list')
+        break;
       case 'Oshad':
         router.push('/company-dashboard/document/oshad-list')
         break;
@@ -280,7 +280,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-             <Link href={{ pathname: '/company-dashboard/document/'+row._id }}>{row.title}</Link>
+            <Link href={{ pathname: '/company-dashboard/document/' + row._id }}>{row.title}</Link>
           </Typography>
         )
       }
@@ -304,7 +304,7 @@ const AllDocumentsList = () => {
       field: 'type',
       minWidth: 400,
       headerName: 'Tags',
-      sortable:false,
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
@@ -313,7 +313,7 @@ const AllDocumentsList = () => {
               {row.type.map((t, index) => {
                 return (
                   <CustomChip
-                    onClick={() =>handleClick(t) }
+                    onClick={() => handleClick(t)}
                     key={index}
                     color='primary'
                     skin='light'
@@ -337,7 +337,7 @@ const AllDocumentsList = () => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString() }
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString()}
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'
@@ -385,7 +385,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Documents is loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Documents is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewDocument'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>
@@ -455,17 +455,22 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-          <DataGrid
-            autoHeight
-            rowHeight={85}
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+
+          {
+            loading ?
+              <Loading header='Please Wait' description='Documents is loading'></Loading> :
+              <DataGrid
+                autoHeight
+                rowHeight={85}
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+          }
         </Card>
       </Grid>
 

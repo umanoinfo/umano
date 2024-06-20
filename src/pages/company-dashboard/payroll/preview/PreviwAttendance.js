@@ -249,7 +249,7 @@ const AttendanceList = ({ attendances }) => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Attendances are loading'></Loading>
 
   // if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
   //   return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
@@ -257,6 +257,9 @@ const AttendanceList = ({ attendances }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
+{
+        loading ? 
+          <Loading header='Please Wait' description='Attendances are loading'></Loading>:
         <DataGrid
           autoHeight
           rows={attendances}
@@ -268,6 +271,7 @@ const AttendanceList = ({ attendances }) => {
           onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           getRowHeight={() => 'auto'}
         />
+}
       </Grid>
     </Grid>
   )

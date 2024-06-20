@@ -246,7 +246,7 @@ const AttendanceList = ({ attendances }) => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Attendances is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendance'))
     return <NoPermission header='No Permission' description='No permission to view attendance'></NoPermission>
@@ -254,17 +254,21 @@ const AttendanceList = ({ attendances }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <DataGrid
-          autoHeight
-          rows={attendances}
-          columns={columns}
-          pageSize={pageSize}
-          disableSelectionOnClick
-          rowsPerPageOptions={[10, 25, 50]}
-          sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          getRowHeight={() => 'auto'}
-        />
+        {
+          loading ? 
+            <Loading header='Please Wait' description='Attendances is loading'></Loading>:
+          <DataGrid
+            autoHeight
+            rows={attendances}
+            columns={columns}
+            pageSize={pageSize}
+            disableSelectionOnClick
+            rowsPerPageOptions={[10, 25, 50]}
+            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            getRowHeight={() => 'auto'}
+          />
+        }
       </Grid>
     </Grid>
   )

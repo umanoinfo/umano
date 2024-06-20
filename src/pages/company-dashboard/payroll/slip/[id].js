@@ -25,12 +25,12 @@ const Slip = ({ id }) => {
     axios.get('/api/payroll/' + id, {}).then(res => {
       setPayroll(res.data.data[0])
       setLoading(false)
-    }).catch((err)=>{})
+    }).catch((err) => { })
   };
 
   useEffect(() => {
     getPayroll()
-  }, [ ])
+  }, [])
 
 
 
@@ -48,8 +48,8 @@ const Slip = ({ id }) => {
     pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight)
     pdf.save('print.pdf')
     setLoading(false);
-    
-return data
+
+    return data
   }
 
   //   --------------------------- View ----------------------------------------------
@@ -135,7 +135,7 @@ return data
                   !payroll.flexible &&
                   <>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                    Early and late Hours
+                      Early and late Hours
                     </div>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
                       {payroll.totalEarlyValue} AED
@@ -147,14 +147,14 @@ return data
                   Monthly Deductions
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                -{payroll.totalDeductions} AED
+                  -{payroll.totalDeductions} AED
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                   Employee Deductions
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                -{payroll.totalEmployeeDeductions} AED
+                  -{payroll.totalEmployeeDeductions} AED
                 </div>
                 {/*  */}
                 {
@@ -170,10 +170,10 @@ return data
                 }
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-          
+
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-            
+
                 </div>
                 {/*  */}
                 <div style={{ width: '100%', display: 'flex' }}>
@@ -186,7 +186,7 @@ return data
                       padding: '5px'
                     }}
                   >
-                
+
                   </div>
                   <div
                     style={{
@@ -197,7 +197,7 @@ return data
                       padding: '5px'
                     }}
                   >
-                  
+
                   </div>
                 </div>
               </div>
@@ -230,32 +230,32 @@ return data
                 </div>
               </div>
               <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
-              {
-                !payroll.flexible &&
-                <>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                    Holiday Hours
-                  </div>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                    {payroll.totalholidayValue} <small>AED</small>
-                  </div>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                    Overtime
-                  </div>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                    {(payroll.totalEarlyOverTimeValue +  payroll.totalLateOverTimeValue).toFixed(2)} <small>AED</small>
-                  </div>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                    Off Day Hours	
-                  </div>
-                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                    {payroll.totalOffDayValue} <small>AED</small>
-                  </div>
-                </>
-                
+                {
+                  !payroll.flexible &&
+                  <>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                      Holiday Hours
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                      {payroll.totalholidayValue} <small>AED</small>
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                      Overtime
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                      {(payroll.totalEarlyOverTimeValue + payroll.totalLateOverTimeValue).toFixed(2)} <small>AED</small>
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                      Off Day Hours
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                      {payroll.totalOffDayValue} <small>AED</small>
+                    </div>
+                  </>
+
                 }
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                  Monthly Compensations
+                  Monthly Allowances
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
                   {payroll.totalCompensations} <small>AED</small>
@@ -269,7 +269,7 @@ return data
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                
+
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
                 </div>
@@ -299,45 +299,45 @@ return data
               </div>
             </div>
           </div>
-        { !payroll.flexible &&
-          <>
-           <div item xs={12} style={{ margin: '20px', display: 'flex' }}>
-            <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
-              <div style={{ width: '100%', display: 'flex' }}>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                  Off Day Hours
+          {!payroll.flexible &&
+            <>
+              <div item xs={12} style={{ margin: '20px', display: 'flex' }}>
+                <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
+                  <div style={{ width: '100%', display: 'flex' }}>
+                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                      Off Day Hours
+                    </div>
+                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                      {Number(payroll.totalOffDayHours)} <small>Hours</small>
+                    </div>
+                  </div>
                 </div>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                {Number(payroll.totalOffDayHours)} <small>Hours</small>
+                <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
+                  <div style={{ width: '100%', display: 'flex' }}>
+                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                      Early and late Hours
+                    </div>
+                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                      {Number(payroll.totalEarlyHours) + Number(payroll.totalLateHours)} <small>Hours</small>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
-              <div style={{ width: '100%', display: 'flex' }}>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                Early and late Hours
-                </div>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                  {Number(payroll.totalEarlyHours) + Number(payroll.totalLateHours)} <small>Hours</small>
-                </div>
-              </div>
-              </div>
-            </div>
-        
+
             </>
           }
           <div item xs={12} style={{ margin: '20px', display: 'flex' }}>
-          { !payroll.flexible &&
-            <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
-              <div style={{ width: '100%', display: 'flex' }}>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                  Holiday Hours
-                </div>
-                <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                  {payroll.totalholidayHours} <small>Hours</small>
+            {!payroll.flexible &&
+              <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
+                <div style={{ width: '100%', display: 'flex' }}>
+                  <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                    Holiday Hours
+                  </div>
+                  <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                    {payroll.totalholidayHours} <small>Hours</small>
+                  </div>
                 </div>
               </div>
-            </div>
             }
             <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
               <div style={{ width: '100%', display: 'flex' }}>

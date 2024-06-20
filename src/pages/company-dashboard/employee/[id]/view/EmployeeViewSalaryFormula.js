@@ -27,7 +27,7 @@ const EmployeeViewSalary = ({ employee }) => {
 
   return (
     <Card>
-      <Typography variant='h6' style={{padding:'10px'}} >Salary Formula <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+      <Typography variant='h6' style={{ padding: '10px' }} >Salary Formula <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{ fontSize: '15px', marginLeft: '7px' }} icon='fa-regular:edit' /></a></small></Typography>
 
       <Divider sx={{ m: '0 !important' }} />
 
@@ -37,7 +37,7 @@ const EmployeeViewSalary = ({ employee }) => {
             <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
               <Tab value='Over Time' label='Over Time' />
               <Tab value='Absence' label='Absence' />
-              <Tab value='Compensation' label='Compensation' />
+              <Tab value='Compensation' label='Allowance' />
             </TabList>
             <TabPanel value='Over Time'>
               <Typography sx={{ mb: 5 }}>Over Time</Typography>
@@ -138,7 +138,7 @@ const EmployeeViewSalary = ({ employee }) => {
                       day
                     </Typography>
                   </Box>
-     
+
                 </Grid>
                 <Grid item sm={12} md={6}>
                   <Typography sx={{ mt: 5, mb: 1 }}>Absence Houre</Typography>
@@ -174,7 +174,7 @@ const EmployeeViewSalary = ({ employee }) => {
             <TabPanel value='Compensation'>
               <Grid container spacing={1} sx={{ px: 5 }}>
                 <Grid item sm={12} md={12}>
-                  <Typography sx={{ mt: 5, mb: 1 }}>End of service compensation</Typography>
+                  <Typography sx={{ mt: 5, mb: 1 }}>End of service Allowance</Typography>
                   <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                     <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                       From 1 to 5 year :
@@ -203,7 +203,7 @@ const EmployeeViewSalary = ({ employee }) => {
                   </Box>
                   <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                     <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                      Maximum end of service compensation :
+                      Maximum end of service Allowance :
                     </Typography>
                     {employee.salary_formula_info[0] && employee.salary_formula_info[0].maxCompensation && (
                       <Typography sx={{ fontWeight: 500 }}>
@@ -221,7 +221,7 @@ const EmployeeViewSalary = ({ employee }) => {
         </Grid>
       )}
       <Divider></Divider>
-      <Typography sx={{ p: 2 }}>Compensations</Typography>
+      <Typography sx={{ p: 2 }}>Allowances</Typography>
       {employee && employee.compensations_array && (
         <>
           <Box sx={{ px: 2 }}>

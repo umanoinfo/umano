@@ -332,7 +332,7 @@ const PermissionsTable = () => {
 
   // ----------------------------  Columns -----------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Positions are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Positions are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewRole')) {
     return <NoPermission header='No Permission' description='No permission to View permissions'></NoPermission>
@@ -366,6 +366,9 @@ const PermissionsTable = () => {
                   </Button>
                 )}
               </Box>
+{
+              loading ?
+              <Loading header='Please Wait' description='Positions are loading'></Loading>:
               <DataGrid
                 autoHeight
                 rows={store.data}
@@ -385,6 +388,8 @@ const PermissionsTable = () => {
                 onPageSizeChange={newPageSize => setPageSize(newPageSize)}
                 sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
               />
+
+}              
             </Grid>
           </Card>
         </Grid>

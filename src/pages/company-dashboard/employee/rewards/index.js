@@ -348,7 +348,7 @@ const DeductionsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Rewards is loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Rewards is loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployeeReward'))
     return <NoPermission header='No Permission' description='No permission to view employee reward'></NoPermission>
@@ -442,16 +442,20 @@ const DeductionsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+          {
+            loading ? 
+            <Loading header='Please Wait' description='Rewards is loading'></Loading>:
+            <DataGrid
+              autoHeight
+              rows={store.data}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          }
         </Card>
       </Grid>
 

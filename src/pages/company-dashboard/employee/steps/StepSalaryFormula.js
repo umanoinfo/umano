@@ -106,7 +106,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
     ];
 
     if (salaryFormula_.type == 'Flexible') {
-      tabs_.push({ value: 'CompensationAndDeductions', label: 'Compensation & Deductions' });
+      tabs_.push({ value: 'CompensationAndDeductions', label: 'Allowances & Deductions' });
     }
     setTabs(tabs_)
     setSelectedSalaryFormula(salaryFormula_)
@@ -166,7 +166,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                     <Tab value='Absence' label='Absence' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
                     <Tab value='Leave' label='Leave' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
                     <Tab value='EndOfService' label='End of service' hidden={selectedSalaryFormula && selectedSalaryFormula.type == 'Flexible'} />
-                    <Tab value='CompensationAndDeductions' label='Compensation & Deductions' />
+                    <Tab value='CompensationAndDeductions' label='Allowances & Deductions' />
 
 
                     {/* { 
@@ -443,7 +443,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='EndOfService'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
-                        <Typography sx={{ mt: 5, mb: 5 }}>End of service compensation</Typography>
+                        <Typography sx={{ mt: 5, mb: 5 }}>End of service Allowance</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             From 1 to 5 Hour/s :
@@ -472,7 +472,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Maximum end of service compensation :
+                            Maximum end of service Allowance :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.maxCompensation && (
                             <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.maxCompensation}</Typography>
@@ -487,7 +487,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='CompensationAndDeductions'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
-                        <small>Add Compensations</small>
+                        <small>Add Allowances</small>
                         <TagPicker
                           data={compensationsOptions}
                           value={selectedCompensations}

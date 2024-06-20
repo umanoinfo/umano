@@ -291,7 +291,7 @@ const DocumentsTable = () => {
 
   // ----------------------------  Columns -----------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Documents types are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Documents types are loading'></Loading>
   if (session && session.user && !session.user.permissions.includes('ViewDocumentType')) {
 
     return <NoPermission header='No Permission' description='No permission to View Documents'></NoPermission>
@@ -323,6 +323,10 @@ const DocumentsTable = () => {
                   </Button>
                 )}
               </Box>
+{
+              loading ? 
+              <Loading header='Please Wait' description='Documents types are loading'></Loading>:
+              
               <DataGrid
                 autoHeight
                 rows={store.data}
@@ -333,6 +337,7 @@ const DocumentsTable = () => {
                 onPageSizeChange={newPageSize => setPageSize(newPageSize)}
                 sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
               />
+}              
             </Grid>
           </Card>
         </Grid>

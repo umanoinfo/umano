@@ -420,7 +420,7 @@ const LeaveList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Leaves are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Leaves are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployeeLeave'))
     return <NoPermission header='No Permission' description='No permission to view employees leaves'></NoPermission>
@@ -514,6 +514,9 @@ const LeaveList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{
+          loading ?
+          <Loading header='Please Wait' description='Leaves are loading'></Loading>:
           <DataGrid
             autoHeight
             rows={store.data}
@@ -524,6 +527,7 @@ const LeaveList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+}
         </Card>
       </Grid>
       {/* -------------------------- Delete Dialog -------------------------------------- */}

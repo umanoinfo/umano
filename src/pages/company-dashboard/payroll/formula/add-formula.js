@@ -61,16 +61,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
     compensationFrom1To5: 21,
     compensationMoreThan5: 30,
     maxCompensation: 2,
-    paidLeave: 100 ,
+    paidLeave: 100,
     unpaidLeave: 0,
     sickLeave: 30,
-    sickLeaveFrom1To15:100,
-    sickLeaveFrom16To30:50,
+    sickLeaveFrom1To15: 100,
+    sickLeaveFrom16To30: 50,
     sickLeaveFrom31To90: 0,
-    maternityLeave: 100 ,
-    parentalLeaveFrom1To45:100,
-    parentalLeaveFrom46To60:50,
-    parentalLeaveFrom61To105:0,
+    maternityLeave: 100,
+    parentalLeaveFrom1To45: 100,
+    parentalLeaveFrom46To60: 50,
+    parentalLeaveFrom61To105: 0,
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -87,8 +87,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = { ...formValue }
-        if(formValue.type == 'Flexible'){
-          data = { type: 'Flexible' , title : data.title } ;
+        if (formValue.type == 'Flexible') {
+          data = { type: 'Flexible', title: data.title };
         }
         data.status = 'active'
         data.created_at = new Date()
@@ -150,16 +150,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/payroll/formula/'>
-            Salary Formulas
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-            Add Salary Formula
-            </Typography>
-          </Breadcrumbs>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/payroll/formula/'>
+                Salary Formulas
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Salary Formula
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -187,222 +187,222 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <small>Title</small>
                       <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
                     </Grid>
-                  {
-                    formValue.type != 'Flexible' ?
-                    <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
-                      <TabContext value={tabValue}>
-                        <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
-                          <Tab value='Over Time' label='Over Time' />
-                          <Tab value='Absence' label='Absence' />
-                          <Tab value='Leave' label='Leave' />
-                          <Tab value='EndOfService' label='End Of Service' />
-                        </TabList>
-                        <TabPanel value='Over Time'>
-                          <Typography sx={{ mb: 5 }}>Over Time</Typography>
-                          <Grid item sm={12} md={6}>
-                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Over time :
-                              </Typography>
-                              <Form.Control
-                                controlId='firstOverTime'
-                                size='sm'
-                                type='number'
-                                name='firstOverTime'
-                                placeholder='First'
-                              />
-                              <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Hour/s
-                              </Typography>
-                            </Box>
-                            <Box sx={{ mb: 1, mt: 8, display: 'flex', alignItems: 'center' }}>
-                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Holiday :
-                              </Typography>
-                              <Form.Control
-                                controlId='holidayOverTime'
-                                type='number'
-                                size='sm'
-                                name='holidayOverTime'
-                                placeholder='Holiday'
-                              />
-                              <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Hour/s
-                              </Typography>
-                            </Box>
-                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                              <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Weekend :
-                              </Typography>
-                              <Form.Control
-                                controlId='weekendOverTime'
-                                type='number'
-                                size='sm'
-                                name='weekendOverTime'
-                                placeholder='Weekend'
-                              />
-                              <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Hour/s
-                              </Typography>
-                            </Box>
-                          </Grid>
-                        </TabPanel>
+                    {
+                      formValue.type != 'Flexible' ?
+                        <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
+                          <TabContext value={tabValue}>
+                            <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
+                              <Tab value='Over Time' label='Over Time' />
+                              <Tab value='Absence' label='Absence' />
+                              <Tab value='Leave' label='Leave' />
+                              <Tab value='EndOfService' label='End Of Service' />
+                            </TabList>
+                            <TabPanel value='Over Time'>
+                              <Typography sx={{ mb: 5 }}>Over Time</Typography>
+                              <Grid item sm={12} md={6}>
+                                <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                  <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                    Over time :
+                                  </Typography>
+                                  <Form.Control
+                                    controlId='firstOverTime'
+                                    size='sm'
+                                    type='number'
+                                    name='firstOverTime'
+                                    placeholder='First'
+                                  />
+                                  <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                    Hour/s
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ mb: 1, mt: 8, display: 'flex', alignItems: 'center' }}>
+                                  <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                    Holiday :
+                                  </Typography>
+                                  <Form.Control
+                                    controlId='holidayOverTime'
+                                    type='number'
+                                    size='sm'
+                                    name='holidayOverTime'
+                                    placeholder='Holiday'
+                                  />
+                                  <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                    Hour/s
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                  <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                    Weekend :
+                                  </Typography>
+                                  <Form.Control
+                                    controlId='weekendOverTime'
+                                    type='number'
+                                    size='sm'
+                                    name='weekendOverTime'
+                                    placeholder='Weekend'
+                                  />
+                                  <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                    Hour/s
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                            </TabPanel>
 
-                        <TabPanel value='Absence'>
-                          <Grid container spacing={1} sx={{ px: 5 }}>
-                            <Grid item sm={12} md={6}>
-                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Justified :
-                                </Typography>
-                                <Form.Control
-                                  controlId='justifiedAbsenceDay'
-                                  size='sm'
-                                  type='number'
-                                  name='justifiedAbsenceDay'
-                                  placeholder='Justified'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Day/s
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Not Justified :
-                                </Typography>
-                                <Form.Control
-                                  controlId='notJustifiedAbsenceDay'
-                                  type='number'
-                                  size='sm'
-                                  name='notJustifiedAbsenceDay'
-                                  placeholder='Not Justified'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Day/s
-                                </Typography>
-                              </Box>
-                            </Grid>
-                            <Grid item sm={12} md={6}>
-                              <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s</Typography>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Justified :
-                                </Typography>
-                                <Form.Control
-                                  controlId='justifiedAbsenceHoure'
-                                  type='number'
-                                  size='sm'
-                                  name='justifiedAbsenceHoure'
-                                  placeholder='Justified'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  Hour/s
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Not Justified :
-                                </Typography>
-                                <Form.Control
-                                  controlId='notJustifiedAbsenceHoure'
-                                  type='number'
-                                  size='sm'
-                                  name='notJustifiedAbsenceHoure'
-                                  placeholder='Not Justified'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  Hour/s
-                                </Typography>
-                              </Box>
-                            </Grid>
-                          </Grid>
-                        </TabPanel>
-                        <TabPanel value='Leave'>
-                          <Grid container spacing={1} sx={{ px: 5 }}>
-                            <Grid item sm={12} md={6} >
-                              <Typography sx={{ mt: 5, mb: 1 }}>leaves</Typography>
-                              <Box sx={{ mb: 1,  mt: 5, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Paid leave :
-                                </Typography>
-                                <Form.Control
-                                  controlId='paidLeave'
-                                  size='sm'
-                                  type='number'
-                                  name='paidLeave'
-                                  placeholder='Paid leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Unpaid Leave :
-                                </Typography>
-                                <Form.Control
-                                  controlId='unpaidLeave'
-                                  size='sm'
-                                  type='number'
-                                  name='unpaidLeave'
-                                  placeholder='Unpaid Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '50%' }}>
-                                  Sick Leave:
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  &emsp;&emsp; From 1 to 15
-                                </Typography>
-                                <Form.Control
-                                  controlId='sickLeaveFrom1To15'
-                                  size='sm'
-                                  type='number'
-                                  name='sickLeaveFrom1To15'
-                                  placeholder='Sick Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  &emsp;&emsp; From 16 to 30
-                                </Typography>
-                                <Form.Control
-                                  controlId='sickLeaveFrom16To30'
-                                  size='sm'
-                                  type='number'
-                                  name='sickLeaveFrom16To30'
-                                  placeholder='Sick Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                &emsp;&emsp; From 31 to 90
-                                </Typography>
-                                <Form.Control
-                                  controlId='sickLeaveFrom31To90'
-                                  size='sm'
-                                  type='number'
-                                  name='sickLeaveFrom31To90'
-                                  placeholder='Sick Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                            <TabPanel value='Absence'>
+                              <Grid container spacing={1} sx={{ px: 5 }}>
+                                <Grid item sm={12} md={6}>
+                                  <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='justifiedAbsenceDay'
+                                      size='sm'
+                                      type='number'
+                                      name='justifiedAbsenceDay'
+                                      placeholder='Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Day/s
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Not Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='notJustifiedAbsenceDay'
+                                      type='number'
+                                      size='sm'
+                                      name='notJustifiedAbsenceDay'
+                                      placeholder='Not Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Day/s
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item sm={12} md={6}>
+                                  <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s</Typography>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='justifiedAbsenceHoure'
+                                      type='number'
+                                      size='sm'
+                                      name='justifiedAbsenceHoure'
+                                      placeholder='Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Hour/s
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Not Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='notJustifiedAbsenceHoure'
+                                      type='number'
+                                      size='sm'
+                                      name='notJustifiedAbsenceHoure'
+                                      placeholder='Not Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Hour/s
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            </TabPanel>
+                            <TabPanel value='Leave'>
+                              <Grid container spacing={1} sx={{ px: 5 }}>
+                                <Grid item sm={12} md={6} >
+                                  <Typography sx={{ mt: 5, mb: 1 }}>leaves</Typography>
+                                  <Box sx={{ mb: 1, mt: 5, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Paid leave :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='paidLeave'
+                                      size='sm'
+                                      type='number'
+                                      name='paidLeave'
+                                      placeholder='Paid leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Unpaid Leave :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='unpaidLeave'
+                                      size='sm'
+                                      type='number'
+                                      name='unpaidLeave'
+                                      placeholder='Unpaid Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '50%' }}>
+                                      Sick Leave:
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp;&emsp; From 1 to 15
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='sickLeaveFrom1To15'
+                                      size='sm'
+                                      type='number'
+                                      name='sickLeaveFrom1To15'
+                                      placeholder='Sick Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp;&emsp; From 16 to 30
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='sickLeaveFrom16To30'
+                                      size='sm'
+                                      type='number'
+                                      name='sickLeaveFrom16To30'
+                                      placeholder='Sick Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp;&emsp; From 31 to 90
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='sickLeaveFrom31To90'
+                                      size='sm'
+                                      type='number'
+                                      name='sickLeaveFrom31To90'
+                                      placeholder='Sick Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                 <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                 Maternity Leave :
                                 </Typography>
@@ -417,118 +417,118 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                 %
                                 </Typography>
                               </Box> */}
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                Maternity Leave :
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  &emsp; From 1 to 45
-                                </Typography>
-                                <Form.Control
-                                  controlId='parentalLeaveFrom1To45'
-                                  size='sm'
-                                  type='number'
-                                  name='parentalLeaveFrom1To45'
-                                  placeholder='Parental Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                            
-                            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  &emsp; From 46 to 60
-                                </Typography>
-                                <Form.Control
-                                  controlId='parentalLeaveFrom46To60'
-                                  size='sm'
-                                  type='number'
-                                  name='parentalLeaveFrom46To60'
-                                  placeholder='Parental Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  &emsp; From 61 to 105
-                                </Typography>
-                                <Form.Control
-                                  controlId='parentalLeaveFrom61To105'
-                                  size='sm'
-                                  type='number'
-                                  name='parentalLeaveFrom61To105'
-                                  placeholder='Parental Leave'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                %
-                                </Typography>
-                              </Box>
-                            </Grid>
-                            <Grid item sm={12} md={6}>
-                            </Grid>
-                          </Grid>
-                        </TabPanel>
-                        <TabPanel value='EndOfService'>
-                          <Grid container spacing={1} sx={{ px: 5 }}>
-                            <Grid item sm={12} md={12}>
-                              <Typography sx={{ mt: 5, mb: 1 }}>End of service compensation</Typography>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  From 1 to 5 year :
-                                </Typography>
-                                <Form.Control
-                                  controlId='compensationFrom1To5'
-                                  size='sm'
-                                  type='number'
-                                  name='compensationFrom1To5'
-                                  placeholder='From 1 to 5 year'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Day/s
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  More than 5 year :
-                                </Typography>
-                                <Form.Control
-                                  controlId='compensationMoreThan5'
-                                  type='number'
-                                  size='sm'
-                                  name='compensationMoreThan5'
-                                  placeholder='More than 5 year'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                Day/s
-                                </Typography>
-                              </Box>
-                              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                  Maximum end of service compensation :
-                                </Typography>
-                                <Form.Control
-                                  controlId='maxCompensation'
-                                  type='number'
-                                  size='sm'
-                                  name='maxCompensation'
-                                  placeholder='Maximum'
-                                />
-                                <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                  Year
-                                </Typography>
-                              </Box>
-                            </Grid>
-                          </Grid>
-                        </TabPanel>
-                      </TabContext>
-                    </Grid>
-                    :
-                    <></>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Maternity Leave :
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp; From 1 to 45
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='parentalLeaveFrom1To45'
+                                      size='sm'
+                                      type='number'
+                                      name='parentalLeaveFrom1To45'
+                                      placeholder='Parental Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp; From 46 to 60
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='parentalLeaveFrom46To60'
+                                      size='sm'
+                                      type='number'
+                                      name='parentalLeaveFrom46To60'
+                                      placeholder='Parental Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      &emsp; From 61 to 105
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='parentalLeaveFrom61To105'
+                                      size='sm'
+                                      type='number'
+                                      name='parentalLeaveFrom61To105'
+                                      placeholder='Parental Leave'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      %
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item sm={12} md={6}>
+                                </Grid>
+                              </Grid>
+                            </TabPanel>
+                            <TabPanel value='EndOfService'>
+                              <Grid container spacing={1} sx={{ px: 5 }}>
+                                <Grid item sm={12} md={12}>
+                                  <Typography sx={{ mt: 5, mb: 1 }}>End of service Allowance</Typography>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      From 1 to 5 year :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='compensationFrom1To5'
+                                      size='sm'
+                                      type='number'
+                                      name='compensationFrom1To5'
+                                      placeholder='From 1 to 5 year'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Day/s
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      More than 5 year :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='compensationMoreThan5'
+                                      type='number'
+                                      size='sm'
+                                      name='compensationMoreThan5'
+                                      placeholder='More than 5 year'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Day/s
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Maximum end of service Allowance :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='maxCompensation'
+                                      type='number'
+                                      size='sm'
+                                      name='maxCompensation'
+                                      placeholder='Maximum'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Year
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            </TabPanel>
+                          </TabContext>
+                        </Grid>
+                        :
+                        <></>
                     }
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (

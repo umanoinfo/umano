@@ -98,7 +98,7 @@ const CompensationsList = () => {
         compensationStatus,
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, compensationType, compensationStatus, value])
 
   // ----------------------- Handle ------------------------------
@@ -129,7 +129,7 @@ const CompensationsList = () => {
     console.log(ex)
     const ws = XLSX.utils.json_to_sheet(ex)
     XLSX.utils.book_append_sheet(wb, ws, 'Comments')
-    XLSX.writeFile(wb, 'compensations.xlsx')
+    XLSX.writeFile(wb, 'allowances.xlsx')
   }
 
   const handleFilter = useCallback(val => {
@@ -154,7 +154,7 @@ const CompensationsList = () => {
       })
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
-          toast.success('salary compensation (' + selectedCompensation.title + ') Deleted Successfully.', {
+          toast.success('salary Allowance (' + selectedCompensation.title + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
           })
@@ -236,13 +236,13 @@ const CompensationsList = () => {
             </MenuItem>
           )} */}
 
-          {session && session.user && session.user.permissions.includes('EditPayrollCompensation') && (
+          {session && session.user && session.user.permissions.includes('EditPayrollAllowance') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
               Edit
             </MenuItem>
           )}
-          {session && session.user && session.user.permissions.includes('DeletePayrollCompensation') && (
+          {session && session.user && session.user.permissions.includes('DeletePayrollAllowance') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
@@ -370,10 +370,10 @@ const CompensationsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Compensations are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Allowances are loading'></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('ViewPayrollCompensation'))
-    return <NoPermission header='No Permission' description='No permission to view payroll compensation'></NoPermission>
+  if (session && session.user && !session.user.permissions.includes('ViewPayrollAllowance'))
+    return <NoPermission header='No Permission' description='No permission to view payroll Allowance'></NoPermission>
 
   return (
     <Grid container spacing={6}>
@@ -384,7 +384,7 @@ const CompensationsList = () => {
               Home
             </Link>
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Compensations List
+              Allowances List
             </Typography>
           </Breadcrumbs>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
@@ -453,9 +453,9 @@ const CompensationsList = () => {
               >
                 Export
               </Button>
-              {session && session.user && session.user.permissions.includes('AddPayrollCompensation') && (
+              {session && session.user && session.user.permissions.includes('AddPayrollAllowance') && (
                 <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => addCompensation()}>
-                  Add Compensation
+                  Add Allowance
                 </Button>
               )}
             </Grid>
@@ -464,6 +464,10 @@ const CompensationsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+
+{         
+          loading  ?
+            <Loading header='Please Wait' description='Allowances are loading'></Loading>:
           <DataGrid
             autoHeight
             rows={store.data}
@@ -474,6 +478,8 @@ const CompensationsList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+
+}          
         </Card>
       </Grid>
 
@@ -493,7 +499,7 @@ const CompensationsList = () => {
         <DialogTitle id='alert-dialog-title text'>Warning</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
-            Are you sure , you want to delete compensation{' '}
+            Are you sure , you want to delete Allowance{' '}
             <span className='bold'>{selectedCompensation && selectedCompensation.title}</span>
           </DialogContentText>
         </DialogContent>

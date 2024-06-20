@@ -559,7 +559,7 @@ const EmployeeList = classNamec => {
 
   //   --------------------------- View ----------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Employees are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Employees are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewEmployee')) {
     return <NoPermission header='No Permission' description='No permission to View Employees'></NoPermission>
@@ -651,17 +651,22 @@ const EmployeeList = classNamec => {
           </Box>
 
           {/* ------------------------------- Table --------------------------------- */}
+          {
+            loading ?
+            <Loading header='Please Wait' description='Employees are loading'></Loading>:
+            <DataGrid
+              autoHeight
+              rows={store.data}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0  } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          }
 
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0  } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+          
         </Card>
       </Grid>
       <Dialog

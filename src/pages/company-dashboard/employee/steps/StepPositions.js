@@ -552,7 +552,7 @@ const Steppositions = ({ handleNext, employee }) => {
     return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
   if (loading) {
-    return <Loading header='Please Wait' description='Positions are loading' />
+    // return <Loading header='Please Wait' description='Positions are loading' />
   }
 
   return (
@@ -577,6 +577,9 @@ const Steppositions = ({ handleNext, employee }) => {
                 Add Employee Position
               </Button>
             </Box>
+{
+            loading ? 
+              <Loading header='Please Wait' description='Positions are loading' />:            
             <DataGrid
               autoHeight
               rows={store.data}
@@ -586,7 +589,7 @@ const Steppositions = ({ handleNext, employee }) => {
               rowsPerPageOptions={[7, 10, 25, 50]}
               onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             />
-
+}
           </Grid>
 
           {/* --------------------------- Passport  ------------------------------------ */}

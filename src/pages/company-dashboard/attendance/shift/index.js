@@ -349,7 +349,7 @@ const ShiftList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Shifts are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Shifts are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewAttendanceShift'))
     return <NoPermission header='No Permission' description='No permission to view forms'></NoPermission>
@@ -420,6 +420,8 @@ const ShiftList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{          
+          loading ? <Loading header='Please Wait' description='Shifts are loading'></Loading>:
           <DataGrid
             autoHeight
             rows={store.data}
@@ -430,6 +432,7 @@ const ShiftList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+}
         </Card>
       </Grid>
 

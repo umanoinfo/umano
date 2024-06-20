@@ -56,22 +56,22 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ------------------------ Get Employee -----------------------------------
 
   const getCompensation = async () => {
-    try{
-    setLoading(true)
-    const res = await fetch('/api/compensation/' + id)
-    const { data } = await res.json()
-    setFormValue(data[0])
-    setLoading(false)
-    
+    try {
+      setLoading(true)
+      const res = await fetch('/api/compensation/' + id)
+      const { data } = await res.json()
+      setFormValue(data[0])
+      setLoading(false)
+
     }
-    catch(err){
-      
+    catch (err) {
+
     }
-  }   ;
+  };
 
   useEffect(() => {
     getCompensation()
-  }, [ ])
+  }, [])
 
 
   // ------------------------------ validate Mmodel ------------------------------------
@@ -81,7 +81,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     type: StringType().isRequired('This field is required.'),
     fixedValue: NumberType().min(0).isRequired('The field is required'),
     percentageValue: NumberType().min(0).isRequired('The field is required'),
-    
+
   })
 
   // ------------------------------- Submit --------------------------------------
@@ -91,7 +91,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       if (!result.hasError) {
         let data = { ...formValue }
         setLoading(true)
-        setLoadingDescription('Compensations is updating')
+        setLoadingDescription('Allowances are updating')
         axios
           .post('/api/compensation/edit-compensation', {
             data
@@ -138,8 +138,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   if (loading) return <Loading header='Please Wait' description={loadingDescription}></Loading>
 
-  if (session && session.user && !session.user.permissions.includes('EditPayrollCompensation'))
-    return <NoPermission header='No Permission' description='No permission to edit payroll compensation'></NoPermission>
+  if (session && session.user && !session.user.permissions.includes('EditPayrollAllowance'))
+    return <NoPermission header='No Permission' description='No permission to edit payroll Allowance'></NoPermission>
 
   return (
     <>
@@ -147,7 +147,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Edit Compensation' sx={{ pb: 0, pt: 2 }} />
+            <CardHeader title='Edit Allowance' sx={{ pb: 0, pt: 2 }} />
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>

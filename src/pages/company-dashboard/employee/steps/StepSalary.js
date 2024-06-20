@@ -477,7 +477,7 @@ const StepSalary = ({ handleNext, employee }) => {
     return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
   if (loading) {
-    return <Loading header='Please Wait' description='Salaries is loading' />
+    // return <Loading header='Please Wait' description='Salaries is loading' />
   }
 
   return (
@@ -502,6 +502,9 @@ const StepSalary = ({ handleNext, employee }) => {
             </Box>
 
             <Card xs={12} md={12} lg={12}>
+{
+              loading ? 
+                <Loading header='Please Wait' description='Salaries is loading' />:
               <DataGrid
                 autoHeight
                 rows={store.data}
@@ -511,6 +514,7 @@ const StepSalary = ({ handleNext, employee }) => {
                 rowsPerPageOptions={[7, 10, 25, 50]}
                 onPageSizeChange={newPageSize => setPageSize(newPageSize)}
               />
+}
             </Card>
           </Grid>
 

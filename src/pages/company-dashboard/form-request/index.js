@@ -311,7 +311,7 @@ const AllDocumentsList = () => {
 
   // ------------------------------------ View ---------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Requests are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Requests are loading'></Loading>
 
   if (session && session.user && !session.user.permissions.includes('ViewFormRequest'))
     return <NoPermission header='No Permission' description='No permission to view documents'></NoPermission>
@@ -406,6 +406,9 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
+{
+          loading ? 
+            <Loading header='Please Wait' description='Requests are loading'></Loading>:
           <DataGrid
             autoHeight
             rows={store.data}
@@ -416,6 +419,7 @@ const AllDocumentsList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+}          
         </Card>
       </Grid>
 

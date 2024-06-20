@@ -527,7 +527,7 @@ const UserList = () => {
 
   //   --------------------------- Return ----------------------------------------------
 
-  if (loading) return <Loading header='Please Wait' description='Users are loading'></Loading>
+  // if (loading) return <Loading header='Please Wait' description='Users are loading'></Loading>
 
   if (session && !session.user && session.user.permissions.includes('AdminViewUser'))
     return <NoPermission header='No Permission' description='No permission to  View Users'></NoPermission>
@@ -621,7 +621,10 @@ const UserList = () => {
           </Box>
 
           {/* ------------------------------- Table --------------------------------- */}
-
+        {
+          loading ? 
+          <Loading header='Please Wait' description='Users are loading'></Loading>
+          :
           <DataGrid
             autoHeight
             rows={store.data}
@@ -632,6 +635,7 @@ const UserList = () => {
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
+        }
         </Card>
       </Grid>
 
