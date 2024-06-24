@@ -58,6 +58,8 @@ const EditLeave = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession
   const formRef = useRef()
   const [formError, setFormError] = useState()
+  const [fileLoading , setFileLoading] = useState() ;
+  const [tempFile, setTempFile] = useState() ;
 
   // new states
 
@@ -131,7 +133,7 @@ const EditLeave = ({ popperPlacement, id }) => {
           setSelectedEmployee({ ...employee })
 
           setFormValue({ ...val , date_to: val.date_to , date_from: val.date_from });
-
+          setTempFile( val?.file );
           val = employee.leaves_info.map(e => {
             e.id = e._id
 
@@ -180,19 +182,35 @@ const EditLeave = ({ popperPlacement, id }) => {
    
     return val.map(val => {
       if (val.type == 'daily') {
-        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from) )
+        const diffDays = (diffTime / (1000 * 60 * 60 * 24))+1
+        let curDate = new Date( val.date_from ) ;
+        let totalDays =0  ;
+        for(let i =0  ;i < diffDays ;i++){
+          if(curDate.getFullYear() == new Date().getFullYear())
+            totalDays++;
+          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24  ) ; 
+        }
         
-        return { ...val, leave_value: diffDays }
+        return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
-        const diffDays = Math.ceil(diffTime / (1000 * 60))
+        let shift_times = selectedEmployee?.shift_info?.[0]?.times?.[0];
+        let shift_hours = (new Date(shift_times?.timeOut) - new Date(shift_times?.timeIn) )/ (1000 * 60 * 60) ;
+        const diffDays = (diffTime / (shift_hours)) +1 
 
-        return { ...val, leave_value: diffDays }
+        // divide by the shift hours that this employee work not by (8 / 24 ) 
+
+        
+        if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
+          return { ...val, leave_value: diffDays };
+        }
+        else{
+          return {...val , leave_value: 0 } ;
+        }
       }
     })
   }
-
   function calculateIntersectionValue(timeRanges1, timeRanges2) {
 
     let totalIntersection = 0
@@ -415,10 +433,44 @@ const EditLeave = ({ popperPlacement, id }) => {
   }
 
   // ------------------------------- Submit --------------------------------------
+  const checkIntersectionWithVacation = ()=>{
+    console.log(selectedEmployee);
+    let start = new Date(formValue.date_from) ;
+    while(start < new Date(formValue.date_to)){
+      let i = !days.includes(start.getDay())
+      let j = holyDays.includes(start.toDateString())
+      let z = false;
+      selectedEmployee?.leaves_info?.map((leave)=>{
+        let start_leave = new Date(leave.date_from) ;
+        while(start_leave < new Date(leave.date_to)){
+          if(start_leave.toDateString() == start.toDateString()){
+            z = true ;
+            break;
+          }
+          start_leave = new Date(start_leave.getTime() + 1000 * 60 * 60 * 24 ) ;
+        }
+      })
+      if(i || j || z ){
+        return true ;
+      }
+      start = new Date(start.getTime() + 1000 * 60 * 60 * 24);
+    }
+    
+    return false; 
+  }
+
 
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
+        if(checkIntersectionWithVacation()){
+          toast.error('leave intersect with (holiday/weekend/ already taken leave)' , {
+            duration: 5000,
+            position:'bottom-right'
+          } );
+
+          return ;
+        }
         let data = { ...formValue }
         const data_request = { ...formValue }
 
@@ -438,7 +490,7 @@ const EditLeave = ({ popperPlacement, id }) => {
         ]
 
         const diffTime = Math.abs(data.date_to - data.date_from)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
 
         const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange)) / totalMinutes).toFixed(2)
 
@@ -550,7 +602,7 @@ const EditLeave = ({ popperPlacement, id }) => {
         setLoading(true)
         setLoadingDescription('leaves is inserting')
 
-        let newData = { ...data_request }
+        let newData = { ...data_request , file: tempFile}
         newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
         newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
         axios
@@ -784,6 +836,32 @@ const EditLeave = ({ popperPlacement, id }) => {
     })
   }
 
+  const uploadNewFile = async event => {
+    setFileLoading(true)
+    const file = event.target.files[0]
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('type', 'leave')
+    let data = {}
+    data.formData = formData
+    axios
+      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .then(response => {
+        setTempFile(response.data)
+        setFormValue({...formValue , file: response.data})
+        setFileLoading(false);
+      })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response + ' !', {
+          delay: 3000,
+          position: 'bottom-right'
+        })
+
+        setFileLoading(false);
+        
+      })
+  }
+
   const changeStatus = e =>{
     let paidValue = selectedEmployee.salaryFormulas_info[0][e]
     if(e == 'otherLeave'){
@@ -794,6 +872,10 @@ const EditLeave = ({ popperPlacement, id }) => {
       ...formValue,
       paidValue:paidValue
     })
+  }
+
+  const openFile = fileName => {
+    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeePosition/' + fileName, '_blank')
   }
 
   const RenderDate = () => {
@@ -1136,6 +1218,30 @@ const EditLeave = ({ popperPlacement, id }) => {
                             placeholder='resolution Number'
                             value={formValue.resolution_number}
                           />
+                        </Box>
+                        <Box >
+                          <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                            File:
+                          </Typography>
+                          <div>
+                            {
+                              formValue.file && 
+                              <a  onClick={()=>openFile(formValue.file)}>
+                                {formValue.file }
+                              </a>
+                            }
+                          </div>
+                          <input
+                            controlid='file'
+                            type='file'
+                            onChange={uploadNewFile}
+                            size='sm'
+                            name='file'
+                            placeholder='file'
+                          />
+                          {fileLoading && <small style={{ paddingLeft: '20px', fontStyle: 'italic', color: 'blue' }}>Uploading ...</small>}
+                          
+
                         </Box>
                       </Grid>
                     </Grid>}

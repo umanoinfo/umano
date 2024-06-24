@@ -6,13 +6,59 @@
  * @param activeItem
  */
 export const handleURLQueries = (router, path) => {
-  if (Object.keys(router.query).length && path) {
-    const arr = Object.keys(router.query)
+  
+      let router_paths = router.asPath.split('/');
+      path = path.split('/');
+      
 
-    return router.asPath.includes(path) && router.asPath.includes(router.query[arr[0]]) && path !== '/'
-  }
+      const isId = (str)=>{
+        return str.match(/^[a-f\d]{24}$/i);
+      }
+  
+    
+      if(isId(router_paths[router_paths.length-2])){
+        // console.log('up');
+        let match = true ;
+        for(let i = 1;i < router_paths.length - 2 ;i++){
+          if(path[i] != router_paths[i] ){
+            match = false ;
+            break;
+          }
+        }
+        if(match){
+          // console.log('a', router_paths) ;
+          // console.log('b' , path);
 
-  return false
+          return true ;
+        }
+        else{
+          return false;
+        }
+      }
+      else{
+        // console.log('down');
+        let match = true ;
+        if(router_paths.length != path.length ){
+          return false ;
+        }
+        for(let i = 1 ;i < router_paths.length - 1 ;i++ ){
+          if(path[i] != router_paths[i]){
+            match = false; 
+            break;
+          }
+        }
+        if(match){
+          // console.log('a', router_paths) ;
+          // console.log('b' , path);
+
+          return true; 
+        }
+        else{
+          return false ;
+        }
+
+      }
+
 }
 
 /**

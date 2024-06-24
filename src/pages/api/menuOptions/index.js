@@ -33,13 +33,13 @@ export default async function handler(req, res) {
     options.push({ sectionTitle: 'Admin Dashboard' })
   }
   if (myUser && myUser.permissions.includes('AdminViewCompany') && myUser.type == 'admin') {
-    options.push({ title: 'Companies', icon: 'mdi:google-circles-extended', path: '/admin-dashboard/company' })
+    options.push({ title: 'Companies', icon: 'mdi:google-circles-extended', path: '/admin-dashboard/company/' })
   }
   if (myUser && myUser.permissions.includes('AdminViewUser') && myUser.type == 'admin') {
     options.push({
       title: 'Users',
       icon: 'mdi:account-outline',
-      path: '/admin-dashboard/user'
+      path: '/admin-dashboard/user/'
     })
   }
 
@@ -55,13 +55,13 @@ export default async function handler(req, res) {
     if (myUser.permissions.includes('AdminViewPermission')) {
       children.push({
         title: 'Permissions',
-        path: '/admin-dashboard/permission'
+        path: '/admin-dashboard/permission/'
       });
     }
     if (myUser.permissions.includes('AdminViewRole')) {
       children.push({
         title: 'Roles',
-        path: '/admin-dashboard/role'
+        path: '/admin-dashboard/role/'
       });
     }
     options.push({
@@ -75,7 +75,7 @@ export default async function handler(req, res) {
       {
         title: 'Documents',
         icon: 'mdi:checkbox-multiple-blank-outline',
-        path: '/admin-dashboard/documents'
+        path: '/admin-dashboard/documents/'
       }
     );
 
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
     options.push({
       title: 'Calender',
       icon: 'mdi-calendar-multiple-check',
-      path: '/company-dashboard/calender'
+      path: '/company-dashboard/calender/'
     })
   }
 
@@ -109,11 +109,11 @@ export default async function handler(req, res) {
       children: [
         {
           title: 'List',
-          path: '/company-dashboard/department'
+          path: '/company-dashboard/department/'
         },
         {
           title: 'Structure',
-          path: '/company-dashboard/department/organizational-structure'
+          path: '/company-dashboard/department/organizational-structure/'
         }
       ]
     })
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
     if (myUser && myUser.permissions.includes('ViewEmployee')) {
       children.push({
         title: 'List',
-        path: '/company-dashboard/employee'
+        path: '/company-dashboard/employee/'
       })
     }
     if (myUser && myUser.permissions.includes('ViewEmployeeLeave')) {
@@ -148,7 +148,7 @@ export default async function handler(req, res) {
     if (myUser && myUser.permissions.includes('ViewCME')) {
       children.push({
         title: 'CME',
-        path: '/company-dashboard/cme'
+        path: '/company-dashboard/cme/'
       })
     }
 
@@ -172,7 +172,7 @@ export default async function handler(req, res) {
 
   if (myUser && (myUser.permissions.includes('ViewDocument'))) {
     const children = documents.map((document) => {
-      return { title: document.name, category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}` }
+      return { title: document.name, category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}/` }
     });
 
     options.push({
@@ -200,11 +200,11 @@ export default async function handler(req, res) {
         },
         {
           title: 'All Documents',
-          path: '/company-dashboard/document'
+          path: '/company-dashboard/document/'
         },
         {
           title: 'All Files',
-          path: '/company-dashboard/document/files'
+          path: '/company-dashboard/document/files/'
         }
       ]
     })
@@ -300,21 +300,21 @@ export default async function handler(req, res) {
     options.push({
       title: 'Mails',
       icon: 'ic:baseline-mail-outline',
-      path: '/company-dashboard/mail'
+      path: '/company-dashboard/mail/'
     })
   }
   if (myUser && myUser.permissions.includes('ViewUser')) {
     options.push({
       title: 'Users',
       icon: 'mdi:account-outline',
-      path: '/company-dashboard/user'
+      path: '/company-dashboard/user/'
     })
   }
   if (myUser && myUser.permissions.includes('ViewRole')) {
     options.push({
       title: 'Roles',
       icon: 'mdi:shield-outline',
-      path: '/company-dashboard/role'
+      path: '/company-dashboard/role/'
     })
   }
 
@@ -326,13 +326,13 @@ export default async function handler(req, res) {
     if (myUser.permissions.includes('ViewCompany')) {
       children.push({
         title: 'Company',
-        path: '/company-dashboard/settings/company'
+        path: '/company-dashboard/settings/company/'
       });
     }
     if (myUser.permissions.includes('ViewDocumentType')) {
       children.push({
         title: 'Documents',
-        path: '/company-dashboard/settings/document-types'
+        path: '/company-dashboard/settings/document-types/'
       })
     }
     options.push({

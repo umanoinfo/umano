@@ -238,6 +238,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             name='value'
                             placeholder='Percentage value'
                             value={formValue.value}
+                            
                           />
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>

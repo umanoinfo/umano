@@ -427,7 +427,9 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
               {
                 !data.flexible ?
                 <>
-                      <TableRow>
+                {
+                    data.totalEarlyValue && 
+                    <TableRow>
                       <TableCell>Early and late Hours</TableCell>
                       <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
                       <TableCell>
@@ -439,7 +441,9 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <small> AED</small>
                       </TableCell>
                     </TableRow>
-
+                }
+                {
+                  data.totalLateOverTimeHours ?
                     <TableRow>
                       <TableCell>Early and late OverTime Hours</TableCell>
                       <TableCell>{(data.totalEarlyOverTimeHours + data.totalLateOverTimeHours).toFixed(2)}</TableCell>
@@ -451,8 +455,11 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <strong>{(+(Number(data.totalLateOverTimeValue) + Number(data.totalEarlyOverTimeValue)).toFixed(3)).toLocaleString("en-US")}</strong>
                         <small> AED</small>
                       </TableCell>
-                    </TableRow>
-
+                    </TableRow>:
+                    <> </>
+                }
+                {
+                    data.totalholidayHours ?
                     <TableRow>
                       <TableCell>Holiday Hours</TableCell>
                       <TableCell>{data.totalholidayHours}</TableCell>
@@ -464,8 +471,11 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <strong>{(+data.totalholidayValue).toLocaleString("en-US")}</strong>
                         <small> AED</small>
                       </TableCell>
-                    </TableRow>
-
+                    </TableRow>:
+                    <></>
+                }
+                {
+                    data.totalOffDayHours ?
                     <TableRow>
                       <TableCell>Off Day Hours</TableCell>
                       <TableCell>{data.totalOffDayHours}</TableCell>
@@ -477,7 +487,9 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <strong>{(+data.totalOffDayValue).toLocaleString("en-US")}</strong>
                         <small> AED</small>
                       </TableCell>
-                    </TableRow>
+                    </TableRow>:
+                    <></>
+                  }
                   </>
               :
               <></>
@@ -579,10 +591,12 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
               })}
               
               {!data.flexible && data.leaves_info.map((leave, index) => {
+                // if(leave.time == 0 ) return <></>;
+                
                 return (
                   <TableRow key={index}>
                     <TableCell>
-                      Leave <small> ({leave.type})</small> 
+                      Leave <small> ({leave.type}) - ({leave.status_reason})</small> 
                     </TableCell>
                     <TableCell>{leave.time} hour</TableCell>
                     <TableCell>
@@ -639,7 +653,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
       </Card>
     )
   } else {
-    return null
+    return <></>
   }
 }
 

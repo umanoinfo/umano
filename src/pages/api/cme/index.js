@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   // ----------------------------- View Companies --------------------------------
   const employees = await client.db().collection('employees').find({
     $and: [ 
-      { $or: [{ firstName: { $regex: req.query.q, '$options' : 'i'  } }, { lastName: { $regex: req.query.q , '$options' : 'i'  } }] },
+      { $or: [{ firstName: { $regex: req.query.q, '$options' : 'i'  } }, { lastName: { $regex: req.query.q , '$options' : 'i'  } }, { idNo: { $regex: req.query.q , '$options' : 'i'  } }] },
       { company_id: myUser.company_id },
       { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
     ]

@@ -86,6 +86,7 @@ const LeaveList = () => {
   const [leaveType, setLeaveType] = useState('')
   const [leaveStatus, setLeaveStatus] = useState('')
   const [value, setValue] = useState('')
+  const [employeeQ,setEmployeeQ] = useState('');
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -105,10 +106,11 @@ const LeaveList = () => {
       fetchData({
         leaveType,
         leaveStatus,
-        q: value
+        q: value,
+        employee:employeeQ
       })
     ).then( () => setLoading(false))
-  }, [dispatch, leaveType, leaveStatus, value])
+  }, [dispatch, leaveType, leaveStatus, value , employeeQ])
 
   // ----------------------- Handle ------------------------------
 
@@ -119,6 +121,10 @@ const LeaveList = () => {
   const handleFilter = useCallback(val => {
     setValue(val)
   }, [])
+
+  const handleEmployeeFilter= useCallback(val =>{
+    setEmployeeQ(val);
+  })
 
   const HandleStatusChange = useCallback(e => {
     setLeaveStatus(e.target.value)
@@ -260,6 +266,19 @@ const LeaveList = () => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {row.index}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.5,
+      minWidth: 100,
+      field: 'idNo',
+      headerName: 'idNo',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.employee_info?.[0]?.idNo}
           </Typography>
         )
       }
@@ -481,17 +500,32 @@ const LeaveList = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item sm={3} xs={12}>
-              <FormControl fullWidth size='small'>
-                <TextField
-                  size='small'
-                  label='Search'
-                  value={value}
-                  sx={{ mr: 6, mb: 2 }}
-                  placeholder='Search Reason'
-                  onChange={e => handleFilter(e.target.value)}
-                />
-              </FormControl>
+            <Grid item sm={2} xs={6} >
+                <FormControl   size='small'>
+                  <TextField
+                    size='small'
+                    label='Search Employee'
+                    value={employeeQ}
+                    sx={{ mr: 6, mb: 2 }}
+                    placeholder='Search Employee'
+                    onChange={e => handleEmployeeFilter(e.target.value)}
+                  />
+                </FormControl>
+              </Grid>
+            <Grid item sm={2} xs={6}>
+              
+              
+                <FormControl   size='small'>
+                  <TextField
+                    size='small'
+                    label='Search'
+                    value={value}
+                    sx={{ mr: 6, mb: 2 }}
+                    placeholder='Search Reason'
+                    onChange={e => handleFilter(e.target.value)}
+                  />
+                </FormControl>
+              
             </Grid>
 
             <Grid item sm={5} xs={12} textAlign={right}>

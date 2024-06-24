@@ -408,7 +408,7 @@ const AllDocumentsList = () => {
               </FormControl>
             </Grid>
             <Grid item sm={3} xs={12}>
-              <FormControl fullWidth size='small'>
+              {/* <FormControl fullWidth size='small'>
                 <TextField
                   size='small'
                   label='Search'
@@ -417,7 +417,7 @@ const AllDocumentsList = () => {
                   placeholder='Search User'
                   onChange={e => handleFilter(e.target.value)}
                 />
-              </FormControl>
+              </FormControl> */}
             </Grid>
 
             <Grid item sm={5} xs={12} textAlign={right}>

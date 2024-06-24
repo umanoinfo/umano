@@ -318,6 +318,8 @@ const StepSalary = ({ handleNext, employee }) => {
   }
 
   const handleAdd = () => {
+    // console.log('.' , employee.joiningDate);
+    setStartChangeDate(employee?.joiningDate);
     setFormValue({})
     setAction('add')
     setForm(true)

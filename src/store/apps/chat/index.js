@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 // ** Fetch User Profile
-export const fetchUserProfile = createAsyncThunk('appChat/fetchUserProfile', async () => {
+export const fetchUserProfile = createAsyncThunk('appChat/fetchUserProfile', async () => {z
   const response = await axios.get('/apps/chat/users/profile-user')
 
   return response.data
