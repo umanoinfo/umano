@@ -62,7 +62,7 @@ import { useRouter } from 'next/router'
 
 
 // ** Data
-import { EmployeesTypes, MaritalStatus, SourceOfHire, HealthInsuranceTypes } from 'src/local-db'
+import { EmployeesTypes, MaritalStatus, SourceOfHire, HealthInsuranceTypes, WorkingHours } from 'src/local-db'
 
 // ** Step Components
 import StepSalary from './steps/StepSalary'
@@ -135,7 +135,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [compensationDataSource, setCompensationDataSource] = useState()
   const [shiftsDataSource, setShiftsDataSource] = useState([])
   const [salaryFormulaDataSource, setSalaryFormulaDataSource] = useState([])
-
+  const [workingHours , setWorkingHours ] = useState('other');
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
 
@@ -469,6 +469,17 @@ const AddEmployee = ({ popperPlacement, id }) => {
                           {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
+                    </Grid>
+                    <Grid item sm={12} xs={12} md={5} mt={9}>
+                      <SelectPicker
+                          size='sm'
+                          name='workingHours'
+                          data={WorkingHours}
+                          value={workingHours}
+                          onChange={(e)=>{setWorkingHours(e)}}
+                          block
+                      >
+                      </SelectPicker>
                     </Grid>
                   </Grid>
                   <Grid container spacing={3}>
@@ -895,14 +906,16 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     selectedEmployee ? update() : saveNew()
   }
-
+  
   const saveNew = () => {
+    console.log(formValue);
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
         data = formValue
         data.idNo = newEmployeeID
+        data.workingHours = workingHours ;
         data.countryID = countryID
         data.dateOfBirth = new Date(dateOfBirth)
         data.joiningDate = new Date(joiningDate)

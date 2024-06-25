@@ -3,6 +3,12 @@ export const companiesTypes = [
   { title: 'Clinic', icon: 'mdi:laptop', color: 'warning.main', value: 'clinic' }
 ]
 
+export const WorkingHours =   [
+  {label:'8 hours/day', value:'8 hours/day' } ,
+  {label:'48 hours/week',value:'48 hours/week'} , 
+  {label:'other',value:'other'}
+];
+
 export const EmployeesTypes = [
   { title: 'Full-time', value: 'fullTime' },
   { title: 'Part-time', value: 'partTime' },

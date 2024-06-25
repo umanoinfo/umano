@@ -242,7 +242,7 @@ const StepSalary = ({ handleNext, employee }) => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
-        data = { ...formValue }
+        data = { ...formValue , lumpySalary : Number(formValue.lumpySalary.replaceAll(',','')) }
         console.log(startChangeDate)
         data.startChangeDate = new Date(startChangeDate)
         data.employee_id = employee._id
@@ -395,7 +395,7 @@ const StepSalary = ({ handleNext, employee }) => {
       renderCell: ({ row }) => (
         <>
           <Typography variant='body2' sx={{ fontWeight: 900, fontSize: '0.85rem' }}>
-            {Number(row.totalSalary).toLocaleString() ?? '-'}
+            {row.totalSalary?  Number(row.totalSalary).toLocaleString() : '-'}
           </Typography>
         </>)
     },
@@ -548,16 +548,24 @@ const StepSalary = ({ handleNext, employee }) => {
                       <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                         <small>Monthly Basic Salary</small>
                         <Form.Control
-                          type='text'
+                          
+
+                          /*
+                              https://codesandbox.io/s/react-hooks-counter-demo-br8l1?file=/src/index.js
+                          */
+
+                          step='0.01'
                           controlId='lumpySalary'
                           size='lg'
                           name='lumpySalary'
                           placeholder='Basic Salary'
+                          type='text'
                           onChange={(e) => {
                             e = String(e).replaceAll(',', '');
                             e = Number(e);
                             setFormValue({ ...formValue, lumpySalary: Number(e).toLocaleString() })
                           }}
+                          
                         />
                       </Grid>
                       {/* <Grid item sm={12} md={6} sx={{ mt: 2 }}>

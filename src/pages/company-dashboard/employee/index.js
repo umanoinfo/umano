@@ -245,6 +245,9 @@ const EmployeeList = classNamec => {
       handleRowOptionsClose()
     }
 
+    const handleRowSummary = ()=>{
+      router.push('/company-dashboard/employee/' + row._id + '/view');
+    }
 
 
 
@@ -284,6 +287,15 @@ const EmployeeList = classNamec => {
               View
             </MenuItem>
           )}
+          {
+            session && session.user.permissions.includes('ViewEmployee') && (
+              <MenuItem onClick={handleRowSummary} sx={{ '& svg': { mr: 2 } }}>
+                <Icon icon='mdi:eye-outline' fontSize={20}>
+                  Summary 
+                </Icon>
+              </MenuItem>
+            ) 
+          }
           {session && session.user.permissions.includes('ViewEmployee') && (
             <MenuItem onClick={handleRowTimeLine} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:clock-outline' fontSize={20} />
@@ -302,6 +314,7 @@ const EmployeeList = classNamec => {
               Delete
             </MenuItem>
           )}
+
         </Menu>
       </>
     )

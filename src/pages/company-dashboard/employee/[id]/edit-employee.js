@@ -27,7 +27,7 @@ import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import MuiStepper from '@mui/material/Stepper'
 import Loading from 'src/views/loading'
-import { EmployeesPositions } from 'src/local-db'
+import { EmployeesPositions, WorkingHours } from 'src/local-db'
 
 import { Input, InputGroup, Row, Col, Radio, RadioGroup } from 'rsuite'
 import { Form, Schema, Panel } from 'rsuite'
@@ -115,6 +115,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
   const [unpaidLeaves, setUnpaidLeaves] = useState();
   const [parentalLeaves, setParentalLeaves] = useState();
   const [newEmployeeID, setNewEmployeeID] = useState();
+  const [workingHours , setWorkingHours] = useState('other');
   let [companyEmployeeID, setCompanyEmployeeID] = useState();
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
@@ -263,8 +264,10 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
       setParentalLeaves(data[0].parentalLeavesBeforeAddingToSystem);
       setUnpaidLeaves(data[0].unpaidLeavesBeforeAddingToSystem);
       setNewEmployeeID(String(data[0].idNo));
-
       setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
+      console.log('...');
+      
+      setWorkingHours(data[0].workingHours);
 
       // console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
       if (tab) { setActiveStep(Number(tab)) } else { setActiveStep(0) }
@@ -455,6 +458,17 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                           {/* <input type='number' checkAsync name='idNo' placeholder='ID No' size={'sm'}  value={newEmployeeID} onChange={(e)=>{setNewEmployeeID(e.target.value)}} /> */}
                         </InputGroup>
                       </Form.Group>
+                    </Grid>
+                    <Grid item sm={12} xs={12} md={5} mt={9}>
+                      <SelectPicker
+                          size='sm'
+                          name='workingHours'
+                          data={WorkingHours}
+                          value={workingHours} 
+                          onChange={(e)=>{setWorkingHours(e)}}
+                          block
+                      >
+                      </SelectPicker>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -890,7 +904,8 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
         data = formValue
         if (isNaN(Number(data.idNo))) {
           toast.error('Id No must be a number', { duration: 1000, position: 'bottom-right' });
-
+          setLoading(false);
+          
           return;
         }
         data._id = id
@@ -909,6 +924,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
         data.idNo = newEmployeeID;
         data.type = position;
+        data.workingHours = workingHours ;
 
         axios
           .post('/api/company-employee/edit-employee', {

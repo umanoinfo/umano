@@ -132,14 +132,14 @@ const Slip = ({ id }) => {
                   Less Than Five Year
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {payroll.lessThanFiveValue} AED
+                  {Number(Number(payroll.lessThanFiveValue).toFixed(2)).toLocaleString()} AED
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                   More Than Five Year
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {payroll.moreThanFiveValue} AED
+                  {Number(Number(payroll.moreThanFiveValue).toFixed(2)).toLocaleString()} AED
                 </div>
               </div>
             </div>
@@ -193,7 +193,7 @@ const Slip = ({ id }) => {
               <div style={{ width: '100%', display: 'flex', border: '1px solid black' }}>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>Total</div>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>
-                  {payroll.endOfServeceTotalValue} AED
+                  {Number(Number(payroll.endOfServeceTotalValue).toFixed(2)).toLocaleString()} AED
                 </div>
               </div>
             </div>

@@ -263,7 +263,7 @@ const EditLeave = ({ popperPlacement, id }) => {
       takenParentalLeaves: 0,
       takenOthers: 0
     }
-    const leaves = employee.leaves_info
+    const leaves = employee.leaves_info.filter((leave)=> {return leave._id != id })
     
     const range1 = employee.shift_info[0].times.map(time => {
       return { start: time.timeIn, end: time.timeOut }
@@ -434,13 +434,16 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   // ------------------------------- Submit --------------------------------------
   const checkIntersectionWithVacation = ()=>{
-    console.log(selectedEmployee);
+    
     let start = new Date(formValue.date_from) ;
     while(start < new Date(formValue.date_to)){
       let i = !days.includes(start.getDay())
       let j = holyDays.includes(start.toDateString())
       let z = false;
       selectedEmployee?.leaves_info?.map((leave)=>{
+        if(leave._id == id ){
+          return false ;
+        }
         let start_leave = new Date(leave.date_from) ;
         while(start_leave < new Date(leave.date_to)){
           if(start_leave.toDateString() == start.toDateString()){
@@ -603,8 +606,9 @@ const EditLeave = ({ popperPlacement, id }) => {
         setLoadingDescription('leaves is inserting')
 
         let newData = { ...data_request , file: tempFile}
-        newData.date_from = new Date(data_request.date_from).toLocaleString().toString()
-        newData.date_to = new Date(data_request.date_to).toLocaleString().toString()
+
+        newData.date_from = new Date(data_request.date_from)
+        newData.date_to = new Date(data_request.date_to)
         axios
           .post('/api/employee-leave/edit-leave', {
             data: newData

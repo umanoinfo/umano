@@ -23,6 +23,14 @@ export default async function handler(req, res) {
   }
 
   // --------------------- Post ------------------------------------------
+  const filterEmployees = await client.db().collection('employees').find({ 
+    $or: [{firstName: { $regex: req.query.q , '$options' : 'i' } },{lastName: { $regex: req.query.q , '$options' : 'i' } },{idNo: { $regex: req.query.q , '$options' : 'i' } }]
+  }).toArray();
+
+  const ids = filterEmployees.map((emp)=>{
+    return {employee_id: String(emp._id)}
+  });
+  console.log(ids);
 
   const employees = await client
     .db()
@@ -32,7 +40,8 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { reason: { $regex: req.query.q , '$options' : 'i' } },
-            { $or: [{firstName: { $regex: req.query.q , '$options' : 'i' } },{lastName: { $regex: req.query.q , '$options' : 'i' } },{idNo: { $regex: req.query.q , '$options' : 'i' } }]},
+            
+            // { $or : ids },
             { type: { $regex: req.query.rewardType } },
             { status: { $regex: req.query.rewardStatus } },
             { company_id: myUser.company_id },

@@ -138,7 +138,7 @@ const Slip = ({ id }) => {
                       Early and late Hours
                     </div>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                      {payroll.totalEarlyValue} AED
+                      {Number(payroll.totalEarlyValue.toFixed(2)).toLocaleString()} AED
                     </div>
                   </>
                 }
@@ -147,14 +147,14 @@ const Slip = ({ id }) => {
                   Monthly Deductions
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  -{payroll.totalDeductions} AED
+                  -{payroll.totalDeductions.toLocaleString()} AED
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                   Employee Deductions
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  -{payroll.totalEmployeeDeductions} AED
+                  -{Number(payroll.totalEmployeeDeductions.toFixed(2)).toLocaleString()} AED
                 </div>
                 {/*  */}
                 {
@@ -258,14 +258,14 @@ const Slip = ({ id }) => {
                   Monthly Allowances
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {payroll.totalCompensations} <small>AED</small>
+                  {Number(payroll.totalCompensations.toFixed(2)).toLocaleString()} <small>AED</small>
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                   Employee Rewards
                 </div>
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {payroll.totalEmployeeRewards} <small>AED</small>
+                  {Number(payroll.totalEmployeeRewards.toFixed(2)).toLocaleString()} <small>AED</small>
                 </div>
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
@@ -354,7 +354,7 @@ const Slip = ({ id }) => {
             <div style={{ width: '100%', padding: '5px' }} xs={12} md={6}>
               <div style={{ width: '100%', display: 'flex', border: '1px solid black' }}>
                 <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>Total</div>
-                <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>{payroll.total.toFixed(2)} AED</div>
+                <div style={{ padding: '5px', width: '50%', textAlign: 'center' }}>{Number(payroll.total.toFixed(2)).toLocaleString()} AED</div>
               </div>
             </div>
           </div>

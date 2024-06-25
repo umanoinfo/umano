@@ -283,7 +283,7 @@ const DeductionsList = () => {
       minWidth: 100,
       headerName: 'Value',
       renderCell: ({ row }) => {
-        return <>{row.value} AED</>
+        return <>{row.value.toLocaleString()} AED</>
       }
     },
     {

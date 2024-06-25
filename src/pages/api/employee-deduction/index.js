@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   }
 
   // --------------------- Post ------------------------------------------
-
+  
   const employees = await client
     .db()
     .collection('employeeDeductions')
@@ -32,7 +32,8 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { reason: { $regex: req.query.q , '$options' : 'i' } },
-            { $or: [{firstName: { $regex: req.query.q , '$options' : 'i' } },{lastName: { $regex: req.query.q , '$options' : 'i' } },{idNo: { $regex: req.query.q , '$options' : 'i' } }]},
+            
+            // { $or: [{firstName: { $regex: req.query.q , '$options' : 'i' } },{lastName: { $regex: req.query.q , '$options' : 'i' } },{idNo: { $regex: req.query.q , '$options' : 'i' } }]},
             { type: { $regex: req.query.deductionType } },
             { status: { $regex: req.query.deductionStatus } },
             { company_id: myUser.company_id },

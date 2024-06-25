@@ -528,7 +528,7 @@ const LeaveList = () => {
               
             </Grid>
 
-            <Grid item sm={5} xs={12} textAlign={right}>
+            <Grid item sm={4} xs={10} textAlign={right}>
               <Button
                 sx={{ mr: 4, mb: 2 }}
                 color='secondary'

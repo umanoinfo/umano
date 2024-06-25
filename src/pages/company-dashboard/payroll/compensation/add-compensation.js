@@ -59,8 +59,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const validateMmodel = Schema.Model({
     title: StringType().isRequired('This field is required.'),
     type: StringType().isRequired('This field is required.'),
-    fixedValue: NumberType().min(0).isRequired('The field is required'),
-    percentageValue: NumberType().min(0).isRequired('The field is required'),
+    fixedValue: StringType().isRequired('The field is required'),
+    percentageValue: StringType().isRequired('The field is required'),
   })
 
   // ------------------------------- Submit --------------------------------------
@@ -68,7 +68,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...formValue }
+        let data = { ...formValue , fixedValue: Number(formValue.fixedValue.replaceAll(',','')) ,percentageValue: Number(formValue.percentageValue.replaceAll(',',''))}
+        if( isNaN(data.fixedValue) || isNaN(data.percentageValue)  ) {
+          toast.error('fixed value / percentage value must be a number' , {duration:5000 , position:'bottom-right'});
+
+          return ;
+        } 
         setLoading(true)
         setLoadingDescription('Allowance is inserting')
         axios
@@ -173,9 +178,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Form.Control
                             controlId='fixedValue'
                             size='sm'
-                            type='number'
                             name='fixedValue'
                             placeholder='Fixed value'
+                            type='text'
+                            onChange={(e) => {
+                              e = String(e).replaceAll(',', '');
+                              e = Number(e);
+                              setFormValue({ ...formValue, fixedValue: Number(e).toLocaleString() })
+                            }}
                           />
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -184,10 +194,15 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Typography>
                           <Form.Control
                             controlId='percentageValue'
-                            type='number'
                             size='sm'
                             name='percentageValue'
                             placeholder='Percentage value'
+                            type='text'
+                            onChange={(e) => {
+                              e = String(e).replaceAll(',', '');
+                              e = Number(e);
+                              setFormValue({ ...formValue, percentageValue: Number(e).toLocaleString() })
+                            }}
                           />
                         </Box>
                       </Grid>

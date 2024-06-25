@@ -37,10 +37,9 @@ export default async function handler(req, res) {
             { reason: { $regex: req.query.q , '$options' : 'i' } },
             { type: { $regex: req.query.leaveType } },
             { status_reason: { $regex: req.query.leaveStatus } },
-            { $or: [{ firstName: { $regex: req.query.employeeQ, '$options' : 'i'  } }, { lastName: { $regex: req.query.employeeQ , '$options' : 'i'  } } , { idNo: { $regex: req.query.employeeQ , '$options' : 'i'  } }] },
+
+            // { $or: [{ firstName: { $regex: req.query.employeeQ, '$options' : 'i'  } }, { lastName: { $regex: req.query.employeeQ , '$options' : 'i'  } } , { idNo: { $regex: req.query.employeeQ , '$options' : 'i'  } }] },
             
-            // {$or:[
-            // ]},
             { company_id: myUser.company_id },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]

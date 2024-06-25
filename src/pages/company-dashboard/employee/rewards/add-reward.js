@@ -79,7 +79,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     type: StringType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
     employees: ArrayType().isRequired('This field is required.'),
-    value: NumberType().min(1).isRequired('This field is required.'),
+    value: StringType().isRequired('This field is required.'),
     date: DateType().isRequired('This field is required.')
   })
 
@@ -105,8 +105,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...formValue }
+        let data = { ...formValue , value : Number(formValue.value.replaceAll(',',''))}
+        if( isNaN(data.value) ) {
+          toast.error('Value must be a number' , {duration:5000 , position:'bottom-right'});
 
+          return ;
+        }
         setLoading(true)
         setLoadingDescription('Reward is inserting')
 
@@ -233,11 +237,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Typography>
                           <Form.Control
                             controlId='value'
-                            type='number'
                             size='sm'
                             name='value'
                             placeholder='Percentage value'
                             value={formValue.value}
+                            type='text'
+                            onChange={(e) => {
+                              e = String(e).replaceAll(',', '');
+                              e = Number(e);
+                              setFormValue({ ...formValue, value: Number(e).toLocaleString() })
+                            }}
                             
                           />
                         </Box>
