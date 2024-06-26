@@ -281,21 +281,22 @@ const EmployeeList = classNamec => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
+          {
+            session && session.user.permissions.includes('ViewEmployee') && (
+              <MenuItem onClick={handleRowSummary} sx={{ '& svg': { mr: 2 } }}>
+                {/* <Icon icon='mdi:eye-outline' fontSize={20}> */}
+                  Summary 
+                {/* </Icon> */}
+              </MenuItem>
+            ) 
+          }
           {session && session.user.permissions.includes('ViewEmployee') && (
             <MenuItem onClick={handleRowView} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
           )}
-          {
-            session && session.user.permissions.includes('ViewEmployee') && (
-              <MenuItem onClick={handleRowSummary} sx={{ '& svg': { mr: 2 } }}>
-                <Icon icon='mdi:eye-outline' fontSize={20}>
-                  Summary 
-                </Icon>
-              </MenuItem>
-            ) 
-          }
+          
           {session && session.user.permissions.includes('ViewEmployee') && (
             <MenuItem onClick={handleRowTimeLine} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:clock-outline' fontSize={20} />

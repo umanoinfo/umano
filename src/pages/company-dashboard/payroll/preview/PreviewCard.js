@@ -56,6 +56,7 @@ const renderClient = employee => {
 
 const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
   let totalSalary = 0 ;
+  console.log(data);
   if(data.flexible ){
      totalSalary =(( 
 
@@ -598,7 +599,14 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                     <TableCell>
                       Leave <small> ({leave.type}) - ({leave.status_reason})</small> 
                     </TableCell>
-                    <TableCell>{leave.time} hour</TableCell>
+                    {
+                      leave.type == 'daily' && 
+                      <TableCell>{(leave.time / ( ((new Date('1970-1-1 ' + data.shift_info[0].times[0].timeOut) - new Date('1970-1-1 ' + data.shift_info[0].times[0].timeIn)) / (1000 * 60 * 60) )  ) ).toFixed(2)} day</TableCell>
+                    }
+                    {
+                      leave.type == 'hourly' && 
+                      <TableCell>{(leave.time).toFixed(2)} hour</TableCell>
+                    }
                     <TableCell>
                       -{ 100 - leave.paidValue}
                       <small> %</small>

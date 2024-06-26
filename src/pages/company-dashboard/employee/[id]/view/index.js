@@ -174,7 +174,7 @@ const EmployeeViewLeft = ({  }) => {
             </CardContent>
 
             <CardContent>
-              <Typography variant='h6'>Summery <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+              <Typography variant='h6'>Summary <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
               <Grid container spacing={2}>
               <Grid Item xs={6}>
