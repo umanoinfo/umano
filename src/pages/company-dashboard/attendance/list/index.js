@@ -308,7 +308,7 @@ const AllDocumentsList = () => {
           )} */}
           {session && session.user && session.user.permissions.includes('EditAttendance') && (
             <MenuItem onClick={()=>handleResetAttendance(row._id)} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              <Icon icon='mdi:recycle' fontSize={20} />
               Reset
             </MenuItem>
           )}
