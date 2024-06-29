@@ -102,20 +102,32 @@ export default async function handler(req, res) {
     })
   }
 
-  if (myUser && myUser.permissions.includes('ViewDepartment')) {
-    options.push({
-      title: 'Departments',
-      icon: 'mdi-view-module',
-      children: [
+  if (myUser && (myUser.permissions.includes('ViewDepartment')  || myUser.permissions.includes('ViewPosition')) ) {
+    let children = [] ;
+    if(myUser.permissions.includes('ViewDepartment')){
+      children.push(
         {
           title: 'List',
           path: '/company-dashboard/department/'
-        },
-        {
+        }
+      )
+      children.push(
+      {
           title: 'Structure',
           path: '/company-dashboard/department/organizational-structure/'
-        }
-      ]
+      }
+      )
+    }
+    if(myUser.permissions.includes('ViewPosition')){
+      children.push({
+        title:'Positions',
+        path: '/company-dashboard/position'
+      })
+    }
+    options.push({
+      title: 'Departments',
+      icon: 'mdi-view-module',
+      children: children
     })
   }
   checkPermissions = ['ViewEmployee', 'ViewEmployeeLeave', 'ViewEmployeeReward', 'ViewEmployeeDeduction', 'ViewCME'];

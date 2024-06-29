@@ -141,13 +141,30 @@ const Steppositions = ({ handleNext, employee }) => {
   const [pageSize, setPageSize] = useState(7)
   const formRef = useRef()
   const [isManager, SetIsManager] = useState(0);
-
+  const [positions , setPositions ] = useState([]);
+  const [positionTitle , setPositionTitle] = useState('') ;
   const inputFile = useRef(null)
 
 
 
   // ----------------------- bulid -------------------------------------------
 
+  const getPositions = async ()=>{
+      
+      try{
+        axios.get('/api/positions' , {}).then((response)=>{
+          let positions = response?.data?.data?.map((position)=>{
+            return {label: position.title , value: position.title}
+          });
+          setPositions(positions);
+          console.log(response?.data?.data)
+        })
+      }
+      catch(err){
+
+      }
+  }
+  
   useEffect(() => {
     if (employee) {
 
@@ -161,7 +178,9 @@ const Steppositions = ({ handleNext, employee }) => {
         })
       ).then(() => {
         getDepartments().then(() => {
-          setLoading(false)
+          getPositions().then(()=>{
+            setLoading(false)
+          })
         })
       })
       setEndChangeType('onPosition')
@@ -220,7 +239,7 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const validateMmodel = Schema.Model({
-    positionTitle: StringType().isRequired('Position Title is required'),
+    // positionTitle: StringType().isRequired('Position Title is required'),
 
   })
 
@@ -228,17 +247,24 @@ const Steppositions = ({ handleNext, employee }) => {
 
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
+      
       if (!result.hasError) {
         if (!department) {
           toast.error('Department is a required field', { duration: 5000, position: 'bottom-right' });
-
+          
           return;
+        }
+        console.log(positionTitle);
+        if(!positionTitle){
+          toast.error('Position title is required', {duration:1000 , position:'bottom-right'}) ;
+
+          return ;
         }
 
         setLoading(true)
         let data = { ...formValue }
         console.log(data);
-        data.positionTitle = formValue.positionTitle
+        data.positionTitle = positionTitle
         data.startChangeType = startChangeType
         data.endChangeType = endChangeType
         data.isManager = isManager;
@@ -635,11 +661,17 @@ const Steppositions = ({ handleNext, employee }) => {
                     )}
                     <Grid item sm={6} md={6} sx={{ mt: 2 }}>
                       <small>Position Title</small>
-                      <Form.Control
+                      <SelectPicker
                         controlId='positionTitle'
                         size='sm'
                         name='positionTitle'
                         placeholder='position Title'
+                        data={positions}
+                        value={positionTitle}
+                        onChange={e=>{
+                          setPositionTitle(e)
+                        }}
+                        block
                       />
 
                     </Grid>
