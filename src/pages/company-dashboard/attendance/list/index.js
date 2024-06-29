@@ -257,6 +257,27 @@ const AllDocumentsList = () => {
       setOpen(true)
     }
 
+    const handleResetAttendance = (_id)=>{
+      setLoading(true);
+      axios.post('/api/attendance/reset-attendance' , {id:_id}).then((response)=>{
+
+        setLoading(true);
+        dispatch(
+          fetchData({        
+            fromDate: fromDate,
+            toDate: toDate,
+            employee_no: value
+          })
+        ).then(()=>{
+          setLoading(false);
+        })
+
+      }).catch((err)=>{
+        setLoading(false);
+      })
+
+    }
+
     // ------------------------------ Table Definition ---------------------------------
 
     return (
@@ -285,6 +306,12 @@ const AllDocumentsList = () => {
               View
             </MenuItem>
           )} */}
+          {session && session.user && session.user.permissions.includes('EditAttendance') && (
+            <MenuItem onClick={()=>handleResetAttendance(row._id)} sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              Reset
+            </MenuItem>
+          )}
           {session && session.user && session.user.permissions.includes('EditAttendance') && (
             <MenuItem onClick={handleEditRowOptions} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -363,6 +390,14 @@ const AllDocumentsList = () => {
 
           /* save data */
           const data = XLSX.utils.sheet_to_json(ws) // to get 2d array pass 2nd parameter as object {header: 1}
+          let EmployeesIds = new Map();
+
+          let ids = employeesList.map(val => {
+            EmployeesIds.set(String(val.idNo) , val._id) ;
+            
+            return String(val.idNo)
+          })
+          console.log(EmployeesIds);
 
           let d = data.map((val, index) => {
             let timeOut = excelDateToJSDate(val['Clock Out']);
@@ -370,22 +405,20 @@ const AllDocumentsList = () => {
 
             timeOut = new Date(timeOut).toLocaleTimeString('en-US', { hour12: false });
             timeIn = new Date(timeIn).toLocaleTimeString('en-US', { hour12: false });
-            console.log(val['Date'], new Date(val['Date']), ExcelDateToJSDate(val['Date']));
-
+            
             return {
+              'employee_id' : EmployeesIds.get(String(val['Emp No.'])),
               'Emp No.': val['Emp No.'],
               'Date': ExcelDateToJSDate(val['Date']),
               'Clock Out': timeOut,
               'Clock In': timeIn,
-              index: index + 1
+              index: index + 1 ,
             }
           })
 
 
-          let ids = employeesList.map(val => {
-            return String(val.idNo)
-          })
-
+       
+          
 
           let unValid = d.filter(val => {
             let i = !val['Emp No.']
@@ -434,9 +467,11 @@ const AllDocumentsList = () => {
         date: new Date(item.Date),
         timeOut: item['Clock Out'],
         timeIn: item['Clock In'],
-        employee_no: item['Emp No.']
+        employee_no: item['Emp No.'],
+        employee_id : item['employee_id']
       }
     })
+    console.log(data);
     setLoading(true)
 
     axios
