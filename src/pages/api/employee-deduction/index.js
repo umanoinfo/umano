@@ -23,7 +23,17 @@ export default async function handler(req, res) {
   }
 
   // --------------------- Post ------------------------------------------
-  
+  const employees_ = await client.db().collection('employees').find({
+    $or: [{ firstName: { $regex: req.query.q, '$options' : 'i'  } }, { lastName: { $regex: req.query.q , '$options' : 'i'  } } , { idNo: { $regex: req.query.q , '$options' : 'i'  } }] 
+    
+    
+   }).toArray();
+
+   const ids = employees_.map((emp)=>{
+     
+     return {employee_id : String(emp._id) };
+   });
+
   const employees = await client
     .db()
     .collection('employeeDeductions')
@@ -33,7 +43,7 @@ export default async function handler(req, res) {
           $and: [
             { reason: { $regex: req.query.q , '$options' : 'i' } },
             
-            // { $or: [{firstName: { $regex: req.query.q , '$options' : 'i' } },{lastName: { $regex: req.query.q , '$options' : 'i' } },{idNo: { $regex: req.query.q , '$options' : 'i' } }]},
+            { $or: ids },
             { type: { $regex: req.query.deductionType } },
             { status: { $regex: req.query.deductionStatus } },
             { company_id: myUser.company_id },

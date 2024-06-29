@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         $match: {
           $and: [
             { name: { $regex: req.query.q , '$options' : 'i' }  },
-            { idNo: { $regex: req.query.no } },
+            { idNo: { $regex: req.query.no , '$options' : 'i'  } },
             { company_id: myUser.company_id },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
           ]

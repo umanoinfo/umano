@@ -247,6 +247,27 @@ const DeductionsList = () => {
     },
     {
       flex: 0.15,
+      minWidth: 100,
+      field: 'idNo',
+      headerName: 'idNo',
+      renderCell: ({ row }) => {
+        const { email, firstName, lastName , idNo } = row.employee_info[0]
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row.employee_info[0])}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
+                {idNo }
+              </Typography>
+              
+            </Box>
+          </Box>
+        )
+    },
+    },
+    {
+      flex: 0.15,
       minWidth: 250,
       field: 'employeeName',
       headerName: 'Employee',

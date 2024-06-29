@@ -275,6 +275,19 @@ const CMEList = () => {
     {
       flex: 0.17,
       minWidth: 100,
+      field: 'idNo',
+      headerName: 'Id NO',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.idNo}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.17,
+      minWidth: 100,
       field: 'employee',
       headerName: 'Employee',
       renderCell: ({ row , index }) => {

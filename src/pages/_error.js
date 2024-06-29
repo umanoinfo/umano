@@ -4,7 +4,9 @@ import { useEffect } from 'react';
 function Error({ statusCode }) {
     const router = useRouter();
     useEffect(()=>{
-        router.push('/');
+        if(router.pathname != '/'){
+          router.push('/');
+        }
     })
 
     // return (
