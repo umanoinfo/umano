@@ -131,7 +131,7 @@ const EmployeeViewLeft = ({ id, employee }) => {
             </CardContent>
 
             <CardContent>
-              <Typography variant='h6'>Summery <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+              <Typography variant='h6'>Summary <small><a href="#" onClick={handleEditRowOptions} ><Icon style={{ fontSize: '15px', marginLeft: '7px' }} icon='fa-regular:edit' /></a></small></Typography>
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
               <Box sx={{ pt: 2, pb: 1 }}>
                 {employee.firstName && (

@@ -29,7 +29,12 @@ import MuiStepper from '@mui/material/Stepper'
 
 import { Input, InputGroup, Row, Col, Radio, RadioGroup } from 'rsuite'
 import { Form, Schema, Panel } from 'rsuite'
-import { DatePicker } from 'rsuite'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import en from 'date-fns/locale/en-US';
+import { DatePicker } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+
+// import { DatePicker } from 'rsuite'
 
 import { AutoComplete } from 'rsuite'
 import { SelectPicker } from 'rsuite'
@@ -82,6 +87,7 @@ import Icon from 'src/@core/components/icon'
 import { useSession } from 'next-auth/react'
 import NoPermission from 'src/views/noPermission'
 import React from 'react';
+
 
 const styles = {
   marginBottom: 10
@@ -504,9 +510,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
                   </Grid>
 
                   <Grid container spacing={3}>
-                    <Grid item sm={5} md={4} xs={12} mt={2}>
+                    <Grid item sm={5} md={4} xs={12} mt={0}>
                       <small>Date of birth</small>
-                      <Form.Control
+                      {/* <Form.Control
                         size='sm'
                         oneTap
                         accepter={DatePicker}
@@ -516,7 +522,19 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         }}
                         value={new Date(dateOfBirth)}
                         block
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                        <DatePicker
+                          slotProps={{textField:{size:'small'}}}
+                          name='dateOfBirth'
+                          value={new Date(dateOfBirth)}
+                          size='sm'
+                          
+                          onChange={(e)=>{
+                            setDateOfBirth(e.toISOString().substring(0,10))
+                          }}
+                        />
+                      </LocalizationProvider>
                       {/* </MuiLocalizationProvider> */}
                     </Grid>
                     <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
@@ -740,9 +758,9 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         block
                       />
                     </Grid>
-                    <Grid item sm={5} xs={12} md={5} mt={2}>
-                      <small>Joining Date</small>
-                      <Form.Control
+                    <Grid item sm={5} xs={12} md={5} mt={6}>
+                      {/* <small>Joining Date</small> */}
+                      {/* <Form.Control
                         size='sm'
                         oneTap
 
@@ -753,7 +771,19 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         }}
                         value={new Date(joiningDate)}
                         block
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                        <DatePicker
+                          name='joiningDate'
+                          label='Joining Date'
+                          slotProps={{textField:{size:'small'}}}
+                          value={new Date(joiningDate)}
+                          size='sm'
+                          onChange={(e)=>{
+                            setJoiningDate(e.toISOString().substring(0,10))
+                          }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                   </Grid>
 
