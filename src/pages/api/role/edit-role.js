@@ -56,6 +56,8 @@ export default async function handler(req, res) {
       }
     ])
     .toArray()
+  
+  console.log( id , users );
 
   // deleting permissions 
   for (const user of users) {
@@ -113,6 +115,7 @@ export default async function handler(req, res) {
           }).toArray();
 
           for(let companyUser of companyUsers ){
+            if(companyUser._id == myUser._id || myUser.type == 'admin') continue ;
             let id = companyUser._id ;
             delete companyUser._id;
             let permissions = [] ;

@@ -82,7 +82,7 @@ export default async function handler(req, res) {
 
             {
               $match: {
-                date_from: { $gte: fromDate, $lte: toDate },
+                date_from: { $gte: new Date( fromDate ).toISOString(), $lte: new Date( toDate ).toISOString() },
                 $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] 
               }
             }

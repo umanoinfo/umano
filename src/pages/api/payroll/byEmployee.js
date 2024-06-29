@@ -22,11 +22,13 @@ export default async function handler(req, res) {
 
   const selectedEmployee = req.body.data
   const id = selectedEmployee._id
-
-  const fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)) 
-  const toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
-
-
+  
+  let fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)) 
+  let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
+  console.log(fromDate , toDate);
+  
+  // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
+  // toDate = new Date( toDate - 1000 * 60 * 60 * 24  );
   
 
   // --------------------- Get ------------------------------------------
@@ -93,7 +95,7 @@ export default async function handler(req, res) {
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_no', '$$employee_no'] } } },
             {
-              $match: { date: { $gte: fromDate, $lte: toDate } }
+              $match: { date: { $gte: new Date( fromDate ).toISOString(), $lte: new Date( toDate ).toISOString() } }
             },
             {
               $match:{ $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
@@ -131,7 +133,16 @@ export default async function handler(req, res) {
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
             {
               $match: {
-                date_from: { $gte: fromDate , $lte: toDate  },
+                $or:[
+                  {date_from: { $gte:  new Date( fromDate ).toISOString() , $lte: new Date( toDate  ).toISOString() }},
+                  {date_to :  { $gte: new Date(fromDate).toISOString() , $lte: new Date(toDate).toISOString() } }
+
+                ]
+                
+              }
+            },
+            {
+              $match:{
                 $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] 
               }
             }
@@ -144,11 +155,20 @@ export default async function handler(req, res) {
           from: 'employeeLeaves',
           let: { id: { $toString: '$_id' } },
           pipeline: [
-            { $match:  { $and: [
-              {date_from: { $gte: new Date("1/1/"+new Date().getFullYear()) , $lt: new Date("1/1/"+(new Date().getFullYear()+1))  }},
-              { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
-              { $expr: { $eq: ['$employee_id', '$$id'] } }
-            ]}}
+            { 
+              $match:  { 
+              $and: [
+                {
+                  $or:[
+                    {date_from: { $gte: new Date("1/1/"+new Date().getFullYear()).toISOString() , $lt: new Date("1/1/"+(new Date().getFullYear()+1)).toISOString()  }},
+                    {date_to: { $gte: new Date("1/1/"+new Date().getFullYear()).toISOString() , $lt: new Date("1/1/"+(new Date().getFullYear()+1)).toISOString()  }},  
+                  ]
+                },
+                { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
+                { $expr: { $eq: ['$employee_id', '$$id'] } }
+              ]
+              }
+            }
           ],
           as: 'all_leaves_info' // for the curernt year only
         }
@@ -170,7 +190,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: fromDate , $lte: toDate  } } }
+            { $match: { date: { $gte: new Date(fromDate).toISOString() , $lte: new Date(toDate).toISOString()  } } }
           ],
           as: 'employee_deductions_info'
         }
@@ -181,7 +201,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: fromDate , $lte: toDate  } } }
+            { $match: { date: { $gte: new Date( fromDate).toISOString() , $lte: new Date( toDate ).toISOString()  } } }
           ],
           as: 'employee_rewards_info'
         }

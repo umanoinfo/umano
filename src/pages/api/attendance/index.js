@@ -40,8 +40,8 @@ export default async function handler(req, res) {
             { employee_no_str: { $regex: req.query.employee_no  }},
             {
               date: {
-                $gte: new Date(fromDate),
-                $lte: new Date(toDate)
+                $gte: new Date(fromDate).toISOString(),
+                $lte: new Date(toDate).toISOString()
               }
             },
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }

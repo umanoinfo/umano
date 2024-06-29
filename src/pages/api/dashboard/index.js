@@ -153,7 +153,7 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               expiryDate: {
-                $gt: new Date(from30Date)
+                $gt: new Date(from30Date).toISOString()
               }
             },
           ]
@@ -174,7 +174,7 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               expiryDate: {
-                $gt: new Date(from30Date)
+                $gt: new Date(from30Date).toISOString()
               }
             },
           ]
@@ -203,8 +203,8 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               dateOfBirth: {
-                $gt: new Date(from3Date),
-                $lte: new Date(to3Date)
+                $gt: new Date(from3Date).toISOString(),
+                $lte: new Date(to3Date).toISOString()
               }
             },
           ]
