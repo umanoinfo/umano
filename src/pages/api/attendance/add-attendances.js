@@ -37,6 +37,7 @@ export default async function handler(req, res) {
     attendance.user_id = myUser._id
     attendance.created_at = new Date()
     attendance.status = 'active'
+    attendance.employee_id = attendance.employee_id ;
     attendancesQuery.push({date: attendance.date , employee_no: attendance.employee_no , $or:[{deleted_at:{$exists:false} , deleted_at: null}]});
   }
 

@@ -24,15 +24,19 @@ export default async function handler(req, res) {
   // -------------------- Insert ---------------------------------------------
 
   const attendance = req.body
-
   attendance.company_id = myUser.company_id
   attendance.date = new Date(attendance.date)
-  attendance.user_id = myUser._id
+  
+  // attendance.user_id = myUser._id
+
+  const employee = await client.db().collection('employees').findOne({idNo: attendance.employee_no });
+  attendance.employee_id = String(employee._id);
+
   attendance.created_at = new Date()
   attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
   attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
   attendance.status = 'active'
-  const existing = await client.db().collection('attendances').findOne({date: attendance.date , user_id: attendance.user_id});
+  const existing = await client.db().collection('attendances').findOne({date: attendance.date , employee_id: attendance.employee_id });
   if(!existing)
   {
       const newAttendance = await client.db().collection('attendances').insertOne(attendance)
