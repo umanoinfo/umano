@@ -71,6 +71,7 @@ const PermissionsTable = () => {
   const [editPositionId, setEditPositionId] = useState(null);
   const [editPositionValue, setEditPositionValue] = useState(null);
   const { data: session, status } = useSession()
+  
 
   // ** Hooks
   const dispatch = useDispatch()
@@ -80,7 +81,9 @@ const PermissionsTable = () => {
     dispatch(
       fetchData({
       })
-    ).then(() => setLoading(false))
+    ).then(() => setLoading(false)).catch((err)=>{
+      setLoading(false);
+    })
   }, [dispatch, value])
 
   const handleFilter = useCallback(val => {
@@ -88,7 +91,12 @@ const PermissionsTable = () => {
   }, [])
 
   // -------------------------- Columns ----------------------------------------
-  const editPosition = async (position_) => {
+  const editPosition = async () => {
+    handleDialogEditToggle();
+
+    let position_ = store.data.filter((pos)=>{
+      return pos.id == editPositionId ;
+    })[0] ;
     console.log(position_);
     let position = { ...position_, title: editPositionValue };
     setLoading(true);
@@ -101,6 +109,8 @@ const PermissionsTable = () => {
 
       })).then(() => {
         setLoading(false);
+
+        toast.success('edited position succesfully' , {duration:1000 , position:'bottom-right'});
       })
 
     }
@@ -129,33 +139,33 @@ const PermissionsTable = () => {
       minWidth: 20,
       headerName: 'title',
       renderCell: ({ row }) => {
-        if (row.id == editPositionId) {
-          return <>
+        // if (row.id == editPositionId) {
+        //   return <>
 
-            <TextField
+        //     <TextField
 
-              min='1'
-              max='100'
-              size='md'
-              type='text' value={editPositionValue}
-              onKeyDown={
-                (e) => {
-                  if (e.code == 'Space') {
-                    setEditPositionValue(editPositionValue + ' ');
-                  }
-                  if (e.code == 'NumpadEnter' || e.code == 'Enter') {
-                    editPosition(row);
-                  }
-                  console.log(e.code)
-                }}
-              onChange={(e) => { console.log(e.target.value); setEditPositionValue(e.target.value) }}
+        //       min='1'
+        //       max='100'
+        //       size='md'
+        //       type='text' value={editPositionValue}
+        //       onKeyDown={
+        //         (e) => {
+        //           if (e.code == 'Space') {
+        //             setEditPositionValue(editPositionValue + ' ');
+        //           }
+        //           if (e.code == 'NumpadEnter' || e.code == 'Enter') {
+        //             editPosition(row);
+        //           }
+        //           console.log(e.code)
+        //         }}
+        //       onChange={(e) => { console.log(e.target.value); setEditPositionValue(e.target.value) }}
 
-            >
-            </TextField>
+        //     >
+        //     </TextField>
 
 
-          </>
-        }
+        //   </>
+        // }
 
         return (
           <>
@@ -274,6 +284,7 @@ const PermissionsTable = () => {
   const handleAdminEditPermission = position => {
     setEditPositionId(position.id)
     setEditPositionValue(position.title);
+    setEditDialogOpen(true);
   }
 
   const handleChange = event => {
@@ -395,9 +406,9 @@ const PermissionsTable = () => {
         </Grid>
       </Grid>
 
-      {/* ---------------------------------- Edit Dialog----------------------------------------- */}
+      
 
-      <Dialog fullWidth maxWidth='sm' onClose={handleDialogEditToggle} open={editDialogOpen}>
+      {/* <Dialog fullWidth maxWidth='sm' onClose={handleDialogEditToggle} open={editDialogOpen}>
         <DialogTitle sx={{ pt: 12, mx: 'auto', textAlign: 'center' }}>
           <Typography variant='h5' component='span' sx={{ mb: 2 }}>
             Edit Permission
@@ -452,7 +463,7 @@ const PermissionsTable = () => {
             )}
           </Box>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* -----------------------------------Add Dialog----------------------------------------- */}
 
@@ -485,7 +496,7 @@ const PermissionsTable = () => {
                 setTitle(e.target.value)
               }}
               sx={{ mb: 1, mt: 1, maxWidth: 360 }}
-              placeholder='Enter Permission Name'
+              placeholder='Enter Position Name'
             />
             {/* <span>Company</span>
             <Switch checked={isCompany} onChange={handleChange} value={isCompany} /> */}
@@ -510,7 +521,50 @@ const PermissionsTable = () => {
           </Box>
         </DialogContent>
       </Dialog>
+      {/* ---------------------------------- Edit Dialog----------------------------------------- */}
+      <Dialog fullWidth maxWidth='sm' onClose={handleDialogEditToggle} open={editDialogOpen}>
+        <DialogTitle sx={{ pt: 12, mx: 'auto', textAlign: 'center' }}>
+          <Typography variant='h5' component='span' sx={{ mb: 2 }}>
+            Edit Position
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ pb: 12, mx: 'auto' }}>
+          <Box component='form' sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 
+            <TextField
+              fullWidth
+              value={ editPositionValue }
+              name='title'
+              label='Position Title'
+              onChange={e => {
+                setEditPositionValue(e.target.value)
+              }}
+              sx={{ mb: 1, mt: 1, maxWidth: 360 }}
+              placeholder='Enter Position name'
+            />
+            {/* <span>Company</span>
+            <Switch checked={isCompany} onChange={handleChange} value={isCompany} /> */}
+
+            <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
+            {!loading && (
+              <Box className='demo-space-x' sx={{ '& > :last-child': { mr: '0 !important' } }}>
+                <Button
+                  size='large'
+                  onClick={e => {
+                    editPosition()
+                  }}
+                  variant='contained'
+                >
+                  Update Position
+                </Button>
+                <Button type='reset' size='large' variant='outlined' color='secondary' onClick={handleDialogEditToggle}>
+                  Close
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+      </Dialog>
       {/* -------------------------------------Delete Dialog------------------------------------------------- */}
       <Dialog
         open={deleteDialogOpen}
