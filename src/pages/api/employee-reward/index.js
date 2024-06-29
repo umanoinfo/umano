@@ -41,7 +41,7 @@ export default async function handler(req, res) {
           $and: [
             { reason: { $regex: req.query.q , '$options' : 'i' } },
             
-            // { $or : ids },
+            { $or : ids },
             { type: { $regex: req.query.rewardType } },
             { status: { $regex: req.query.rewardStatus } },
             { company_id: myUser.company_id },

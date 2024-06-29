@@ -52,7 +52,7 @@ const UserDropdown = props => {
   }
 
   const handleDropdownClose = url => {
-    if (url) {
+    if (url && router.pathname != url) {
       router.push(url)
     }
     setAnchorEl(null)

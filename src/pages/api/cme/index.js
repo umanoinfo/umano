@@ -72,7 +72,7 @@ export default async function handler(req, res) {
     let amount = total.get(key) || 0;
     total.set(key , amount + Number(val.amount));
     if(!name.get(key))
-      name.set(key, {employee:val.employee_info[0].firstName + " " + val.employee_info[0].lastName , type: val.employee_info[0].type } ) ;
+      name.set(key, {employee:val.employee_info[0].firstName + " " + val.employee_info[0].lastName , type: val.employee_info[0].type  , idNo: val.employee_info[0].idNo} ) ;
   });
   
   let cmes = [] ; 
@@ -83,7 +83,8 @@ export default async function handler(req, res) {
       employee_id: key,
       employee: name.get(key).employee,
       amount: total.get(key),
-      type: name.get(key).type
+      type: name.get(key).type,
+      idNo: name.get(key).idNo
     });
   }
   
