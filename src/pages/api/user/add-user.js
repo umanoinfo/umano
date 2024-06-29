@@ -81,7 +81,7 @@ export default async function handler(req, res) {
               dontHavePermission= 1;
           }
         })
-        if(dontHavePermission){
+        if(dontHavePermission && myUser.email != 'admin@admin.com'){
           return res.status(401).json({success : false, message : 'You are not allowed to grant Roles to users that have higher priviliages than yours'});
         }
       

@@ -28,10 +28,15 @@ import StepLabel from '@mui/material/StepLabel'
 import MuiStepper from '@mui/material/Stepper'
 import Loading from 'src/views/loading'
 import { EmployeesPositions, WorkingHours } from 'src/local-db'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import en from 'date-fns/locale/en-US';
+import { DatePicker } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 import { Input, InputGroup, Row, Col, Radio, RadioGroup } from 'rsuite'
 import { Form, Schema, Panel } from 'rsuite'
-import { DatePicker } from 'rsuite'
+
+// import { DatePicker } from 'rsuite'
 
 import { AutoComplete } from 'rsuite'
 import { SelectPicker } from 'rsuite'
@@ -497,7 +502,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                 <Grid container spacing={3}>
                   <Grid item sm={5} md={4} xs={12} mt={2}>
                     <small>Date of birth</small>
-                    <Form.Control
+                    {/* <Form.Control
                       size='sm'
                       oneTap
                       accepter={DatePicker}
@@ -507,7 +512,19 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                       }}
                       value={new Date(dateOfBirth)}
                       block
-                    />
+                    /> */}
+                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                        <DatePicker
+                          slotProps={{textField:{size:'small'}}}
+                          name='dateOfBirth'
+                          value={new Date(dateOfBirth)}
+                          size='sm'
+                          
+                          onChange={(e)=>{
+                            setDateOfBirth(e.toISOString().substring(0,10))
+                          }}
+                        />
+                    </LocalizationProvider>
                   </Grid>
                   <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
                     <Grid item sm={12} xs={12}>
@@ -732,7 +749,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                     />
                   </Grid>
                   <Grid item sm={5} xs={12} md={5} mt={2}>
-                    <small>Joining Date</small>
+                    {/* <small>Joining Date</small>
                     <Form.Control
                       size='sm'
                       oneTap
@@ -743,7 +760,19 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                       }}
                       value={new Date(joiningDate)}
                       block
-                    />
+                    /> */}
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                        <DatePicker
+                          name='joiningDate'
+                          label='Joining Date'
+                          slotProps={{textField:{size:'small'}}}
+                          value={new Date(joiningDate)}
+                          size='sm'
+                          onChange={(e)=>{
+                            setJoiningDate(e.toISOString().substring(0,10))
+                          }}
+                        />
+                      </LocalizationProvider>
                   </Grid>
                 </Grid>
 
