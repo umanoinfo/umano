@@ -107,7 +107,8 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   const validateMmodel = Schema.Model({
     type: StringType().isRequired('This field is required.'),
-    paidValue: NumberType().isRequired('This field is required.'),
+    
+    // paidValue: NumberType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
     employee_id: StringType().isRequired('This field is required.'),
     date_from: DateType().isRequired('This field is required.'),

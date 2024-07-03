@@ -114,7 +114,9 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   const validateMmodel = Schema.Model({
     type: StringType().isRequired('This field is required.'),
-    paidValue: NumberType().isRequired('This field is required.'),
+
+    // paidValue: NumberType().isRequired('This field is required.'),
+
     reason: StringType().isRequired('This field is required.'),
     employee_id: StringType().isRequired('This field is required.'),
     date_from: DateType().isRequired('This field is required.'),
@@ -575,7 +577,7 @@ const AddLeave = ({ popperPlacement, id }) => {
           }
           if (data.status_reason == 'unpaidLeave') {
             if (+selectedEmployee.availableUnpaidLeave < newHours + +selectedEmployee.takenUnpaidLeaves) {
-              toast.error('Error : Your not un paid leaves are over the limit  !', {
+              toast.error('Error : Your unpaid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
@@ -627,7 +629,7 @@ const AddLeave = ({ popperPlacement, id }) => {
           }
           if (data.status_reason == 'unpaidLeave') {
             if (+selectedEmployee.availableUnpaidLeave < diffDays + +selectedEmployee.takenUnpaidLeaves) {
-              toast.error('Error : Your not unpaid leaves are over the limit  !', {
+              toast.error('Error : Your  unpaid leaves are over the limit  !', {
                 delay: 3000,
                 position: 'bottom-right'
               })
