@@ -517,14 +517,14 @@ const AddLeave = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        if(checkIntersectionWithVacation()){
-          toast.error('leave intersect with (holiday/weekend/ already taken leave)' , {
-            duration: 5000,
-            position:'bottom-right'
-          } );
+        // if(checkIntersectionWithVacation()){
+        //   toast.error('leave intersect with (holiday/weekend/ already taken leave)' , {
+        //     duration: 5000,
+        //     position:'bottom-right'
+        //   } );
 
-          return ;
-        }
+        //   return ;
+        // }
 
         let data = { ...formValue }
         const data_request = { ...formValue }
@@ -669,13 +669,13 @@ const AddLeave = ({ popperPlacement, id }) => {
         
         if(selectedEmployee.status_reason == 'parentalLeave'){
           if(selectedEmployee.takenParentalLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45 ){
-              toast.error(`Error: add the first ${45 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 45} `,
+              toast.error(`Error: add the first ${45 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 45} (each have different paid value)`,
               {duration:5000, position: 'bottom-right'});
               
               return ;
           }
           else if(selectedEmployee.takenParentalLeaves < 60 && diffDays + selectedEmployee.takenParentalLeaves > 60 ){
-              toast.error(`Error: add the first ${60 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 60} `,
+              toast.error(`Error: add the first ${60 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 60} (each have different paid value)`,
               {duration:5000, position: 'bottom-right'});
 
               return ;
@@ -685,13 +685,13 @@ const AddLeave = ({ popperPlacement, id }) => {
         console.log(selectedEmployee.status_reason , selectedEmployee.takenSickLeaves , diffDays);
         if(selectedEmployee.status_reason == 'sickLeave'){
           if(selectedEmployee.takenSickLeaves < 15 && diffDays + selectedEmployee.takenSickLeaves > 15 ){
-            toast.error(`Error: add the first ${15 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 15} `,
+            toast.error(`Error: add the first ${15 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 15} (each have different paid value)`,
             {duration:5000, position: 'bottom-right'});
 
             return ;
           }
           else if(selectedEmployee.takenSickLeaves < 30 && diffDays + selectedEmployee.takenSickLeaves > 30 ){
-            toast.error(`Error: add the first ${30 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 30} `,
+            toast.error(`Error: add the first ${30 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 30} (each have different paid value)`,
             {duration:5000, position: 'bottom-right'});
 
             return ;

@@ -466,14 +466,14 @@ const EditLeave = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        if(checkIntersectionWithVacation()){
-          toast.error('leave intersect with (holiday/weekend/ already taken leave)' , {
-            duration: 5000,
-            position:'bottom-right'
-          } );
+        // if(checkIntersectionWithVacation()){
+        //   toast.error('leave intersect with (holiday/weekend/ already taken leave)' , {
+        //     duration: 5000,
+        //     position:'bottom-right'
+        //   } );
 
-          return ;
-        }
+        //   return ;
+        // }
         let data = { ...formValue }
         const data_request = { ...formValue }
 
