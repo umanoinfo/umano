@@ -27,8 +27,8 @@ export default async function handler(req, res) {
   }
 
 
-  employeeLeave.date_from = new Date(employeeLeave.date_from)
-  employeeLeave.date_to = new Date(employeeLeave.date_to)
+  employeeLeave.date_from = employeeLeave.date_from
+  employeeLeave.date_to = employeeLeave.date_to
 
   if (
     !employeeLeave.reason ||
