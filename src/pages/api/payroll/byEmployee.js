@@ -245,8 +245,9 @@ export default async function handler(req, res) {
             employee.totalWorkingDaysCount = Number(employee.totalWorkingDaysCount)
             
             if (comp.type == 'Monthly') {
-              totalValue = totalValue + Number(comp.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30))
-              totalValue = totalValue + Number((comp.percentageValue * lumpySalary ) / 100) * Math.ceil((employee.totalWorkingDaysCount/ 30));
+              // totalValue = totalValue + Number(comp.fixedValue) *  Math.ceil((employee.totalWorkingDaysCount/ 30))
+              totalValue = totalValue + Number(comp.fixedValue) * 1
+              totalValue = totalValue + Number((comp.percentageValue * lumpySalary ) / 100) * 1
             }
             if (comp.type == 'Daily') {
               totalValue = totalValue + Number(comp.fixedValue * employee.totalWorkingDaysCount)
@@ -269,7 +270,8 @@ export default async function handler(req, res) {
             deduction.percentageValue = Number(deduction.percentageValue);
             employee.totalWorkingDaysCount = Number(employee.totalWorkingDaysCount)
             if (deduction.type == 'Monthly') {
-              totalValue = totalValue + Number(deduction.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30));
+              // totalValue = totalValue + Number(deduction.fixedValue) * Math.ceil((employee.totalWorkingDaysCount/ 30));
+              totalValue = totalValue + Number(deduction.fixedValue) * 1;
               totalValue = totalValue + Number((deduction.percentageValue * lumpySalary) / 100) * Math.ceil((employee.totalWorkingDaysCount/ 30))
             }
             if (deduction.type == 'Daily') {

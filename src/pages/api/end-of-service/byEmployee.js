@@ -152,7 +152,20 @@ export default async function handler(req, res) {
 
         holidayDay = holidays.includes(isHoliday[0] + '/' + isHoliday[1]) // boolean
       }
-      
+
+      const setUTCHours = (time)=>{
+        let date = new Date('1/1/2023');
+        date.setUTCHours(Number(time.split(':')[0]) ,  Number(time.split(':')[1]) );
+
+        return date ;
+      }
+      let shift_in = setUTCHours(employee.shift_info[0].times[0].timeIn.toString() ) ; 
+      let shift_out =  setUTCHours( employee.shift_info[0].times[0].timeOut.toString()  )
+      let availableEarly =  setUTCHours( employee.shift_info[0].times[0].availableEarly.toString()  )// the amount of delay that doesn't count (in the morning)
+      let availableLate =  setUTCHours( employee.shift_info[0].times[0].availableLate.toString()  )// the amount of delay that doesn't count (in the afternoon)
+      let shiftOverTime1 =  setUTCHours( employee.shift_info[0].times[0]['1st'].toString()  )
+      let shiftOverTime2 =  setUTCHours( employee.shift_info[0].times[0]['2nd'].toString()  )
+      let shiftOverTime3 =  setUTCHours( employee.shift_info[0].times[0]['3rd'].toString()  )
       if(employee?.attendances_info){
         if(!leaveDay){
             employee.attendances_info?.map(att => {
@@ -160,6 +173,8 @@ export default async function handler(req, res) {
                 
                 _in = setUTCHours( att.timeIn.toString() ) ;
                 _out = setUTCHours( att.timeOut.toString() ) ;
+
+                
                 
                 earlyFlag = false
                 earlyHours =0
