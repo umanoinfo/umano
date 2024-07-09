@@ -285,14 +285,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
               data
             })
             .then(function (response) {
-              dispatch(fetchData({ employeeId: employee._id })).then(() => {
+              
                 toast.success('Document (' + data.title + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
                 })
                 setForm(false)
                 setLoading(false)
-              })
+              
             })
             .catch(function (error) {
               toast.error('Error : ' + error.response.data.message + ' !', {

@@ -137,6 +137,21 @@ const UserList = () => {
   const store = useSelector(state => state.company)
   const router = useRouter()
 
+  const handleExcelExport = () => {
+    const wb = XLSX.utils.book_new()
+    let ex = [...store.data]
+
+    ex = ex.map(val => {
+      let c = { ...val }
+      delete c['user_id']
+      delete c['subscriptions_info']
+      delete c['created_at']
+      delete c['country_id']
+      delete c['updated_at']
+
+      return c
+    })
+  }
   useEffect(() => {
     setLoading(true);
     dispatch(
@@ -209,7 +224,7 @@ const UserList = () => {
   }, [])
 
   const handleStatusChange = useCallback(e => {
-    setUserStatus(e.target.value)
+    setCompanyStatus(e.target.value)
   }, [])
 
   const RowOptions = ({ row }) => {
@@ -243,21 +258,6 @@ const UserList = () => {
       setOpen(true)
     }
 
-    const handleExcelExport = () => {
-      const wb = XLSX.utils.book_new()
-      let ex = [...store.data]
-
-      ex = ex.map(val => {
-        let c = { ...val }
-        delete c['user_id']
-        delete c['subscriptions_info']
-        delete c['created_at']
-        delete c['country_id']
-        delete c['updated_at']
-
-        return c
-      })
-    }
 
     return (
       <>
@@ -495,7 +495,7 @@ return (
             }}
           >
             <Button
-              onClick={handleExcelExport}
+              onClick={()=>handleExcelExport()}
               sx={{ mr: 4, mb: 2 }}
               color='secondary'
               variant='outlined'

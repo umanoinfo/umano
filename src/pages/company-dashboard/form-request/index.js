@@ -122,7 +122,7 @@ const AllDocumentsList = () => {
   }, [])
 
   const handleTypeChange = useCallback(e => {
-    setrequestType(e.target.value)
+    setRequestType(e.target.value)
   }, [])
 
   // -------------------------- Delete Form --------------------------------

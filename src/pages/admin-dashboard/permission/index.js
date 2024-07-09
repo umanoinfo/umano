@@ -542,7 +542,7 @@ const PermissionsTable = () => {
         aria-describedby='alert-dialog-description'
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {
-            handleClose()
+            
           }
         }}
       >

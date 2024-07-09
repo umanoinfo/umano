@@ -66,28 +66,6 @@ const StatusObj = {
   blocked: 'error'
 }
 
-const handleExcelExport = () => {
-  const wb = XLSX.utils.book_new()
-  let ex = [...store.data]
-
-  ex = ex.map(val => {
-    let c = { ...val }
-    delete c['company_id']
-    delete c['created_at']
-    delete c['children_info']
-    delete c['parent']
-    delete c['updated_at']
-    delete c['user_id']
-    delete c['user_info']
-    delete c['_id']
-    c.parent = c.parent_info.map(v => {
-      return v.name
-    })
-    delete c['parent_info']
-
-    return c
-  })
-}
 
 const DepartmentList = ({ apiData }) => {
   // ** State

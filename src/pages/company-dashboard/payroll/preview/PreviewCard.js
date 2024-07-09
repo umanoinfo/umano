@@ -505,7 +505,8 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       {comp.title} <small> ( {comp.type} )</small>
                     </TableCell>
                     <TableCell>
-                      {
+                      1.00
+                      {/* {
                         comp.fixedValue &&
                       (+comp.fixedValue).toLocaleString("en-US")
                       }
@@ -515,7 +516,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <small> %</small>
                         </>
                         )
-                      }
+                      } */}
                       
                     </TableCell>
                     <TableCell>

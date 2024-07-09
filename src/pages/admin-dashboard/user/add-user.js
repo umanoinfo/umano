@@ -85,12 +85,12 @@ const DialogAddUser = () => {
 
   const { data: session, status } = useSession()
 
-  const handleChange = event => {
-    const {
-      target: { value }
-    } = event
-    setLanguages(typeof value === 'string' ? value.split(',') : value)
-  }
+  // const handleChange = event => {
+  //   const {
+  //     target: { value }
+  //   } = event
+  //   setLanguages(typeof value === 'string' ? value.split(',') : value)
+  // }
 
   const dispatch = useDispatch()
 
@@ -289,7 +289,27 @@ const DialogAddUser = () => {
                               <FormControlLabel
                               key = {index}
                                 control={
-                                  <Switch checked={roles.includes(role._id,'')} onChange={handleChange} value={role._id} />
+                                  <Switch checked={roles.includes(role._id,'')} onChange={(e)=>{
+                                    let exist = false ;
+                                    e = e.target.value ;
+                                    console.log(e)
+                                    roles.map((id)=>{
+                                      console.log(id, e ) ;
+                                      if(id == e){
+                                        exist= true ;
+                                      }
+                                    })
+                                    console.log(exist);
+                                    let newRoles = [...roles];
+                                    if(!exist){
+                                      newRoles = [...roles , e ];
+                                    }
+                                    else{
+                                      newRoles = roles.filter((id)=> id != e)
+                                    }
+                                    setRoles(newRoles);
+                                    console.log(newRoles);
+                                  }} value={role._id} />
                                 }
                                 label={role.title}
                               />

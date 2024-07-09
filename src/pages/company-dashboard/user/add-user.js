@@ -86,7 +86,8 @@ const DialogAddUser = () => {
     const {
       target: { value }
     } = event
-    setLanguages(typeof value === 'string' ? value.split(',') : value)
+    
+    // setLanguages(typeof value === 'string' ? value.split(',') : value)
   }
 
   const dispatch = useDispatch()

@@ -13,6 +13,7 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { Tab } from '@mui/material'
+import { useRouter } from 'next/router'
 
 const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductions, compensations }) => {
   const [loading, setLoading] = useState(false)
@@ -26,7 +27,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
   const [selectedSalaryFormulaID, setSelectedSalaryFormulaID] = useState()
   const [tabValue, setTabValue] = useState('CompensationAndDeductions')
   const [tabs, setTabs] = useState([])
-
+  const router = useRouter();
 
   // ----------------------- build ------------------------------------
 

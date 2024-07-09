@@ -99,12 +99,7 @@ const AddCME = ({  }) => {
   }
 
 
-  const handleAdd = () => {
-    setSelectedDocument(null)
-    setFormValue({'documentTitle':'' , 'documentNo':'' , 'documentDescription':''})
-    setAction('add')
-    setForm(true)
-  }
+   
 
   const handleDelete = e => {
     setSelectedDocument(e)
@@ -112,67 +107,10 @@ const AddCME = ({  }) => {
   }
 
   const handleDeleteFile = e => {
-    setOpenFileDialog(true)
+    // setOpenFileDialog(true)
   }
 
-const deleteFile =()=>{
-
-  setLoading(true)
-
-  let data = {...formValue}
-    delete data.file
-    data._id = selectedDocument._id
-    data.updated_at = new Date()
-    axios
-      .post('/api/employee-document/delete-documentFile', {
-        data
-      })
-      .then(function (response) {
-        dispatch(fetchData({ employeeId: employee._id })).then(() => {
-          toast.success('Document (' + data.documentTitle + ') deleted file successfully.', {
-            delay: 3000,
-            position: 'bottom-right'
-          })
-          setForm(false)
-          setOpenFileDialog(false)
-          setLoading(false)
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 3000,
-          position: 'bottom-right'
-        })
-        setLoading(false)
-      })
-      
-}
-
-  const deleteDocument = () => {
-    setLoading(true)
-    axios
-      .post('/api/employee-document/delete-document', {
-        selectedDocument
-      })
-      .then(function (response) {
-        dispatch(fetchData({})).then(() => {
-          toast.success('Employee document (' + selectedDocument.documentTitle + ') Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
-          setOpen(false)
-          setAction('add')
-          setLoading(false);
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 1000,
-          position: 'bottom-right'
-        })
-        setLoading(false)
-      })
-  }
+ 
 
   const open_file = fileName => {
     window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeDocument/' + fileName, '_blank')

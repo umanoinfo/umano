@@ -420,7 +420,6 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).toFixed(2)
 
     return employee
-
    
   }
 

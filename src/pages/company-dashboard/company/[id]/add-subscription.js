@@ -197,9 +197,6 @@ const DialogAddUser = ({ id }) => {
     setType(newValue.value)
   }
 
-  const handleUserChange = (event, newValue) => {
-    setUserId(newValue._id)
-  }
 
   const handleCountryChange = (event, newValue) => {
     setCountry(newValue._id)

@@ -69,7 +69,7 @@ const InvoicePreview = ({ employee, attendances, fromDate, toDate , lumpySalary 
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Alert severity='error'>
-            Invoice with the id: {id} does not exist. Please check the list of invoices:{' '}
+            Invoice with the id: {"id"} does not exist. Please check the list of invoices:{' '}
             <Link href='/apps/invoice/list'>Invoice List</Link>
           </Alert>
         </Grid>

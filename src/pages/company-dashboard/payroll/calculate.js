@@ -517,31 +517,7 @@ const AllDocumentsList = () => {
     setOpenExcel(false)
   }
 
-  // -------------------------- Delete Form --------------------------------
-
-  const deleteAttendance = () => {
-    axios
-      .post('/api/attendance/delete-attendance', {
-        selectedAttendance
-      })
-      .then(function (response) {
-        dispatch(fetchData({})).then(() => {
-          toast.success('Attendance Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
-          setOpen(false)
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 1000,
-          position: 'bottom-right'
-        })
-        setLoading(true)
-      })
-  }
-
+ 
   // -------------------------- Add Document -----------------------------------------------
 
   const addAttendance = () => {
@@ -574,10 +550,7 @@ const AllDocumentsList = () => {
       handleRowOptionsClose()
     }
 
-    const handleDelete = () => {
-      setSelectedAttendance(row)
-      setOpen(true)
-    }
+ 
 
     // ------------------------------ Table Definition ---------------------------------
 
@@ -613,12 +586,7 @@ const AllDocumentsList = () => {
               Edit
             </MenuItem>
           )}
-          {session && session.user && session.user.permissions.includes('DeleteAttendance') && (
-            <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:delete-outline' fontSize={20} />
-              Delete
-            </MenuItem>
-          )}
+          
         </Menu>
       </>
     )

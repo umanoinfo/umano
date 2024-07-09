@@ -669,7 +669,7 @@ const deleteFile =()=>{
               aria-describedby='alert-dialog-description'
               onClose={(event, reason) => {
                 if (reason !== 'backdropClick') {
-                  handleClose()
+                  // handleClose()
                 }
               }}
             >
@@ -694,7 +694,7 @@ const deleteFile =()=>{
               aria-describedby='alert-dialog-description'
               onClose={(event, reason) => {
                 if (reason !== 'backdropClick') {
-                  handleClose()
+                  // handleClose()
                 }
               }}
             >

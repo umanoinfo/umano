@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       company_id: myUser.company_id,
       Module: 'Employee Deductions',
       Action: 'Add',
-      Description: 'Add Employee deductions (' + insertedDeduction.reason + ')',
+      Description: 'Add Employee deductions (' + newEmployeeDeduction?.reason + ')',
       created_at: new Date()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)

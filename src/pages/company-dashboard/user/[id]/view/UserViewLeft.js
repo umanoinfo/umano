@@ -106,7 +106,7 @@ const UserViewLeft = ({ id }) => {
               <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                 {user.img && user.img.length ? (
                   <CustomAvatar
-                    src={data.avatar}
+                    src={user.avatar}
                     variant='rounded'
                     alt={user.name}
                     sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}

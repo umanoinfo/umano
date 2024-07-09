@@ -272,28 +272,7 @@ const AllDocumentsList = () => {
 
   // -------------------------- Delete Form --------------------------------
 
-  const deleteAttendance = () => {
-    axios
-      .post('/api/attendance/delete-attendance', {
-        selectedAttendance
-      })
-      .then(function (response) {
-        dispatch(fetchData({})).then(() => {
-          toast.success('Attendance Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
-          setOpen(false)
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 1000,
-          position: 'bottom-right'
-        })
-        setLoading(false)
-      })
-  }
+ 
 
   // -------------------------- Add Document -----------------------------------------------
 
@@ -328,7 +307,7 @@ const AllDocumentsList = () => {
     }
 
     const handleDelete = () => {
-      setSelectedAttendance(row)
+      // setSelectedAttendance(row)
       setOpen(true)
     }
 

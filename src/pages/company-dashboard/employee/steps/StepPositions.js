@@ -829,7 +829,7 @@ const Steppositions = ({ handleNext, employee }) => {
             aria-describedby='alert-dialog-description'
             onClose={(event, reason) => {
               if (reason !== 'backdropClick') {
-                handleClose()
+                // handleClose()
               }
             }}
           >
@@ -853,7 +853,7 @@ const Steppositions = ({ handleNext, employee }) => {
             aria-describedby='alert-dialog-description'
             onClose={(event, reason) => {
               if (reason !== 'backdropClick') {
-                handleClose()
+                // handleClose()
               }
             }}
           >

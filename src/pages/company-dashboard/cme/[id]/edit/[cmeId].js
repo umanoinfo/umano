@@ -37,7 +37,7 @@ import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 import { DataGrid } from '@mui/x-data-grid'
 import Link from 'next/link'
-import {Chip} from '@mui/material'
+import { Chip } from '@mui/material'
 
 const { StringType, NumberType, DateType } = Schema.Types
 
@@ -48,11 +48,11 @@ const types = [
   { label: 'Daily', value: 'daily' }
 ]
 
-const AddCME = ({  }) => {
+const AddCME = ({ }) => {
   // ** States
   const [loadingDescription, setLoadingDescription] = useState('')
   const [action, setAction] = useState('add')
-  
+
   const [tempFile, setTempFile] = useState()
   const [selectedDocument, setSelectedDocument] = useState()
   const [fileLoading, setFileLoading] = useState(false)
@@ -68,36 +68,37 @@ const AddCME = ({  }) => {
   const formRef = useRef()
   const [formError, setFormError] = useState()
   let [employeesFullInfo, setEmployeesFullInfo] = useState([])
-  const [CME , setCME ] = useState()  ;
-  const {id , cmeId} = router.query; 
+  const [CME, setCME] = useState();
+  const { id, cmeId } = router.query;
 
   const getCME = () => {
     setLoading(true);
     axios.get(`/api/cme/${cmeId}`, {}).then(res => {
-      
-      let cme  = res.data.data
-      formValue.amount = cme.amount ;
-      formValue.date = new Date(cme.date) ; 
-      setTempFile(cme.url) ;
+
+      let cme = res.data.data
+      formValue.amount = cme.amount;
+      formValue.date = new Date(cme.date);
+      setTempFile(cme.url);
       setLoading(false)
-    }).catch((err)=>{})
+    }).catch((err) => { })
   }
 
-  const changeEmployee = (e)=>{
+  const changeEmployee = (e) => {
     const employee = employeesFullInfo.find(val => {
       console.log(val);
-        
+
       return val._id == e
-      })
-    
+    })
+
   }
 
 
   const handleAdd = () => {
     setSelectedDocument(null)
-    setFormValue({'documentTitle':'' , 'documentNo':'' , 'documentDescription':''})
+    setFormValue({ 'documentTitle': '', 'documentNo': '', 'documentDescription': '' })
     setAction('add')
-    setForm(true)
+
+    // setForm(true)
   }
 
   const handleDelete = e => {
@@ -106,14 +107,15 @@ const AddCME = ({  }) => {
   }
 
   const handleDeleteFile = e => {
-    setOpenFileDialog(true)
+    setOpen(true);
+
   }
 
-const deleteFile =()=>{
+  const deleteFile = () => {
 
-  setLoading(true)
+    setLoading(true)
 
-  let data = {...formValue}
+    let data = { ...formValue }
     delete data.file
     data._id = selectedDocument._id
     data.updated_at = new Date()
@@ -122,15 +124,9 @@ const deleteFile =()=>{
         data
       })
       .then(function (response) {
-        dispatch(fetchData({ employeeId: employee._id })).then(() => {
-          toast.success('Document (' + data.documentTitle + ') deleted file successfully.', {
-            delay: 3000,
-            position: 'bottom-right'
-          })
-          setForm(false)
-          setOpenFileDialog(false)
+        
           setLoading(false)
-        })
+        
       })
       .catch(function (error) {
         toast.error('Error : ' + error.response.data.message + ' !', {
@@ -139,35 +135,10 @@ const deleteFile =()=>{
         })
         setLoading(false)
       })
-      
-}
 
-  const deleteDocument = () => {
-    setLoading(true)
-    axios
-      .post('/api/employee-document/delete-document', {
-        selectedDocument
-      })
-      .then(function (response) {
-        dispatch(fetchData({})).then(() => {
-          toast.success('Employee document (' + selectedDocument.documentTitle + ') Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
-          setOpen(false)
-          setAction('add')
-          setLoading(false);
-        })
-      })
-      .catch(function (error) {
-        toast.error('Error : ' + error.response.data.message + ' !', {
-          delay: 1000,
-          position: 'bottom-right'
-        })
-        setLoading(false)
-      })
   }
 
+  
   const open_file = fileName => {
     window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeDocument/' + fileName, '_blank')
   }
@@ -187,7 +158,7 @@ const deleteFile =()=>{
   //       data.amount = formValue.amount ;
   //       data.employee_id = formValue.employee_id ; 
   //       data.url = response.data ;
-        
+
   //       axios
   //         .post('/api/cme/add-cme', {
   //           data
@@ -250,12 +221,12 @@ const deleteFile =()=>{
   const openNewUploadFile = row => {
     newinputFile.current.click()
   }
-  
- 
+
+
   // --------------forms values--------------------------------
 
   const default_value = {
-  
+
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -270,42 +241,42 @@ const deleteFile =()=>{
     date: DateType().isRequired('Date is required')
   });
 
-  const handleSubmit =   ()=>{
+  const handleSubmit = () => {
     setLoading(true);
-    formRef.current.checkAsync().then(   (result )=>{
-        if(!result.hasError){
-          let data = formValue ; 
-          data.url = tempFile ;
-          axios.post(`/api/cme/edit-cme/?id=${cmeId}` , data ).then(res =>{
-              setFormValue(default_value);
-              setTempFile(null);
-              setLoading(false);
-              toast.success('Updated successfully' , {duration: 5000 , position: 'bottom-right'}) ;
-              router.push(`/company-dashboard/cme/${id}`)
-
-            }
-          ).catch((err)=>{
-            toast.error(err.response.data.message , {duration: 5000 , position: 'bottom-right'});
-            setLoading(false);
-          })
-        }
-        else{
+    formRef.current.checkAsync().then((result) => {
+      if (!result.hasError) {
+        let data = formValue;
+        data.url = tempFile;
+        axios.post(`/api/cme/edit-cme/?id=${cmeId}`, data).then(res => {
+          setFormValue(default_value);
+          setTempFile(null);
           setLoading(false);
-         
+          toast.success('Updated successfully', { duration: 5000, position: 'bottom-right' });
+          router.push(`/company-dashboard/cme/${id}`)
+
         }
+        ).catch((err) => {
+          toast.error(err.response.data.message, { duration: 5000, position: 'bottom-right' });
+          setLoading(false);
+        })
+      }
+      else {
+        setLoading(false);
 
       }
-      
+
+    }
+
     )
   }
-  
-  
+
+
   // -------------------------------- Routes -----------------------------------------------
 
   const close = () => {
     router.push(`/company-dashboard/cme/${id}`)
   }
- 
+
   // ------------------------------ View ---------------------------------
 
   if (loading) return <Loading header='Please Wait' description={'Loading...'}></Loading>
@@ -331,7 +302,7 @@ const deleteFile =()=>{
             </Breadcrumbs>
             <Divider />
             <Grid container>
-   
+
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
                 <Form
                   fluid
@@ -358,63 +329,63 @@ const deleteFile =()=>{
                         }}
                       />
                     </Grid>
-           
-                      <Grid item sm={4} md={5} lg={3}>
-                        <small>Date of certificate </small>
-                        <Form.Control
-                          size='sm'
-                          controlid='date'
-                          name='date'
-                          accepter={DatePicker}
-                          block
-                          oneTap
-                          value={formValue.date}
-                        />
-                      </Grid>
-                  
-                   
-                        <Grid item sm={4} md={3} lg={3}>
-                          <small>Amount of hours</small>
-                          <Form.Control
-                            size='sm'
-                            controlid='amount'
-                            name='amount'
-                            type='number'
-                            block
-                            value={formValue.amount}
-                          />
-                        </Grid>
-                       
+
+                    <Grid item sm={4} md={5} lg={3}>
+                      <small>Date of certificate </small>
+                      <Form.Control
+                        size='sm'
+                        controlid='date'
+                        name='date'
+                        accepter={DatePicker}
+                        block
+                        oneTap
+                        value={formValue.date}
+                      />
+                    </Grid>
+
+
+                    <Grid item sm={4} md={3} lg={3}>
+                      <small>Amount of hours</small>
+                      <Form.Control
+                        size='sm'
+                        controlid='amount'
+                        name='amount'
+                        type='number'
+                        block
+                        value={formValue.amount}
+                      />
+                    </Grid>
+
 
                     <Grid item sm={12} xs={12} mt={-4} mb={10}>
-                          <Typography sx={{ pt: 6 }}>
-                            File :
-                            {tempFile && action=="add" && !fileLoading &&(<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
-                            {tempFile && action=="add" && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {selectedDocument?.file && !fileLoading && (<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(selectedFile)} >{selectedFile}</a></span>)}
-                            {selectedDocument?.file && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {/* {selectedDocument && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />} */}
+                      <Typography sx={{ pt: 6 }}>
+                        File :
+                        {tempFile && action == "add" && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
+                        {tempFile && action == "add" && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
+                        {selectedDocument?.file && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(selectedFile)} >{selectedFile}</a></span>)}
+                        {selectedDocument?.file && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
+                        {/* {selectedDocument && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />} */}
 
-                            {!fileLoading && action=="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openNewUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
-                            {fileLoading && <small style={{paddingLeft:'20px' , fontStyle:'italic' , color:'blue'}}>Uploading ...</small>}
-                          </Typography>
+                        {!fileLoading && action == "add" && <Chip label='Upload' variant='outlined' size="small" color='primary' sx={{ mx: 2 }} onClick={() => openNewUploadFile()} icon={<Icon icon='mdi:upload-outline' />} />}
+                        {fileLoading && <small style={{ paddingLeft: '20px', fontStyle: 'italic', color: 'blue' }}>Uploading ...</small>}
+                      </Typography>
                     </Grid>
                   </Grid>
-                    <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40 , marginLeft: '1rem'}}>
-                        {
-                        (
-                            <>
-                                <Button color='success' type='submit' variant='contained' onClick={() => handleSubmit()} sx={{ mr: 3 }}>
-                                Save
-                                </Button>
-                                <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => close()}>
-                                Close
-                                </Button>
-                            </>
-                        )
-                        }
-                    </Box>
-                   
+                  <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, marginLeft: '1rem' }}>
+                    {
+                      (
+                        <>
+                          <Button color='success' type='submit' variant='contained' onClick={() => handleSubmit()} sx={{ mr: 3 }}>
+                            Save
+                          </Button>
+                          <Button type='button' color='warning' variant='contained' sx={{ mr: 3 }} onClick={() => close()}>
+                            Close
+                          </Button>
+                        </>
+                      )
+                    }
+                  </Box>
+
                 </Form>
                 {/* <input
                 id='file'
@@ -428,15 +399,15 @@ const deleteFile =()=>{
                /> */}
 
                 <input
-                id='newfile'
-                ref={newinputFile}
-                hidden
-                type='file'
-                onChange={e => {
-                  uploadNewFile(e)
-                }}
-                name='file'
-               />
+                  id='newfile'
+                  ref={newinputFile}
+                  hidden
+                  type='file'
+                  onChange={e => {
+                    uploadNewFile(e)
+                  }}
+                  name='file'
+                />
 
 
               </Grid>

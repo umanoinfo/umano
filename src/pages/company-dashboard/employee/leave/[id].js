@@ -633,9 +633,7 @@ const EditLeave = ({ popperPlacement, id }) => {
     })
   }
 
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue)
-  }
+  
 
   // -------------------------------- Routes -----------------------------------------------
 

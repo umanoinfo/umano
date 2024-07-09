@@ -85,7 +85,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
             setDocumentTypeCategory(map);
             setAllDocumentTypes(data);
             setLoading(false);
-            resolve()
+            
         }
 
     }catch(err){

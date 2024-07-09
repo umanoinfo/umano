@@ -24,6 +24,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'import/no-anonymous-default-export': 'off',
     'react-hooks/exhaustive-deps':'off',
+    'no-undef':'error',
 
     // add new line above comment
     'lines-around-comment': [

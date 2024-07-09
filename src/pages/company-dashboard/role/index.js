@@ -94,7 +94,9 @@ const RolesComponent = () => {
 
         setPermissionsLength(count);
         setLoading(false);
-        resolve()
+
+        // resolve()
+        
       })
       .catch(function (error) {
         setLoading(false);

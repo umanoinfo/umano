@@ -38,7 +38,8 @@ export const addUser = createAsyncThunk('appUsers/addUser', async (data, { getSt
 const updateUser = createAsyncThunk('users/update', async (userData, { rejectWithValue }) => {
   const { id, ...fields } = userData
   try {
-    const response = await userAPI.updateById(id, fields)
+    // const response = await userAPI.updateById(id, fields)
+    const response = await userData.updateById(id, fields)
 
     return response.data.user
   } catch (err) {

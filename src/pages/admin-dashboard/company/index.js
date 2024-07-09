@@ -308,7 +308,7 @@ const CompaniesList = () => {
 
       }
       catch(err){
-        toast.error(res , {duration:5000 , position:'bottom-right'} );
+        toast.error(err.toString() , {duration:5000 , position:'bottom-right'} );
       }
 
       setLoading(false) ;
