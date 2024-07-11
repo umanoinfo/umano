@@ -476,7 +476,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             <TabPanel value='EndOfService'>
                               <Grid container spacing={1} sx={{ px: 5 }}>
                                 <Grid item sm={12} md={12}>
-                                  <Typography sx={{ mt: 5, mb: 1 }}>End of service Allowance</Typography>
+                                  <Typography sx={{ mt: 5, mb: 1 }}>End of service Compensation</Typography>
                                   <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                     <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                       From 1 to 5 year :
@@ -509,7 +509,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                   </Box>
                                   <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                     <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                      Maximum end of service Allowance :
+                                      Maximum end of service Compensation:
                                     </Typography>
                                     <Form.Control
                                       controlId='maxCompensation'

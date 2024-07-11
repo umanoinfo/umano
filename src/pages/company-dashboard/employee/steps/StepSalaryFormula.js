@@ -444,10 +444,10 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                   <TabPanel value='EndOfService'>
                     <Grid container spacing={1} sx={{ px: 5 }}>
                       <Grid item sm={12} md={12}>
-                        <Typography sx={{ mt: 5, mb: 5 }}>End of service Allowance</Typography>
+                        <Typography sx={{ mt: 5, mb: 5 }}>End of service Compensation</Typography>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            From 1 to 5 Hour/s :
+                            From 1 to 5 years/s :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.compensationFrom1To5 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -460,7 +460,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            More than 5 Hour/s :
+                            More than 5 Year/s :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.compensationMoreThan5 && (
                             <Typography sx={{ fontWeight: 500 }}>
@@ -473,7 +473,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Maximum end of service Allowance :
+                            Maximum end of service Compensation :
                           </Typography>
                           {selectedSalaryFormula && selectedSalaryFormula.maxCompensation && (
                             <Typography sx={{ fontWeight: 500 }}>{selectedSalaryFormula.maxCompensation}</Typography>
