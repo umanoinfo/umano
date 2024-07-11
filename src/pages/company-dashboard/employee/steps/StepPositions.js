@@ -152,7 +152,7 @@ const Steppositions = ({ handleNext, employee }) => {
   const getPositions = async ()=>{
       
       try{
-        axios.get('/api/positions' , {}).then((response)=>{
+        axios.get('/api/position' , {}).then((response)=>{
           let positions = response?.data?.data?.map((position)=>{
             return {label: position.title , value: position.title}
           });
