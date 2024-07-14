@@ -705,7 +705,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         setLoadingDescription('leave is inserting')
 
         let newData = { ...data_request , file: tempFile}
-        newData.date_from = (data_request.date_from) 
+        newData.date_from =  (data_request.date_from) 
         newData.date_to = (data_request.date_to) 
         console.log('a' , newData.date_from , newData.date_to) ;
         console.log('b' , new Date(newData.date_from) , new  Date(newData.date_to)) ;
