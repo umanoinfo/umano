@@ -905,6 +905,11 @@ const AddLeave = ({ popperPlacement, id }) => {
 
       return 
     }
+    if(!employee?.salaryFormulas_info?.[0] ){
+      toast.error('Error: Salary formula is not defined for this employee', {duration: 5000 , position:'bottom-right'});
+
+      return 
+    }
     fillTable(e)
     let temp_reasons = []
 
@@ -941,6 +946,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const changeStatus = e =>{
+    console.log(e , selectedEmployee , selectedEmployee.salaryFormulas_info?.[0]?.[e]);
     let paidValue = selectedEmployee.salaryFormulas_info?.[0]?.[e]
     if(e == 'otherLeave'){
       paidValue = 0

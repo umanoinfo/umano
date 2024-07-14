@@ -40,8 +40,14 @@ export default async function handler(req, res) {
   employeeLeave.status = 'active'
   employeeLeave.date_from_1 = employeeLeave.date_from ;
   employeeLeave.date_to_1 = employeeLeave.date_to ;
-  employeeLeave.date_from = new Date( new Date( employeeLeave.date_from).setUTCHours(23,59,59,999 + 1) ) // solves the problem of making it less one day
-  employeeLeave.date_to = new Date(new Date(employeeLeave.date_to).setUTCHours(23,59,59,999) + 1 )  // solves the problem of making it less one day
+
+  // employeeLeave.date_from = new Date( new Date( employeeLeave.date_from).setUTCHours(23,59,59,999 + 1 ) // solves the problem of making it less one day
+  // employeeLeave.date_to = new Date(new Date(employeeLeave.date_to).setUTCHours(23,59,59,999) + 1 )  // solves the problem of making it less one day
+
+  let date_from = new Date(employeeLeave.date_from) ;
+  let date_to = new Date(employeeLeave.date_to) ;
+  employeeLeave.date_from = new Date(date_from.getTime() + Math.abs(date_from.getTimezoneOffset() * 60000) )
+  employeeLeave.date_to = new Date(date_to.getTime() + Math.abs(date_to.getTimezoneOffset() * 60000) )
   
   const newEmployeeLeave = await client.db().collection('employeeLeaves').insertOne(employeeLeave)
 
