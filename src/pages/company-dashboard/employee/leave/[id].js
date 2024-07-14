@@ -866,7 +866,7 @@ const EditLeave = ({ popperPlacement, id }) => {
   }
 
   const changeStatus = e =>{
-    let paidValue = selectedEmployee.salaryFormulas_info[0][e]
+    let paidValue = selectedEmployee.salaryFormulas_info?.[0]?.[e]
     if(e == 'otherLeave'){
       paidValue = 0
     }

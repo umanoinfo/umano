@@ -941,30 +941,30 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const changeStatus = e =>{
-    let paidValue = selectedEmployee.salaryFormulas_info[0][e]
+    let paidValue = selectedEmployee.salaryFormulas_info?.[0]?.[e]
     if(e == 'otherLeave'){
       paidValue = 0
     }
     if(e == 'parentalLeave'){
       if(selectedEmployee.takenParentalLeaves < 45) {
-          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom1To45'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom1To45'];
       }
       else if(selectedEmployee.takenParentalLeaves >= 45 && selectedEmployee.takenParentalLeaves < 60){
-          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom46To60'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom46To60'];
       }
       else if(selectedEmployee.takenParentalLeaves >= 60  ){
-          paidValue = selectedEmployee.salaryFormulas_info[0]['parentalLeaveFrom61To105'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom61To105'];
       }
     }
     if(e == 'sickLeave'){
       if(selectedEmployee.takenSickLeaves < 15) {
-          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom1To15'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom1To15'];
       }
       else if(selectedEmployee.takenSickLeaves >= 15 && selectedEmployee.takenSickLeaves < 30){
-          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom16To30'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom16To30'];
       }
       else if(selectedEmployee.takenSickLeaves >= 30  ){
-          paidValue = selectedEmployee.salaryFormulas_info[0]['sickLeaveFrom31To90'];
+          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom31To90'];
       }
     }
     paidValue = Number(paidValue);
