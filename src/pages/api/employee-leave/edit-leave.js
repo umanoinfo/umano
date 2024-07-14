@@ -27,8 +27,8 @@ export default async function handler(req, res) {
   }
 
 
-  employeeLeave.date_from = employeeLeave.date_from
-  employeeLeave.date_to = employeeLeave.date_to
+  employeeLeave.date_from = new Date( new Date( employeeLeave.date_from).setHours(23,59,59,999)) ;
+  employeeLeave.date_to = new Date( new Date(employeeLeave.date_to).setHours(23,59,59,999));
 
   if (
     !employeeLeave.reason ||
