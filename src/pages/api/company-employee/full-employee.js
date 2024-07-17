@@ -42,7 +42,9 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeLeaves',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
           as: 'leaves_info'
         }
       },
@@ -50,7 +52,10 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeDeductions',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }
+            ,{ $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
           as: 'deductions_info'
         }
       },
@@ -58,7 +63,10 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeRewards',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+          ],
           as: 'rewards_info'
         }
       },
@@ -77,7 +85,9 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'salaryFormula',
           let: { salary_formula_id: { $toObjectId: '$salary_formula_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$salary_formula_id'] } } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$salary_formula_id'] } } } , 
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'salary_formula_info'
         }
       },
@@ -92,7 +102,8 @@ export default async function handler(req, res) {
                 { $isArray: '$$deductions' },
                 { $in: ['$string_id', '$$deductions'] } 
               ]
-            } } }
+            } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'deductions_array'
         }
@@ -104,7 +115,8 @@ export default async function handler(req, res) {
           pipeline: [
             { $addFields: { string_id: { $toString: '$_id' } } },
             { $match: { $expr: {$and: [{ $isArray: '$$compensations' },
-            { $in: ['$string_id', '$$compensations'] } ] } } }
+            { $in: ['$string_id', '$$compensations'] } ] } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'compensations_array'
         }
@@ -113,7 +125,7 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeePositions',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } } , { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'employeePositions_info'
         }
       },
@@ -121,7 +133,9 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'shifts',
           let: { shift_id: { $toObjectId: '$shift_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
           as: 'shift_info'
         }
       },
@@ -129,7 +143,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeDocuments',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'documents_info'
         }
       }

@@ -421,7 +421,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                   {(+data.salaries_info[0].lumpySalary).toLocaleString("en-US")} <small>AED</small>
                 </TableCell>
                 <TableCell>
-                  <strong>{((+data.salaries_info[0].lumpySalary) * (1)).toFixed(2)}</strong>
+                  <strong>{((+data.salaries_info[0].lumpySalary) * (1)).toFixed(2).toLocaleString("en-US")}</strong>
                   <small> AED</small>
                 </TableCell>
               </TableRow>
