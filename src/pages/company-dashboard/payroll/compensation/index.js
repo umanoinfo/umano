@@ -500,6 +500,9 @@ const CompensationsList = () => {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             Are you sure , you want to delete Allowance{' '}
+            <b>
+            This will delete this Allowances for all Employees
+            </b>
             <span className='bold'>{selectedCompensation && selectedCompensation.title}</span>
           </DialogContentText>
         </DialogContent>

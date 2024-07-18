@@ -284,9 +284,9 @@ const EmployeeList = classNamec => {
           {
             session && session.user.permissions.includes('ViewEmployee') && (
               <MenuItem onClick={handleRowSummary} sx={{ '& svg': { mr: 2 } }}>
-                {/* <Icon icon='mdi:eye-outline' fontSize={20}> */}
+                <Icon icon='mdi:file-document' fontSize={20}/>
                   Summary 
-                {/* </Icon> */}
+               
               </MenuItem>
             ) 
           }

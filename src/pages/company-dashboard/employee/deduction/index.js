@@ -494,6 +494,9 @@ const DeductionsList = () => {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             Are you sure , you want to delete Deduction{' '}
+            <b>
+              This will delete tihs Deduction for all Employees
+            </b>
             <span className='bold'>{selectedDeduction && selectedDeduction.title}</span>
           </DialogContentText>
         </DialogContent>

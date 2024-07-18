@@ -479,6 +479,10 @@ const FormulaList = () => {
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             Are you sure , you want to delete salary Formula{' '}
+            <b>
+            This will delete this Salary Formula for all Employees
+            </b>
+
             <span className='bold'>{selectedFormula && selectedFormula.title}</span>
           </DialogContentText>
         </DialogContent>

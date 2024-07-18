@@ -523,6 +523,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         value={new Date(dateOfBirth)}
                         block
                       /> */}
+                      <div>
                       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                         <DatePicker
                           slotProps={{textField:{size:'small'}}}
@@ -535,6 +536,8 @@ const AddEmployee = ({ popperPlacement, id }) => {
                           }}
                         />
                       </LocalizationProvider>
+                      </div>
+                      
                       {/* </MuiLocalizationProvider> */}
                     </Grid>
                     <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>

@@ -513,6 +513,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                       value={new Date(dateOfBirth)}
                       block
                     /> */}
+                    <div>
                     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                         <DatePicker
                           slotProps={{textField:{size:'small'}}}
@@ -525,6 +526,8 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                           }}
                         />
                     </LocalizationProvider>
+                    </div>
+                    
                   </Grid>
                   <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
                     <Grid item sm={12} xs={12}>
