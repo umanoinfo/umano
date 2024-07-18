@@ -18,6 +18,11 @@ export const EmployeesTypes = [
   { title: 'Job sharing', value: 'jobSharing' }
 ]
 
+export const TerminationReasonsTyps = [
+  {label:'resignation', value:'resignation'},
+  {label:'other' , value:'other'},
+]
+
 export const EmployeesPositions = [
     {label: 'Nurse' , value:'Nurse'},
     {label: 'Physician' , value:'Physician'},

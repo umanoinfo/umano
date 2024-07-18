@@ -38,7 +38,7 @@ import {
 // ** React Imports
 import { Fragment } from 'react'
 
-import { PositionChangeStartTypes, PositionChangeEndTypes } from 'src/local-db'
+import { PositionChangeStartTypes, PositionChangeEndTypes  , TerminationReasonsTyps} from 'src/local-db'
 
 // ** MUI Imports
 import List from '@mui/material/List'
@@ -146,9 +146,38 @@ const Steppositions = ({ handleNext, employee }) => {
   const inputFile = useRef(null)
 
 
+  const [terminationReason , setTerminationReason]= useState('other');
+  const [terminationDate , setTerminationDate] = useState(new Date());
+  const [terminationStatus , setTerminationStatus ] = useState(employee.terminationDate ? 'terminated' : 'notTerminated');
+
 
   // ----------------------- bulid -------------------------------------------
 
+  const terminateEmployee = (action)=>{
+    
+    try{
+      let data = {
+        terminationDate ,
+        terminationReason,
+        action,
+        employee_id: employee._id 
+      };
+      setAction('');
+      axios.post('/api/terminate' , data).then((response)=>{
+        toast.success(response?.data?.data , {duration:2000 , position:'bottom-right'});
+        if(action=='terminate'){
+          setTerminationStatus('terminated');
+        }
+        else{
+          setTerminationStatus('notTerminated');
+        }
+      })
+    }
+    catch(err){
+
+    }
+  }
+  
   const getPositions = async ()=>{
       
       try{
@@ -157,6 +186,7 @@ const Steppositions = ({ handleNext, employee }) => {
             return {label: position.title , value: position.title}
           });
           setPositions(positions);
+
           console.log(response?.data?.data)
         })
       }
@@ -340,6 +370,11 @@ const Steppositions = ({ handleNext, employee }) => {
     setAction('add')
     setForm(true)
   }
+  
+  const handleTermination = ()=>{
+    setAction('terminate');
+    setForm(false);
+   }
 
   const handleDelete = e => {
     setSelectedPosition(e)
@@ -590,18 +625,33 @@ const Steppositions = ({ handleNext, employee }) => {
 
           <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
 
+            <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
             <Box
               sx={{
                 mb: 2.5,
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'flex-end'
               }}>
-              <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Positions</Typography>
-              <Button variant='outlined' size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
-                Add Employee Position
-              </Button>
+              {
+                terminationStatus == 'notTerminated' && 
+                <Button variant='outlined' style={{color:'red'}} size='small' onClick={handleTermination} sx={{ px: 1, mt: 1, mb: 1 }}>
+                  Terminate Employee
+                </Button>
+              }
+              {
+                terminationStatus == 'terminated' && 
+                <Button variant='outlined' style={{color:'red'}} size='small' onClick={()=>terminateEmployee('re-employ')} sx={{ px: 1, mt: 1, mb: 1 }}>
+                  Re-employ Employee
+                </Button>
+              }
+              {
+                terminationStatus == 'notTerminated' &&  (
+                <Button variant='outlined'  size='small' onClick={handleAdd} sx={{ px: 2, mt: 2, mb: 2 }}>
+                  Add Employee Position
+                </Button>)
+              }
             </Box>
 {
             loading ? 
@@ -619,7 +669,93 @@ const Steppositions = ({ handleNext, employee }) => {
           </Grid>
 
           {/* --------------------------- Passport  ------------------------------------ */}
+          {
+            action == 'terminate' && (
+              <Grid xs={12} md={5} lg={5} sx={{px: 1 , mt:2}}>
+                 <Card xs={12} md={12} lg={12} sx={{ px: 1, pb: 8 }}>
+ 
+                  <Typography variant='h6' sx={{ px: 2, pt: 2 }}>
+                    Terminate Employee
+                  </Typography>
+               
+                 
+       
+                <Form
+                  fluid
+                  ref={formRef}
+                  onChange={setFormValue}
+                  onCheck={setFormError}
+                  formValue={formValue}
+                  model={validateMmodel}
+                >
+                  <Grid container sx={{ mt: 3, px: 5 }}>     
+                    <Grid container spacing={3}>
+                      <Grid item sm={12} xs={12} mt={2}>
+                        <small>Termination Reason</small>
+                        <SelectPicker
+                          size='sm'
+                          name='Terminatoin Reason'
+                          onChange={e => {
+                            // console.log(e)
+                            setTerminationReason(e)
+                          }}
 
+                          value={terminationReason}
+                          data={TerminationReasonsTyps}
+                          block
+                        />
+                      </Grid>
+                    
+                        <Grid item sm={12} xs={12} mt={2}>
+                          <small>Date of Termination</small>
+                          <Form.Control
+                            size='sm'
+                            oneTap
+                            accepter={DatePicker}
+                            name='terminationDate'
+                            onChange={e => {
+                              setTerminationDate(e)
+                            }}
+
+                            value={new Date(terminationDate)}
+                            block
+                          />
+                        </Grid>
+                        <Grid>
+                          <Typography>
+                            <small style={{color:'red' , paddingLeft:'1rem'}}>
+                              by terminating employee all of his positions will be ended
+                            </small>
+                          </Typography>
+                        </Grid>
+                    </Grid>
+ 
+                    <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 3 }}>
+                      {!loading && (
+                        <>
+                          <Button color='success' onClick={()=>terminateEmployee('terminate')} variant='contained' sx={{ mr: 3 }}>
+                              Save
+                          </Button>
+                         
+                          <Button
+                            type='button'
+                            color='warning'
+                            variant='contained'
+                            sx={{ mr: 3 }}
+                            onClick={() => setAction('')}
+                          >
+                            Close
+                          </Button>
+                        </>
+                      )}
+                      {loading && <LinearProgress />}
+                    </Box>
+                  </Grid>
+                </Form>
+              </Card>
+              </Grid>
+            )
+          }
           <Grid xs={12} md={5} lg={5} sx={{ px: 1, mt: 2 }}>
             {form && (
               <Card xs={12} md={12} lg={12} sx={{ px: 1, pb: 8 }}>
@@ -633,6 +769,7 @@ const Steppositions = ({ handleNext, employee }) => {
                     Edit Position
                   </Typography>
                 )}
+       
                 <Form
                   fluid
                   ref={formRef}
