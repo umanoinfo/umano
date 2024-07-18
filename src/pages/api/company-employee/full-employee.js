@@ -125,7 +125,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeePositions',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } } , { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } } , 
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'employeePositions_info'
         }
       },

@@ -35,7 +35,10 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employees',
           let: { employee_id: { $toObjectId: '$employee_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$employee_id'] } } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$employee_id'] } } } , 
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
           as: 'employee_info'
         }
       }

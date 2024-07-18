@@ -49,6 +49,8 @@ export default async function handler(req, res) {
                 $lte: (req.body.to_date ? new Date(req.body.to_date).toISOString():  new Date().toISOString() )
               }
             }
+            ,
+            { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }
             ]
         }
       },

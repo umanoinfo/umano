@@ -49,7 +49,8 @@ export default async function handler(req, res) {
             { $addFields: { linked_id: { $toObjectId: '$linked_id' } } },
             {
               $match: { $expr: { $eq: ['$linked_id', '$$id'] } }
-            }
+            },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'files_info'
         }

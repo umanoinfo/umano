@@ -283,7 +283,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>{(data.hourlySalary * data.salaryFormulas_info[0].firstOverTime).toFixed(2)}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
+                              <small style={{paddingLeft:5}}> AED / hour </small>
                             </Typography>
                           </MUITableCell>
                         </TableRow>
@@ -294,7 +294,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>{(data.hourlySalary * data.salaryFormulas_info[0].holidayOverTime).toFixed(3)}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
+                              <small style={{paddingLeft:5}}> AED / day</small>
                             </Typography>
                           </MUITableCell>
                         </TableRow>
@@ -305,7 +305,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>{(data.hourlySalary * data.salaryFormulas_info[0].weekendOverTime).toFixed(3)}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
+                              <small style={{paddingLeft:5}}> AED / day </small>
                             </Typography>
                           </MUITableCell>
                         </TableRow>

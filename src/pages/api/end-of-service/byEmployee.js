@@ -41,7 +41,8 @@ export default async function handler(req, res) {
           let: { salary_formula_id: { $toString: '$salary_formula_id' } },
           pipeline: [
             { $addFields: { formula_id: { $toObjectId: '$_id' } } },
-            { $match: { $expr: { $eq: ['$formula_id', { $toObjectId: '$$salary_formula_id' }] } } }
+            { $match: { $expr: { $eq: ['$formula_id', { $toObjectId: '$$salary_formula_id' }] } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'salaryFormulas_info'
         }
@@ -50,7 +51,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeePositions',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'employeePositions_info'
         }
       },
@@ -60,7 +62,8 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $sort: { startChangeDate: 1 } }
+            { $sort: { startChangeDate: 1 } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'salaries_info'
         }
@@ -69,7 +72,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'shifts',
           let: { shift_id: { $toObjectId: '$shift_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'shift_info'
         }
       },
@@ -85,7 +89,8 @@ export default async function handler(req, res) {
                 date_from: { $gte: new Date( fromDate ).toISOString(), $lte: new Date( toDate ).toISOString() },
                 $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] 
               }
-            }
+            },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'leaves_info'
         }

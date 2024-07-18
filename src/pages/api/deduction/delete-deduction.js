@@ -53,6 +53,7 @@ export default async function handler(req, res) {
       .db()
       .collection('deductions')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
+      await client.db().collection('employees').updateMany({ deductions: id  } , { $pull: {deductions: id} });
 
     // ---------------- logBook ----------------
 

@@ -22,7 +22,6 @@ export default async function handler(req, res) {
     .findOne({
         _id: ObjectId(myUser.company_id)
     })
-    console.log(company);
   let working_days = company.working_days   ;
   let holidays = company.holidays ;
   company = {

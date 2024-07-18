@@ -66,7 +66,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'shifts',
           let: { shift_id: { $toObjectId: '$shift_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$shift_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'shift_info'
         }
       },
@@ -74,7 +75,9 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'employeeLeaves',
           let: { employee_id: { $toString: '$_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } ,  $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } }],
+          pipeline: [
+            { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } ,  $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } }
+          ],
           as: 'leaves_info'
         }
       },
@@ -82,7 +85,8 @@ export default async function handler(req, res) {
         $lookup: {
           from: 'salaryFormula',
           let: { salary_formula_id: { $toObjectId: '$salary_formula_id' } },
-          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$salary_formula_id'] } } }],
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$salary_formula_id'] } } },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},],
           as: 'salaryFormulas_info'
         }
       },

@@ -53,6 +53,9 @@ export default async function handler(req, res) {
       .collection('compensations')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
 
+    await client.db().collection('employees').updateMany({ compensations: id } , { $pull: {compensations: id} });
+
+
     // ---------------- logBook ----------------
 
     let log = {

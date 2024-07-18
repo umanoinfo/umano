@@ -49,7 +49,8 @@ export default async function handler(req, res) {
             let: { userRoles: '$roles' },
             pipeline: [
               { $addFields: { string_id: { $toString: '$_id' } } },
-              { $match: { $expr: { $in: ['$string_id', '$$userRoles'] } } }
+              { $match: { $expr: { $in: ['$string_id', '$$userRoles'] } } },
+              { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
             ],
             as: 'roles_info'
           }

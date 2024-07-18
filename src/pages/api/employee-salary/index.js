@@ -71,7 +71,8 @@ export default async function handler(req, res) {
           let: { deductions: '$deductions' },
           pipeline: [
             { $addFields: { string_id: { $toString: '$_id' } } },
-            { $match: { $expr: { $and: [{ $isArray: '$$deductions' }, { $in: ['$string_id', '$$deductions'] }] } } }
+            { $match: { $expr: { $and: [{ $isArray: '$$deductions' }, { $in: ['$string_id', '$$deductions'] }] } } },
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'deductions_array'
         }

@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       },
       {
         $lookup: {
-          from: 'users',
+          from: 'employees',
           let: { mng_id: { $toObjectId: '$user_id' } },
           pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$mng_id'] } } }],
           as: 'user_info'

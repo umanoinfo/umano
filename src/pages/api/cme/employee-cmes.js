@@ -31,9 +31,12 @@ export default async function handler(req, res) {
             {
               employee_id: req.query.employee_id,
               company_id: myUser.company_id
-            }           
+            },
+            { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }
             ]
-        }
+            
+        },
+        
       },
 
       {

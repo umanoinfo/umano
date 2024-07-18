@@ -309,12 +309,12 @@ const EmployeeList = classNamec => {
               Edit
             </MenuItem>
           )}
-          {session && session.user.permissions.includes('DeleteEmployee') && (
+          {/* {session && session.user.permissions.includes('DeleteEmployee') && (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:delete-outline' fontSize={20} />
               Delete
             </MenuItem>
-          )}
+          )} */}
 
         </Menu>
       </>

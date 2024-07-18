@@ -38,8 +38,8 @@ export default async function handler(req, res) {
           pipeline: [{ $match: { 
             $expr: { $eq: ['$_id', '$$department_id'] } ,
 
-            // $or: [{deleted_at: {$exists: false }} , {deleted_at: null }]
-
+            // $or: [{deleted_at: {$exists: false }} , {deleted_at: null }] // on purpose
+            
           }
            }],
           as: 'department_info'
