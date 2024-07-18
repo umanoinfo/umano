@@ -26,14 +26,16 @@ export default async function handler(req, res) {
     return res.status(404).json({success: false, message: 'Leave not found'});
   }
 
-
+  // working
   // employeeLeave.date_from = new Date( new Date( employeeLeave.date_from).setHours(23,59,59,999)) ;
   // employeeLeave.date_to = new Date( new Date(employeeLeave.date_to).setHours(23,59,59,999));
   let date_from = new Date(employeeLeave.date_from) ;
   let date_to = new Date(employeeLeave.date_to) ;
-  employeeLeave.date_from = new Date(date_from.getTime() + Math.abs(date_from.getTimezoneOffset() * 60000) )
-  employeeLeave.date_to = new Date(date_to.getTime() + Math.abs(date_to.getTimezoneOffset() * 60000) )
 
+  // employeeLeave.date_from = new Date(date_from.getTime() + Math.abs(date_from.getTimezoneOffset() * 60000) )
+  // employeeLeave.date_to = new Date(date_to.getTime() + Math.abs(date_to.getTimezoneOffset() * 60000) )
+  employeeLeave.paidValue = employeeLeave.paidValue ?? 0 
+  
   if (
     !employeeLeave.reason ||
     !employeeLeave.employee_id ||
