@@ -23,9 +23,11 @@ export default async function handler(req, res) {
   const selectedEmployee = req.body.data
   const id = selectedEmployee._id
   
-  let fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)) 
-  let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
-  console.log(fromDate , toDate);
+  // let fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)) 
+  // let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
+  let fromDate  = new Date(selectedEmployee.fromDate ) ;
+  let toDate =  new Date(selectedEmployee.toDate ) ;
+  console.log(fromDate , toDate); 
   
   // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
   // toDate = new Date( toDate - 1000 * 60 * 60 * 24  );

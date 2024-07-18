@@ -419,18 +419,22 @@ const AllDocumentsList = () => {
   const calculate = async (e) => {
     let data = {}
     data._id = e.id
-    setFromDate( new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000) ))
-    let from_date = new Date(fromDate.getFullYear() , fromDate.getMonth() , 1 ) ;
+    
+
+    let from_date = new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000 )) ;
+    from_date = new Date(from_date.getFullYear() , from_date.getMonth() , 1 ) ;
+    let to_date = new Date(from_date.getFullYear() , from_date.getMonth() + 1, 0 );
+    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000 )) ;
+    
+    data.fromDate = from_date ;
+    data.toDate = to_date;
+    
+    toDate = to_date; 
     fromDate = from_date ;
     setFromDate(from_date);
-    data.fromDate = from_date ;
-    let to_date = new Date(fromDate.getFullYear() , fromDate.getMonth() + 1, 0 );
-    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000 )) ;
-    toDate = to_date; 
-    
     setToDate(to_date);
-    data.toDate = to_date;
-    console.log(fromDate, toDate);
+    console.log('date_1:' , fromDate, toDate);
+    console.log('date_2:' , from_date , to_date) ;
     data.lumpySalary = lumpySalary ;
     if(e.salaryFormulaType == 'Flexible' && lumpySalary == 0 ){
       setSelectedEmployeeID(e);
