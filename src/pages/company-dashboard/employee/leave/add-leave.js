@@ -708,7 +708,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         newData.date_from = new Date (data_request.date_from) 
         newData.date_to = new Date(data_request.date_to) 
         newData.date_from = new Date(newData.date_from.getTime() + Math.abs(newData.date_from.getTimezoneOffset() * 60000) )
-        newData.date_to = new Date(newData.date_from.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000) )
+        newData.date_to = new Date(newData.date_to.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000) )
         console.log('a' , newData.date_from , newData.date_to) ;
         console.log('b' , new Date(newData.date_from) , new  Date(newData.date_to)) ;
         axios
