@@ -38,8 +38,9 @@ export default async function handler(req, res) {
   employeeLeave.user_id = myUser._id
   employeeLeave.created_at = new Date()
   employeeLeave.status = 'active'
-  employeeLeave.date_from_1 = employeeLeave.date_from ;
-  employeeLeave.date_to_1 = employeeLeave.date_to ;
+  
+  // employeeLeave.date_from_1 = employeeLeave.date_from ;
+  // employeeLeave.date_to_1 = employeeLeave.date_to ;
   employeeLeave.paidValue = employeeLeave.paidValue ?? 0 
 
 

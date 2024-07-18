@@ -419,12 +419,15 @@ const AllDocumentsList = () => {
   const calculate = async (e) => {
     let data = {}
     data._id = e.id
+    setFromDate( new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000) ))
     let from_date = new Date(fromDate.getFullYear() , fromDate.getMonth() , 1 ) ;
     fromDate = from_date ;
     setFromDate(from_date);
     data.fromDate = from_date ;
     let to_date = new Date(fromDate.getFullYear() , fromDate.getMonth() + 1, 0 );
+    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000 )) ;
     toDate = to_date; 
+    
     setToDate(to_date);
     data.toDate = to_date;
     console.log(fromDate, toDate);

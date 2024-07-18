@@ -28,7 +28,7 @@ import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 
-const { StringType, NumberType, DateType, ArrayType } = Schema.Types
+const { StringType, NumberType, DateType, ArrayType  , MixedType } = Schema.Types
 
 import { TabContext, TabPanel } from '@mui/lab'
 
@@ -60,6 +60,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setLoading(true)
       const res = await fetch('/api/compensation/' + id)
       const { data } = await res.json()
+      
       setFormValue(data[0])
       setLoading(false)
 
@@ -79,8 +80,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const validateMmodel = Schema.Model({
     title: StringType().isRequired('This field is required.'),
     type: StringType().isRequired('This field is required.'),
-    fixedValue: StringType().isRequired('The field is required'),
-    percentageValue: StringType().isRequired('The field is required'),
+    fixedValue:  MixedType().isRequired('The field is required'),
+    percentageValue: MixedType()
 
   })
 
@@ -89,7 +90,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...formValue , fixedValue: Number(formValue.fixedValue.replaceAll(',','')) ,percentageValue: Number(formValue.percentageValue.replaceAll(',',''))}
+        let data = { ...formValue , fixedValue: Number(String(formValue.fixedValue).replaceAll(',','')) ,percentageValue: Number(String(formValue.percentageValue).replaceAll(',',''))}
         if( isNaN(data.fixedValue) || isNaN(data.percentageValue)  ) {
           toast.error('fixed value / percentage value must be a number' , {duration:5000 , position:'bottom-right'});
 

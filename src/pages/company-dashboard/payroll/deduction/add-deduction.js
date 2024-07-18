@@ -48,8 +48,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const default_value = {
     type: 'Monthly',
-    fixedValue: 0,
-    percentageValue: 0
+    fixedValue: '0',
+    percentageValue: '0'
   }
   const [formValue, setFormValue] = useState(default_value)
 
@@ -59,7 +59,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     title: StringType().isRequired('This field is required.'),
     type: StringType().isRequired('This field is required.'),
     fixedValue: StringType().isRequired('The field is required'),
-    percentageValue: StringType().isRequired('The field is required'),
+    percentageValue: StringType()
 
   })
 
