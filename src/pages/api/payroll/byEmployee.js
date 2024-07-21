@@ -24,9 +24,10 @@ export default async function handler(req, res) {
   const id = selectedEmployee._id
   
   // let fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(0,0,0,0)) 
-  // let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999)) 
-  let fromDate  = new Date(selectedEmployee.fromDate ) ;
-  let toDate =  new Date(selectedEmployee.toDate ) ;
+  // let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999))
+  
+  let fromDate  = new Date(new Date(selectedEmployee.fromDate ).setUTCHours(23,59,59,999) + 1 );
+  let toDate =  new Date(new Date(selectedEmployee.toDate ).setUTCHours(23,59,59,999)+1) ;
   console.log(fromDate , toDate); 
   
   // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
@@ -362,7 +363,7 @@ export default async function handler(req, res) {
   let totalWorkingDaysCount =0 ;
   if (employee)
     for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
-
+      
       index++
       let _in = ''
       let _out = ''
@@ -531,6 +532,7 @@ export default async function handler(req, res) {
         leaves:leaves,
         totalLeaveHours: totalLeaveHours
       })
+      x = new Date(x.getTime() + 1000 * 60 * 60 * 24 ) ;
     }
 
     //   ----------------------- Assume hourly Salary -------------------------------
