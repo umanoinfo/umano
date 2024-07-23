@@ -228,34 +228,22 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         </TableRow>
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Daily Salary:</Typography>
-                          </MUITableCell>
-                          <MUITableCell>
-                            <Typography variant='body2' px={5}>
-                              <strong>{(+data.dailySalary).toLocaleString("en-US")}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
-                            </Typography>
-                          </MUITableCell>
-                        </TableRow>
-                        {}
-                        <TableRow>
-                          <MUITableCell>
-                            <Typography variant='body2'>Hourly Salary:</Typography>
-                          </MUITableCell>
-                          <MUITableCell>
-                            <Typography variant='body2' px={5}>
-                              <strong>{(+data.hourlySalary).toLocaleString("en-US")}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
-                            </Typography>
-                          </MUITableCell>
-                        </TableRow>
-                        <TableRow>
-                          <MUITableCell>
-                            <Typography variant='body2'>Total Salary:</Typography>
+                            <Typography variant='body2'>Net Salary:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>{(+data.totalSalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Gross Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(data?.salaries_info?.[0]?.lumpySalary + data?.totalCompensations).toLocaleString("en-US")}</strong>
                               <small style={{paddingLeft:5}}> AED</small>
                             </Typography>
                           </MUITableCell>
@@ -278,6 +266,30 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         </TableRow>
                         <TableRow>
                           <MUITableCell>
+                            <Typography variant='body2'>Daily Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.dailySalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        {}
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Hourly Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(+data.hourlySalary).toLocaleString("en-US")}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
+                        <TableRow>
+                          
+                          <MUITableCell>
                             <Typography variant='body2'>Over Time:</Typography>
                           </MUITableCell>
                           <MUITableCell>
@@ -287,6 +299,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+                        
                         <TableRow>
                           <MUITableCell>
                             <Typography variant='body2'>Holiday:</Typography>
