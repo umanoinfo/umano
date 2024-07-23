@@ -362,7 +362,7 @@ export default async function handler(req, res) {
   employee.absenseDays = 0;
   let totalWorkingDaysCount =0 ;
   if (employee)
-    for (let x = start; x <= end; x.setDate(x.getDate() + 1)) {
+    for (let x = start; x <= end; ) {
       
       index++
       let _in = ''
