@@ -295,19 +295,20 @@ const CompensationsList = () => {
         )
       }
     },
-    {
-      flex: 0.17,
-      minWidth: 100,
-      field: 'percentageValue',
-      headerName: 'Percentage Value',
-      renderCell: ({ row }) => {
-        return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.percentageValue > 0 ? row.percentageValue + '%' : '-'}
-          </Typography>
-        )
-      }
-    },
+    
+    // {
+    //   flex: 0.17,
+    //   minWidth: 100,
+    //   field: 'percentageValue',
+    //   headerName: 'Percentage Value',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+    //         {row.percentageValue > 0 ? row.percentageValue + '%' : '-'}
+    //       </Typography>
+    //     )
+    //   }
+    // },
     {
       flex: 0.08,
       field: 'type',

@@ -198,7 +198,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             }}
                           />
                         </Box>
-                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                        {/* <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Percentage value (%) :
                           </Typography>
@@ -214,7 +214,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               setFormValue({ ...formValue, percentageValue: Number(e).toLocaleString() })
                             }}
                           />
-                        </Box>
+                        </Box> */}
                       </Grid>
                     </Grid>
                     <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
