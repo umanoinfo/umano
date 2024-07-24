@@ -246,7 +246,7 @@ const DeductionsList = () => {
       }
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       minWidth: 100,
       field: 'idNo',
       headerName: 'idNo',
@@ -255,7 +255,7 @@ const DeductionsList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row.employee_info[0])}
+            {/* {renderClient(row.employee_info[0])} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
                 {idNo }

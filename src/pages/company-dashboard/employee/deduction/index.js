@@ -245,7 +245,7 @@ const DeductionsList = () => {
       }
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       minWidth: 100,
       field: 'idNo',
       headerName: 'idNo',

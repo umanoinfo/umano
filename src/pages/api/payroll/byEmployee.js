@@ -507,7 +507,13 @@ export default async function handler(req, res) {
             })
           }
         }
-      totalWorkingDaysCount++ ;
+
+      // في حال كان يوم دوام وهو مداوم (يحسب يوم دوام )
+      // يوم دوام وهو مو مداوم (لا يحسب )
+      // في حال كان يوم عطلة أو يوم إجازة رسمية يحسب بغض النظر عن الدوام
+       
+      if((workingDay && _in ) || holidayDay || !workingDay)
+        totalWorkingDaysCount++ ;
       if(workingDay && !_in && !leaveDay){
         employee.absenseDays++ ;
       }
