@@ -143,22 +143,37 @@ const Slip = ({ id }) => {
                   </>
                 }
                 {/*  */}
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                  Monthly Deductions
-                </div>
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  -{payroll.totalDeductions.toLocaleString()} AED
-                </div>
+                {
+                  payroll.totalDeductions ? 
+                  <>                  
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                      Monthly Deductions
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                      -{payroll.totalDeductions.toLocaleString()} AED
+                    </div>
+                  </>
+                  :
+                  <></>
+                }
                 {/*  */}
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                  Employee Deductions
-                </div>
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  -{Number(payroll.totalEmployeeDeductions.toFixed(2)).toLocaleString()} AED
-                </div>
+                { payroll.totalEmployeeDeductions ? 
+                    (
+                      <>
+                        <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                          Employee Deductions
+                        </div>
+                        <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                          -{Number(payroll.totalEmployeeDeductions.toFixed(2)).toLocaleString()} AED
+                        </div>
+                      </>
+                    )
+                    :
+                    <></>
+                }
                 {/*  */}
                 {
-                  !payroll.flexible &&
+                  !payroll.flexible && payroll.totalLeave ?
                   <>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                       Leaves
@@ -167,6 +182,8 @@ const Slip = ({ id }) => {
                       -{payroll.totalLeave.toFixed(2)} AED
                     </div>
                   </>
+                  :
+                  <></>
                 }
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
@@ -233,18 +250,35 @@ const Slip = ({ id }) => {
                 {
                   !payroll.flexible &&
                   <>
+                  {
+                    payroll.totalHolidayValue ? 
+                    <>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                       Holiday Hours
                     </div>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
                       {payroll.totalholidayValue} <small>AED</small>
                     </div>
-                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                      Overtime
-                    </div>
-                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                      {(payroll.totalEarlyOverTimeValue + payroll.totalLateOverTimeValue).toFixed(2)} <small>AED</small>
-                    </div>
+                    </>
+                    :
+                    <></>
+                  }
+                  {
+                    payroll.totalEarlyOverTimeValue ?
+                    <>
+                      <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                        Overtime
+                      </div>
+                      <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                        {(payroll.totalEarlyOverTimeValue + payroll.totalLateOverTimeValue).toFixed(2)} <small>AED</small>
+                      </div>
+                    </>
+                    :
+                    <></>
+                  }
+              {
+                payroll.totalOffDayValue ?
+                  <>
                     <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                       Off Day Hours
                     </div>
@@ -252,21 +286,39 @@ const Slip = ({ id }) => {
                       {payroll.totalOffDayValue} <small>AED</small>
                     </div>
                   </>
-
+                  :
+                  <></>
+              } 
+                  </>
                 }
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                {
+                  payroll.totalCompensations ?
+                  <>
+                   <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
                   Monthly Allowances
-                </div>
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {Number(payroll.totalCompensations.toFixed(2)).toLocaleString()} <small>AED</small>
-                </div>
+                  </div>
+                  <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                    {Number(payroll.totalCompensations.toFixed(2)).toLocaleString()} <small>AED</small>
+                  </div>
+                  </>
+                  :
+                  <></>
+                }
+               
                 {/*  */}
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
-                  Employee Rewards
-                </div>
-                <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
-                  {Number(payroll.totalEmployeeRewards.toFixed(2)).toLocaleString()} <small>AED</small>
-                </div>
+                {     
+                  payroll.totalEmployeeRewards ?
+                  <>               
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
+                      Employee Rewards
+                    </div>
+                    <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderLeft: '1px solid black' }}>
+                      {Number(payroll.totalEmployeeRewards.toFixed(2)).toLocaleString()} <small>AED</small>
+                    </div>
+                  </>
+                  :
+                  <></>
+                }
                 {/*  */}
                 <div style={{ width: '50%', textAlign: 'center', padding: '5px', borderRight: '1px solid black' }}>
 
@@ -303,31 +355,41 @@ const Slip = ({ id }) => {
             <>
               <div item xs={12} style={{ margin: '20px', display: 'flex' }}>
                 <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
-                  <div style={{ width: '100%', display: 'flex' }}>
-                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                      Off Day Hours
-                    </div>
-                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                      {Number(payroll.totalOffDayHours)} <small>Hours</small>
+                  {
+                      payroll.totalOffDayHours ? 
+                      <div style={{ width: '100%', display: 'flex' }}>
+                      <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                        Off Day Hours
+                      </div>
+                      <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                        {Number(payroll.totalOffDayHours)} <small>Hours</small>
+                      </div>
+                      </div>
+                      :
+                      <></>
+                  }
+                </div>
+                {
+                  payroll.totalEarlyHours ? 
+                  <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
+                    <div style={{ width: '100%', display: 'flex' }}>
+                      <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                        Early and late Hours
+                      </div>
+                      <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
+                        {Number(payroll.totalEarlyHours) + Number(payroll.totalLateHours)} <small>Hours</small>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
-                  <div style={{ width: '100%', display: 'flex' }}>
-                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                      Early and late Hours
-                    </div>
-                    <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
-                      {Number(payroll.totalEarlyHours) + Number(payroll.totalLateHours)} <small>Hours</small>
-                    </div>
-                  </div>
-                </div>
+                  :
+                  <></>
+                }
               </div>
 
             </>
           }
           <div item xs={12} style={{ margin: '20px', display: 'flex' }}>
-            {!payroll.flexible &&
+            {!payroll.flexible && payroll.totalholidayHours ?
               <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
                 <div style={{ width: '100%', display: 'flex' }}>
                   <div style={{ border: '1px solid black', padding: '5px', width: '50%', textAlign: 'center' }}>
@@ -338,6 +400,7 @@ const Slip = ({ id }) => {
                   </div>
                 </div>
               </div>
+              :<></>
             }
             <div style={{ width: '50%', padding: '5px' }} xs={12} md={6}>
               <div style={{ width: '100%', display: 'flex' }}>

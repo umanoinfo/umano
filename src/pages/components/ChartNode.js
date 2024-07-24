@@ -67,6 +67,10 @@ const ChartNode = ({
   // const expandIcon = value =>
   console.log(datasource);
   
+  // datasource.employees = datasource.employees.filter((employee)=>{
+  //   return employee != undefined && employee?.firstName != undefined  && employee.lastName != undefined;
+  // })
+  
   const [isChildrenCollapsed, setIsChildrenCollapsed] = useState(false)
   const [topEdgeExpanded, setTopEdgeExpanded] = useState()
   const [rightEdgeExpanded, setRightEdgeExpanded] = useState()
@@ -300,8 +304,12 @@ const ChartNode = ({
                 <ul>
                   {
                     datasource.employees && 
-                    datasource.employees.map((employee)=>{
+                    datasource.employees?.map((employee)=>{
                       employee = employee?.[0];
+                      console.log('abc',employee);
+                      if(!employee){
+                        return <></>;
+                      }
 
                       return (
                         <li key={employee?.id}>

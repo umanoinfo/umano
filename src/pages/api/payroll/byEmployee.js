@@ -351,7 +351,7 @@ export default async function handler(req, res) {
   let attendances = []
   let index = 0
   const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  let holidays = [] ; 
+  let holidays = [] ;
   if(company.holidays){
     holidays = company.holidays.map(day => {
       let holidayDate = new Date(day.date).toLocaleDateString().split('/');
@@ -361,6 +361,7 @@ export default async function handler(req, res) {
   }
   employee.absenseDays = 0;
   let totalWorkingDaysCount =0 ;
+  console.log(start , end ); 
   if (employee)
     for (let x = start; x <= end; ) {
       

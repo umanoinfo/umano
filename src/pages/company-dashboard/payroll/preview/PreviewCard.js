@@ -146,7 +146,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                   <TableBody>
                     <TableRow>
                       <MUITableCell>
-                        <Typography variant='body2'>Form :</Typography>
+                        <Typography variant='body2'>Duration :</Typography>
                       </MUITableCell>
                       {fromDate && (
                         <MUITableCell>
@@ -231,17 +231,6 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         </TableRow>
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Net Salary:</Typography>
-                          </MUITableCell>
-                          <MUITableCell>
-                            <Typography variant='body2' px={5}>
-                              <strong>{(+data.totalSalary).toLocaleString("en-US")}</strong>
-                              <small style={{paddingLeft:5}}> AED</small>
-                            </Typography>
-                          </MUITableCell>
-                        </TableRow>
-                        <TableRow>
-                          <MUITableCell>
                             <Typography variant='body2'>Gross Salary:</Typography>
                           </MUITableCell>
                           <MUITableCell>
@@ -251,6 +240,8 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+
+                  
                         <TableRow>
                           <MUITableCell>
                             <Typography variant='body2'>Total deduction:</Typography>
@@ -273,16 +264,28 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+                        <TableRow>
+                          <MUITableCell>
+                            <Typography variant='body2'>Net Salary:</Typography>
+                          </MUITableCell>
+                          <MUITableCell>
+                            <Typography variant='body2' px={5}>
+                              <strong>{(totalSalary)}</strong>
+                              <small style={{paddingLeft:5}}> AED</small>
+                            </Typography>
+                          </MUITableCell>
+                        </TableRow>
                       </TableBody>
+                      
                     </Table>
                   </TableContainer>
                 </div>
               </Grid>
               <Grid item xs={12} sm={4} px={4} sx={{ display: 'flex' }}>
                 <div>
-                  {/* <Typography variant='subtitle2' sx={{ mb: 3, color: 'text.primary', letterSpacing: '.1px' }}>
-                    Salary (Hourly/AED):
-                  </Typography> */}
+                <Typography variant='subtitle2' sx={{ mb: -7, color: 'text.primary', letterSpacing: '.1px' }}>
+                    Fixed Rate Details:
+                  </Typography>
                   <TableContainer>
                     <Table>
                       <TableBody>
@@ -291,7 +294,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         </TableRow>
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Daily Salary:</Typography>
+                            <Typography variant='body2'>Daily Salary Rate:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
@@ -303,7 +306,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         {}
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Hourly Salary:</Typography>
+                            <Typography variant='body2'>Hourly Salary Rate:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
@@ -315,7 +318,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         <TableRow>
                           
                           <MUITableCell>
-                            <Typography variant='body2'>Over Time:</Typography>
+                            <Typography variant='body2'>Over Time Rate:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
@@ -327,7 +330,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Holiday:</Typography>
+                            <Typography variant='body2'>Holiday Rate:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
@@ -338,7 +341,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                         </TableRow>
                         <TableRow>
                           <MUITableCell>
-                            <Typography variant='body2'>Weekend:</Typography>
+                            <Typography variant='body2'>Weekend Rate:</Typography>
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
@@ -367,7 +370,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>
-                                {data.yearlyTakenPaidLeaves.toFixed(1)}/{data.availablePaidLeave}
+                                {data.yearlyTakenPaidLeaves}/{data.availablePaidLeave}
                               </strong>
                               <small style={{paddingLeft:5}}> Day</small>
                             </Typography>
@@ -380,7 +383,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>
-                                {data.yearlyTakenUnpaidLeaves.toFixed(1)}/{data.availableUnpaidLeave}
+                                {data.yearlyTakenUnpaidLeaves}/{data.availableUnpaidLeave}
                               </strong>
                               <small style={{paddingLeft:5}}> Day</small>
                             </Typography>
@@ -393,7 +396,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
                               <strong>
-                                {data.yearlyTakenSickLeaves.toFixed(1)}/{data.availableSickLeave}
+                                {data.yearlyTakenSickLeaves}/{data.availableSickLeave}
                               </strong>
                               <small style={{paddingLeft:5}}> Day</small>
                             </Typography>
@@ -539,25 +542,27 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
               }
              
 
-              {data.compensations_array.map((comp, index) => {
+              { data.compensations_array.map((comp, index) => {
                 return (
                   <TableRow key={index}>
                     <TableCell>
                       {comp.title} <small> ( {comp.type} )</small>
                     </TableCell>
                     <TableCell>
-                      1.00
-                      {/* {
+                      {/* 1.00 */}
+                      {
                         comp.fixedValue &&
                       (+comp.fixedValue).toLocaleString("en-US")
                       }
+                      <small> AED</small>
                       {
-                        comp.percentageValue && (<>
-                        <small> AED</small> + {comp.percentageValue}
+                        comp.percentageValue ? (<>
+                         + {comp.percentageValue}
                         <small> %</small>
                         </>
-                        )
-                      } */}
+                        ):
+                        ""
+                      }
                       
                     </TableCell>
                     <TableCell>
@@ -580,8 +585,14 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                     </TableCell>
                     <TableCell>
                       {(+deduction.fixedValue).toLocaleString("en-US")}
-                      <small> AED</small> + {deduction.percentageValue}
-                      <small> %</small>
+                      <small> AED</small> 
+                      {
+                        deduction.percentageValue ?
+                          "+ " +  deduction.percentageValue + "%"
+                          : ""
+                      }
+                        
+                      
                     </TableCell>
                     <TableCell>
                       {(+deduction.totalValue * -1).toFixed(3).toLocaleString("en-US")}
