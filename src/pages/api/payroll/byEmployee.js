@@ -198,7 +198,8 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: new Date(fromDate).toISOString() , $lte: new Date(toDate).toISOString()  } } },
+
+            { $match: { date: { $gte: (fromDate) , $lte: (toDate)  } } }, // this working without toISOString
             { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'employee_deductions_info'
@@ -210,7 +211,7 @@ export default async function handler(req, res) {
           let: { employee_id: { $toString: '$_id' } },
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_id', '$$employee_id'] } } },
-            { $match: { date: { $gte: new Date( fromDate).toISOString() , $lte: new Date( toDate ).toISOString()  } } },
+            { $match: { date: { $gte: ( fromDate) , $lte: ( toDate )  } } }, // this working without toISOString
             { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
           ],
           as: 'employee_rewards_info'
@@ -366,8 +367,8 @@ export default async function handler(req, res) {
     for (let x = start; x <= end; ) {
       
       index++
-      let _in = ''
-      let _out = ''
+      let _in = null 
+      let _out = null 
       let earlyFlag = false // It represents lateness when working in the morning
       let lateFlag = false // It represents lateness when working in the evening
       let earlyOvertimeFlag = false ; // It represents overtime when working before work in the morning
@@ -423,6 +424,7 @@ export default async function handler(req, res) {
       const setUTCHours = (time)=>{
         let date = new Date('1/1/2023');
         date.setUTCHours(Number(time.split(':')[0]) ,  Number(time.split(':')[1]) );
+        date = new Date(date);
 
         return date ;
       }
