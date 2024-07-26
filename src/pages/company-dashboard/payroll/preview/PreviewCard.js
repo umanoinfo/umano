@@ -75,11 +75,11 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
       // Number(data.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) + old payroll technique
       Number(data.salaries_info[0].lumpySalary * ( 1 )) +
       Number(data.totalEarlyValue) -
-      Number(data.totalDeductions) +
+      Number(data.totalDeductions) + // 
       Number(data.totalCompensations) -
-      Number(data.totalEmployeeDeductions) +
+      Number(data.totalEmployeeDeductions) + // 
       Number(data.totalEmployeeRewards)-
-      Number(data.totalLeave)+
+      Number(data.totalLeave)+ // 
       Number(data.totalLateOverTimeValue)+
       Number(data.totalEarlyOverTimeValue)
     ).toFixed(3)).toLocaleString("en-US") ;
@@ -248,7 +248,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2' px={5}>
-                              <strong>{( data?.totalDeductions).toLocaleString("en-US")}</strong>
+                              <strong>{( Number(data?.totalDeductions) + Number( data?.totalEmployeeDeductions ) + Number(data?.totalLeave) - Number(data?.totalEarlyValue) ).toLocaleString("en-US")}</strong>
                               <small style={{paddingLeft:5}}> AED</small>
                             </Typography>
                           </MUITableCell>
