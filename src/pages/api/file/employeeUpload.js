@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
   // ---------------- Upload File ---------------------------------------------
 
-  const uploadFile = await axios.post('https://robin-sass.pioneers.network/api/test', req.body).then(response => {
+  const uploadFile = await axios.post('https://umanu.blink-techno.com/public/api/upload', req.body).then(response => {
     // if (type == 'frontEmiratesID' || type == 'BackEmiratesID') setEmiratesIDLoading(false)
   })
 

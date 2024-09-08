@@ -19,7 +19,7 @@ import { useRouter } from 'next/router'
 
 const UserViewOverview = ({ employee }) => {
   const open_file = fileName => {
-    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeDocument/' + fileName, '_blank')
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
 
   const router = useRouter()

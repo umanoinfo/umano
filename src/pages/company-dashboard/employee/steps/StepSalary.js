@@ -169,7 +169,7 @@ const StepSalary = ({ handleNext, employee }) => {
   }
 
   const open_file = fileName => {
-    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeeSalary/' + fileName, '_blank')
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
 
   const openUploadFile = row => {
@@ -188,7 +188,7 @@ const StepSalary = ({ handleNext, employee }) => {
     data.id = selectedSalary._id
     data.formData = formData
     axios
-      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .post('https://umanu.blink-techno.com/public/api/upload', formData)
       .then(response => {
         let data = {}
         data = {}

@@ -418,7 +418,7 @@ const Steppositions = ({ handleNext, employee }) => {
     data.id = selectedPosition._id
     data.formData = formData
     axios
-      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .post('https://umanu.blink-techno.com/public/api/upload', formData)
       .then(response => {
         let data = {}
         data = {}
@@ -469,7 +469,7 @@ const Steppositions = ({ handleNext, employee }) => {
     data.id = selectedPosition._id
     data.formData = formData
     axios
-      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .post('https://umanu.blink-techno.com/public/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
         setFileLoading(false)
@@ -489,7 +489,7 @@ const Steppositions = ({ handleNext, employee }) => {
   }
 
   const open_file = fileName => {
-    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeePosition/' + fileName, '_blank')
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
 
   // ------------------------------- handle Edit --------------------------------------

@@ -851,7 +851,7 @@ const EditLeave = ({ popperPlacement, id }) => {
     let data = {}
     data.formData = formData
     axios
-      .post('https://robin-sass.pioneers.network/api/test', formData)
+      .post('https://umanu.blink-techno.com/public/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
         setFormValue({...formValue , file: response.data})
@@ -881,7 +881,7 @@ const EditLeave = ({ popperPlacement, id }) => {
   }
 
   const openFile = fileName => {
-    window.open('https://robin-sass.pioneers.network/assets/testFiles/employeePosition/' + fileName, '_blank')
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
 
   const RenderDate = () => {

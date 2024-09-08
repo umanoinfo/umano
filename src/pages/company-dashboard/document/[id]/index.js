@@ -160,7 +160,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // -----------------------------------------------------------
 
   const open_file = fileName => {
-    window.open('https://robin-sass.pioneers.network/assets/testFiles/document/' + fileName, '_blank')
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
 
   // ----------------------------------------------------------
