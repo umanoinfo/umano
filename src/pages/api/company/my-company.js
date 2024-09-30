@@ -20,9 +20,25 @@ export default async function handler(req, res) {
   const company = await client
     .db()
     .collection('companies')
-    .findOne({
-        _id: ObjectId(myUser.company_id)
-    })
+    .aggregate([
+      {
+        $match: {
+          _id: ObjectId(myUser.company_id),
+        }
+      },
+      {
+        $lookup: {
+          from: 'fingerprintDevices',
+          let: { fingerprintDeviceId: { $toObjectId: '$fingerprintDeviceId' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$fingerprintDeviceId'] } } } , 
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
+          as: 'fingerprintDevice'
+        }
+      }
+    ]).toArray()
+  
 
-  return res.status(200).json({ success: true, data: [company] })
+  return res.status(200).json({ success: true, data: company })
 }

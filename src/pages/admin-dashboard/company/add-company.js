@@ -108,6 +108,8 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [countriesDataSource, setCountriesDataSource] = useState([])
+  const [fingerprintDevicesDataSource , setFingerprintDevicesDataSource] = useState([]);
+  const [fingerprintDeviceId , setFingerprintDeviceId] = useState();
   const [country, setCountry] = useState()
   const [countryIndex, setCountryIndex] = useState()
   const [end_at, setEnd_at] = useState(new Date().toISOString().substring(0, 10))
@@ -132,6 +134,7 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   useEffect(() => {
     getUsers(), getCountries()
+    getFingerprintDevices()
   }, [])
 
   // ------------------------------ Get Users ------------------------------------
@@ -141,6 +144,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     try{
       const res = await fetch('/api/user/manager-users')
       const { data , success , message } = await res.json()
+      console.log(data);
       if(!success){
         throw new Error(message);
       }
@@ -169,6 +173,24 @@ const DialogAddUser = ({ popperPlacement }) => {
     setCountriesDataSource(countries)
     setCountry(countries[0])
     setState(countries[0].states[0])
+  }
+
+  const getFingerprintDevices = async ()=>{
+    setLoading(true);
+    axios
+    .get('/api/fingerprint-device')
+    .then(function (response) {
+      setFingerprintDevicesDataSource(response?.data?.data);
+      console.log(response?.data?.data)
+      setLoading(false);
+    })
+    .catch(function (error) {
+      toast.error('Error : ' + error.response.data.message + ' !', {
+        delay: 1000,
+        position: 'bottom-right'
+      })
+      setLoading(false)
+    })
   }
 
   // -------------------------------- Upload Image -----------------------------------------
@@ -207,6 +229,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.status = 'pending'
     data.logo = logo
     data.created_at = new Date()
+    data.fingerprintDeviceId = fingerprintDeviceId ;
     axios
       .post('/api/company/add-company', {
         data
@@ -259,6 +282,10 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const handleUserChange = (event, newValue) => {
     setUserId(newValue._id)
+  }
+
+  const handleFingerprintDeviceChange= (event , newValue)=>{
+    setFingerprintDeviceId(newValue._id);
   }
 
   const handleCountryChange = (event, newValue) => {
@@ -465,7 +492,23 @@ const DialogAddUser = ({ popperPlacement }) => {
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
                     )} */}
                   </FormControl>
-
+             
+             
+                  <FormControl fullWidth sx={{ mb: 3 }} value={fingerprintDeviceId} >
+                    <Autocomplete
+                      size='small'
+                      options={ [...fingerprintDevicesDataSource]}
+                      value={fingerprintDeviceId}
+                      onChange={handleFingerprintDeviceChange}
+                      id='autocomplete-outlined'
+                      getOptionLabel={option => option?.companyName  + ' '+ option?.model}
+                      renderInput={params => <TextField {...params} label='Fingerprint Device' value={fingerprintDeviceId}  error={Boolean(false)}    />}
+                    />
+                    
+                    {/* {errors.manager && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
+                    )} */}
+                  </FormControl>
                   {/* <Grid container spacing={1}>
                     <Grid item sm={3} xs={12}>
                       <FormControl fullWidth sx={{ mb: 1 }} size='small'>

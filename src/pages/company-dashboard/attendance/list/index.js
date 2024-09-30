@@ -31,7 +31,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
 
-
+import { functions } from './fingerprint-device-functions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -109,6 +109,8 @@ const AllDocumentsList = () => {
   const [employeesList, setEmployeesList] = useState([])
   const [notAuthorized, setNotAuthorized] = useState([]);
 
+  const [companyFingerprintDevice , setCompanyFingerprintDevice ] = useState();
+  
   // ** Hooks
 
   const [openExcel, setOpenExcel] = useState(false)
@@ -130,6 +132,24 @@ const AllDocumentsList = () => {
       })
     ).then(() => setLoading(false))
   }, [dispatch, fromDate, toDate, value])
+
+
+  const getCompany = async (resolve) => {
+        setLoading(true)
+        axios
+          .get('/api/company/my-company/' , {})
+          .then(function (response) {
+            console.log('te', response.data.data[0].fingerprintDevice[0].functionName)
+            
+            setCompanyFingerprintDevice(response?.data?.data?.[0]?.fingerprintDevice[0])
+            
+
+            resolve()
+          })
+          .catch(function (error) {
+            setLoading(false)
+          })
+  }
 
   const getEmployees = () => {
 
@@ -159,6 +179,8 @@ const AllDocumentsList = () => {
   }
   useEffect(() => {
     getEmployees()
+    getCompany();
+
   }, [open])
 
   // ----------------------- Handle ------------------------------
@@ -363,6 +385,7 @@ const AllDocumentsList = () => {
   }
 
   const onFileChange = event => {
+    
     /* wire up file reader */
     if (notAuthorized.includes('ViewEmployee')) {
       toast.error('You do not have permission to view Employees', {
@@ -371,7 +394,34 @@ const AllDocumentsList = () => {
 
       return;
     }
+    const filename = event.target.files[0].name;
+    console.log(setCompanyFingerprintDevice?.functionName)
+    if(companyFingerprintDevice?.functionName){
+      onCustomFileChange(event);
+    }
+    else {
+      onExcelFileChange(event);
+    }
+
+
+    // if(target.files[0])
+
+  }
+
+  const onCustomFileChange = (event)=>{
+    if(!event?.target?.files?.[0]?.name.endsWith(companyFingerprintDevice?.extension) ){
+      toast.error('File Fomat should be ' + companyFingerprintDevice?.extension ,{delay:3000 , position:'bottom-right'});
+
+      return ;
+    }
+    
+    functions[companyFingerprintDevice?.functionName](event , employeesList, handleSubmit);
+  }
+
+  const onExcelFileChange = (event)=>{
+
     const target = event.target
+
 
     if (target.files.length != 0) {
       if (target.files.length !== 1) {
@@ -452,6 +502,7 @@ const AllDocumentsList = () => {
         }
       }
     }
+    
   }
 
   const downloadExcel = () => {
@@ -717,7 +768,7 @@ const AllDocumentsList = () => {
                   <input
                     type='file'
                     ref={myRef}
-                    accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    accept={'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,' + companyFingerprintDevice?.extension}
                     style={{ display: 'none' }}
                     onChange={e => {
                       onFileChange(e)
