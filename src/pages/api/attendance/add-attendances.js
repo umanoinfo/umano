@@ -1,3 +1,4 @@
+//
 import { ObjectId } from 'mongodb'
 import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
       attendance.timeOut = new Date('2000-1-1 ' + attendance.timeOut ).toLocaleTimeString('en-US' , {hour12: false}) ;
     }
     attendance.company_id = myUser.company_id
-    attendance.date = new Date(attendance.date)
+    attendance.date = new Date(attendance.date).toISOString()
     attendance.user_id = myUser._id
     attendance.created_at = new Date()
     attendance.status = 'active'

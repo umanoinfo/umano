@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   // -------------------- Insert ---------------------------------------------
-
+ 
   const document = req.body.data
   if (!document.title || !document.version || !document.type) {
     return res.status(422).json({
@@ -77,3 +77,5 @@ export default async function handler(req, res) {
 
   return res.status(201).json({ success: true, data: insertedDocument })
 }
+
+//

@@ -1,3 +1,4 @@
+//
 import { ObjectId } from 'mongodb'
 import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
@@ -31,7 +32,7 @@ export default async function handler(req, res) {
     company_id: myUser.company_id,
     created_at: new Date(),
     description: req.body.description,
-    date: new Date(req.body.date)
+    date: new Date(req.body.date).toISOString()
   });
 
   let log = {

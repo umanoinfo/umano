@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     newEmp.company_id = myUser.company_id
     newEmp.user_id = myUser._id
     newEmp.created_at = new Date()
-    newEmp.date = new Date(newEmp.date)
+    newEmp.date = new Date(newEmp.date).toISOString()
     newEmp.status = 'active'
 
     const newemployeeReward = await client.db().collection('employeeRewards').insertOne(newEmp)
@@ -62,3 +62,5 @@ export default async function handler(req, res) {
 
   return res.status(201).json({ success: true, data: employeeReward })
 }
+
+//

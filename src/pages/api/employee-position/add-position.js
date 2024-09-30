@@ -29,7 +29,8 @@ export default async function handler(req, res) {
     return
   }
   employeeposition.company_id = myUser.company_id
-
+  
+  
   const newEmployeepositions = await client.db().collection('employeePositions').insertOne(employeeposition)
   if(employeeposition.isManager){
     
@@ -56,3 +57,5 @@ export default async function handler(req, res) {
 
   return res.status(201).json({ success: true, data: insertedEmployee })
 }
+
+//

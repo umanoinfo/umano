@@ -24,7 +24,8 @@ export default async function handler(req, res) {
     })
   }
   employeeDocument.company_id = myUser.company_id
-  
+  employeeDocument.expiryDate = new Date(employeeDocument.expiryDate).toISOString();
+
   const newEmployeeDocument = await client.db().collection('employeeDocuments').insertOne(employeeDocument)
 
   const insertedEmployee = await client
@@ -46,3 +47,5 @@ export default async function handler(req, res) {
 
   return res.status(201).json({ success: true, data: insertedEmployee })
 }
+
+//

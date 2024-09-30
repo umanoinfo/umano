@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   deduction.user_id = myUser._id
   deduction.created_at = new Date()
   deduction.status = 'active'
-
+  deduction.date = new Date(deduction.date).toISOString()
   const newDeduction = await client.db().collection('deductions').insertOne(deduction)
   const insertedDeduction = await client.db().collection('deductions').findOne({ _id: newDeduction.insertedId })
 
@@ -51,3 +51,5 @@ export default async function handler(req, res) {
   
 return res.status(201).json({ success: true, data: insertedDeduction })
 }
+
+//

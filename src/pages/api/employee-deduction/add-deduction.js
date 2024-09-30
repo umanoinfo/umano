@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     newEmp.user_id = myUser._id
     newEmp.created_at = new Date()
     newEmp.status = 'active'
-    newEmp.date = new Date(newEmp.date)
+    newEmp.date = new Date(newEmp.date).toISOString()
 
     const newEmployeeDeduction = await client.db().collection('employeeDeductions').insertOne(newEmp)
 
@@ -60,3 +60,5 @@ export default async function handler(req, res) {
 
   return res.status(201).json({ success: true, data: employeeDeduction })
 }
+
+//
