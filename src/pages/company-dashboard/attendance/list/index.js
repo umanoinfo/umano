@@ -31,7 +31,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
 
-import { functions } from './fingerprint-device-functions'
+import { functions } from '../../../../helpers/fingerprint-device-functions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
