@@ -21,7 +21,7 @@ import Avatar from '@mui/material/Avatar'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox,  SelectPicker } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -186,7 +186,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.description = formValue.description
         data.content = content
         data.status = 'active'
-        data.created_at = new Date()
+        data.created_at = new Date().toISOString()()
         setLoading(true)
         setLoadingDescription('Form is inserting')
         axios
@@ -237,16 +237,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/form/'>
-              Forms List
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Add Form
-            </Typography>
-          </Breadcrumbs>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/form/'>
+                Forms List
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Form
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -281,7 +281,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Description</small>
-                      <Form.Control rows={2} name='description' controlId='description'  />
+                      <Form.Control rows={2} name='description' controlId='description' />
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                       <small>Content</small>

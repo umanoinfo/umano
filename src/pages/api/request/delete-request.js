@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -25,9 +25,9 @@ export default async function handler(req, res) {
   const selectedRequest = await client
     .db()
     .collection('requests')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
-  if(!selectedRequest){
-    return res.status(404).json({success: false, message: 'Request not found'});
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
+  if (!selectedRequest) {
+    return res.status(404).json({ success: false, message: 'Request not found' });
   }
 
   if (selectedRequest && selectedRequest.deleted_at) {
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       Module: 'Request',
       Action: 'Restore',
       Description: 'Restore request (' + selectedRequest.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       Module: 'Request',
       Action: 'Delete',
       Description: 'Delete request (' + selectedRequest.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

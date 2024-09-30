@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -20,15 +20,15 @@ export default async function handler(req, res) {
 
   const employeeDocument = req.body.data
   const id = employeeDocument._id
-  const document = await client.db().collection('employeeDocuments').findOne({_id: ObjectId(id) , company_id: myUser.company_id.toString()});
-  if(!document){
-    return res.status(404).json({success: false, message: 'document not found'});
+  const document = await client.db().collection('employeeDocuments').findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() });
+  if (!document) {
+    return res.status(404).json({ success: false, message: 'document not found' });
   }
 
   delete employeeDocument._id
 
   if (!employeeDocument.documentTitle) {
-    return  res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
   }
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     Module: 'Employee document',
     Action: 'Edit',
     Description: 'Edit employee document (' + employeeDocument.positionTitle + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

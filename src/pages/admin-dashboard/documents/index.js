@@ -66,7 +66,7 @@ const DocumentsTable = () => {
   const [title, setTitle] = useState()
   const [loading, setLoading] = useState(true)
   const [oldTitle, setOldTitle] = useState()
-  
+
 
   const { data: session, status } = useSession()
 
@@ -74,13 +74,13 @@ const DocumentsTable = () => {
   const dispatch = useDispatch()
 
   const store = useSelector(state => state.documentTypes)
-  
+
   useEffect(() => {
     dispatch(
       fetchData({
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, value])
 
   const handleFilter = useCallback(val => {
@@ -146,17 +146,17 @@ const DocumentsTable = () => {
       return
     }
     setLoading(true)
-   
+
 
     const data = {
-      name : title,
-      category: category ,
-      created_at: new Date(),
+      name: title,
+      category: category,
+      created_at: new Date().toISOString()(),
       updated_at: new Date(),
       deleted_at: null
     }
-    
- 
+
+
 
     axios
       .post('/api/document-types/add-document-type', {
@@ -187,7 +187,7 @@ const DocumentsTable = () => {
 
   const handleDialogDeleteToggle = () => setDeleteDialogOpen(!deleteDialogOpen)
 
-  const handleAdminRestoreDocumentType  = DocumentType =>{
+  const handleAdminRestoreDocumentType = DocumentType => {
     setDeleteValue(DocumentType);
     setOldTitle(DocumentType.name);
     deleteDocumentType(1);
@@ -209,14 +209,13 @@ const DocumentsTable = () => {
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
           let message = '';
-          if(type == 1  )
-          {
+          if (type == 1) {
             message = 'Document Type (' + deleteValue.name + ') Restored Successfully.';
           }
-          else{
+          else {
             message = 'Document Type (' + deleteValue.name + ') Deleted Successfully.';
           }
-          toast.success(message , {
+          toast.success(message, {
             delay: 3000,
             position: 'bottom-right'
           })
@@ -230,9 +229,9 @@ const DocumentsTable = () => {
           position: 'bottom-right'
         })
         setLoading(false)
-        
+
       })
-      
+
   }
 
   // -------------------------- Edit Permission ----------------------------------------
@@ -246,10 +245,10 @@ const DocumentsTable = () => {
     setCategory(DocumentType.category)
     setEditDialogOpen(true)
   }
- 
+
   const onSubmitEdit = () => {
     setLoading(true)
-    
+
 
     const data = {
       _id: editValue._id,
@@ -291,7 +290,7 @@ const DocumentsTable = () => {
 
     return <NoPermission header='No Permission' description='No permission to View Documents'></NoPermission>
   }
-  
+
   return (
     <>
       <Grid container spacing={6}>
@@ -319,8 +318,8 @@ const DocumentsTable = () => {
                 )}
               </Box>
               {
-                  loading ? 
-                  <Loading header='Please Wait' description='Documents types are loading'/>
+                loading ?
+                  <Loading header='Please Wait' description='Documents types are loading' />
                   :
                   <DataGrid
                     autoHeight
@@ -361,7 +360,7 @@ const DocumentsTable = () => {
               <MenuItem value='Entity Documents'>Entity Documents</MenuItem>
               <MenuItem value='Ownership Documents'>Ownership Documents</MenuItem>
               <MenuItem value='Vendors'>Vendors</MenuItem>
-   
+
             </Select>
 
             <TextField
@@ -434,7 +433,7 @@ const DocumentsTable = () => {
               sx={{ mb: 1, mt: 1, maxWidth: 360 }}
               placeholder='Enter Document Type Name'
             />
-         
+
             <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
             {!loading && (
               <Box className='demo-space-x' sx={{ '& > :last-child': { mr: '0 !important' } }}>
@@ -464,7 +463,7 @@ const DocumentsTable = () => {
         aria-describedby='alert-dialog-description'
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {
-            
+
           }
         }}
       >
@@ -476,7 +475,7 @@ const DocumentsTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button onClick={()=>deleteDocumentType(0)}>Yes</Button>
+          <Button onClick={() => deleteDocumentType(0)}>Yes</Button>
           <Button onClick={handleDialogDeleteToggle}>No</Button>
         </DialogActions>
       </Dialog>

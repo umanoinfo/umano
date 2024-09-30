@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -29,8 +29,8 @@ export default async function handler(req, res) {
 
     return
   }
-  if(myUser.email != 'admin@admin.com'){
-    role.permissions = role?.permissions?.filter((permission)=>{
+  if (myUser.email != 'admin@admin.com') {
+    role.permissions = role?.permissions?.filter((permission) => {
       return myUser.permissions.includes(permission);
     });
   }
@@ -56,8 +56,8 @@ export default async function handler(req, res) {
       }
     ])
     .toArray()
-  
-  console.log( id , users );
+
+  console.log(id, users);
 
   // deleting permissions 
   for (const user of users) {
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
         .db()
         .collection('roles')
         .findOne({ _id: ObjectId(role_id) })
-      
+
       if (selectedRole && selectedRole.permissions) {
         for (const permission of selectedRole.permissions) {
           if (!user.permissions.includes(permission)) {
@@ -87,50 +87,50 @@ export default async function handler(req, res) {
       .db()
       .collection('users')
       .updateOne({ _id: ObjectId(user_id) }, { $set: user }, { upsert: false })
-    if(user.type != 'admin'){     
-          /* query roles for that company */ 
-          const roles = await client.db().collection('roles').find({
-            company_id: user.company_id
-          }).toArray();
-      
-          /* itterating over all the roles that was created by this manager and removing all permissions that are higher in
-           privilages than the updated permissions that are being assigned
-          */
-          for(let role of roles ){
-            const id = role._id ; 
-            delete role._id ;
-            let permissions = [] ; 
-            for(const permission of role.permissions ){
-              if(updatedRole.permissions.includes(permission)){ // if the new assigned role does have that permission then add it to that role
-                permissions.push(permission);
-              }
-            }
-            role.permissions = permissions ; 
-            const updated = await client.db().collection('roles').updateOne({_id : ObjectId(id) } , {$set : role } , {upsert: false});
+    if (user.type != 'admin') {
+      /* query roles for that company */
+      const roles = await client.db().collection('roles').find({
+        company_id: user.company_id
+      }).toArray();
+
+      /* itterating over all the roles that was created by this manager and removing all permissions that are higher in
+       privilages than the updated permissions that are being assigned
+      */
+      for (let role of roles) {
+        const id = role._id;
+        delete role._id;
+        let permissions = [];
+        for (const permission of role.permissions) {
+          if (updatedRole.permissions.includes(permission)) { // if the new assigned role does have that permission then add it to that role
+            permissions.push(permission);
           }
-          
-          /* query users for that company */
-          const companyUsers = await client.db().collection('users').find({
-            company_id: user.company_id
-          }).toArray();
+        }
+        role.permissions = permissions;
+        const updated = await client.db().collection('roles').updateOne({ _id: ObjectId(id) }, { $set: role }, { upsert: false });
+      }
 
-          for(let companyUser of companyUsers ){
-            if(companyUser._id == myUser._id || myUser.type == 'admin') continue ;
-            let id = companyUser._id ;
-            delete companyUser._id;
-            let permissions = [] ;
+      /* query users for that company */
+      const companyUsers = await client.db().collection('users').find({
+        company_id: user.company_id
+      }).toArray();
 
-            /* itterating over the permissions of the users in that company and removing all permissions that are higher in
-              privilages than the updated permissions that are being assigned */
-            for(const permission of companyUser.permissions ){
-              if(updatedRole.permissions.includes(permission)){ // if the new assigned role does have that permission then add it to that user
-                permissions.push(permission);
-              }
-            }
-            companyUser.permissions = permissions ;
+      for (let companyUser of companyUsers) {
+        if (companyUser._id == myUser._id || myUser.type == 'admin') continue;
+        let id = companyUser._id;
+        delete companyUser._id;
+        let permissions = [];
 
-            const updated = await client.db().collection('users').updateOne({_id : ObjectId(id) } , {$set : companyUser } , {upsert: false});
+        /* itterating over the permissions of the users in that company and removing all permissions that are higher in
+          privilages than the updated permissions that are being assigned */
+        for (const permission of companyUser.permissions) {
+          if (updatedRole.permissions.includes(permission)) { // if the new assigned role does have that permission then add it to that user
+            permissions.push(permission);
           }
+        }
+        companyUser.permissions = permissions;
+
+        const updated = await client.db().collection('users').updateOne({ _id: ObjectId(id) }, { $set: companyUser }, { upsert: false });
+      }
     }
   }
 
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
     Module: 'Role',
     Action: 'Edit',
     Description: 'Edit role (' + role.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

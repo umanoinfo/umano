@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -25,19 +25,19 @@ export default async function handler(req, res) {
     return res.status(422).json({
       message: 'Invalid input'
     })
-    
+
     return
   }
   employeeposition.company_id = myUser.company_id
-  
-  
+
+
   const newEmployeepositions = await client.db().collection('employeePositions').insertOne(employeeposition)
-  if(employeeposition.isManager){
-    
-    const department = await client.db().collection('departments').updateOne({_id:ObjectId(employeeposition.department_id)} , {$set: {user_id : employeeposition.employee_id }}, {upsert: false });
-    
+  if (employeeposition.isManager) {
+
+    const department = await client.db().collection('departments').updateOne({ _id: ObjectId(employeeposition.department_id) }, { $set: { user_id: employeeposition.employee_id } }, { upsert: false });
+
   }
-  
+
   const insertedEmployee = await client
     .db()
     .collection('employeePositions')
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     Module: 'Employee position',
     Action: 'Add',
     Description: 'Add Employee position (' + insertedEmployee.positionTitle + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

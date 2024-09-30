@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     newEmp.employee_id = empId
     newEmp.company_id = myUser.company_id
     newEmp.user_id = myUser._id
-    newEmp.created_at = new Date()
+    newEmp.created_at = new Date().toISOString()()
     newEmp.date = new Date(newEmp.date).toISOString()
     newEmp.status = 'active'
 
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       Module: 'Employee Reward',
       Action: 'Add',
       Description: 'Add Employee reward (' + employeeReward.reason + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   })

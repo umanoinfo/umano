@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const token = await getToken({ req })
 
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  
+
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('EditEmployee')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
@@ -23,9 +23,9 @@ export default async function handler(req, res) {
   const employeeposition = req.body.data
 
   const id = employeeposition._id
-  const position = await client.db().collection('employeePositions').findOne({_id: ObjectId(id) , company_id: myUser.company_id.toString()}) ; 
-  if(!position){
-    return res.status(404).json({success: false, message: 'Employee position not found'});
+  const position = await client.db().collection('employeePositions').findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() });
+  if (!position) {
+    return res.status(404).json({ success: false, message: 'Employee position not found' });
   }
   delete employeeposition._id
 
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
-    
+
     return
   }
 
@@ -46,12 +46,12 @@ export default async function handler(req, res) {
     .db()
     .collection('employeePositions')
     .updateOne({ _id: ObjectId(id) }, { $set: employeeposition }, { upsert: false })
-  if(position.isManager != employeeposition.isManager){
-    if(employeeposition.isManager){
-      const department = await client.db().collection('departments').updateOne({_id:ObjectId(employeeposition.department_id)} , {$set: {user_id : employeeposition.employee_id }}, {upsert: false });
+  if (position.isManager != employeeposition.isManager) {
+    if (employeeposition.isManager) {
+      const department = await client.db().collection('departments').updateOne({ _id: ObjectId(employeeposition.department_id) }, { $set: { user_id: employeeposition.employee_id } }, { upsert: false });
     }
-    else{
-      const department = await client.db().collection('departments').updateOne({_id: ObjectId(employeeposition.department_id)} , {$set: {user_id : null }} , {upsert: false });
+    else {
+      const department = await client.db().collection('departments').updateOne({ _id: ObjectId(employeeposition.department_id) }, { $set: { user_id: null } }, { upsert: false });
     }
   }
 
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     Module: 'Employee position',
     Action: 'Edit',
     Description: 'Edit employee position (' + employeeposition.positionTitle + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

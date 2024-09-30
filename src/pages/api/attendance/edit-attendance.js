@@ -3,10 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
-  
+
   const client = await connectToDatabase()
 
   // ------------------------------- Token -------------------------------------
@@ -20,14 +20,14 @@ export default async function handler(req, res) {
   // ------------------------------- Edit -------------------------------------
 
   const attendance = req.body.data
-  if (!attendance.date || !attendance.timeIn ||  !attendance.timeOut || !attendance.employee_no) {
+  if (!attendance.date || !attendance.timeIn || !attendance.timeOut || !attendance.employee_no) {
     return res.status(422).json({
       message: 'Invalid input'
     })
   }
-  const curAttendance = await client.db().collection('attendances').findOne({_id: ObjectId(attendance._id)});
-  if(!curAttendance || curAttendance.company_id != myUser.company_id) {
-    return res.status(404).json({success: false, message: 'Attendance not found'});
+  const curAttendance = await client.db().collection('attendances').findOne({ _id: ObjectId(attendance._id) });
+  if (!curAttendance || curAttendance.company_id != myUser.company_id) {
+    return res.status(404).json({ success: false, message: 'Attendance not found' });
   }
 
   attendance.company_id = myUser.company_id
@@ -43,8 +43,8 @@ export default async function handler(req, res) {
   const newAttendance = await client
     .db()
     .collection('attendances')
-    .updateOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() }, { $set: attendance }, { upsert: false })
-  
+    .updateOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() }, { $set: attendance }, { upsert: false })
+
   console.log(id);
   console.log(newAttendance);
 
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     Module: 'Attendance',
     Action: 'Edit',
     Description: 'Edit attendance (' + attendance.no + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

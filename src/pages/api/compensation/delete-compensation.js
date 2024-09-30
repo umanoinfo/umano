@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       Module: 'Compensation',
       Action: 'Restore',
       Description: 'Restore compensation (' + selectedCompensation.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       .collection('compensations')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
 
-    await client.db().collection('employees').updateMany({ compensations: id } , { $pull: {compensations: id} });
+    await client.db().collection('employees').updateMany({ compensations: id }, { $pull: { compensations: id } });
 
 
     // ---------------- logBook ----------------
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       Module: 'Compensation',
       Action: 'Delete',
       Description: 'Delete compensation (' + selectedCompensation.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

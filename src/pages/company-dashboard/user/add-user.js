@@ -86,7 +86,7 @@ const DialogAddUser = () => {
     const {
       target: { value }
     } = event
-    
+
     // setLanguages(typeof value === 'string' ? value.split(',') : value)
   }
 
@@ -111,11 +111,11 @@ const DialogAddUser = () => {
     data.status = userStatus
     data.permissions = []
     data.roles = []
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/company-user/add-user', {
-        data:data,
-        user:session.user
+        data: data,
+        user: session.user
       })
       .then(function (response) {
         dispatch(fetchData({})).then(() => {
@@ -232,7 +232,7 @@ const DialogAddUser = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-       
+
                 </Grid>
                 <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
 

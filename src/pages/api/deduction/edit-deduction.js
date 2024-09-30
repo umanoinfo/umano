@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -18,9 +18,9 @@ export default async function handler(req, res) {
 
   // ------------------------------- Edit -------------------------------------
   const deduction = req.body.data
-  const ded = await client.db().collection('deductions').findOne({_id: ObjectId(deduction._id) , company_id: myUser.company_id.toString()});
-  if(!ded){
-    return res.status(404).json({success: false, message: 'Deduction not found'});
+  const ded = await client.db().collection('deductions').findOne({ _id: ObjectId(deduction._id), company_id: myUser.company_id.toString() });
+  if (!ded) {
+    return res.status(404).json({ success: false, message: 'Deduction not found' });
   }
 
 
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     Module: 'Deduction',
     Action: 'Edit',
     Description: 'Edit deduction (' + deduction.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

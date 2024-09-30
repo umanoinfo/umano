@@ -70,26 +70,26 @@ const DialogAddUser = ({ id }) => {
   const formRef = useRef()
 
   // ---------------------- Get Company ------------------------------------
-  const getCompany =  () => {
+  const getCompany = () => {
     setLoading(true)
     axios
-        .get('/api/company/' + id, {})
-        .then(function (response) {
-          setCompany(response.data.data[0])
-          setLoading(false)
-        })
-        .catch(function (error) {
-          setLoading(false)
-        })
-    }
-  
+      .get('/api/company/' + id, {})
+      .then(function (response) {
+        setCompany(response.data.data[0])
+        setLoading(false)
+      })
+      .catch(function (error) {
+        setLoading(false)
+      })
+  }
+
 
   useEffect(() => {
     getCompany()
   }, [])
 
-  
-  
+
+
 
   // ---------------------- Submit ------------------------------------
 
@@ -99,7 +99,7 @@ const DialogAddUser = ({ id }) => {
     data.company_id = id
     data.start_at = start_at
     data.end_at = end_at
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/subscription/add-subscription', {
         data

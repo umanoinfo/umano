@@ -3,20 +3,20 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const { method } = req
 
   // ---------------- Token ----------------
 
   const client = await connectToDatabase()
-  
+
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('AdminEditPermission')) {
-    return res.status(401).json({ success: false, message: 'Not Auth' })  
-  }   
+    return res.status(401).json({ success: false, message: 'Not Auth' })
+  }
 
   // ---------------- Edit ----------------
 
@@ -32,12 +32,12 @@ export default async function handler(req, res) {
 
     return
   }
- 
+
   const newPermission = await client
     .db()
     .collection('permissions')
     .updateOne({ _id: ObjectId(id) }, { $set: permission }, { upsert: false })
-    
+
   const updatedPermission = await client
     .db()
     .collection('permissions')
@@ -105,7 +105,7 @@ export default async function handler(req, res) {
       }
     }
     delete user._id
-    
+
     const updatedUser = await client
       .db()
       .collection('users')
@@ -119,7 +119,7 @@ export default async function handler(req, res) {
     Module: 'Permission',
     Action: 'Edit',
     Description: 'Update Permission (' + permission.title + ') group (' + permission.group + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

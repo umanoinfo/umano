@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   // -------------------- Insert ---------------------------------------------
- 
+
   const document = req.body.data
   if (!document.title || !document.version || !document.type) {
     return res.status(422).json({
@@ -28,12 +28,12 @@ export default async function handler(req, res) {
     })
   }
 
-  if(!document.notifyBefore){
+  if (!document.notifyBefore) {
     document.notifyBefore = 30
   }
   document.notifyBeforeDays = document.notifyBefore
   var date = new Date(document.expiryDate);
-  date.setDate(date.getDate() - document.notifyBefore); 
+  date.setDate(date.getDate() - document.notifyBefore);
 
   document.notifyBefore = date
   document.company_id = myUser.company_id
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     event.status = 'active'
     event.company_id = myUser.company_id
     event.user_id = myUser._id
-    event.created_at = new Date()
+    event.created_at = new Date().toISOString()()
     event.document_id = insertedDocument._id
     const newEvent = await client.db().collection('events').insertOne(event)
   }
@@ -69,9 +69,9 @@ export default async function handler(req, res) {
     company_id: myUser.company_id,
     Module: 'Document',
     Action: 'Add',
-    linked_id: insertedDocument._id ,
+    linked_id: insertedDocument._id,
     Description: 'Add Document (' + insertedDocument.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

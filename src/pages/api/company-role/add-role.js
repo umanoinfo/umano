@@ -23,8 +23,8 @@ export default async function handler(req, res) {
       message: 'Invalid input'
     })
   }
-  role.permissions = role?.permissions?.filter((permission)=>{
-    return !permission.includes('Admin') && myUser.permissions.includes(permission) ;
+  role.permissions = role?.permissions?.filter((permission) => {
+    return !permission.includes('Admin') && myUser.permissions.includes(permission);
   });
 
   const newRole = await client.db().collection('roles').insertOne(role)
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     Module: 'Role',
     Action: 'Add',
     Description: 'Add role (' + insertedRole.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

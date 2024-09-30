@@ -2,8 +2,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   const token = await getToken({ req })
   const myUser = await client.db().collection('users').findOne({ email: token.email })
-  if (!myUser || !myUser.permissions || (!myUser.permissions.includes('AddEmployee') && !myUser.permissions.includes('EditEmployee') )) {
+  if (!myUser || !myUser.permissions || (!myUser.permissions.includes('AddEmployee') && !myUser.permissions.includes('EditEmployee'))) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     Module: 'Employee document',
     Action: 'Add',
     Description: 'Add Employee document (' + insertedEmployee.positionTitle + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

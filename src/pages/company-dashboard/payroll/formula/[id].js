@@ -104,7 +104,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       if (!result.hasError) {
         let data = { ...formValue }
         data.status = 'active'
-        data.created_at = new Date()
+        data.created_at = new Date().toISOString()()
         setLoading(true)
         setLoadingDescription('Form is inserting')
         axios

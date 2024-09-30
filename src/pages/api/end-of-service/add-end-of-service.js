@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -21,17 +21,17 @@ export default async function handler(req, res) {
 
   // -------------------- Insert ---------------------------------------------
 
-  const endOfService = req.body 
+  const endOfService = req.body
   if (!endOfService.company_id || !endOfService.employee_id || !endOfService.idNo) {
     res.status(422).json({
       message: 'Invalid input'
     })
-    
+
     return
   }
   endOfService.company_id = myUser.company_id
   endOfService.user_id = myUser._id
-  endOfService.created_at = new Date()
+  endOfService.created_at = new Date().toISOString()()
 
   const newEndOfService = await client.db().collection('endOfServices').insertOne(endOfService)
   const insertedEndOfService = await client.db().collection('endOfServices').findOne({ _id: newEndOfService.insertedId })
@@ -44,9 +44,9 @@ export default async function handler(req, res) {
     company_id: myUser.company_id,
     Module: 'EndOfService',
     Action: 'Add',
-    linked_id: insertedEndOfService._id ,
+    linked_id: insertedEndOfService._id,
     Description: 'Add End of service for employee (' + endOfService.name + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

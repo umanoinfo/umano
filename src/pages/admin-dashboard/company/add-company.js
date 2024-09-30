@@ -86,7 +86,7 @@ const schema = yup.object().shape({
     .string()
     .min(3, obj => showErrors('Name', obj.value.length, obj.min))
     .required(),
-    
+
   // manager: yup.number().required(),
 })
 
@@ -108,8 +108,8 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [countriesDataSource, setCountriesDataSource] = useState([])
-  const [fingerprintDevicesDataSource , setFingerprintDevicesDataSource] = useState([]);
-  const [fingerprintDeviceId , setFingerprintDeviceId] = useState();
+  const [fingerprintDevicesDataSource, setFingerprintDevicesDataSource] = useState([]);
+  const [fingerprintDeviceId, setFingerprintDeviceId] = useState();
   const [country, setCountry] = useState()
   const [countryIndex, setCountryIndex] = useState()
   const [end_at, setEnd_at] = useState(new Date().toISOString().substring(0, 10))
@@ -117,7 +117,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   const [userID, setUserId] = useState()
   const [user, setUser] = useState()
   const { data: session, status } = useSession()
-  
+
   const dispatch = useDispatch()
 
   const {
@@ -141,27 +141,27 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/user/manager-users')
-      const { data , success , message } = await res.json()
+      const { data, success, message } = await res.json()
       console.log(data);
-      if(!success){
+      if (!success) {
         throw new Error(message);
       }
       setUsersDataSource(data)
 
     }
-    catch(err){
+    catch (err) {
       let message = err.toString();
-      if(message == 'Error: Not Auth'){
+      if (message == 'Error: Not Auth') {
         message = 'Error : failed to fetch users (you do not have permission to view users)'
         setUsersDataSource([{
-          email : <div style={{color:'red'}}> You do not have permission to view users</div>,
-          value : undefined
+          email: <div style={{ color: 'red' }}> You do not have permission to view users</div>,
+          value: undefined
         }]);
 
       }
-      toast.error(message , {duration : 5000 , position: 'bottom-right'});
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
@@ -175,48 +175,48 @@ const DialogAddUser = ({ popperPlacement }) => {
     setState(countries[0].states[0])
   }
 
-  const getFingerprintDevices = async ()=>{
+  const getFingerprintDevices = async () => {
     setLoading(true);
     axios
-    .get('/api/fingerprint-device')
-    .then(function (response) {
-      setFingerprintDevicesDataSource(response?.data?.data);
-      console.log(response?.data?.data)
-      setLoading(false);
-    })
-    .catch(function (error) {
-      toast.error('Error : ' + error.response.data.message + ' !', {
-        delay: 1000,
-        position: 'bottom-right'
+      .get('/api/fingerprint-device')
+      .then(function (response) {
+        setFingerprintDevicesDataSource(response?.data?.data);
+        console.log(response?.data?.data)
+        setLoading(false);
       })
-      setLoading(false)
-    })
+      .catch(function (error) {
+        toast.error('Error : ' + error.response.data.message + ' !', {
+          delay: 1000,
+          position: 'bottom-right'
+        })
+        setLoading(false)
+      })
   }
 
   // -------------------------------- Upload Image -----------------------------------------
 
   const uploadImage = async event => {
     const file = event.target.files[0]
-    const size = file.size / (1024 * 1024) ;
-    if(size > 1 ){
-      toast.error('Logo size is more than 1 MB' , {
-        duration: 5000 , 
-        position: 'bottom-right' 
+    const size = file.size / (1024 * 1024);
+    if (size > 1) {
+      toast.error('Logo size is more than 1 MB', {
+        duration: 5000,
+        position: 'bottom-right'
       });
 
-      return ;
+      return;
     }
-    
+
     const base64 = await convertBase64(file)
     setLogo(base64)
   }
 
   const onSubmit = data => {
-    if(!userID){
+    if (!userID) {
       toast.error('Manager field is required', {
-        delay:3000,position:'bottom-right'
+        delay: 3000, position: 'bottom-right'
       });
-      
+
       return;
     }
     setLoading(true)
@@ -228,8 +228,8 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.user_id = userID;
     data.status = 'pending'
     data.logo = logo
-    data.created_at = new Date()
-    data.fingerprintDeviceId = fingerprintDeviceId ;
+    data.created_at = new Date().toISOString()()
+    data.fingerprintDeviceId = fingerprintDeviceId;
     axios
       .post('/api/company/add-company', {
         data
@@ -284,7 +284,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     setUserId(newValue._id)
   }
 
-  const handleFingerprintDeviceChange= (event , newValue)=>{
+  const handleFingerprintDeviceChange = (event, newValue) => {
     setFingerprintDeviceId(newValue._id);
   }
 
@@ -346,11 +346,11 @@ const DialogAddUser = ({ popperPlacement }) => {
                         />
                       </FormControl>
                     </Grid>
-                   
+
                   </Grid>
 
                   <Grid container spacing={1}>
-                  <Grid item sm={7} xs={12}>
+                    <Grid item sm={7} xs={12}>
                       {countriesDataSource.length > 0 && (
                         <FormControl fullWidth sx={{ mb: 3 }}>
                           <Autocomplete
@@ -368,7 +368,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                       )}
                     </Grid>
                     <Grid item sm={5} xs={12}>
-                     {country && <FormControl fullWidth sx={{ mb: 3 }}>
+                      {country && <FormControl fullWidth sx={{ mb: 3 }}>
                         <Autocomplete
                           size='small'
                           options={country.states}
@@ -378,19 +378,19 @@ const DialogAddUser = ({ popperPlacement }) => {
                           getOptionLabel={option => option.name}
                           error={Boolean(errors.state)}
                           renderInput={params => <TextField {...params} label='State' error={Boolean(errors.states)} />}
-                        /> 
-                         
-                         {errors.state && (
-                      <FormHelperText sx={{ color: 'error.main' }}>{errors.state.message}</FormHelperText>
-                    )}
+                        />
+
+                        {errors.state && (
+                          <FormHelperText sx={{ color: 'error.main' }}>{errors.state.message}</FormHelperText>
+                        )}
                       </FormControl>}
-                    
+
                     </Grid>
-   
+
                   </Grid>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                  {country && country.dial &&  <Controller
+                    {country && country.dial && <Controller
                       name='phone'
                       control={control}
                       rules={{ required: true }}
@@ -415,7 +415,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                  <Controller
+                    <Controller
                       name='website'
                       control={control}
                       rules={{ required: true }}
@@ -450,7 +450,7 @@ const DialogAddUser = ({ popperPlacement }) => {
                       )}
                     />
                   </FormControl> */}
-                  
+
                   <FormControl fullWidth sx={{ mb: 3 }}>
                     <Controller
                       name='address'
@@ -474,8 +474,8 @@ const DialogAddUser = ({ popperPlacement }) => {
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.address.message}</FormHelperText>
                     )}
                   </FormControl>
-                  
-                  
+
+
 
                   <FormControl fullWidth sx={{ mb: 3 }} value={userID} >
                     <Autocomplete
@@ -485,26 +485,26 @@ const DialogAddUser = ({ popperPlacement }) => {
                       onChange={handleUserChange}
                       id='autocomplete-outlined'
                       getOptionLabel={option => option.email}
-                      renderInput={params => <TextField {...params} label='Manager' value={userID}   error={Boolean(errors.manager)}  />}
+                      renderInput={params => <TextField {...params} label='Manager' value={userID} error={Boolean(errors.manager)} />}
                     />
-                    
+
                     {/* {errors.manager && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
                     )} */}
                   </FormControl>
-             
-             
+
+
                   <FormControl fullWidth sx={{ mb: 3 }} value={fingerprintDeviceId} >
                     <Autocomplete
                       size='small'
-                      options={ [...fingerprintDevicesDataSource]}
+                      options={[...fingerprintDevicesDataSource]}
                       value={fingerprintDeviceId}
                       onChange={handleFingerprintDeviceChange}
                       id='autocomplete-outlined'
-                      getOptionLabel={option => option?.companyName  + ' '+ option?.model}
-                      renderInput={params => <TextField {...params} label='Fingerprint Device' value={fingerprintDeviceId}  error={Boolean(false)}    />}
+                      getOptionLabel={option => option?.companyName + ' ' + option?.model}
+                      renderInput={params => <TextField {...params} label='Fingerprint Device' value={fingerprintDeviceId} error={Boolean(false)} />}
                     />
-                    
+
                     {/* {errors.manager && (
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.manager.message}</FormHelperText>
                     )} */}

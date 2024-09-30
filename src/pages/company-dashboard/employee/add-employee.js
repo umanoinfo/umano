@@ -141,7 +141,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const [compensationDataSource, setCompensationDataSource] = useState()
   const [shiftsDataSource, setShiftsDataSource] = useState([])
   const [salaryFormulaDataSource, setSalaryFormulaDataSource] = useState([])
-  const [workingHours , setWorkingHours ] = useState('other');
+  const [workingHours, setWorkingHours] = useState('other');
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
 
@@ -478,12 +478,12 @@ const AddEmployee = ({ popperPlacement, id }) => {
                     </Grid>
                     <Grid item sm={12} xs={12} md={5} mt={9}>
                       <SelectPicker
-                          size='sm'
-                          name='workingHours'
-                          data={WorkingHours}
-                          value={workingHours}
-                          onChange={(e)=>{setWorkingHours(e)}}
-                          block
+                        size='sm'
+                        name='workingHours'
+                        data={WorkingHours}
+                        value={workingHours}
+                        onChange={(e) => { setWorkingHours(e) }}
+                        block
                       >
                       </SelectPicker>
                     </Grid>
@@ -524,20 +524,20 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         block
                       /> */}
                       <div>
-                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                        <DatePicker
-                          slotProps={{textField:{size:'small'}}}
-                          name='dateOfBirth'
-                          value={new Date(dateOfBirth)}
-                          size='sm'
-                          
-                          onChange={(e)=>{
-                            setDateOfBirth(e.toISOString().substring(0,10))
-                          }}
-                        />
-                      </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                          <DatePicker
+                            slotProps={{ textField: { size: 'small' } }}
+                            name='dateOfBirth'
+                            value={new Date(dateOfBirth)}
+                            size='sm'
+
+                            onChange={(e) => {
+                              setDateOfBirth(e.toISOString().substring(0, 10))
+                            }}
+                          />
+                        </LocalizationProvider>
                       </div>
-                      
+
                       {/* </MuiLocalizationProvider> */}
                     </Grid>
                     <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
@@ -779,11 +779,11 @@ const AddEmployee = ({ popperPlacement, id }) => {
                         <DatePicker
                           name='joiningDate'
                           label='Joining Date'
-                          slotProps={{textField:{size:'small'}}}
+                          slotProps={{ textField: { size: 'small' } }}
                           value={new Date(joiningDate)}
                           size='sm'
-                          onChange={(e)=>{
-                            setJoiningDate(e.toISOString().substring(0,10))
+                          onChange={(e) => {
+                            setJoiningDate(e.toISOString().substring(0, 10))
                           }}
                         />
                       </LocalizationProvider>
@@ -939,7 +939,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     selectedEmployee ? update() : saveNew()
   }
-  
+
   const saveNew = () => {
     console.log(formValue);
     formRef.current.checkAsync().then(result => {
@@ -948,7 +948,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         setLoading(true)
         data = formValue
         data.idNo = newEmployeeID
-        data.workingHours = workingHours ;
+        data.workingHours = workingHours;
         data.countryID = countryID
         data.dateOfBirth = new Date(dateOfBirth)
         data.joiningDate = new Date(joiningDate)
@@ -958,7 +958,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         data.gender = gender
         data.logo = newLogo
         data.status = newStatus
-        data.created_at = new Date()
+        data.created_at = new Date().toISOString()()
         data.type = position;
         axios
           .post('/api/company-employee/add-employee', {

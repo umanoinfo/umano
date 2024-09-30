@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -36,12 +36,12 @@ export default async function handler(req, res) {
 
   employeeLeave.company_id = myUser.company_id
   employeeLeave.user_id = myUser._id
-  employeeLeave.created_at = new Date()
+  employeeLeave.created_at = new Date().toISOString()()
   employeeLeave.status = 'active'
-  
+
   // employeeLeave.date_from_1 = employeeLeave.date_from ;
   // employeeLeave.date_to_1 = employeeLeave.date_to ;
-  employeeLeave.paidValue = employeeLeave.paidValue ?? 0 
+  employeeLeave.paidValue = employeeLeave.paidValue ?? 0
 
 
   // working 
@@ -50,10 +50,10 @@ export default async function handler(req, res) {
 
   let date_from = new Date(employeeLeave.date_from).toISOString();
   let date_to = new Date(employeeLeave.date_to).toISOString();
-  
+
   // employeeLeave.date_from = new Date(date_from.getTime() + Math.abs(date_from.getTimezoneOffset() * 60000) )
   // employeeLeave.date_to = new Date(date_to.getTime() + Math.abs(date_to.getTimezoneOffset() * 60000) )
-  
+
   const newEmployeeLeave = await client.db().collection('employeeLeaves').insertOne(employeeLeave)
 
   const insertedLeave = await client.db().collection('employeeLeaves').findOne({ _id: newEmployeeLeave.insertedId })
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     Module: 'Employee Leave',
     Action: 'Add',
     Description: 'Add Employee leave (' + insertedLeave.reason + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

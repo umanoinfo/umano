@@ -81,7 +81,7 @@ const handler = async (req, res) => {
     email.user = data.user
     email.user_id = myUser._id
     email.company_id = myUser.company_id
-    email.created_at = new Date()
+    email.created_at = new Date().toISOString()()
 
     await transporter
       .sendMail({

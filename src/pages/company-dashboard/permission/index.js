@@ -78,7 +78,7 @@ const PermissionsTable = () => {
       fetchData({
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, value])
 
   const handleFilter = useCallback(val => {
@@ -166,7 +166,7 @@ const PermissionsTable = () => {
       group: group,
       type: 'admin',
       status: 'Active',
-      created_at: new Date(),
+      created_at: new Date().toISOString()(),
       updated_at: new Date(),
       deleted_at: null
     }
@@ -330,20 +330,20 @@ const PermissionsTable = () => {
                   </Button>
                 )}
               </Box>
-{
-              loading ? 
-              <Loading header='Please Wait' description='Permissions is loading'></Loading>:
-              <DataGrid
-                autoHeight
-                rows={store.data}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-              />
-}
+              {
+                loading ?
+                  <Loading header='Please Wait' description='Permissions is loading'></Loading> :
+                  <DataGrid
+                    autoHeight
+                    rows={store.data}
+                    columns={columns}
+                    pageSize={pageSize}
+                    disableSelectionOnClick
+                    rowsPerPageOptions={[10, 25, 50]}
+                    onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                    sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                  />
+              }
             </Grid>
           </Card>
         </Grid>

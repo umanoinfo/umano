@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -27,12 +27,12 @@ export default async function handler(req, res) {
     return res.status(422).json({
       message: 'Invalid input'
     })
-    
+
   }
 
   formula.company_id = myUser.company_id
   formula.user_id = myUser._id
-  formula.created_at = new Date()
+  formula.created_at = new Date().toISOString()()
   formula.status = 'active'
 
   const newFormula = await client.db().collection('salaryFormula').insertOne(formula)
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     Module: 'Salary Formula',
     Action: 'Add',
     Description: 'Add Salary Formula (' + insertedFormula.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

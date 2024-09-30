@@ -3,10 +3,10 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
-  
+
   const client = await connectToDatabase()
 
   // ---------------------------- Token -------------------------------------
@@ -21,16 +21,16 @@ export default async function handler(req, res) {
 
   const selectedUser = req.body.selectedUser
   const id = selectedUser._id
-  if(id == myUser._id ){
-    return res.status(400).json({success: false, message: 'Bad opeartion'});
+  if (id == myUser._id) {
+    return res.status(400).json({ success: false, message: 'Bad opeartion' });
   }
 
   const user = await client
     .db()
     .collection('users')
     .findOne({ _id: ObjectId(id) })
-  if(user.email == 'admin@admin.com'){
-    return res.status(400).json({success: false , message : 'You are not allowed to delete this account'});
+  if (user.email == 'admin@admin.com') {
+    return res.status(400).json({ success: false, message: 'You are not allowed to delete this account' });
   }
   if (user?.deleted_at) {
     const deletUser = await client
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     Module: 'User',
     Action: 'Delete',
     Description: 'Delete user (' + selectedUser.name + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
 
   return res.status(200).json({ success: true, data: user })

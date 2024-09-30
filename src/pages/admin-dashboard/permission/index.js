@@ -177,7 +177,7 @@ const PermissionsTable = () => {
       group: group,
       type: type,
       status: 'Active',
-      created_at: new Date(),
+      created_at: new Date().toISOString()(),
       updated_at: new Date(),
       deleted_at: null
     }
@@ -355,8 +355,8 @@ const PermissionsTable = () => {
                 )}
               </Box>
               {
-                  loading ?
-                  <Loading header='Please Wait' description='Permissions is loading'></Loading>:
+                loading ?
+                  <Loading header='Please Wait' description='Permissions is loading'></Loading> :
                   <DataGrid
                     autoHeight
                     rows={store.data}
@@ -542,7 +542,7 @@ const PermissionsTable = () => {
         aria-describedby='alert-dialog-description'
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {
-            
+
           }
         }}
       >

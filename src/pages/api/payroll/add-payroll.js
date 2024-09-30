@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -21,17 +21,17 @@ export default async function handler(req, res) {
 
   // -------------------- Insert ---------------------------------------------
 
-  const payroll = req.body 
+  const payroll = req.body
   if (!payroll.company_id || !payroll.employee_id || !payroll.idNo) {
     res.status(422).json({
       message: 'Invalid input'
     })
-    
+
     return
   }
   payroll.company_id = myUser.company_id
   payroll.user_id = myUser._id
-  payroll.created_at = new Date()
+  payroll.created_at = new Date().toISOString()()
 
   const newPayroll = await client.db().collection('payrolls').insertOne(payroll)
   const insertedPayroll = await client.db().collection('payrolls').findOne({ _id: newPayroll.insertedId })
@@ -44,9 +44,9 @@ export default async function handler(req, res) {
     company_id: myUser.company_id,
     Module: 'Payroll',
     Action: 'Add',
-    linked_id: insertedPayroll._id ,
+    linked_id: insertedPayroll._id,
     Description: 'Add Payroll for employee (' + payroll.name + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -18,9 +18,9 @@ export default async function handler(req, res) {
 
   // ------------------------------- Edit -------------------------------------
   const compensation = req.body.data
-  const comp = await client.db().collection('compensations').findOne({_id: ObjectId(compensation._id)  , company_id: myUser.company_id.toString()});
-  if(!comp){
-    return res.status(404).json({success: false, message: 'Compensation not found'});
+  const comp = await client.db().collection('compensations').findOne({ _id: ObjectId(compensation._id), company_id: myUser.company_id.toString() });
+  if (!comp) {
+    return res.status(404).json({ success: false, message: 'Compensation not found' });
   }
 
 
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     Module: 'Compensation',
     Action: 'Edit',
     Description: 'Edit compensation (' + compensation.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

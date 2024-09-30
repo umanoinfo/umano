@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -20,9 +20,9 @@ export default async function handler(req, res) {
 
   const employeeReward = req.body.data
   const id = employeeReward._id
-  const reward = await client.db().collection('employeeRewards').findOne({_id: ObjectId(id) , company_id: myUser.company_id.toString()}); 
-  if(!reward){
-    return res.status(404).json({success: false, message: 'Reward not found'});
+  const reward = await client.db().collection('employeeRewards').findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() });
+  if (!reward) {
+    return res.status(404).json({ success: false, message: 'Reward not found' });
   }
   delete employeeReward._id
   employeeReward.company_id = myUser.company_id
@@ -51,9 +51,9 @@ export default async function handler(req, res) {
     Module: 'Employee Reward',
     Action: 'Edit',
     Description: 'Edit employee reward (' + employeeReward.reason + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  return  res.status(201).json({ success: true, data: employeeReward })
+  return res.status(201).json({ success: true, data: employeeReward })
 }

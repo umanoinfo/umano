@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       Module: 'Company',
       Action: 'Restore',
       Description: 'Restore company (' + selectedCompany.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       Module: 'Company',
       Action: 'Delete',
       Description: 'Delete company (' + selectedCompany.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

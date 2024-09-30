@@ -3,11 +3,11 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
-  
+
   // -------------------- Token --------------------------------------------------
 
   const token = await getToken({ req })
@@ -25,9 +25,9 @@ export default async function handler(req, res) {
   const selectedFile = await client
     .db()
     .collection('files')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString() })
-  if(!selectedFile){
-    return res.status(404).json({success: false, message: 'File not found'});
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
+  if (!selectedFile) {
+    return res.status(404).json({ success: false, message: 'File not found' });
   }
 
 
@@ -45,20 +45,20 @@ export default async function handler(req, res) {
       Module: 'File',
       Action: 'Restore',
       Description: 'Restore file (' + selectedFile.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-     // -------------------- logBook Doc ------------------------------------------
+    // -------------------- logBook Doc ------------------------------------------
 
-     let logDog = {
+    let logDog = {
       user_id: myUser._id,
       company_id: myUser.company_id,
       Module: 'File',
       Action: 'Restore',
-      linked_id: ObjectId(selectedFile.linked_id) ,
+      linked_id: ObjectId(selectedFile.linked_id),
       Description: 'Restore File (' + selectedFile.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBookDoc = await client.db().collection('logBook').insertOne(logDog)
 
@@ -76,21 +76,21 @@ export default async function handler(req, res) {
       Module: 'Files',
       Action: 'Delete',
       Description: 'Delete file (' + selectedFile.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-    
-     // -------------------- logBook Doc ------------------------------------------
 
-     let logDog = {
+    // -------------------- logBook Doc ------------------------------------------
+
+    let logDog = {
       user_id: myUser._id,
       company_id: myUser.company_id,
       Module: 'File',
       Action: 'Delete',
-      linked_id: ObjectId(selectedFile.linked_id) ,
+      linked_id: ObjectId(selectedFile.linked_id),
       Description: 'Delete File (' + selectedFile.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBookDoc = await client.db().collection('logBook').insertOne(logDog)
 

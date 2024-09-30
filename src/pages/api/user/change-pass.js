@@ -21,14 +21,14 @@ export default async function handler(req, res) {
   user.password = hashedPassword
   const id = req.body.user._id
   delete user._id
-  const curUser = await client.db().collection('users').findOne({_id: ObjectId(id)});
-  if(curUser.email == 'admin@admin.com' && curUser._id != myUser._id) {
-    return res.status(401).json({success: false, message:'You are not allowed to change password'});
+  const curUser = await client.db().collection('users').findOne({ _id: ObjectId(id) });
+  if (curUser.email == 'admin@admin.com' && curUser._id != myUser._id) {
+    return res.status(401).json({ success: false, message: 'You are not allowed to change password' });
   }
 
   try {
-    
-    
+
+
     const newUser = await client
       .db()
       .collection('users')
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       Module: 'User',
       Action: 'Change Password',
       Description: 'Change password (' + updatedUser.name + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
 
     return res.status(200).json({ success: true, data: user })

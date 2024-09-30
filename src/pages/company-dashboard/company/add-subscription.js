@@ -124,7 +124,7 @@ const DialogAddUser = ({ popperPlacement }) => {
   const formRef = useRef()
 
   const { StringType } = Schema.Types
-  
+
   const {
     reset,
     control,
@@ -137,7 +137,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     resolver: yupResolver(schema)
   })
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   const model = Schema.Model({
     users: StringType().isRequired('This phone is required.')
@@ -146,18 +146,18 @@ const DialogAddUser = ({ popperPlacement }) => {
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/country')
-    const { data } = await res.json()
-    setIsLoading(false)
-    setCountriesDataSource(data)
-    const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
-    setCountryIndex(index)
-    setCountry(data[index])
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/country')
+      const { data } = await res.json()
+      setIsLoading(false)
+      setCountriesDataSource(data)
+      const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
+      setCountryIndex(index)
+      setCountry(data[index])
     }
-    catch(err){
-        
+    catch (err) {
+
     }
   }
 
@@ -176,7 +176,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.end_at = end_at
     data.status = status
     data.logo = logo
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/company/add-company', {
         data
@@ -196,7 +196,7 @@ const DialogAddUser = ({ popperPlacement }) => {
       })
   }
 
-  const test = e => {}
+  const test = e => { }
 
   const close = () => {
     router.push('/admin-dashboard/user')

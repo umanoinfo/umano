@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
   deduction.company_id = myUser.company_id
   deduction.user_id = myUser._id
-  deduction.created_at = new Date()
+  deduction.created_at = new Date().toISOString()()
   deduction.status = 'active'
   deduction.date = new Date(deduction.date).toISOString()
   const newDeduction = await client.db().collection('deductions').insertOne(deduction)
@@ -45,11 +45,11 @@ export default async function handler(req, res) {
     Module: 'Deduction',
     Action: 'Add',
     Description: 'Add deduction (' + insertedDeduction.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
-  
-return res.status(201).json({ success: true, data: insertedDeduction })
+
+  return res.status(201).json({ success: true, data: insertedDeduction })
 }
 
 //

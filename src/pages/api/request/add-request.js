@@ -6,8 +6,8 @@ import { connectToDatabase } from 'src/configs/dbConnect'
 import axios from 'axios'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     res.status(422).json({
       message: 'Invalid input'
     })
-    
+
     return
   }
 
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   request.company_id = myUser.company_id
   request.user_id = myUser._id
   request.no = max_no[0].no + 1
-  request.created_at = new Date()
+  request.created_at = new Date().toISOString()()
   request.status = 'active'
 
   const newRequest = await client.db().collection('requests').insertOne(request)
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     Module: 'Request',
     Action: 'Add',
     Description: 'Add Request (' + insertedRequest.no + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -30,12 +30,12 @@ export default async function handler(req, res) {
   const id = shift._id
 
   const selectedShift = await client
-  .db()
-  .collection('shifts')
-  .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
+    .db()
+    .collection('shifts')
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
 
-  if(!selectedShift){
-    return res.status(404).json({success: false, message: 'Shift not found'});
+  if (!selectedShift) {
+    return res.status(404).json({ success: false, message: 'Shift not found' });
   }
   delete shift._id
   delete shift.user_id
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     Module: 'Shift',
     Action: 'Edit',
     Description: 'Edit salary formula (' + shift.title + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

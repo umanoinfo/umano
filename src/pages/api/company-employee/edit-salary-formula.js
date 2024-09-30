@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
 
   const client = await connectToDatabase()
@@ -32,12 +32,12 @@ export default async function handler(req, res) {
   const employee = await client
     .db()
     .collection('employees')
-    .findOne({ _id: ObjectId(id) ,company_id: myUser.company_id.toString() })
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
 
-  if(!employee){
-      return res.status(404).json({success: false,  message: 'Employee not found'});
+  if (!employee) {
+    return res.status(404).json({ success: false, message: 'Employee not found' });
   }
-  
+
   delete employee._id
   employee.salary_formula_id = req.body.data.salary_formula_id
   employee.deductions = req.body.data.deductions
@@ -63,9 +63,9 @@ export default async function handler(req, res) {
       ') to shift (' +
       req.body.data.salary_formula_id +
       ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
-  return  res.status(201).json({ success: true, data: employee })
+  return res.status(201).json({ success: true, data: employee })
 }

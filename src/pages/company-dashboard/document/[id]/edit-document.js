@@ -10,11 +10,11 @@ import CardHeader from '@mui/material/CardHeader'
 import Icon from 'src/@core/components/icon'
 import { Divider, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
-import {Breadcrumbs} from '@mui/material'
+import { Breadcrumbs } from '@mui/material'
 import Link from 'next/link'
 
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader,  Checkbox } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, Checkbox } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -64,44 +64,44 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const inputFile = useRef(null)
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
-  const [AllDocumentTypes , setAllDocumentTypes] = useState([]);
-  const [documentTypeCategory , setDocumentTypeCategory] = useState();
-  const [ tags , setTags] = useState([]);
+  const [AllDocumentTypes, setAllDocumentTypes] = useState([]);
+  const [documentTypeCategory, setDocumentTypeCategory] = useState();
+  const [tags, setTags] = useState([]);
 
-  const getDocumentTypes = async () =>{
+  const getDocumentTypes = async () => {
     setLoading(true);
-    try{
-        const res = await axios.get('/api/document-types');
-        if(res.status == 200 ){
-            const documents = new Map() ;
+    try {
+      const res = await axios.get('/api/document-types');
+      if (res.status == 200) {
+        const documents = new Map();
 
-            let data = res?.data?.data?.map((document)=>{
-                return {label: document.name + ' ( ' + document.category + ' )' , value: document.name , category: document.category} ;
-            })
-            let map = new Map();
-            res?.data?.data?.map((document)=>{
-              map[document.name] = document.category ;
-            });
-            setDocumentTypeCategory(map);
-            setAllDocumentTypes(data);
-            setLoading(false);
-            
-        }
+        let data = res?.data?.data?.map((document) => {
+          return { label: document.name + ' ( ' + document.category + ' )', value: document.name, category: document.category };
+        })
+        let map = new Map();
+        res?.data?.data?.map((document) => {
+          map[document.name] = document.category;
+        });
+        setDocumentTypeCategory(map);
+        setAllDocumentTypes(data);
+        setLoading(false);
 
-    }catch(err){
-        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+      }
+
+    } catch (err) {
+      toast.error('Failed to fetch documents types', { duration: 5000, position: 'bottom-right' });
 
     }
   }
 
-  useEffect( ()=>{
-    (new Promise((resolve,reject)=>getDocumentTypes(resolve))).then(()=>{
-       (new Promise((resolve,reject)=>getDocument(resolve))).then(()=>{
-        
-       })
+  useEffect(() => {
+    (new Promise((resolve, reject) => getDocumentTypes(resolve))).then(() => {
+      (new Promise((resolve, reject) => getDocument(resolve))).then(() => {
+
+      })
 
     })
-  },[])
+  }, [])
 
   const goToIndex = () => {
     router.push('/company-dashboard/document')
@@ -128,8 +128,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
               fileKey: index,
 
               // url: 'https://robin-sass.pioneers.network/assets/testFiles/document/' + file.url,
-              
-              created_at: new Date(file.created_at).toISOString().substring(0, 10)
+
+              created_at: new Date().toISOString()(file.created_at).toISOString().substring(0, 10)
             })
           }
         })
@@ -139,10 +139,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
       }
 
       setLoading(false)
-    }).catch((err)=>{})
-  } ;
-  
- 
+    }).catch((err) => { })
+  };
+
+
 
   // ------------------------------ validate Mmodel ------------------------------------
 
@@ -173,20 +173,20 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.renewing_email = formValue.renewing_email
         data.issueDate = issueDate
         data.status = 'active'
-        if(tags.includes('Vendors')){
-          data.companyEmail = formValue.companyEmail ;
-          data.companyName = formValue.companyName ;
-          data.companyMobile = formValue.companyMobile; 
-          data.companyFax = formValue.companyFax ;
-          data.companyLandline = formValue.companyLandline ;
-          data.companyContactPerson = formValue.companyContactPerson ;
+        if (tags.includes('Vendors')) {
+          data.companyEmail = formValue.companyEmail;
+          data.companyName = formValue.companyName;
+          data.companyMobile = formValue.companyMobile;
+          data.companyFax = formValue.companyFax;
+          data.companyLandline = formValue.companyLandline;
+          data.companyContactPerson = formValue.companyContactPerson;
         }
-        
-        if(tags.includes('Third Party Contracts')){
-            data.thirdPartyContractorsEmail = formValue.thirdPartyContractorsEmail;
-            data.thirdPartyContractorsLandline = formValue.thirdPartyContractorsLandline ;
+
+        if (tags.includes('Third Party Contracts')) {
+          data.thirdPartyContractorsEmail = formValue.thirdPartyContractorsEmail;
+          data.thirdPartyContractorsLandline = formValue.thirdPartyContractorsLandline;
         }
-        
+
         if (!expiryDateFlag) {
           data.expiryDate = expiryDate
           data.expiryDateFlag = false
@@ -203,7 +203,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
             data
           })
           .then(function (response) {
-            if(files.length == 0){
+            if (files.length == 0) {
               goToIndex()
             }
             let doc_id = response.data.data._id
@@ -220,15 +220,15 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   data.linked_id = doc_id
                   data.type = 'document'
                   data.url = response.data
-                  data.created_at = new Date()
+                  data.created_at = new Date().toISOString()()
                   axios
                     .post('/api/file/add-file', {
                       data
                     })
                     .then(res => {
-                      
-                    }).catch((err)=>{})
-                }).catch((err)=>{})
+
+                    }).catch((err) => { })
+                }).catch((err) => { })
               }
               goToIndex()
             })
@@ -258,18 +258,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
 
 
-  const handleTagsChange = (e)=>{
-    let categories = new Set(e?.map((type)=>{
-        return documentTypeCategory[type];
+  const handleTagsChange = (e) => {
+    let categories = new Set(e?.map((type) => {
+      return documentTypeCategory[type];
     }));
     categories = [...categories];
     setTags(categories);
   }
-    
-  
+
+
 
   const removeFile = e => {
-    axios.post('/api/file/delete-file', e).then(response => {}).catch((err)=>{})
+    axios.post('/api/file/delete-file', e).then(response => { }).catch((err) => { })
   }
 
   // ------------------------------ View ---------------------------------
@@ -281,200 +281,200 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   return (
     <>
-        <Form
-                  fluid
-                  ref={formRef}
-                  onChange={setFormValue}
-                  onCheck={setFormError}
-                  formValue={formValue}
-                  model={validateMmodel}
-         >
-          <Grid item xs={12} sm={6} lg={6}></Grid>
-            <Grid item xs={12}>
-              <Card>
-                <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-                  <Link underline='hover' color='inherit' href='/'>
-                    Home
-                  </Link>
-                  <Link underline='hover' color='inherit' href='/company-dashboard/document/'>
-                    All Documents List
-                  </Link>
-                  <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-                    Edit Document
-                  </Typography>
-                </Breadcrumbs>
-                <Divider />
-                <Grid container>
-                  <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
-                
-                      <Grid container sx={{ px: 5 }}>
-                        <Grid item spacing={3} sm={12} md={12}>
-                          <small>Tags</small>
-                          <Form.Control
-                            name='type'
-                            controlId='type'
-                            accepter={TagPicker}
-                            data={AllDocumentTypes}
-                            style={{ width: '100%' }}
-                            onChange={(e)=>handleTagsChange(e)}
-                          />
-                        </Grid>
-                        <Grid container sm={12} md={12}>
-                          <Grid item sm={8} md={8} pr={2}>
-                            <small>Title</small>
-                            <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
-                          </Grid>
-                          <Grid item sm={4} md={4}>
-                            <small>Version</small>
-                            <Form.Control
-                              controlId='version'
-                              size='sm'
-                              type='text'
-                              name='version'
-                              placeholder='Version'
-                            />
-                          </Grid>
-                        </Grid>
-                        <Grid item sm={12} md={12} sx={{ mt: 2 }}>
-                          <small>Description</small>
-                          <Form.Control rows={2} name='description' controlId='description'  />
-                        </Grid>
-                      
-                        
-                        <Grid item sm={12} md={12} sx={{ mt: 2 }}>
-                          <small>Issue date</small>
-                            <Form.Control
-                                  size='sm'
-                                  oneTap
-                                  accepter={DatePicker}
-                                  name='issueDate'
-                                  onChange={e => {
-                                    setIssueDate(e.toISOString().substring(0, 10))
-                                  }}
-                                  value={new Date(issueDate)}
-                                  block
-                                />
-                        </Grid>
-                        <Grid container spacing={3}>
-                          <Grid item sm={6} xs={12} mt={2}>
-                            <div className='flex d-flex row-flex'>
-                              <small>Expiry Date</small>
-                              {!expiryDateFlag && (
-                                <Form.Control
-                                  size='sm'
-                                  oneTap
-                                  accepter={DatePicker}
-                                  name='expiryDate'
-                                  onChange={e => {
-                                    setExpiryDate(e.toISOString().substring(0, 10))
-                                  }}
-                                  value={new Date(expiryDate)}
-                                  block
-                                />
-                              )}
-                            </div>
-                          </Grid>
-                          <Grid item sm={6} xs={12} mt={2}>
-                            <Typography sx={{ pt: 6 }}>
-                              <Form.Control
-                                name='checkbox'
-                                accepter={Checkbox}
-                                inline
-                                checked={expiryDateFlag}
-                                onChange={e => {
-                                  setExpiryDateFlag(!expiryDateFlag)
-                                }}
-                              >
-                                For ever
-                              </Form.Control>
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        
+      <Form
+        fluid
+        ref={formRef}
+        onChange={setFormValue}
+        onCheck={setFormError}
+        formValue={formValue}
+        model={validateMmodel}
+      >
+        <Grid item xs={12} sm={6} lg={6}></Grid>
+        <Grid item xs={12}>
+          <Card>
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/document/'>
+                All Documents List
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Edit Document
+              </Typography>
+            </Breadcrumbs>
+            <Divider />
+            <Grid container>
+              <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
 
-                        {!expiryDateFlag && (<Grid container spacing={3}>
-                          <Grid item sm={6} xs={12} mt={2}>
-                            <div className='flex d-flex row-flex'>
-                              <small>Notify before <span>(Days)</span></small>
-                              <div className='flex d-flex row-flex'>
-                                <Form.Control
-                                controlId='notifyBefore'
-                                size='sm'
-                                type='number'
-                                name='notifyBefore'
-                                value={notifyBeforeDays}
-                                onChange={e => {
-                                  setNotifyBeforeDays(e)
-                                }}
-                                placeholder='Notify before'
-                              /> 
-                              </div>
-                                
-                            </div>
-                          </Grid>
-                        </Grid> )}
-                        
-
-                        <Grid container spacing={3}>
-
-
-                          <Grid item sm={12} xs={12} mt={5}>
-                          <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
-
-                            <div className='flex d-flex row-flex'>
-                              <small>Name</small>
-                              <Form.Control
-                              controlId='renewing_name'
-                              size='sm'
-                              type='text'
-                              name='renewing_name'
-                              placeholder='Name'
-                            />
-                              <Grid container sm={12} md={12}>
-                                <Grid item sm={6} md={6} pr={2}>
-                                  <small>Phone</small>
-                                  <Form.Control
-                                  controlId='renewing_phone'
-                                  size='sm'
-                                  type='number'
-                                  name='renewing_phone'
-                                  placeholder='Phone'
-                                />
-                                </Grid>
-                                <Grid item sm={6} md={6} pr={2}>
-                                  <small>Email</small>
-                                  <Form.Control
-                                  controlId='renewing_email'
-                                  size='sm'
-                                  type='text'
-                                  name='renewing_email'
-                                  placeholder='Email'
-                                />
-                                </Grid>
-                              </Grid>
-                            </div>
-                          </Grid>
-                  
-                        </Grid>
-                      </Grid>
-                    
+                <Grid container sx={{ px: 5 }}>
+                  <Grid item spacing={3} sm={12} md={12}>
+                    <small>Tags</small>
+                    <Form.Control
+                      name='type'
+                      controlId='type'
+                      accepter={TagPicker}
+                      data={AllDocumentTypes}
+                      style={{ width: '100%' }}
+                      onChange={(e) => handleTagsChange(e)}
+                    />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
-                    <small style={{ color: 'white' }}>.</small>
-                    <Card>
-                      <Box
-                        sx={{
-                          pt: 2,
-                          px: 2,
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <Typography sx={{ fontWeight: 'bold' }}>Files</Typography>
+                  <Grid container sm={12} md={12}>
+                    <Grid item sm={8} md={8} pr={2}>
+                      <small>Title</small>
+                      <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
+                    </Grid>
+                    <Grid item sm={4} md={4}>
+                      <small>Version</small>
+                      <Form.Control
+                        controlId='version'
+                        size='sm'
+                        type='text'
+                        name='version'
+                        placeholder='Version'
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                    <small>Description</small>
+                    <Form.Control rows={2} name='description' controlId='description' />
+                  </Grid>
 
-                        {/* <Button
+
+                  <Grid item sm={12} md={12} sx={{ mt: 2 }}>
+                    <small>Issue date</small>
+                    <Form.Control
+                      size='sm'
+                      oneTap
+                      accepter={DatePicker}
+                      name='issueDate'
+                      onChange={e => {
+                        setIssueDate(e.toISOString().substring(0, 10))
+                      }}
+                      value={new Date(issueDate)}
+                      block
+                    />
+                  </Grid>
+                  <Grid container spacing={3}>
+                    <Grid item sm={6} xs={12} mt={2}>
+                      <div className='flex d-flex row-flex'>
+                        <small>Expiry Date</small>
+                        {!expiryDateFlag && (
+                          <Form.Control
+                            size='sm'
+                            oneTap
+                            accepter={DatePicker}
+                            name='expiryDate'
+                            onChange={e => {
+                              setExpiryDate(e.toISOString().substring(0, 10))
+                            }}
+                            value={new Date(expiryDate)}
+                            block
+                          />
+                        )}
+                      </div>
+                    </Grid>
+                    <Grid item sm={6} xs={12} mt={2}>
+                      <Typography sx={{ pt: 6 }}>
+                        <Form.Control
+                          name='checkbox'
+                          accepter={Checkbox}
+                          inline
+                          checked={expiryDateFlag}
+                          onChange={e => {
+                            setExpiryDateFlag(!expiryDateFlag)
+                          }}
+                        >
+                          For ever
+                        </Form.Control>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+
+                  {!expiryDateFlag && (<Grid container spacing={3}>
+                    <Grid item sm={6} xs={12} mt={2}>
+                      <div className='flex d-flex row-flex'>
+                        <small>Notify before <span>(Days)</span></small>
+                        <div className='flex d-flex row-flex'>
+                          <Form.Control
+                            controlId='notifyBefore'
+                            size='sm'
+                            type='number'
+                            name='notifyBefore'
+                            value={notifyBeforeDays}
+                            onChange={e => {
+                              setNotifyBeforeDays(e)
+                            }}
+                            placeholder='Notify before'
+                          />
+                        </div>
+
+                      </div>
+                    </Grid>
+                  </Grid>)}
+
+
+                  <Grid container spacing={3}>
+
+
+                    <Grid item sm={12} xs={12} mt={5}>
+                      <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+
+                      <div className='flex d-flex row-flex'>
+                        <small>Name</small>
+                        <Form.Control
+                          controlId='renewing_name'
+                          size='sm'
+                          type='text'
+                          name='renewing_name'
+                          placeholder='Name'
+                        />
+                        <Grid container sm={12} md={12}>
+                          <Grid item sm={6} md={6} pr={2}>
+                            <small>Phone</small>
+                            <Form.Control
+                              controlId='renewing_phone'
+                              size='sm'
+                              type='number'
+                              name='renewing_phone'
+                              placeholder='Phone'
+                            />
+                          </Grid>
+                          <Grid item sm={6} md={6} pr={2}>
+                            <small>Email</small>
+                            <Form.Control
+                              controlId='renewing_email'
+                              size='sm'
+                              type='text'
+                              name='renewing_email'
+                              placeholder='Email'
+                            />
+                          </Grid>
+                        </Grid>
+                      </div>
+                    </Grid>
+
+                  </Grid>
+                </Grid>
+
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
+                <small style={{ color: 'white' }}>.</small>
+                <Card>
+                  <Box
+                    sx={{
+                      pt: 2,
+                      px: 2,
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Typography sx={{ fontWeight: 'bold' }}>Files</Typography>
+
+                    {/* <Button
                           variant='outlined'
                           size='small'
                           onClick={e => {
@@ -483,18 +483,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         >
                           Add File
                         </Button> */}
-                      </Box>
+                  </Box>
 
-                      <Divider />
-                      <Box sx={{ p: 2 }}>
-                        <Uploader
-                          listType='picture-text'
-                          defaultFileList={files}
-                          autoUpload
-                          onRemove={e => removeFile(e)}
-                          onUpload={e => addToFiles(e)}
-                          action=''
-                        renderFileInfo={(file, fileElement) => {
+                  <Divider />
+                  <Box sx={{ p: 2 }}>
+                    <Uploader
+                      listType='picture-text'
+                      defaultFileList={files}
+                      autoUpload
+                      onRemove={e => removeFile(e)}
+                      onUpload={e => addToFiles(e)}
+                      action=''
+                      renderFileInfo={(file, fileElement) => {
                         return (
                           <>
                             {file.url && (
@@ -510,100 +510,100 @@ const AddDepartment = ({ popperPlacement, id }) => {
                               </div>
                             )}
                           </>
-                          )
+                        )
                       }}
                     />
-                </Box>
-              </Card>    
-              {
-                          tags.includes('Vendors') ?
-                          <>
-                            <Grid item sm={12} md={12} pr={1}  >
-                              <Typography sx={{ fontWeight: 'bold' , fontSize:18}} >
-                                  Company Information
-                              </Typography>
-                            </Grid>
-                            <Grid item sm={12} md={8} pr={2}>
-                                  <small> Company Name </small>
-                                  <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
-                            </Grid>
-                            <Grid container sm={12} md={12}>
-                              <Grid item sm={6} md={6} pr={2}>
-                                      <small> Company Mobile </small>
-                                    <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
-                              </Grid>
-                              <Grid item sm={6} md={6} pr={2}>
-                                    <small> Company Email </small>
-                                    <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
-                              </Grid>
-                            </Grid>
-                            <Grid container sm={12} md={12}>
-                              <Grid item sm={6} md={6} pr={2}>
-                                    <small> Fax </small>
-                                    <Form.Control controlId='companyFax' size='sm' name='companyFax' placeholder='Company Fax' />
-                              </Grid>
-                              <Grid item sm={6} md={6} pr={2}>
-                                    <small> Company Landline </small>
-                                    <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
-                              </Grid>
-                            </Grid>
+                  </Box>
+                </Card>
+                {
+                  tags.includes('Vendors') ?
+                    <>
+                      <Grid item sm={12} md={12} pr={1}  >
+                        <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
+                          Company Information
+                        </Typography>
+                      </Grid>
+                      <Grid item sm={12} md={8} pr={2}>
+                        <small> Company Name </small>
+                        <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
+                      </Grid>
+                      <Grid container sm={12} md={12}>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Mobile </small>
+                          <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
+                        </Grid>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Email </small>
+                          <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
+                        </Grid>
+                      </Grid>
+                      <Grid container sm={12} md={12}>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Fax </small>
+                          <Form.Control controlId='companyFax' size='sm' name='companyFax' placeholder='Company Fax' />
+                        </Grid>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Landline </small>
+                          <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
+                        </Grid>
+                      </Grid>
 
-                            <Grid item sm={12} md={8} pr={2}>
-                                  <small> Company Contact Person </small>
-                                  <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
-                            </Grid>
-                          
-                          </>
-                          :
-                          <>
-                          </>
-                        }
-                        {
-                          tags.includes('Third Party Contracts')?
-                            <>
-                              <Typography sx={{ fontWeight: 'bold' , fontSize:18}} >
-                                  Third Party Contractors Information
-                              </Typography>
-                              <Grid item sm={12} md={8} pr={2}>
-                                  <small> Email </small>
-                                  <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
-                              </Grid>
-                              <Grid item sm={12} md={8} pr={2}>
-                                  <small> LandLine </small>
-                                  <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
-                              </Grid>
-                            </>
-                          :
-                          <></>
-                        } 
+                      <Grid item sm={12} md={8} pr={2}>
+                        <small> Company Contact Person </small>
+                        <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
+                      </Grid>
+
+                    </>
+                    :
+                    <>
+                    </>
+                }
+                {
+                  tags.includes('Third Party Contracts') ?
+                    <>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
+                        Third Party Contractors Information
+                      </Typography>
+                      <Grid item sm={12} md={8} pr={2}>
+                        <small> Email </small>
+                        <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
+                      </Grid>
+                      <Grid item sm={12} md={8} pr={2}>
+                        <small> LandLine </small>
+                        <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
+                      </Grid>
+                    </>
+                    :
+                    <></>
+                }
+              </Grid>
             </Grid>
-          </Grid>
-          <Box sx={{ display: 'block', alignItems: 'center', minHeight: 40, marginLeft: 10 }}>
-                          {!loading && (
-                            <>
-                              {action == 'add' && (
-                                <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
-                                  Save
-                                </Button>
-                              )}
-                              {action == 'edit' && (
-                                <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
-                                  Update
-                                </Button>
-                              )}
-                              <Button
-                                type='button'
-                                color='warning'
-                                variant='contained'
-                                sx={{ mr: 3 }}
-                                onClick={() =>{ setForm(false) ;  router.push('/company-dashboard/document')}}
-                              >
-                                Close
-                              </Button>
-                            </>
-                          )}
-                </Box>
-        </Card>
+            <Box sx={{ display: 'block', alignItems: 'center', minHeight: 40, marginLeft: 10 }}>
+              {!loading && (
+                <>
+                  {action == 'add' && (
+                    <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
+                      Save
+                    </Button>
+                  )}
+                  {action == 'edit' && (
+                    <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
+                      Update
+                    </Button>
+                  )}
+                  <Button
+                    type='button'
+                    color='warning'
+                    variant='contained'
+                    sx={{ mr: 3 }}
+                    onClick={() => { setForm(false); router.push('/company-dashboard/document') }}
+                  >
+                    Close
+                  </Button>
+                </>
+              )}
+            </Box>
+          </Card>
         </Grid>
       </Form>
     </>

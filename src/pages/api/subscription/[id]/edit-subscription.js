@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const { method } = req
   const client = await connectToDatabase()
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     .collection('companies')
     .updateOne({ _id: ObjectId(company._id) }, { $set: company }, { upsert: false })
 
-    const updated_sub = await client.db().collection('subscriptions').updateOne({_id: ObjectId(id)} , {$set: subscription} , {upsert: false });
+  const updated_sub = await client.db().collection('subscriptions').updateOne({ _id: ObjectId(id) }, { $set: subscription }, { upsert: false });
 
   // ------------------ logBook ---------------------------------------------------
 
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     Module: 'Subscription',
     Action: 'Edit',
     Description: 'Edit Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

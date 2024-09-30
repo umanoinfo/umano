@@ -242,13 +242,13 @@ const StepSalary = ({ handleNext, employee }) => {
       if (!result.hasError) {
         let data = {}
         setLoading(true)
-        data = { ...formValue , lumpySalary : Number(formValue.lumpySalary.replaceAll(',','')) }
+        data = { ...formValue, lumpySalary: Number(formValue.lumpySalary.replaceAll(',', '')) }
         console.log(startChangeDate)
         data.startChangeDate = new Date(startChangeDate)
         data.employee_id = employee._id
         data.overtimeSalary = data.lumpySalary;
         if (action == 'add') {
-          data.created_at = new Date()
+          data.created_at = new Date().toISOString()()
           axios
             .post('/api/employee-salary/add-salary', {
               data
@@ -395,7 +395,7 @@ const StepSalary = ({ handleNext, employee }) => {
       renderCell: ({ row }) => (
         <>
           <Typography variant='body2' sx={{ fontWeight: 900, fontSize: '0.85rem' }}>
-            {row.totalSalary?  Number(row.totalSalary).toLocaleString() : '-'}
+            {row.totalSalary ? Number(row.totalSalary).toLocaleString() : '-'}
           </Typography>
         </>)
     },
@@ -504,19 +504,19 @@ const StepSalary = ({ handleNext, employee }) => {
             </Box>
 
             <Card xs={12} md={12} lg={12}>
-{
-              loading ? 
-                <Loading header='Please Wait' description='Salaries is loading' />:
-              <DataGrid
-                autoHeight
-                rows={store.data}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[7, 10, 25, 50]}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-              />
-}
+              {
+                loading ?
+                  <Loading header='Please Wait' description='Salaries is loading' /> :
+                  <DataGrid
+                    autoHeight
+                    rows={store.data}
+                    columns={columns}
+                    pageSize={pageSize}
+                    disableSelectionOnClick
+                    rowsPerPageOptions={[7, 10, 25, 50]}
+                    onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                  />
+              }
             </Card>
           </Grid>
 
@@ -548,7 +548,7 @@ const StepSalary = ({ handleNext, employee }) => {
                       <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                         <small>Monthly Basic Salary</small>
                         <Form.Control
-                          
+
 
                           /*
                               https://codesandbox.io/s/react-hooks-counter-demo-br8l1?file=/src/index.js
@@ -565,7 +565,7 @@ const StepSalary = ({ handleNext, employee }) => {
                             e = Number(e);
                             setFormValue({ ...formValue, lumpySalary: Number(e).toLocaleString() })
                           }}
-                          
+
                         />
                       </Grid>
                       {/* <Grid item sm={12} md={6} sx={{ mt: 2 }}>

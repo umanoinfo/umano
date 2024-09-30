@@ -131,11 +131,11 @@ const DialogAddUser = ({ id }) => {
       .catch(function (error) {
         setLoading(false)
       })
-  }  ;
+  };
 
   useEffect(() => {
     getCompany()
-  }, [ ])
+  }, [])
 
   const model = Schema.Model({
     users: StringType().isRequired('This phone is required.')
@@ -145,7 +145,7 @@ const DialogAddUser = ({ id }) => {
     setLoading(true)
     let data = formValue
     data.company_id = company._id
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/subscription/add-subscription', {
         data
@@ -168,7 +168,7 @@ const DialogAddUser = ({ id }) => {
       })
   }
 
-  const test = e => {}
+  const test = e => { }
 
   const close = () => {
     router.push('/admin-dashboard/user')

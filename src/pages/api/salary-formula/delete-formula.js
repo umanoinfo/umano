@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -26,9 +26,9 @@ export default async function handler(req, res) {
     .db()
     .collection('salaryFormula')
     .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
-  
-  if(!selectedFormula){
-    return res.status(404).json({success: false, message: 'Payroll not found'});
+
+  if (!selectedFormula) {
+    return res.status(404).json({ success: false, message: 'Payroll not found' });
   }
 
   if (selectedFormula && selectedFormula.deleted_at) {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       Module: 'Salary Formula',
       Action: 'Restore',
       Description: 'Restore salary formula (' + selectedFormula.title + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       .db()
       .collection('salaryFormula')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
-      await client.db().collection('employees').updateMany({ salary_formula_id:id } , {  $set: {salary_formula_id:null} } );
+    await client.db().collection('employees').updateMany({ salary_formula_id: id }, { $set: { salary_formula_id: null } });
 
     // ---------------- logBook ----------------
 
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       Module: 'Salary Formula',
       Action: 'Delete',
       Description: 'Delete salary formula (' + selectedFormula.title + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

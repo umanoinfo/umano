@@ -125,39 +125,39 @@ const DialogAddUser = ({ popperPlacement }) => {
   })
 
   useEffect(() => {
-    getUsers().then(()=>getCountries())
+    getUsers().then(() => getCountries())
   }, [])
 
   // ------------------------------ Get Users ------------------------------------
 
   const getUsers = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/user')
-    const { data } = await res.json()
-    setIsLoading(false)
-    setUsersDataSource(data)
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/user')
+      const { data } = await res.json()
+      setIsLoading(false)
+      setUsersDataSource(data)
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
   // ----------------------------- Get Countries ----------------------------------
 
   const getCountries = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/country')
-    const { data } = await res.json()
-    setCountriesDataSource(data)
-    const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
-    setCountryIndex(index)
-    setCountry(data[index])
-    setIsLoading(false)
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/country')
+      const { data } = await res.json()
+      setCountriesDataSource(data)
+      const index = data.map(e => e._id).indexOf('618e8986133c2b25923f2248')
+      setCountryIndex(index)
+      setCountry(data[index])
+      setIsLoading(false)
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
@@ -176,7 +176,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.end_at = end_at
     data.status = status
     data.logo = logo
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/company/add-company', {
         data
@@ -196,7 +196,7 @@ const DialogAddUser = ({ popperPlacement }) => {
       })
   }
 
-  const test = e => {}
+  const test = e => { }
 
   const close = () => {
     router.push('/admin-dashboard/user')

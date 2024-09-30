@@ -15,26 +15,26 @@ export default async function handler(req, res) {
 
   // --------------------------- Change Password ---------------------------------
 
-  let company ;
+  let company;
   const user = myUser
 
 
-  if(!req.body.visit){ // loging out of company
-    user.company_id = null ; 
-    user.company_info = null ; 
+  if (!req.body.visit) { // loging out of company
+    user.company_id = null;
+    user.company_info = null;
   }
-  else{
-    company = req.body.selectedCompany ;
+  else {
+    company = req.body.selectedCompany;
     user.company_id = company._id
     user.company_info = [company]
   }
   const id = myUser._id
   delete user._id
- 
+
 
   try {
-    
-    
+
+
     const newUser = await client
       .db()
       .collection('users')
@@ -54,13 +54,13 @@ export default async function handler(req, res) {
       Module: 'User',
       Action: `${req.body.visit ? 'visit' : 'leave'} company`,
       Description: `${myUser.name} ${req.body.visit ? 'visited' : 'left'} company with id: ${myUser.company_id}  `,
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
 
-    return  res.status(200).json({ success: true, data: user })
+    return res.status(200).json({ success: true, data: user })
   } catch (error) {
     console.log(error);
-  
-    return  res.status(400).json({ success: false })
+
+    return res.status(400).json({ success: false })
   }
 }

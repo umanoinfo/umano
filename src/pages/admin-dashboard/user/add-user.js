@@ -79,8 +79,8 @@ const DialogAddUser = () => {
   const [userStatus, userUserStatus] = useState('active')
   const [type, setType] = useState('manager')
   const [roles, setRoles] = useState([])
-  const [allRoles ,setAllRoles] = useState([]);
-  const [roleId , setRoleId] = useState() ;
+  const [allRoles, setAllRoles] = useState([]);
+  const [roleId, setRoleId] = useState();
   const router = useRouter()
 
   const { data: session, status } = useSession()
@@ -118,15 +118,15 @@ const DialogAddUser = () => {
         setLoading(false)
         console.log(error);
         let message = error?.response?.data?.message || error.toString();
-        if(message == 'Not Auth'){
+        if (message == 'Not Auth') {
           message = 'Error : failed to fetch roles (you do not have permission to view roles)';
         }
-        toast.error(message , {duration: 5000 , position:'bottom-right'}) ;
+        toast.error(message, { duration: 5000, position: 'bottom-right' });
 
       })
-    }
-  
-  useEffect(()=>{
+  }
+
+  useEffect(() => {
     getRoles();
   }, [])
 
@@ -135,13 +135,13 @@ const DialogAddUser = () => {
     data.type = type
     data.status = userStatus
     data.permissions = []
-    if(type == 'admin'){
-      data.roles = roles ;
+    if (type == 'admin') {
+      data.roles = roles;
     }
-    else{
-      data.roles = [roleId] ; 
+    else {
+      data.roles = [roleId];
     }
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/user/add-user', {
         data
@@ -282,30 +282,30 @@ const DialogAddUser = () => {
                     <FormControl fullWidth sx={{ mb: 6, mx: 1 }} size='small'>
                       <FormLabel component='legend'>Roles</FormLabel>
                       <FormGroup sx={{ mx: 6 }}>
-                        {allRoles && type =='admin' &&
-                          allRoles.map((role , index) => {
-                            
+                        {allRoles && type == 'admin' &&
+                          allRoles.map((role, index) => {
+
                             return (
                               <FormControlLabel
-                              key = {index}
+                                key={index}
                                 control={
-                                  <Switch checked={roles.includes(role._id,'')} onChange={(e)=>{
-                                    let exist = false ;
-                                    e = e.target.value ;
+                                  <Switch checked={roles.includes(role._id, '')} onChange={(e) => {
+                                    let exist = false;
+                                    e = e.target.value;
                                     console.log(e)
-                                    roles.map((id)=>{
-                                      console.log(id, e ) ;
-                                      if(id == e){
-                                        exist= true ;
+                                    roles.map((id) => {
+                                      console.log(id, e);
+                                      if (id == e) {
+                                        exist = true;
                                       }
                                     })
                                     console.log(exist);
                                     let newRoles = [...roles];
-                                    if(!exist){
-                                      newRoles = [...roles , e ];
+                                    if (!exist) {
+                                      newRoles = [...roles, e];
                                     }
-                                    else{
-                                      newRoles = roles.filter((id)=> id != e)
+                                    else {
+                                      newRoles = roles.filter((id) => id != e)
                                     }
                                     setRoles(newRoles);
                                     console.log(newRoles);
@@ -316,27 +316,27 @@ const DialogAddUser = () => {
                             )
                           })}
                         <RadioGroup sx={{ mx: 6 }}>
-                        {allRoles && type == 'manager' &&
-                          allRoles.map((role , index) => {
-                            
-                            return (
-                              <FormControlLabel
-                                  key = {index}
+                          {allRoles && type == 'manager' &&
+                            allRoles.map((role, index) => {
+
+                              return (
+                                <FormControlLabel
+                                  key={index}
                                   control={
-                                    
+
                                     <Checkbox
                                       value={role._id}
-                                      checked={role._id == roleId }
-                                      onChange={()=> setRoleId(role._id)}
+                                      checked={role._id == roleId}
+                                      onChange={() => setRoleId(role._id)}
                                     />
                                   }
                                   label={role.title}
-                              />
-                            )
-                          })}
+                                />
+                              )
+                            })}
 
-                        {/* <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} /> */}
-                      </RadioGroup>
+                          {/* <Switch checked={roles.includes(role._id)} onChange={handleChange} value={role._id} /> */}
+                        </RadioGroup>
                       </FormGroup>
                     </FormControl>
                   </Grid>

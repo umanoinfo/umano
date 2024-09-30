@@ -18,14 +18,14 @@ import Grid from '@mui/material/Grid'
 
 import axios from 'axios'
 
-import { Form, Schema,  Toggle, CheckPicker, Input, Divider } from 'rsuite'
+import { Form, Schema, Toggle, CheckPicker, Input, Divider } from 'rsuite'
 
 import { MenuItem, Select } from '@mui/material';
 
 import { DatePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US'; 
+import en from 'date-fns/locale/en-US';
 
 import 'rsuite/dist/rsuite.min.css'
 
@@ -39,7 +39,7 @@ import Icon from 'src/@core/components/icon'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { useDispatch } from 'react-redux'
 import { updateEvent } from 'src/store/apps/calendar'
-import {  LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Autocomplete from '@mui/material/Autocomplete'
 
 const capitalize = string => string && string[0].toUpperCase() + string.slice(1)
@@ -81,7 +81,7 @@ const AddEventSidebar = props => {
   const [values, setValues] = useState({ ...defaultState })
 
   // ** States
-  
+
 
   const { data: session, status } = useSession()
 
@@ -91,7 +91,7 @@ const AddEventSidebar = props => {
 
   const [usersDataSource, setUsersDataSource] = useState([])
   const [typesData, setTypesData] = useState(EventType)
-  const [notAuthroized , setNotAuthorized ] = useState(false) ;
+  const [notAuthroized, setNotAuthorized] = useState(false);
   const formRef = useRef()
 
   const dispatch = useDispatch()
@@ -113,7 +113,7 @@ const AddEventSidebar = props => {
   })
 
   useEffect(() => {
-      getUsers()  
+    getUsers()
   }, [])
 
   useEffect(() => {
@@ -124,15 +124,15 @@ const AddEventSidebar = props => {
       setValues({ ...values, ...val })
       defaultUpdateState = val
     }
-  }, [UpdateEvent ])
+  }, [UpdateEvent])
 
   const handleDeleteEvent = () => {
     setIsLoading(true);
     axios
       .post('/api/event/delete-event', { selectedForm: values })
       .then(function (response) {
-        sendEmails(response.data.data._id  ,  values.type + ' ' + values.title + ' Canceled').then(()=>{
-          handleSidebarClose().then(()=>{
+        sendEmails(response.data.data._id, values.type + ' ' + values.title + ' Canceled').then(() => {
+          handleSidebarClose().then(() => {
             setSendingEmails(false), setIsLoading(false)
             setIsLoading(false);
             handleAddEventSidebarToggle();
@@ -146,25 +146,25 @@ const AddEventSidebar = props => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/company-employee')
-      const { data , message , success } = await res.json()
-      if(res.status == 401 ){
+      const { data, message, success } = await res.json()
+      if (res.status == 401) {
         setNotAuthorized(true);
       }
-      if(!success){
+      if (!success) {
         throw new Error('Error: Fetching Employees ( ' + message + ' )');
       }
-  
+
       const users = data.map(user => ({
         label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
         value: user._id
       }))
       setUsersDataSource(users)
-      
+
     }
-    catch(err){
-      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+    catch (err) {
+      toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
@@ -175,7 +175,7 @@ const AddEventSidebar = props => {
         let data = {}
         data = values
         data.status = 'active'
-        data.created_at = new Date()
+        data.created_at = new Date().toISOString()()
         setIsLoading(true)
 
         axios
@@ -187,7 +187,7 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
-            sendEmails(response.data.data._id , 'New ' + values.type + ' ' + values.title ), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
+            sendEmails(response.data.data._id, 'New ' + values.type + ' ' + values.title), setSendingEmails(false), setIsLoading(false), handleSidebarClose()
           })
           .catch(function (error) {
             toast.error('Error : Error !', {
@@ -215,10 +215,10 @@ const AddEventSidebar = props => {
               delay: 3000,
               position: 'bottom-right'
             })
-            dispatch(fetchEvents()).then(()=>{
-              sendEmails(response.data.data._id  , 'Update ' + values.type + ' ' + values.title).then(()=>{
+            dispatch(fetchEvents()).then(() => {
+              sendEmails(response.data.data._id, 'Update ' + values.type + ' ' + values.title).then(() => {
 
-                handleSidebarClose().then(()=>{
+                handleSidebarClose().then(() => {
                   setSendingEmails(false); setIsLoading(false)
                 })
               })
@@ -244,15 +244,15 @@ const AddEventSidebar = props => {
     setValues(defaultState)
   }
 
-  const sendEmails = (id , subject ) => {
+  const sendEmails = (id, subject) => {
     setSendingEmails(true)
     if (values.users) {
       let data = {}
       data.event_id = id
       data.users = values.users
       data.type = values.type
-      data.subject =  subject 
-      data.message =  values.description
+      data.subject = subject
+      data.message = values.description
       if (values.startDate == values.endDate) {
         data.date =
           values.type +
@@ -408,9 +408,9 @@ const AddEventSidebar = props => {
             <Typography variant='h6'>{UpdateEvent ? 'Update Event' : 'Add Event'}</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {UpdateEvent &&
-              session &&
-              session.user._id == values.user_id &&
-              session.user.permissions.includes('DeleteEvent') ? (
+                session &&
+                session.user._id == values.user_id &&
+                session.user.permissions.includes('DeleteEvent') ? (
                 <IconButton
                   size='small'
                   onClick={handleDeleteEvent}
@@ -426,11 +426,11 @@ const AddEventSidebar = props => {
           </Box>
           <Box className='sidebar-body' style={{ overflowY: 'auto' }} sx={{ p: theme => theme.spacing(5, 6) }}>
             <DatePickerWrapper>
-              <Form fluid 
-              ref={formRef} 
-              onCheck={setFormError} 
-              model={validateMmodel} 
-              formValue={values}>
+              <Form fluid
+                ref={formRef}
+                onCheck={setFormError}
+                model={validateMmodel}
+                formValue={values}>
 
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
@@ -472,32 +472,32 @@ const AddEventSidebar = props => {
 
                 <Grid container spacing={3} >
                   <Grid item sm={12} xs={12} mt={2}>
-       
+
 
                     <Form.Group>
                       <small>Start Date</small>
                       <div>
                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                            <DatePicker
-                          
-                              size='md'
-                              format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                              onChange={e => {
-                                setValues({ ...values, startDate: e })
-                              }}
-                              value={values.startDate}
-                              name='startDate'
-                              block
-                              slotProps={{
-                                textField:{ size: 'small' , fullWidth: '2rem'}
-                              }}
-                            />
+                          <DatePicker
+
+                            size='md'
+                            format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                            onChange={e => {
+                              setValues({ ...values, startDate: e })
+                            }}
+                            value={values.startDate}
+                            name='startDate'
+                            block
+                            slotProps={{
+                              textField: { size: 'small', fullWidth: '2rem' }
+                            }}
+                          />
                         </LocalizationProvider>
                       </div>
                     </Form.Group>
                   </Grid>
                 </Grid>
-                
+
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
                     <Form.Group>
@@ -517,7 +517,7 @@ const AddEventSidebar = props => {
                             checkAsync
                             block
                             slotProps={{
-                              textField:{ size: 'small' , fullWidth: '2rem'}
+                              textField: { size: 'small', fullWidth: '2rem' }
                             }}
                           />
                         </LocalizationProvider>
@@ -542,18 +542,18 @@ const AddEventSidebar = props => {
                       >
                         {
                           typesData &&
-                            typesData.map((val)=>{
-                              return (
-                                <MenuItem key={val.value} value={val.value}> {val.label} </MenuItem>
-                              )
-                            })
+                          typesData.map((val) => {
+                            return (
+                              <MenuItem key={val.value} value={val.value}> {val.label} </MenuItem>
+                            )
+                          })
                         }
                       </Select>
                     </Form.Group>
                   </Grid>
                 </Grid>
 
-                
+
 
                 <Grid container spacing={3}>
                   <Grid item sm={12} xs={12} mt={2}>
@@ -572,15 +572,15 @@ const AddEventSidebar = props => {
                     >
                       {
                         notAuthroized &&
-                        <MenuItem key={undefined} value={undefined} style={{color: 'red'}} > {'You do not have Permission to view Employees'} </MenuItem>
+                        <MenuItem key={undefined} value={undefined} style={{ color: 'red' }} > {'You do not have Permission to view Employees'} </MenuItem>
                       }
                       {
                         usersDataSource && !notAuthroized &&
-                          usersDataSource.map((user)=>{
-                            return (
-                              <MenuItem key={user.value} value={user.value} > {user.label} </MenuItem>
-                            )
-                          })
+                        usersDataSource.map((user) => {
+                          return (
+                            <MenuItem key={user.value} value={user.value} > {user.label} </MenuItem>
+                          )
+                        })
                       }
                     </Select>
 

@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   //   Module: 'Employee',
   //   Action: 'Add',
   //   Description: 'Add Employee (' + insertedEmployee.firstName + ' ' + insertedEmployee.lastName + ')',
-  //   created_at: new Date()
+  //   created_at : new Date().toISOString()()
   // }
   // const newlogBook = await client.db().collection('logBook').insertOne(log)
 

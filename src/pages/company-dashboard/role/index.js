@@ -51,8 +51,8 @@ const RolesComponent = () => {
   const [permissionsGroup, setPermissionsGroup] = useState([])
   const [selectedPermissions, setSelectedPermissions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [permissionsLength , setPermissionsLength ] = useState(0) ;
-  const [groupCheckboxDisabled , setGroupCheckboxDisabled ] = useState([]);
+  const [permissionsLength, setPermissionsLength] = useState(0);
+  const [groupCheckboxDisabled, setGroupCheckboxDisabled] = useState([]);
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyRole)
   const { data: session, status } = useSession()
@@ -78,17 +78,17 @@ const RolesComponent = () => {
       .get('/api/permission/company-premission-group', {})
       .then(function (response) {
         setPermissionsGroup(response.data.data)
-        let count = 0 ;
-        response.data.data.map((group)=>{
-          let groupPermissionsCount =0 ;
-          group.permissions.map((permission)=>{
-            count++ ;
-            if(session.user.permissions.includes(permission.alias))
-              groupPermissionsCount++ ;
+        let count = 0;
+        response.data.data.map((group) => {
+          let groupPermissionsCount = 0;
+          group.permissions.map((permission) => {
+            count++;
+            if (session.user.permissions.includes(permission.alias))
+              groupPermissionsCount++;
           })
-          console.log(group._id , groupPermissionsCount , group.permission.length ) ;
-          if(groupPermissionsCount != group.permissions.length ){
-            setGroupCheckboxDisabled([...groupCheckboxDisabled , group._id]);
+          console.log(group._id, groupPermissionsCount, group.permission.length);
+          if (groupPermissionsCount != group.permissions.length) {
+            setGroupCheckboxDisabled([...groupCheckboxDisabled, group._id]);
           }
         })
 
@@ -96,7 +96,7 @@ const RolesComponent = () => {
         setLoading(false);
 
         // resolve()
-        
+
       })
       .catch(function (error) {
         setLoading(false);
@@ -110,12 +110,12 @@ const RolesComponent = () => {
       fetchData({
         q: value
       })
-    ).then( () =>{
+    ).then(() => {
       getPermissionGroup()
     })
   }, [dispatch, value])
 
- 
+
   // ------------------------ Change Permission ------------------------------------
 
   const changePermission = e => {
@@ -177,70 +177,70 @@ const RolesComponent = () => {
       })
   }
 
-  const changeGroupPermissions = (e , _id ) => {
-    permissionsGroup.map((group, index ) =>{
-       
-      if(group._id == _id ){
-        
-        group.permissions.map((permission , index ) => {
-          if(e.target.checked && !selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)){
-              selectedPermissions.push(permission.alias);
+  const changeGroupPermissions = (e, _id) => {
+    permissionsGroup.map((group, index) => {
+
+      if (group._id == _id) {
+
+        group.permissions.map((permission, index) => {
+          if (e.target.checked && !selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)) {
+            selectedPermissions.push(permission.alias);
           }
-          if(!e.target.checked && selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias) ){
+          if (!e.target.checked && selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)) {
             const index = selectedPermissions.indexOf(permission.alias);
-            selectedPermissions.splice(index , 1 ) ; 
+            selectedPermissions.splice(index, 1);
           }
         })
         setSelectedPermissions([...selectedPermissions]);
       }
     });
-    
+
   }
 
-  const allChecked = ()=>{
-    let count = 0 ;
-    permissionsGroup.map((group, index ) =>{
-        group.permissions.map((permission , index ) => {
-            count++;
-        })
+  const allChecked = () => {
+    let count = 0;
+    permissionsGroup.map((group, index) => {
+      group.permissions.map((permission, index) => {
+        count++;
+      })
     });
 
-    return count == selectedPermissions.length ;
+    return count == selectedPermissions.length;
   }
 
-  const checkAll = (e)=>{
-    if(e.target.checked){
-      let selected = [] ;
-      permissionsGroup.map((group, index ) =>{
-        group.permissions.map((permission , index ) => {
-          if(session.user.permissions.includes(permission.alias))
-              selected.push(permission.alias);
+  const checkAll = (e) => {
+    if (e.target.checked) {
+      let selected = [];
+      permissionsGroup.map((group, index) => {
+        group.permissions.map((permission, index) => {
+          if (session.user.permissions.includes(permission.alias))
+            selected.push(permission.alias);
         })
       });
       setSelectedPermissions([...selected]);
     }
-    else{
-      setSelectedPermissions([]) ;
+    else {
+      setSelectedPermissions([]);
     }
   }
-  
-  const groupPermissionsSelected = (_id) =>{
-    permissionsGroup.map((group, index ) =>{
-      if(group._id == _id ){
-        let count = 0 ;
-        group.permissions.map((permission , index ) => {
-          if(selectedPermissions.includes(permission.alias)){
-              count++ ;
+
+  const groupPermissionsSelected = (_id) => {
+    permissionsGroup.map((group, index) => {
+      if (group._id == _id) {
+        let count = 0;
+        group.permissions.map((permission, index) => {
+          if (selectedPermissions.includes(permission.alias)) {
+            count++;
           }
-         
+
         })
-        if(count == permissionsGroup.permissions.length ){
-          return true ;
+        if (count == permissionsGroup.permissions.length) {
+          return true;
         }
       }
     });
 
-    return false ;
+    return false;
   }
 
   // ------------------------ Delete Role ------------------------------------
@@ -286,7 +286,7 @@ const RolesComponent = () => {
     data.type = 'company'
     data.company_id = session.user.company_id
     data.status = 'Active'
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/company-role/add-role', {
         data: data,
@@ -360,7 +360,7 @@ const RolesComponent = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-        <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
             <Link underline='hover' color='inherit' href='/'>
               Home
             </Link>
@@ -382,7 +382,7 @@ const RolesComponent = () => {
                     }}
                   >
                     <Grid container sx={{ height: '100%' }}>
-  
+
                       <Grid item xs={12}>
                         <CardContent>
                           <Box sx={{ textAlign: 'center' }}>
@@ -404,7 +404,7 @@ const RolesComponent = () => {
                   </Card>
                 </Grid>
               )}
-              
+
               {/* --------------------------------------- ADD Edit Dialog ------------------------------------------- */}
               <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
                 <DialogTitle sx={{ textAlign: 'center' }}>
@@ -430,10 +430,10 @@ const RolesComponent = () => {
                     <Table size='small'>
                       <TableHead></TableHead>
                       <TableBody>
-                      <Checkbox 
-                            check={()=>allChecked()}
-                            size='small'
-                            onChange={ (e) => checkAll(e)}
+                        <Checkbox
+                          check={() => allChecked()}
+                          size='small'
+                          onChange={(e) => checkAll(e)}
                         />
                         Choose all
                         {permissionsGroup &&
@@ -450,13 +450,13 @@ const RolesComponent = () => {
                                     color: theme => `${theme.palette.text.primary} !important`
                                   }}
                                 >
-                                  <Checkbox 
-                                    check={()=>groupPermissionsSelected(group._id)}
+                                  <Checkbox
+                                    check={() => groupPermissionsSelected(group._id)}
                                     size='small'
 
                                     // disabled={groupCheckboxDisabled.includes(group._id)}
                                     id={group._id}
-                                    onChange={e => changeGroupPermissions(e , group._id)}
+                                    onChange={e => changeGroupPermissions(e, group._id)}
                                   />
                                   {group._id}
                                 </TableCell>

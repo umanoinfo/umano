@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -25,10 +25,10 @@ export default async function handler(req, res) {
   const selectedShift = await client
     .db()
     .collection('shifts')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
 
-  if(!selectedShift){
-    return res.status(404).json({success: false, message: 'Shift not found'});
+  if (!selectedShift) {
+    return res.status(404).json({ success: false, message: 'Shift not found' });
   }
 
   if (selectedShift && selectedShift.deleted_at) {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       Module: 'Shift',
       Action: 'Restore',
       Description: 'Restore shift (' + selectedShift.title + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
       Module: 'Shifts',
       Action: 'Delete',
       Description: 'Delete shifts (' + selectedShift.title + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

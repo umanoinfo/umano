@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   if (!myUser || !myUser.permissions || !myUser.permissions.includes('DeleteEmployee')) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
-  
+
   // ---------------- Delete --------------------
 
   const employeeSalary = req.body.selectedSalary
@@ -25,9 +25,9 @@ export default async function handler(req, res) {
   const selectedemployeeSalary = await client
     .db()
     .collection('employeeSalaries')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
-  if(!selectedemployeeSalary){
-    return res.status(404).json({success: false, message: 'Employee Salary not found'});
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
+  if (!selectedemployeeSalary) {
+    return res.status(404).json({ success: false, message: 'Employee Salary not found' });
   }
 
   if (selectedemployeeSalary && selectedemployeeSalary.deleted_at) {
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       Module: 'Employee salary',
       Action: 'Restore',
       Description: 'Restore employee salary (' + selectedemployeeSalary._id + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       Module: 'Employee salary',
       Action: 'Delete',
       Description: 'Delete employee salary (' + selectedemployeeSalary._id + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const client = await connectToDatabase()
 
@@ -25,10 +25,10 @@ export default async function handler(req, res) {
   const selectedDeduction = await client
     .db()
     .collection('deductions')
-    .findOne({ _id: ObjectId(id) , company_id: myUser.company_id.toString()})
+    .findOne({ _id: ObjectId(id), company_id: myUser.company_id.toString() })
 
-  if(!selectedDeduction){
-    return res.status(404).json({success: false, message: 'Deduction not found'});
+  if (!selectedDeduction) {
+    return res.status(404).json({ success: false, message: 'Deduction not found' });
   }
 
   if (selectedDeduction && selectedDeduction.deleted_at) {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       Module: 'Deduction',
       Action: 'Restore',
       Description: 'Restore deduction (' + selectedDeduction.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       .db()
       .collection('deductions')
       .updateOne({ _id: ObjectId(id) }, { $set: { deleted_at: new Date() } }, { upsert: false })
-      await client.db().collection('employees').updateMany({ deductions: id  } , { $pull: {deductions: id} });
+    await client.db().collection('employees').updateMany({ deductions: id }, { $pull: { deductions: id } });
 
     // ---------------- logBook ----------------
 
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       Module: 'Deduction',
       Action: 'Delete',
       Description: 'Delete deduction (' + selectedDeduction.no + ')',
-      created_at: new Date()
+      created_at: new Date().toISOString()()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

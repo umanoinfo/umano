@@ -121,9 +121,9 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const dispatch = useDispatch()
   const formRef = useRef()
-  
+
   const { StringType } = Schema.Types
-  
+
   const {
     reset,
     control,
@@ -136,7 +136,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     resolver: yupResolver(schema)
   })
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   const model = Schema.Model({
     users: StringType().isRequired('This phone is required.')
@@ -146,7 +146,7 @@ const DialogAddUser = ({ popperPlacement }) => {
 
   const getCountries = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/country')
       const { data } = await res.json()
       setIsLoading(false)
@@ -155,8 +155,8 @@ const DialogAddUser = ({ popperPlacement }) => {
       setCountryIndex(index)
       setCountry(data[index])
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
@@ -175,7 +175,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.end_at = end_at
     data.status = status
     data.logo = logo
-    data.created_at = new Date()
+    data.created_at = new Date().toISOString()()
     axios
       .post('/api/company/add-company', {
         data

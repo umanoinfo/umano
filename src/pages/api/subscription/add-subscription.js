@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 import { connectToDatabase } from 'src/configs/dbConnect'
 
 export default async function handler(req, res) {
-  if(req.method != 'POST'){
-    return res.status(405).json({success: false , message: 'Method is not allowed'});
+  if (req.method != 'POST') {
+    return res.status(405).json({ success: false, message: 'Method is not allowed' });
   }
   const { method } = req
   const client = await connectToDatabase()
@@ -21,13 +21,14 @@ export default async function handler(req, res) {
 
   const subscription = req.body.data
   if (!subscription.company_id || !subscription.start_at || !subscription.end_at || !subscription.availableUsers) {
-    return  res.status(422).json({
+    return res.status(422).json({
       message: 'Invalid input'
     })
   }
-  const usersCount = await client.db().collection('users').countDocuments({company_id : subscription.company_id , status: 'active' , $or: [{deleted_at: {$exists: false} } , {deleted_at: null }]});
-  if(usersCount > subscription.availableUsers){
-    return res.status(400).json({success: false, message: `The current active users in that company is (${usersCount}) 
+  const usersCount = await client.db().collection('users').countDocuments({ company_id: subscription.company_id, status: 'active', $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] });
+  if (usersCount > subscription.availableUsers) {
+    return res.status(400).json({
+      success: false, message: `The current active users in that company is (${usersCount}) 
     which excceeds the specified avaiable users value ${subscription.availableUsers} 
     disable/delete some accounts or increase the available users`})
   }
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
     .findOne({ _id: ObjectId(subscription.company_id) })
 
   // company.end_at = subscription.end_at
-  
+
   const newCompany = await client
     .db()
     .collection('companies')
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
     Module: 'Subscription',
     Action: 'ADD',
     Description: 'ADD Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
-    created_at: new Date()
+    created_at: new Date().toISOString()()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 
@@ -64,7 +65,7 @@ export default async function handler(req, res) {
     .collection('subscriptions')
     .findOne({ _id: newSubscription.insertedId })
 
-    return res.status(201).json({ success: true, data: insertedSubscription })
+  return res.status(201).json({ success: true, data: insertedSubscription })
 }
 
 //

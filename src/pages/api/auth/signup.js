@@ -41,7 +41,7 @@
 //     email: email,
 //     type: type,
 //     password: hashedPassword,
-//     created_at:new Date(),
+//     created_at : new Date().toISOString()(),
 //     updated_at:new Date(),
 //     deleted_at:null
 //   });

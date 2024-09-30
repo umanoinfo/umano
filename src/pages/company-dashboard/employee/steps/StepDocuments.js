@@ -53,9 +53,9 @@ const StepDocuments = ({ handleNext, employee }) => {
   const [action, setAction] = useState('add')
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const [openFileDialog , setOpenFileDialog] = useState(false)
+  const [openFileDialog, setOpenFileDialog] = useState(false)
   const [selectedDocument, setSelectedDocument] = useState()
- 
+
 
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
@@ -80,45 +80,45 @@ const StepDocuments = ({ handleNext, employee }) => {
 
   useEffect(() => {
     if (employee) {
-        setEmployeeId(employee._id)
-        setLoading(true);
-        dispatch(
-          fetchData({
-            employeeId: employeeId,
-            userStatus,
-            q: value
-          })
-        ).then(()=>{
-          getDepartments().then(()=>{
-            setLoading(false)
-          })
+      setEmployeeId(employee._id)
+      setLoading(true);
+      dispatch(
+        fetchData({
+          employeeId: employeeId,
+          userStatus,
+          q: value
         })
+      ).then(() => {
+        getDepartments().then(() => {
+          setLoading(false)
+        })
+      })
     }
-    else{
+    else {
       <Typography
-      sx={{
-        mt: 2,
-        mb: 3,
-        px: 2,
-        fontWeight: 400,
-        fontSize: 15,
-        color: 'red',
-        textAlign: 'center',
-        fontStyle: 'italic'
-      }}
-    >
-      You must insert employee ..
-    </Typography>
+        sx={{
+          mt: 2,
+          mb: 3,
+          px: 2,
+          fontWeight: 400,
+          fontSize: 15,
+          color: 'red',
+          textAlign: 'center',
+          fontStyle: 'italic'
+        }}
+      >
+        You must insert employee ..
+      </Typography>
     }
 
 
-  }, [dispatch, employeeId, userStatus, value,employee])
+  }, [dispatch, employeeId, userStatus, value, employee])
 
 
 
   // ----------------------------- Get Options ----------------------------------
 
-  const getDepartments = async () => {}
+  const getDepartments = async () => { }
 
   const validateMmodel = Schema.Model({
     documentTitle: StringType().isRequired('Document Title is required')
@@ -130,7 +130,7 @@ const StepDocuments = ({ handleNext, employee }) => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         setLoading(true)
-        let data = {...formValue}
+        let data = { ...formValue }
         data.documentTitle = formValue.documentTitle
         data.documentNo = formValue.documentNo
         data.documentDescription = formValue.documentDescription
@@ -142,16 +142,17 @@ const StepDocuments = ({ handleNext, employee }) => {
         }
         if (action == 'add') {
           data.file = tempFile
-          data.created_at = new Date()
+          data.created_at = new Date().toISOString()()
           axios
             .post('/api/employee-document/add-document', {
               data
             })
             .then(function (response) {
-              dispatch(fetchData({    
+              dispatch(fetchData({
                 employeeId: employeeId,
                 userStatus,
-                q: value })).then(() => {
+                q: value
+              })).then(() => {
                 toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
@@ -178,9 +179,11 @@ const StepDocuments = ({ handleNext, employee }) => {
               data
             })
             .then(function (response) {
-              dispatch(fetchData({   employeeId: employeeId,
+              dispatch(fetchData({
+                employeeId: employeeId,
                 userStatus,
-                q: value })).then(() => {
+                q: value
+              })).then(() => {
                 toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                   delay: 3000,
                   position: 'bottom-right'
@@ -203,7 +206,7 @@ const StepDocuments = ({ handleNext, employee }) => {
 
   const handleAdd = () => {
     setSelectedDocument(null)
-    setFormValue({'documentTitle':'' , 'documentNo':'' , 'documentDescription':''})
+    setFormValue({ 'documentTitle': '', 'documentNo': '', 'documentDescription': '' })
     setAction('add')
     setForm(true)
   }
@@ -217,11 +220,11 @@ const StepDocuments = ({ handleNext, employee }) => {
     setOpenFileDialog(true)
   }
 
-const deleteFile =()=>{
+  const deleteFile = () => {
 
-  setLoading(true)
+    setLoading(true)
 
-  let data = {...formValue}
+    let data = { ...formValue }
     delete data.file
     data._id = selectedDocument._id
     data.updated_at = new Date()
@@ -230,9 +233,11 @@ const deleteFile =()=>{
         data
       })
       .then(function (response) {
-        dispatch(fetchData({    employeeId: employeeId,
+        dispatch(fetchData({
+          employeeId: employeeId,
           userStatus,
-          q: value })).then(() => {
+          q: value
+        })).then(() => {
           toast.success('Document (' + data.documentTitle + ') deleted file successfully.', {
             delay: 3000,
             position: 'bottom-right'
@@ -249,8 +254,8 @@ const deleteFile =()=>{
         })
         setLoading(false)
       })
-      
-}
+
+  }
 
   const deleteDocument = () => {
     setLoading(true)
@@ -259,9 +264,11 @@ const deleteFile =()=>{
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({   employeeId: employeeId,
+        dispatch(fetchData({
+          employeeId: employeeId,
           userStatus,
-          q: value})).then(() => {
+          q: value
+        })).then(() => {
           toast.success('Employee document (' + selectedDocument.documentTitle + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
@@ -313,9 +320,11 @@ const deleteFile =()=>{
             data
           })
           .then(function (response) {
-            dispatch(fetchData({   employeeId: employeeId,
+            dispatch(fetchData({
+              employeeId: employeeId,
               userStatus,
-              q: value })).then(() => {
+              q: value
+            })).then(() => {
               toast.success('Document (' + data.documentTitle + ') Inserted Successfully.', {
                 delay: 3000,
                 position: 'bottom-right'
@@ -344,15 +353,15 @@ const deleteFile =()=>{
 
   const uploadNewFile = async event => {
     setFileLoading(true)
-    console.log(selectedDocument);  
+    console.log(selectedDocument);
     const file = event.target.files[0]
     let formData = new FormData()
     formData.append('file', file)
-    if(action == 'edit')
+    if (action == 'edit')
       formData.append('id', selectedDocument._id)
     formData.append('type', 'employeeDocument')
     let data = {}
-    if(action == 'edit')
+    if (action == 'edit')
       data.id = selectedDocument._id
     data.formData = formData
     axios
@@ -378,7 +387,7 @@ const deleteFile =()=>{
   const openNewUploadFile = row => {
     newinputFile.current.click()
   }
-  
+
   // ------------------------------- handle Edit --------------------------------------
 
   const handleEdit = e => {
@@ -427,41 +436,41 @@ const deleteFile =()=>{
       headerName: '',
       renderCell: ({ row }) => (
         <span>
-            <>
-              <IconButton
-                size='small'
-                onClick={e => {
-                  handleEdit(row)
-                }}
-              >
-                <Icon icon='mdi:pencil-outline' fontSize={18} />
+          <>
+            <IconButton
+              size='small'
+              onClick={e => {
+                handleEdit(row)
+              }}
+            >
+              <Icon icon='mdi:pencil-outline' fontSize={18} />
+            </IconButton>
+            <IconButton
+              size='small'
+              onClick={e => {
+                handleDelete(row)
+              }}
+            >
+              <Icon icon='mdi:delete-outline' fontSize={18} />
+            </IconButton>
+            {row.file && (
+              <IconButton size='small' onClick={() => open_file(row.file)}>
+                <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
               </IconButton>
-              <IconButton
-                size='small'
-                onClick={e => {
-                  handleDelete(row)
-                }}
-              >
-                <Icon icon='mdi:delete-outline' fontSize={18} />
-              </IconButton>
-              {row.file && (
-                <IconButton size='small' onClick={() => open_file(row.file)}>
-                  <Icon icon='ic:outline-remove-red-eye' fontSize={18} />
-                </IconButton>
-              )}
-            </>
+            )}
+          </>
         </span>
       )
     }
   ]
 
   if (!employee) {
-    return <Typography  sx={{mt: 2,mb: 3,px: 2,fontWeight: 400,fontSize: 15,color: 'red',textAlign: 'center',fontStyle: 'italic'}}>You must insert employee ..</Typography>
+    return <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 400, fontSize: 15, color: 'red', textAlign: 'center', fontStyle: 'italic' }}>You must insert employee ..</Typography>
   }
-  if(loading){
+  if (loading) {
     // return <Loading header='Please Wait' description='Documents are loading' />
   }
-  
+
   return (
     <>
       <Grid spacing={6}>
@@ -471,8 +480,8 @@ const deleteFile =()=>{
 
             <Grid xs={12} md={7} lg={7} sx={{ px: 3, mt: 2 }}>
 
-              <Box 
-               sx={{
+              <Box
+                sx={{
                   mb: 2.5,
                   display: 'flex',
                   flexWrap: 'wrap',
@@ -480,25 +489,25 @@ const deleteFile =()=>{
                   justifyContent: 'space-between'
                 }}>
                 <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }}>Documents</Typography>
-                <Button variant='outlined' size='small' onClick={(e)=> {handleAdd()}} sx={{ px: 2, mt: 2, mb: 2 }}>
+                <Button variant='outlined' size='small' onClick={(e) => { handleAdd() }} sx={{ px: 2, mt: 2, mb: 2 }}>
                   Add Employee Document
                 </Button>
               </Box>
 
               <Card xs={12} md={12} lg={12}>
-{
-                loading ? 
-                <Loading header='Please Wait' description='Documents are loading' />:
-                <DataGrid
-                  autoHeight
-                  rows={store.data}
-                  columns={columns}
-                  pageSize={pageSize}
-                  disableSelectionOnClick
-                  rowsPerPageOptions={[7, 10, 25, 50]}
-                  onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-                />
-}
+                {
+                  loading ?
+                    <Loading header='Please Wait' description='Documents are loading' /> :
+                    <DataGrid
+                      autoHeight
+                      rows={store.data}
+                      columns={columns}
+                      pageSize={pageSize}
+                      disableSelectionOnClick
+                      rowsPerPageOptions={[7, 10, 25, 50]}
+                      onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                    />
+                }
               </Card>
             </Grid>
 
@@ -594,13 +603,13 @@ const deleteFile =()=>{
                         <Grid item sm={12} xs={12} mt={-4} mb={10}>
                           <Typography sx={{ pt: 6 }}>
                             File :
-                            {tempFile && action=="add" && !fileLoading &&(<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
-                            {tempFile && action=="add" && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {selectedDocument?.file && !fileLoading && (<span style={{paddingRight:'10px' , paddingLeft:'5px'}}><a href='#' onClick={() => open_file(selectedFile)} >{selectedFile}</a></span>)}
-                            {selectedDocument?.file && !fileLoading && (<Chip label='Delete'  variant='outlined' size="small" color='error'   onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
-                            {selectedDocument && !fileLoading && action!="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
-                            {!fileLoading && action=="add" && <Chip label='Upload'  variant='outlined' size="small" color='primary'  sx = {{mx:2}} onClick={() => openNewUploadFile() } icon={<Icon icon='mdi:upload-outline' />} />}
-                            {fileLoading && <small style={{paddingLeft:'20px' , fontStyle:'italic' , color:'blue'}}>Uploading ...</small>}
+                            {tempFile && action == "add" && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(tempFile)} >{tempFile}</a></span>)}
+                            {tempFile && action == "add" && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => setTempFile(null)} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedDocument?.file && !fileLoading && (<span style={{ paddingRight: '10px', paddingLeft: '5px' }}><a href='#' onClick={() => open_file(selectedFile)} >{selectedFile}</a></span>)}
+                            {selectedDocument?.file && !fileLoading && (<Chip label='Delete' variant='outlined' size="small" color='error' onClick={() => handleDeleteFile()} icon={<Icon icon='mdi:delete-outline' />} />)}
+                            {selectedDocument && !fileLoading && action != "add" && <Chip label='Upload' variant='outlined' size="small" color='primary' sx={{ mx: 2 }} onClick={() => openUploadFile()} icon={<Icon icon='mdi:upload-outline' />} />}
+                            {!fileLoading && action == "add" && <Chip label='Upload' variant='outlined' size="small" color='primary' sx={{ mx: 2 }} onClick={() => openNewUploadFile()} icon={<Icon icon='mdi:upload-outline' />} />}
+                            {fileLoading && <small style={{ paddingLeft: '20px', fontStyle: 'italic', color: 'blue' }}>Uploading ...</small>}
                           </Typography>
                         </Grid>
 
@@ -630,7 +639,7 @@ const deleteFile =()=>{
                             </Button>
                           </>
                         )}
-                        {loading &&<LinearProgress />}
+                        {loading && <LinearProgress />}
                       </Box>
                     </Grid>
                   </Form>
@@ -649,7 +658,7 @@ const deleteFile =()=>{
               name='file'
             />
 
-              <input
+            <input
               id='newfile'
               ref={newinputFile}
               hidden

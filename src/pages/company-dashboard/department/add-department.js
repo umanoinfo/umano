@@ -47,7 +47,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [usersDataSource, setUsersDataSource] = useState([])
   const [parentsDataSource, setParentsDataSource] = useState([])
-  
+
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
     { label: 'Pending', value: 'pending' },
@@ -57,7 +57,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [newParent, setNewParent] = useState('')
   const [newStatus, setNewStatus] = useState('active')
   const [formError, setFormError] = useState({})
-  const [notAuthorized , setNotAuthorized] = useState(false);
+  const [notAuthorized, setNotAuthorized] = useState(false);
 
   const [formValue, setFormValue] = useState({
     name: '',
@@ -75,8 +75,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
   useEffect(() => {
-    getUsers().then(()=>getParents())
-    
+    getUsers().then(() => getParents())
+
   }, [])
 
   // ---------------------- async Check Department Name -----------------------------------------
@@ -105,34 +105,34 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/company-employee')
-      const { data , message , success } = await res.json()
-      if(res.status == 401 ){
+      const { data, message, success } = await res.json()
+      if (res.status == 401) {
         setNotAuthorized(true);
         setUsersDataSource([
           {
-            label: <div style={{color:'red'}}> You do not have Permission to view Employees </div>,
-            value: undefined ,
+            label: <div style={{ color: 'red' }}> You do not have Permission to view Employees </div>,
+            value: undefined,
 
           }
         ])
       }
-      if(!success){
+      if (!success) {
         throw new Error('Error: Fetching Employees ( ' + message + ' )');
       }
-  
+
       const users = data.map(user => ({
         label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
         value: user._id
       }))
 
       setUsersDataSource(users)
-      
+
     }
-    catch(err){
+    catch (err) {
       console.log(err);
-      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+      toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
@@ -140,32 +140,32 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // ----------------------------- Get Parents ----------------------------------
 
   const getParents = async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/company-department/')
-    const { data } = await res.json()
-    let containMain = false ;
-    
-    const parents = []
-    data.map(departmen => {
-      parents.push({
-      label: departmen.name,
-      value: departmen._id
-      })
-      if(!departmen.parent){containMain = true}
-    })
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/company-department/')
+      const { data } = await res.json()
+      let containMain = false;
 
-    if(!containMain )
-    parents.push({
-      label: 'Main',
-      value: ''
-    })
-      
-    setIsLoading(false);
-    setParentsDataSource(parents)
+      const parents = []
+      data.map(departmen => {
+        parents.push({
+          label: departmen.name,
+          value: departmen._id
+        })
+        if (!departmen.parent) { containMain = true }
+      })
+
+      if (!containMain)
+        parents.push({
+          label: 'Main',
+          value: ''
+        })
+
+      setIsLoading(false);
+      setParentsDataSource(parents)
     }
-    catch(err){
-      
+    catch (err) {
+
     }
   }
 
@@ -188,13 +188,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
   // -------------------------------- handle Submit -----------------------------------------------
 
   const handleSubmit = () => {
-    console.log(formValue , parent)
+    console.log(formValue, parent)
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        if(parentsDataSource.length > 1 && newParent == ''){
-          toast.error('Core department is required' , {duration: 5000 , position:'bottom-right'});
-          
-          return ;
+        if (parentsDataSource.length > 1 && newParent == '') {
+          toast.error('Core department is required', { duration: 5000, position: 'bottom-right' });
+
+          return;
         }
 
         // if(parentsDataSource.length > 0 && newParent == '')
@@ -206,7 +206,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         }
         data.status = newStatus
         data.user_id = userID
-        data.created_at = new Date()
+        data.created_at = new Date().toISOString()()
         console.log(data)
 
         axios
@@ -247,16 +247,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
-              Departments List
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Add Department
-            </Typography>
-          </Breadcrumbs>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
+                Departments List
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Department
+              </Typography>
+            </Breadcrumbs>
 
             <CardContent></CardContent>
             <Divider />
