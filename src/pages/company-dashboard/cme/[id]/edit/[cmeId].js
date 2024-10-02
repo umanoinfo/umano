@@ -124,9 +124,9 @@ const AddCME = ({ }) => {
         data
       })
       .then(function (response) {
-        
-          setLoading(false)
-        
+
+        setLoading(false)
+
       })
       .catch(function (error) {
         toast.error('Error : ' + error.response.data.message + ' !', {
@@ -138,7 +138,7 @@ const AddCME = ({ }) => {
 
   }
 
-  
+
   const open_file = fileName => {
     window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
   }
@@ -200,7 +200,7 @@ const AddCME = ({ }) => {
     let data = {}
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
         setFileLoading(false)

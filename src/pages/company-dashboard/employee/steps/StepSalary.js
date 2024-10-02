@@ -188,7 +188,7 @@ const StepSalary = ({ handleNext, employee }) => {
     data.id = selectedSalary._id
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         let data = {}
         data = {}

@@ -214,7 +214,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 let formData = new FormData()
                 formData.append('file', file)
                 formData.append('type', 'document')
-                axios.post('https://umanu.blink-techno.com/public/api/upload', formData).then(response => {
+                axios.post('https://umanu.blink-techno.com/api/upload', formData).then(response => {
                   let data = {}
                   data.name = file.name
                   data.linked_id = doc_id

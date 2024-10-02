@@ -25,7 +25,7 @@ import { Breadcrumbs, Divider, Tab, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker , Input } from 'rsuite'
+import { Form, Schema, SelectPicker, Input } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -58,8 +58,8 @@ const EditLeave = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession
   const formRef = useRef()
   const [formError, setFormError] = useState()
-  const [fileLoading , setFileLoading] = useState() ;
-  const [tempFile, setTempFile] = useState() ;
+  const [fileLoading, setFileLoading] = useState();
+  const [tempFile, setTempFile] = useState();
 
   // new states
 
@@ -94,20 +94,20 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   useEffect(() => {
     setLoading(true);
-    getEmployees().then(()=>{
-      getMyCompany().then(()=>{
+    getEmployees().then(() => {
+      getMyCompany().then(() => {
         setLoading(false);
       })
 
     })
-       // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ------------------------------ validate Mmodel ------------------------------------
 
   const validateMmodel = Schema.Model({
     type: StringType().isRequired('This field is required.'),
-    
+
     // paidValue: NumberType().isRequired('This field is required.'),
     reason: StringType().isRequired('This field is required.'),
     employee_id: StringType().isRequired('This field is required.'),
@@ -119,33 +119,33 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   // ------------------------------- Get Leave --------------------------------------
 
-    const getLeaves = (employees) => {
-      setLoading(true)
-      axios
-        .get('/api/employee-leave/' + id, {})
-        .then(function (response) {
-          setLoading(false)
-          let val = response.data.data[0]
+  const getLeaves = (employees) => {
+    setLoading(true)
+    axios
+      .get('/api/employee-leave/' + id, {})
+      .then(function (response) {
+        setLoading(false)
+        let val = response.data.data[0]
 
-          val.date_from = new Date(val.date_from)
-          val.date_to = new Date(response.data.data[0].date_to)
+        val.date_from = new Date(val.date_from)
+        val.date_to = new Date(response.data.data[0].date_to)
 
-          let employee = employees.find(emp => emp._id == response.data.data[0].employee_id)
-          setSelectedEmployee({ ...employee })
+        let employee = employees.find(emp => emp._id == response.data.data[0].employee_id)
+        setSelectedEmployee({ ...employee })
 
-          setFormValue({ ...val , date_to: val.date_to , date_from: val.date_from });
-          setTempFile( val?.file );
-          val = employee.leaves_info.map(e => {
-            e.id = e._id
+        setFormValue({ ...val, date_to: val.date_to, date_from: val.date_from });
+        setTempFile(val?.file);
+        val = employee.leaves_info.map(e => {
+          e.id = e._id
 
-            return e
-          })
-          setLeavesDataSource(val)
-
+          return e
         })
-        .catch(function (error) {
-          setLoading(false)
-        })
+        setLeavesDataSource(val)
+
+      })
+      .catch(function (error) {
+        setLoading(false)
+      })
   }
 
   // ------------------------------- Get Employees --------------------------------------
@@ -176,38 +176,38 @@ const EditLeave = ({ popperPlacement, id }) => {
         return h
       })
       setDays(temp)
-    }).catch((err)=>{})
+    }).catch((err) => { })
   }
 
   const calcDeffTime = val => {
-   
+
     return val.map(val => {
       if (val.type == 'daily') {
-        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from) )
-        const diffDays = (diffTime / (1000 * 60 * 60 * 24))+1
-        let curDate = new Date( val.date_from ) ;
-        let totalDays =0  ;
-        for(let i =0  ;i < diffDays ;i++){
-          if(curDate.getFullYear() == new Date().getFullYear())
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
+        const diffDays = (diffTime / (1000 * 60 * 60 * 24)) + 1
+        let curDate = new Date(val.date_from);
+        let totalDays = 0;
+        for (let i = 0; i < diffDays; i++) {
+          if (curDate.getFullYear() == new Date().getFullYear())
             totalDays++;
-          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24  ) ; 
+          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24);
         }
-        
+
         return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         let shift_times = selectedEmployee?.shift_info?.[0]?.times?.[0];
-        let shift_hours = (new Date(shift_times?.timeOut) - new Date(shift_times?.timeIn) )/ (1000 * 60 * 60) ;
-        const diffDays = (diffTime / (shift_hours)) +1 
+        let shift_hours = (new Date(shift_times?.timeOut) - new Date(shift_times?.timeIn)) / (1000 * 60 * 60);
+        const diffDays = (diffTime / (shift_hours)) + 1
 
         // divide by the shift hours that this employee work not by (8 / 24 ) 
 
-        
-        if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
+
+        if (new Date(val.date_from).getFullYear() == new Date().getFullYear()) {
           return { ...val, leave_value: diffDays };
         }
-        else{
-          return {...val , leave_value: 0 } ;
+        else {
+          return { ...val, leave_value: 0 };
         }
       }
     })
@@ -244,15 +244,15 @@ const EditLeave = ({ popperPlacement, id }) => {
   }
 
   const statusName = {
-    paidLeave: 'Paid leave' ,
+    paidLeave: 'Paid leave',
     unpaidLeave: 'Unpaid Leave',
     sickLeave: 'Sick Leave',
     maternityLeave: 'Maternity Leave',
     parentalLeave: 'Parental Leave',
-    otherLeave: 'Other Leave' 
+    otherLeave: 'Other Leave'
   }
-  
-  
+
+
 
   const calcLeaves = employee => {
     employee = {
@@ -264,8 +264,8 @@ const EditLeave = ({ popperPlacement, id }) => {
       takenParentalLeaves: 0,
       takenOthers: 0
     }
-    const leaves = employee.leaves_info.filter((leave)=> {return leave._id != id })
-    
+    const leaves = employee.leaves_info.filter((leave) => { return leave._id != id })
+
     const range1 = employee.shift_info[0].times.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
@@ -407,21 +407,21 @@ const EditLeave = ({ popperPlacement, id }) => {
 
     return employee
 
-   
+
   }
 
   const getEmployees = async () => {
     axios.get('/api/company-employee', {}).then(res => {
       let arr = []
       let employees = res.data.data
-      employees = employees.map((employee , index) => {
-   
+      employees = employees.map((employee, index) => {
+
         if (employee?.shift_info[0]) {
           arr.push({
-            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
+            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo,
             value: employee._id
           })
-          
+
           return calcLeaves(employee)
         }
       })
@@ -429,38 +429,38 @@ const EditLeave = ({ popperPlacement, id }) => {
       setEmployeesFullInfo(employees)
 
       return employees
-    }).then(function(employees) { if(employees){console.log(employees) ; getLeaves(employees)}}).catch((err)=>{})
+    }).then(function (employees) { if (employees) { console.log(employees); getLeaves(employees) } }).catch((err) => { })
     setLoading(false)
   }
 
   // ------------------------------- Submit --------------------------------------
-  const checkIntersectionWithVacation = ()=>{
-    
-    let start = new Date(formValue.date_from) ;
-    while(start < new Date(formValue.date_to)){
+  const checkIntersectionWithVacation = () => {
+
+    let start = new Date(formValue.date_from);
+    while (start < new Date(formValue.date_to)) {
       let i = !days.includes(start.getDay())
       let j = holyDays.includes(start.toDateString())
       let z = false;
-      selectedEmployee?.leaves_info?.map((leave)=>{
-        if(leave._id == id ){
-          return false ;
+      selectedEmployee?.leaves_info?.map((leave) => {
+        if (leave._id == id) {
+          return false;
         }
-        let start_leave = new Date(leave.date_from) ;
-        while(start_leave < new Date(leave.date_to)){
-          if(start_leave.toDateString() == start.toDateString()){
-            z = true ;
+        let start_leave = new Date(leave.date_from);
+        while (start_leave < new Date(leave.date_to)) {
+          if (start_leave.toDateString() == start.toDateString()) {
+            z = true;
             break;
           }
-          start_leave = new Date(start_leave.getTime() + 1000 * 60 * 60 * 24 ) ;
+          start_leave = new Date(start_leave.getTime() + 1000 * 60 * 60 * 24);
         }
       })
-      if(i || j || z ){
-        return true ;
+      if (i || j || z) {
+        return true;
       }
       start = new Date(start.getTime() + 1000 * 60 * 60 * 24);
     }
-    
-    return false; 
+
+    return false;
   }
 
 
@@ -549,7 +549,7 @@ const EditLeave = ({ popperPlacement, id }) => {
               return
             }
           }
-        } 
+        }
         else {
           if (data.status_reason == 'paidLeave') {
             if (+selectedEmployee.availablePaidLeave < diffDays + +selectedEmployee.takenPaidLeaves) {
@@ -606,13 +606,13 @@ const EditLeave = ({ popperPlacement, id }) => {
         setLoading(true)
         setLoadingDescription('leaves is inserting')
 
-        let newData = { ...data_request , file: tempFile}
+        let newData = { ...data_request, file: tempFile }
 
         newData.date_from = new Date(data_request.date_from)
         newData.date_to = new Date(data_request.date_to)
-        newData.date_from = new Date(newData.date_from.getTime() + Math.abs(newData.date_from.getTimezoneOffset() * 60000) )
-        newData.date_to = new Date(newData.date_to.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000) )
-        
+        newData.date_from = new Date(newData.date_from.getTime() + Math.abs(newData.date_from.getTimezoneOffset() * 60000))
+        newData.date_to = new Date(newData.date_to.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000))
+
         axios
           .post('/api/employee-leave/edit-leave', {
             data: newData
@@ -636,7 +636,7 @@ const EditLeave = ({ popperPlacement, id }) => {
     })
   }
 
-  
+
 
   // -------------------------------- Routes -----------------------------------------------
 
@@ -698,7 +698,7 @@ const EditLeave = ({ popperPlacement, id }) => {
                 color='primary'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize'}}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5, textTransform: 'capitalize' }}
                 label={row.type}
               />
             </div>
@@ -720,7 +720,7 @@ const EditLeave = ({ popperPlacement, id }) => {
                 color='info'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize' }}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5, textTransform: 'capitalize' }}
                 label={statusName[row.status_reason]}
               />
             </div>
@@ -747,7 +747,7 @@ const EditLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
+            {date}  {row.type == 'hourly' && <span style={{ 'paddingRight': '5px', 'paddingLeft': '5px' }}>{time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -762,7 +762,7 @@ const EditLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
+            {date}  {row.type == 'hourly' && <span style={{ 'paddingRight': '5px', 'paddingLeft': '5px' }}>{time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -786,14 +786,14 @@ const EditLeave = ({ popperPlacement, id }) => {
 
   const fillTable = id => {
 
-    employeesFullInfo = employeesFullInfo.filter(employee=> employee != undefined );
+    employeesFullInfo = employeesFullInfo.filter(employee => employee != undefined);
 
     let val = employeesFullInfo.find(val => val._id == id)
 
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id
-      
+
       return e
     })
     console.log(val)
@@ -823,7 +823,7 @@ const EditLeave = ({ popperPlacement, id }) => {
     if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
       temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
     }
-    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'male') {
+    if ((employee.takenParentalLeaves < +employee.availableParentalLeave) && employee.gender == 'male') {
       temp_reasons.push({ label: 'Parental Leave', value: 'parentalLeave' })
     }
     temp_reasons.push({ label: 'Other Leave', value: 'otherLeave' })
@@ -837,7 +837,7 @@ const EditLeave = ({ popperPlacement, id }) => {
       resolution_number: 0,
       description: '',
       status_reason: 'paidLeave',
-      paidValue:employee.salaryFormulas_info[0].paidLeave ,
+      paidValue: employee.salaryFormulas_info[0].paidLeave,
       reason: ''
     })
   }
@@ -851,10 +851,10 @@ const EditLeave = ({ popperPlacement, id }) => {
     let data = {}
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
-        setFormValue({...formValue , file: response.data})
+        setFormValue({ ...formValue, file: response.data })
         setFileLoading(false);
       })
       .catch(function (error) {
@@ -864,19 +864,19 @@ const EditLeave = ({ popperPlacement, id }) => {
         })
 
         setFileLoading(false);
-        
+
       })
   }
 
-  const changeStatus = e =>{
+  const changeStatus = e => {
     let paidValue = selectedEmployee.salaryFormulas_info?.[0]?.[e]
-    if(e == 'otherLeave'){
+    if (e == 'otherLeave') {
       paidValue = 0
     }
     formValue.status_reason = e
     setFormValue({
       ...formValue,
-      paidValue:paidValue
+      paidValue: paidValue
     })
   }
 
@@ -893,21 +893,21 @@ const EditLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-              <Form.Control
-                shouldDisableDate={val => {
-                  let i = !days.includes(val.getDay())
-                  let j = holyDays.includes(val.toDateString())
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_from'
-                format='yyyy-MM-dd '
-                name='date_from'
-                accepter={DatePicker}
-                value={formValue.date_from}
-                slotProps={{ textField: { size: 'small' } }}
-              />
+                    return i || j
+                  }}
+                  controlid='date_from'
+                  format='yyyy-MM-dd '
+                  name='date_from'
+                  accepter={DatePicker}
+                  value={formValue.date_from}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
               </LocalizationProvider>
             </div>
           </Box>
@@ -917,22 +917,22 @@ const EditLeave = ({ popperPlacement, id }) => {
             </Typography>
             <div>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-              <Form.Control
-                shouldDisableDate={val => {
-                  let i = !days.includes(val.getDay())
+                <Form.Control
+                  shouldDisableDate={val => {
+                    let i = !days.includes(val.getDay())
 
-                  let j = holyDays.includes(val.toDateString())
+                    let j = holyDays.includes(val.toDateString())
 
-                  return i || j
-                }}
-                controlid='date_to'
-                format=' yyyy-MM-dd'
-                name='date_to'
-                accepter={DatePicker}
-                value={formValue.date_to}
-                slotProps={{ textField: { size: 'small' } }}
-              />
-               </LocalizationProvider>
+                    return i || j
+                  }}
+                  controlid='date_to'
+                  format=' yyyy-MM-dd'
+                  name='date_to'
+                  accepter={DatePicker}
+                  value={formValue.date_to}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </LocalizationProvider>
             </div>
             {/* <Form.Control
               controlid='date_to'
@@ -952,7 +952,7 @@ const EditLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div style={{ display: 'flex' }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
                   shouldDisableDate={val => {
                     let i = !days.includes(val.getDay())
@@ -972,21 +972,21 @@ const EditLeave = ({ popperPlacement, id }) => {
                   }}
                   slotProps={{ textField: { size: 'small' } }}
                 />
-               </LocalizationProvider>
-               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                  <Form.Control
-                    shouldDisableDate={val => {
-                      return !disableDates(val)
-                    }}
-                    controlid='date_from'
-                    format='HH:mm'
-                    size='small'
-                    name='date_from'
-                    accepter={TimePicker}
-                    value={formValue.date_from}
-                    slotProps={{ textField: { size: 'small' } }}
-                  />
-               </LocalizationProvider>
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    return !disableDates(val)
+                  }}
+                  controlid='date_from'
+                  format='HH:mm'
+                  size='small'
+                  name='date_from'
+                  accepter={TimePicker}
+                  value={formValue.date_from}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </LocalizationProvider>
             </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -1012,20 +1012,20 @@ const EditLeave = ({ popperPlacement, id }) => {
                   disabled
                   slotProps={{ textField: { size: 'small' } }}
                 />
-               </LocalizationProvider>
-               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                  <Form.Control
-                    shouldDisableDate={val => {
-                      return !disableDates(val)
-                    }}
-                    controlid='date_to'
-                    format=' HH:mm'
-                    name='date_to'
-                    size='small'
-                    accepter={TimePicker}
-                    value={formValue.date_to}
-                    slotProps={{ textField: { size: 'small' } }}
-                  />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
+                  shouldDisableDate={val => {
+                    return !disableDates(val)
+                  }}
+                  controlid='date_to'
+                  format=' HH:mm'
+                  name='date_to'
+                  size='small'
+                  accepter={TimePicker}
+                  value={formValue.date_to}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
               </LocalizationProvider>
             </div>
           </Box>
@@ -1040,7 +1040,7 @@ const EditLeave = ({ popperPlacement, id }) => {
         <CardContent>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              <Typography  sx={{ color: 'primary' }}>{name}</Typography>
+              <Typography sx={{ color: 'primary' }}>{name}</Typography>
               <Typography variant='h6'>{count}</Typography>
             </Box>
           </Box>
@@ -1110,7 +1110,7 @@ const EditLeave = ({ popperPlacement, id }) => {
             </Breadcrumbs>
             <Divider />
             <Grid container>
-   
+
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
                 <Form
                   fluid
@@ -1165,13 +1165,13 @@ const EditLeave = ({ popperPlacement, id }) => {
                             data={statusDs}
                             block
                             value={formValue.status_reason}
-                            onChange={e=>{changeStatus(e)}}
+                            onChange={e => { changeStatus(e) }}
                           />
                         </Box>
 
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Paid value (%):
+                            Paid value (%):
                           </Typography>
                           <Form.Control
                             size='sm'
@@ -1179,7 +1179,7 @@ const EditLeave = ({ popperPlacement, id }) => {
                             name='paidValue'
                             placeholder='Paid value '
                             controlid='paidValue'
-                            disabled = {formValue.status_reason != 'otherLeave'}
+                            disabled={formValue.status_reason != 'otherLeave'}
                             value={formValue.paidValue}
                           />
                         </Box>
@@ -1231,9 +1231,9 @@ const EditLeave = ({ popperPlacement, id }) => {
                           </Typography>
                           <div>
                             {
-                              formValue.file && 
-                              <a  onClick={()=>openFile(formValue.file)}>
-                                {formValue.file }
+                              formValue.file &&
+                              <a onClick={() => openFile(formValue.file)}>
+                                {formValue.file}
                               </a>
                             }
                           </div>
@@ -1246,12 +1246,12 @@ const EditLeave = ({ popperPlacement, id }) => {
                             placeholder='file'
                           />
                           {fileLoading && <small style={{ paddingLeft: '20px', fontStyle: 'italic', color: 'blue' }}>Uploading ...</small>}
-                          
+
 
                         </Box>
                       </Grid>
                     </Grid>}
-                    {selectedEmployee &&  <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
+                    {selectedEmployee && <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>
                           <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
@@ -1275,35 +1275,35 @@ const EditLeave = ({ popperPlacement, id }) => {
                       name={'Paid Leave'}
                       taken={+selectedEmployee.takenPaidLeaves}
                     />
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={3}>
+                  </Grid>
+                  <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
                       count={+selectedEmployee.availableUnpaidLeave}
                       name={'Unpaid Leave'}
                       taken={+selectedEmployee.takenUnpaidLeaves}
                     />
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={3}>
+                  </Grid>
+                  <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
                       count={+selectedEmployee.availableSickLeave}
                       name={'Sick Leave'}
                       taken={+selectedEmployee.takenSickLeaves}
                     />
-                    </Grid>
-                    { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
-                      <ChartCard
-                        count={+selectedEmployee.availableMaternityLeave}
-                        name={'Maternity Leave'}
-                        taken={+selectedEmployee.takenMaternityLeaves}
-                      />
-                     </Grid>}
-                     { selectedEmployee.gender == 'male' && <Grid item xs={12} sm={3} md={3}>
-                      <ChartCard
-                        count={+selectedEmployee.availableParentalLeave}
-                        name={'Parental Leave'}
-                        taken={+selectedEmployee.takenParentalLeaves}
-                      />
-                     </Grid>}
+                  </Grid>
+                  {selectedEmployee.gender == 'female' && <Grid item xs={12} sm={3} md={3}>
+                    <ChartCard
+                      count={+selectedEmployee.availableMaternityLeave}
+                      name={'Maternity Leave'}
+                      taken={+selectedEmployee.takenMaternityLeaves}
+                    />
+                  </Grid>}
+                  {selectedEmployee.gender == 'male' && <Grid item xs={12} sm={3} md={3}>
+                    <ChartCard
+                      count={+selectedEmployee.availableParentalLeave}
+                      name={'Parental Leave'}
+                      taken={+selectedEmployee.takenParentalLeaves}
+                    />
+                  </Grid>}
                 </Grid>
               )}
 

@@ -302,7 +302,7 @@ const StepDocuments = ({ handleNext, employee }) => {
     data.id = selectedDocument._id
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         let data = {}
         data.documentTitle = selectedDocument.documentTitle
@@ -365,7 +365,7 @@ const StepDocuments = ({ handleNext, employee }) => {
       data.id = selectedDocument._id
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
         console.log(selectedDocument)

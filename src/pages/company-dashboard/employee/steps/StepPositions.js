@@ -418,7 +418,7 @@ const Steppositions = ({ handleNext, employee }) => {
     data.id = selectedPosition._id
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         let data = {}
         data = {}
@@ -469,7 +469,7 @@ const Steppositions = ({ handleNext, employee }) => {
     data.id = selectedPosition._id
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
         setFileLoading(false)

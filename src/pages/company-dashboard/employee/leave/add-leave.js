@@ -28,7 +28,7 @@ import en from 'date-fns/locale/en-GB' // for 24 hourrs format
 
 
 // ** Rsuite Imports
-import { Form, Schema, SelectPicker , DateInput , Input } from 'rsuite'
+import { Form, Schema, SelectPicker, DateInput, Input } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -63,8 +63,8 @@ const AddLeave = ({ popperPlacement, id }) => {
   const router = useRouter()
   const { data: session, status } = useSession
   const formRef = useRef()
-  const [formError, setFormError] = useState() ;
-  const [tempFile , setTempFile] = useState() ; 
+  const [formError, setFormError] = useState();
+  const [tempFile, setTempFile] = useState();
 
   // new states
 
@@ -100,13 +100,13 @@ const AddLeave = ({ popperPlacement, id }) => {
 
   useEffect(() => {
     setLoading(true);
-    getEmployees().then(()=>{
-      getMyCompany().then(()=>{
+    getEmployees().then(() => {
+      getMyCompany().then(() => {
         setLoading(false);
       })
 
     })
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -128,10 +128,10 @@ const AddLeave = ({ popperPlacement, id }) => {
   // ------------------------------- Get Employees --------------------------------------
 
   const getMyCompany = async () => {
-    return new Promise( (resolve , reject )=>
+    return new Promise((resolve, reject) =>
       axios.get('/api/company/my-company', {}).then(res => {
         let val = res.data.data[0]
-  
+
         if (!val.working_days) {
           val.working_days = []
         }
@@ -142,7 +142,7 @@ const AddLeave = ({ popperPlacement, id }) => {
           val.holidays = val.holidays.map(h => {
             let v = { ...h, date: new Date(h.date) }
             temp_holydays.push(v.date.toDateString())
-  
+
             return v
           })
           setholyDays(temp_holydays)
@@ -150,17 +150,17 @@ const AddLeave = ({ popperPlacement, id }) => {
         let temp = []
         val.working_days = val.working_days.map(h => {
           temp.push(weekDays.indexOf(h))
-  
+
           return h
         })
         setDays(temp)
-        console.log('com' , loading) ; 
+        console.log('com', loading);
         resolve();
-      }).catch((err)=>{
+      }).catch((err) => {
         setLoading(false);
-        toast.error(err.toString() , {duration:5000 , position:'bottom-right'});
+        toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
         reject(err);
-        
+
       })
     )
   }
@@ -174,7 +174,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     let data = {}
     data.formData = formData
     axios
-      .post('https://umanu.blink-techno.com/public/api/upload', formData)
+      .post('https://umanu.blink-techno.com/api/upload', formData)
       .then(response => {
         setTempFile(response.data)
 
@@ -187,40 +187,40 @@ const AddLeave = ({ popperPlacement, id }) => {
         })
 
         // setFileLoading(false);
-        
+
       })
   }
- 
+
 
   const calcDeffTime = val => {
-   
+
     return val.map(val => {
       if (val.type == 'daily') {
-        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from) )
-        const diffDays = (diffTime / (1000 * 60 * 60 * 24))+1
-        let curDate = new Date( val.date_from ) ;
-        let totalDays =0  ;
-        for(let i =0  ;i < diffDays ;i++){
-          if(curDate.getFullYear() == new Date().getFullYear())
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
+        const diffDays = (diffTime / (1000 * 60 * 60 * 24)) + 1
+        let curDate = new Date(val.date_from);
+        let totalDays = 0;
+        for (let i = 0; i < diffDays; i++) {
+          if (curDate.getFullYear() == new Date().getFullYear())
             totalDays++;
-          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24  ) ; 
+          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24);
         }
-        
+
         return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         let shift_times = selectedEmployee?.shift_info?.[0]?.times?.[0];
-        let shift_hours = (new Date(shift_times?.timeOut) - new Date(shift_times?.timeIn) )/ (1000 * 60 * 60) ;
-        const diffDays = (diffTime / (shift_hours)) +1 
+        let shift_hours = (new Date(shift_times?.timeOut) - new Date(shift_times?.timeIn)) / (1000 * 60 * 60);
+        const diffDays = (diffTime / (shift_hours)) + 1
 
         // divide by the shift hours that this employee work not by (8 / 24 ) 
 
-        
-        if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
+
+        if (new Date(val.date_from).getFullYear() == new Date().getFullYear()) {
           return { ...val, leave_value: diffDays };
         }
-        else{
-          return {...val , leave_value: 0 } ;
+        else {
+          return { ...val, leave_value: 0 };
         }
       }
     })
@@ -258,15 +258,15 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const statusName = {
-    paidLeave: 'Paid leave' ,
+    paidLeave: 'Paid leave',
     unpaidLeave: 'Unpaid Leave',
     sickLeave: 'Sick Leave',
     maternityLeave: 'Maternity Leave',
     parentalLeave: 'Parental Leave',
-    otherLeave: 'Other Leave' 
+    otherLeave: 'Other Leave'
   }
-  
-  
+
+
 
   const calcLeaves = employee => {
     employee = {
@@ -279,7 +279,7 @@ const AddLeave = ({ popperPlacement, id }) => {
       takenOthers: 0
     }
     const leaves = employee.leaves_info
-    
+
     const range1 = employee.shift_info[0].times.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
@@ -420,99 +420,99 @@ const AddLeave = ({ popperPlacement, id }) => {
     ).toFixed(2)
 
     return employee
-   
+
   }
 
   const getEmployees = async () => {
-    return new Promise((resolve, reject)=>
+    return new Promise((resolve, reject) =>
       axios.get('/api/company-employee', {}).then(res => {
         let arr = []
         let employees = res.data.data
-        employees = employees.map((employee , index) => {
-     
+        employees = employees.map((employee, index) => {
+
           // if (employee?.shift_info[0]) {
-            arr.push({
-              label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo ,
-              value: employee._id
-            })
-            if(employee?.shift_info?.[0])
-              return calcLeaves(employee)
+          arr.push({
+            label: employee.firstName + ' ' + employee.lastName + '  :  ' + employee.idNo,
+            value: employee._id
+          })
+          if (employee?.shift_info?.[0])
+            return calcLeaves(employee)
 
           // }
         })
-        employees.filter(employee => employee != undefined ) ;
-  
+        employees.filter(employee => employee != undefined);
+
         setEmployeesDataSource(arr)
         setEmployeesFullInfo(employees)
         resolve();
-       }).catch((err)=>{
-          toast.error(err.toString() , {duration:5000 , position:'bottom-right'});
-          setLoading(false);
-          reject(err);
+      }).catch((err) => {
+        toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
+        setLoading(false);
+        reject(err);
 
-       })
+      })
     )
   }
 
-  const [daysDuration , setDaysDeurtion] = useState(0)
+  const [daysDuration, setDaysDeurtion] = useState(0)
 
-  const assumeDurationFrom = (date_from)=>{
+  const assumeDurationFrom = (date_from) => {
     console.log(date_from);
     let data = { ...formValue }
-    if(data.type != 'hourly'){
-      const diffTime = Math.abs(formValue.date_to  - date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
+    if (data.type != 'hourly') {
+      const diffTime = Math.abs(formValue.date_to - date_from)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
       setDaysDeurtion(diffDays)
     }
-    if(data.type == 'hourly'){
-      const diffTime = (  new Date().setHours(formValue.date_to.getHours(), formValue.date_to.getMinutes(), 0)  -  new Date().setHours(date_from.getHours(), date_from.getMinutes(), 0))
-      const diffDays = Math.round(diffTime / (1000 * 60 * 60 )*10)/10
+    if (data.type == 'hourly') {
+      const diffTime = (new Date().setHours(formValue.date_to.getHours(), formValue.date_to.getMinutes(), 0) - new Date().setHours(date_from.getHours(), date_from.getMinutes(), 0))
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60) * 10) / 10
       setDaysDeurtion(diffDays)
     }
 
   }
 
-  const assumeDurationTo = (date_to)=>{
-    console.log(date_to) ;
+  const assumeDurationTo = (date_to) => {
+    console.log(date_to);
     let data = { ...formValue }
-    if(data.type != 'hourly'){
-      const diffTime = Math.abs(date_to  - formValue.date_from)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1
+    if (data.type != 'hourly') {
+      const diffTime = Math.abs(date_to - formValue.date_from)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
       setDaysDeurtion(diffDays)
     }
-    if(data.type == 'hourly'){
-      const diffTime = (  new Date().setHours(date_to.getHours(), date_to.getMinutes(), 0)  -  new Date().setHours(formValue.date_from.getHours(), formValue.date_from.getMinutes(), 0))
-      const diffDays = Math.round(diffTime / (1000 * 60 * 60 )*10)/10
+    if (data.type == 'hourly') {
+      const diffTime = (new Date().setHours(date_to.getHours(), date_to.getMinutes(), 0) - new Date().setHours(formValue.date_from.getHours(), formValue.date_from.getMinutes(), 0))
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60) * 10) / 10
       setDaysDeurtion(diffDays)
     }
   }
 
   // ------------------------------- Submit --------------------------------------
 
-  const checkIntersectionWithVacation = ()=>{
+  const checkIntersectionWithVacation = () => {
     console.log(selectedEmployee);
-    let start = new Date(formValue.date_from) ;
-    while(start < new Date(formValue.date_to)){
+    let start = new Date(formValue.date_from);
+    while (start < new Date(formValue.date_to)) {
       let i = !days.includes(start.getDay())
       let j = holyDays.includes(start.toDateString())
       let z = false;
-      selectedEmployee?.leaves_info?.map((leave)=>{
-        let start_leave = new Date(leave.date_from) ;
-        while(start_leave < new Date(leave.date_to)){
-          if(start_leave.toDateString() == start.toDateString()){
-            z = true ;
+      selectedEmployee?.leaves_info?.map((leave) => {
+        let start_leave = new Date(leave.date_from);
+        while (start_leave < new Date(leave.date_to)) {
+          if (start_leave.toDateString() == start.toDateString()) {
+            z = true;
             break;
           }
-          start_leave = new Date(start_leave.getTime() + 1000 * 60 * 60 * 24 ) ;
+          start_leave = new Date(start_leave.getTime() + 1000 * 60 * 60 * 24);
         }
       })
-      if(i || j || z ){
-        return true ;
+      if (i || j || z) {
+        return true;
       }
       start = new Date(start.getTime() + 1000 * 60 * 60 * 24);
     }
-    
-    return false; 
+
+    return false;
   }
 
   const handleSubmit = () => {
@@ -531,7 +531,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         const data_request = { ...formValue }
         console.log(formValue);
 
-        
+
         const range1 = selectedEmployee?.shift_info[0].times.map(time => {
           return { start: time.timeIn, end: time.timeOut }
         })
@@ -550,15 +550,15 @@ const AddLeave = ({ popperPlacement, id }) => {
         const diffTime = Math.abs(data.date_to - data.date_from)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
 
-     
+
         if (data.date_to < data.date_from) {
-    
-            toast.error('Error : (To Date) must be greater than (From Date)  !', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
-            
-            return
+
+          toast.error('Error : (To Date) must be greater than (From Date)  !', {
+            delay: 3000,
+            position: 'bottom-right'
+          })
+
+          return
         }
 
         const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange)) / totalMinutes).toFixed(2)
@@ -614,7 +614,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               return
             }
           }
-        } 
+        }
         else {
           if (data.status_reason == 'paidLeave') {
             if (+selectedEmployee.availablePaidLeave < diffDays + +selectedEmployee.takenPaidLeaves) {
@@ -667,50 +667,50 @@ const AddLeave = ({ popperPlacement, id }) => {
             }
           }
         }
-        
-        if(selectedEmployee.status_reason == 'parentalLeave'){
-          if(selectedEmployee.takenParentalLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45 ){
-              toast.error(`Error: add the first ${45 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 45} (each have different paid value)`,
-              {duration:5000, position: 'bottom-right'});
-              
-              return ;
-          }
-          else if(selectedEmployee.takenParentalLeaves < 60 && diffDays + selectedEmployee.takenParentalLeaves > 60 ){
-              toast.error(`Error: add the first ${60 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 60} (each have different paid value)`,
-              {duration:5000, position: 'bottom-right'});
 
-              return ;
+        if (selectedEmployee.status_reason == 'parentalLeave') {
+          if (selectedEmployee.takenParentalLeaves < 45 && diffDays + selectedEmployee.takenParentalLeaves > 45) {
+            toast.error(`Error: add the first ${45 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 45} (each have different paid value)`,
+              { duration: 5000, position: 'bottom-right' });
+
+            return;
+          }
+          else if (selectedEmployee.takenParentalLeaves < 60 && diffDays + selectedEmployee.takenParentalLeaves > 60) {
+            toast.error(`Error: add the first ${60 - selectedEmployee.takenPaidLeaves} then the remaining ${selectedEmployee.takenParentalLeaves + diffDays - 60} (each have different paid value)`,
+              { duration: 5000, position: 'bottom-right' });
+
+            return;
           }
 
         }
-        console.log(selectedEmployee.status_reason , selectedEmployee.takenSickLeaves , diffDays);
-        if(selectedEmployee.status_reason == 'sickLeave'){
-          if(selectedEmployee.takenSickLeaves < 15 && diffDays + selectedEmployee.takenSickLeaves > 15 ){
+        console.log(selectedEmployee.status_reason, selectedEmployee.takenSickLeaves, diffDays);
+        if (selectedEmployee.status_reason == 'sickLeave') {
+          if (selectedEmployee.takenSickLeaves < 15 && diffDays + selectedEmployee.takenSickLeaves > 15) {
             toast.error(`Error: add the first ${15 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 15} (each have different paid value)`,
-            {duration:5000, position: 'bottom-right'});
+              { duration: 5000, position: 'bottom-right' });
 
-            return ;
+            return;
           }
-          else if(selectedEmployee.takenSickLeaves < 30 && diffDays + selectedEmployee.takenSickLeaves > 30 ){
+          else if (selectedEmployee.takenSickLeaves < 30 && diffDays + selectedEmployee.takenSickLeaves > 30) {
             toast.error(`Error: add the first ${30 - selectedEmployee.takenSickLeaves} then the remaining ${selectedEmployee.takenSickLeaves + diffDays - 30} (each have different paid value)`,
-            {duration:5000, position: 'bottom-right'});
+              { duration: 5000, position: 'bottom-right' });
 
-            return ;
+            return;
           }
         }
-        
+
 
 
         setLoading(true)
         setLoadingDescription('leave is inserting')
 
-        let newData = { ...data_request , file: tempFile}
-        newData.date_from = new Date (data_request.date_from) 
-        newData.date_to = new Date(data_request.date_to) 
-        newData.date_from = new Date(newData.date_from.getTime() + Math.abs(newData.date_from.getTimezoneOffset() * 60000) )
-        newData.date_to = new Date(newData.date_to.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000) )
-        console.log('a' , newData.date_from , newData.date_to) ;
-        console.log('b' , new Date(newData.date_from) , new  Date(newData.date_to)) ;
+        let newData = { ...data_request, file: tempFile }
+        newData.date_from = new Date(data_request.date_from)
+        newData.date_to = new Date(data_request.date_to)
+        newData.date_from = new Date(newData.date_from.getTime() + Math.abs(newData.date_from.getTimezoneOffset() * 60000))
+        newData.date_to = new Date(newData.date_to.getTime() + Math.abs(newData.date_to.getTimezoneOffset() * 60000))
+        console.log('a', newData.date_from, newData.date_to);
+        console.log('b', new Date(newData.date_from), new Date(newData.date_to));
         axios
           .post('/api/employee-leave/add-leave', {
             data: newData
@@ -760,7 +760,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   const disableDates = val => {
     const range1 = selectedEmployee?.shift_info[0].times.map(time => {
       return { start: time.timeIn, end: time.timeOut }
-    })  
+    })
 
     return isTimeInRanges(val.toString().substring(16, 21), range1)
   }
@@ -795,7 +795,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 color='primary'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize'}}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5, textTransform: 'capitalize' }}
                 label={row.type}
               />
             </div>
@@ -817,7 +817,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                 color='info'
                 skin='light'
                 size='small'
-                sx={{ mx: 0.5, mt: 0.5, mb: 0.5 , textTransform: 'capitalize' }}
+                sx={{ mx: 0.5, mt: 0.5, mb: 0.5, textTransform: 'capitalize' }}
                 label={statusName[row.status_reason]}
               />
             </div>
@@ -844,7 +844,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
+            {date}  {row.type == 'hourly' && <span style={{ 'paddingRight': '5px', 'paddingLeft': '5px' }}>{time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -859,7 +859,7 @@ const AddLeave = ({ popperPlacement, id }) => {
 
         return (
           <>
-            {date}  { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)}</span>}
+            {date}  {row.type == 'hourly' && <span style={{ 'paddingRight': '5px', 'paddingLeft': '5px' }}>{time.substring(0, 5)}</span>}
           </>
         )
       }
@@ -881,13 +881,13 @@ const AddLeave = ({ popperPlacement, id }) => {
 
 
   const fillTable = id => {
-    employeesFullInfo = employeesFullInfo.filter(employee=> employee != undefined );
-    console.log('filltable a',employeesFullInfo);
+    employeesFullInfo = employeesFullInfo.filter(employee => employee != undefined);
+    console.log('filltable a', employeesFullInfo);
     let val = employeesFullInfo.find(val => val._id == id)
     setSelectedEmployee({ ...val })
     val = val.leaves_info.map(e => {
       e.id = e._id
-      
+
       return e
     })
     setLeavesDataSource(val)
@@ -896,21 +896,21 @@ const AddLeave = ({ popperPlacement, id }) => {
   //-------------------------components-----------------------------
 
   const changeEmployee = e => {
-    
-    
+
+
     const employee = employeesFullInfo.find(val => {
       return val?._id == e
     })
-    
-    if(!employee?.shift_info?.[0]){
-      toast.error('Error: Shift is not defined for this employee', {duration: 5000 , position:'bottom-right'});
 
-      return 
+    if (!employee?.shift_info?.[0]) {
+      toast.error('Error: Shift is not defined for this employee', { duration: 5000, position: 'bottom-right' });
+
+      return
     }
-    if(!employee?.salaryFormulas_info?.[0] ){
-      toast.error('Error: Salary formula is not defined for this employee', {duration: 5000 , position:'bottom-right'});
+    if (!employee?.salaryFormulas_info?.[0]) {
+      toast.error('Error: Salary formula is not defined for this employee', { duration: 5000, position: 'bottom-right' });
 
-      return 
+      return
     }
     fillTable(e)
     let temp_reasons = []
@@ -928,7 +928,7 @@ const AddLeave = ({ popperPlacement, id }) => {
     // if ((employee.takenMaternityLeaves < +employee.availableMaternityLeave) && employee.gender == 'female') {
     //   temp_reasons.push({ label: 'Maternity Leave', value: 'maternityLeave' })
     // }
-    if ((employee.takenParentalLeaves < +employee.availableParentalLeave)&& employee.gender == 'female') {
+    if ((employee.takenParentalLeaves < +employee.availableParentalLeave) && employee.gender == 'female') {
       temp_reasons.push({ label: 'Parental Leave', value: 'parentalLeave' })
     }
     temp_reasons.push({ label: 'Other Leave', value: 'otherLeave' })
@@ -942,44 +942,44 @@ const AddLeave = ({ popperPlacement, id }) => {
       resolution_number: 0,
       description: '',
       status_reason: 'paidLeave',
-      paidValue:employee?.salaryFormulas_info[0]?.paidLeave ,
+      paidValue: employee?.salaryFormulas_info[0]?.paidLeave,
       reason: ''
     })
   }
 
-  const changeStatus = e =>{
-    console.log(e , selectedEmployee , selectedEmployee.salaryFormulas_info?.[0]?.[e]);
+  const changeStatus = e => {
+    console.log(e, selectedEmployee, selectedEmployee.salaryFormulas_info?.[0]?.[e]);
     let paidValue = selectedEmployee.salaryFormulas_info?.[0]?.[e]
-    if(e == 'otherLeave'){
+    if (e == 'otherLeave') {
       paidValue = 0
     }
-    if(e == 'parentalLeave'){
-      if(selectedEmployee.takenParentalLeaves < 45) {
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom1To45'];
+    if (e == 'parentalLeave') {
+      if (selectedEmployee.takenParentalLeaves < 45) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom1To45'];
       }
-      else if(selectedEmployee.takenParentalLeaves >= 45 && selectedEmployee.takenParentalLeaves < 60){
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom46To60'];
+      else if (selectedEmployee.takenParentalLeaves >= 45 && selectedEmployee.takenParentalLeaves < 60) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom46To60'];
       }
-      else if(selectedEmployee.takenParentalLeaves >= 60  ){
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom61To105'];
+      else if (selectedEmployee.takenParentalLeaves >= 60) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['parentalLeaveFrom61To105'];
       }
     }
-    if(e == 'sickLeave'){
-      if(selectedEmployee.takenSickLeaves < 15) {
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom1To15'];
+    if (e == 'sickLeave') {
+      if (selectedEmployee.takenSickLeaves < 15) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom1To15'];
       }
-      else if(selectedEmployee.takenSickLeaves >= 15 && selectedEmployee.takenSickLeaves < 30){
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom16To30'];
+      else if (selectedEmployee.takenSickLeaves >= 15 && selectedEmployee.takenSickLeaves < 30) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom16To30'];
       }
-      else if(selectedEmployee.takenSickLeaves >= 30  ){
-          paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom31To90'];
+      else if (selectedEmployee.takenSickLeaves >= 30) {
+        paidValue = selectedEmployee.salaryFormulas_info?.[0]?.['sickLeaveFrom31To90'];
       }
     }
     paidValue = Number(paidValue);
-    setSelectedEmployee({...selectedEmployee , status_reason: e , paidValue: paidValue});
+    setSelectedEmployee({ ...selectedEmployee, status_reason: e, paidValue: paidValue });
     setFormValue({
       ...formValue,
-      paidValue:paidValue,
+      paidValue: paidValue,
       status_reason: e
     })
   }
@@ -993,7 +993,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
                   shouldDisableDate={val => {
                     let i = !days.includes(val.getDay())
@@ -1007,9 +1007,9 @@ const AddLeave = ({ popperPlacement, id }) => {
                   accepter={DatePicker}
                   value={formValue.date_from}
                   slotProps={{ textField: { size: 'small' } }}
-                  onChange={(e) =>assumeDurationFrom(e) }
+                  onChange={(e) => assumeDurationFrom(e)}
                 />
-            </LocalizationProvider>
+              </LocalizationProvider>
             </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'end' }}>
@@ -1017,7 +1017,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               To Date :
             </Typography>
             <div>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
                   shouldDisableDate={val => {
                     let i = !days.includes(val.getDay())
@@ -1031,15 +1031,15 @@ const AddLeave = ({ popperPlacement, id }) => {
                   name='date_to'
                   accepter={DatePicker}
                   value={formValue.date_to}
-                  onChange={(e) =>assumeDurationTo(e)}
+                  onChange={(e) => assumeDurationTo(e)}
                   slotProps={{ textField: { size: 'small' } }}
                 />
-            </LocalizationProvider>
+              </LocalizationProvider>
             </div>
           </Box>
-          <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
+          <Box sx={{ mb: 9, alignItems: 'center', textAlign: 'center' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-              {daysDuration && formValue.date_from && formValue.date_to  && <> Duration : <> <strong>{daysDuration}</strong> Day</></>}
+              {daysDuration && formValue.date_from && formValue.date_to && <> Duration : <> <strong>{daysDuration}</strong> Day</></>}
             </Typography>
           </Box>
 
@@ -1053,7 +1053,7 @@ const AddLeave = ({ popperPlacement, id }) => {
               From Date :
             </Typography>
             <div style={{ display: 'flex' }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
                   shouldDisableDate={val => {
                     let i = !days.includes(val.getDay())
@@ -1073,30 +1073,30 @@ const AddLeave = ({ popperPlacement, id }) => {
                   }}
                   slotProps={{ textField: { size: 'small' } }}
                 />
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-              <Form.Control
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <Form.Control
                   shouldDisableDate={val => {
                     return !disableDates(val)
                   }}
-                  controlid='date_from'                                                                                                                                                                                                                                                                                                   
+                  controlid='date_from'
                   format='HH:mm'
                   size='small'
                   name='date_from'
                   value={formValue.date_from}
                   accepter={TimePicker}
-                  onChange={(e) =>assumeDurationFrom(e)}
+                  onChange={(e) => assumeDurationFrom(e)}
                   slotProps={{ textField: { size: 'small' } }}
-                  />
-             </LocalizationProvider>
-             </div>
+                />
+              </LocalizationProvider>
+            </div>
           </Box>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
               To Date :
             </Typography>
             <div style={{ display: 'flex' }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
                   shouldDisableDate={val => {
                     let i = !days.includes(val.getDay())
@@ -1116,25 +1116,25 @@ const AddLeave = ({ popperPlacement, id }) => {
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                  <Form.Control
-                    shouldDisableDate={val => {
-                      return !disableDates(val)
-                    }}
-                    controlid='date_to'
-                    format=' HH:mm'
-                    name='date_to'
-                    size='small'
-                    accepter={TimePicker}
-                    value={formValue.date_to}
-                    onChange={(e) =>assumeDurationTo(e)}
-                    slotProps={{ textField: { size: 'small' } }}
-                  />
-               </LocalizationProvider>
+                <Form.Control
+                  shouldDisableDate={val => {
+                    return !disableDates(val)
+                  }}
+                  controlid='date_to'
+                  format=' HH:mm'
+                  name='date_to'
+                  size='small'
+                  accepter={TimePicker}
+                  value={formValue.date_to}
+                  onChange={(e) => assumeDurationTo(e)}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </LocalizationProvider>
             </div>
           </Box>
-          <Box sx={{ mb: 9,  alignItems: 'center' ,  textAlign: 'center' }}>
+          <Box sx={{ mb: 9, alignItems: 'center', textAlign: 'center' }}>
             <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-              {daysDuration  && <> Duration : <> <strong>{daysDuration}</strong> Hour</></>}
+              {daysDuration && <> Duration : <> <strong>{daysDuration}</strong> Hour</></>}
             </Typography>
           </Box>
 
@@ -1149,7 +1149,7 @@ const AddLeave = ({ popperPlacement, id }) => {
         <CardContent>
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              <Typography  sx={{ color: 'primary' }}>{name}</Typography>
+              <Typography sx={{ color: 'primary' }}>{name}</Typography>
               <Typography variant='h6'>{count}</Typography>
             </Box>
           </Box>
@@ -1219,7 +1219,7 @@ const AddLeave = ({ popperPlacement, id }) => {
             </Breadcrumbs>
             <Divider />
             <Grid container>
-   
+
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
                 <Form
                   fluid
@@ -1274,13 +1274,13 @@ const AddLeave = ({ popperPlacement, id }) => {
                             data={statusDs}
                             block
                             value={formValue.status_reason}
-                            onChange={e=>{changeStatus(e)}}
+                            onChange={e => { changeStatus(e) }}
                           />
                         </Box>
 
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                          Paid value (%):
+                            Paid value (%):
                           </Typography>
                           <Form.Control
                             size='sm'
@@ -1288,7 +1288,7 @@ const AddLeave = ({ popperPlacement, id }) => {
                             name='paidValue'
                             placeholder='Paid value '
                             controlid='paidValue'
-                            disabled = {formValue.status_reason != 'otherLeave'}
+                            disabled={formValue.status_reason != 'otherLeave'}
                             value={formValue.paidValue}
                           />
                         </Box>
@@ -1347,11 +1347,11 @@ const AddLeave = ({ popperPlacement, id }) => {
                             placeholder='file'
                           />
 
-                          
+
                         </Box>
                       </Grid>
                     </Grid>}
-                    {selectedEmployee &&  <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
+                    {selectedEmployee && <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 5 }}>
                       {!loading && (
                         <>
                           {action == 'add' && (
@@ -1382,35 +1382,35 @@ const AddLeave = ({ popperPlacement, id }) => {
                       name={'Paid Leave'}
                       taken={+selectedEmployee.takenPaidLeaves}
                     />
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={3}>
+                  </Grid>
+                  <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
                       count={+selectedEmployee.availableUnpaidLeave}
                       name={'Unpaid Leave'}
                       taken={+selectedEmployee.takenUnpaidLeaves}
                     />
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={3}>
+                  </Grid>
+                  <Grid item xs={12} sm={3} md={3}>
                     <ChartCard
                       count={+selectedEmployee.availableSickLeave}
                       name={'Sick Leave'}
                       taken={+selectedEmployee.takenSickLeaves}
                     />
-                    </Grid>
-                    {/* { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
+                  </Grid>
+                  {/* { selectedEmployee.gender == 'female' &&  <Grid item xs={12} sm={3} md={3}>
                       <ChartCard
                         count={+selectedEmployee.availableMaternityLeave}
                         name={'Maternity Leave'}
                         taken={+selectedEmployee.takenMaternityLeaves}
                       />
                      </Grid>} */}
-                     { selectedEmployee.gender == 'female' && <Grid item xs={12} sm={3} md={3}>
-                      <ChartCard
-                        count={+selectedEmployee.availableParentalLeave}
-                        name={'Parental Leave'}
-                        taken={+selectedEmployee.takenParentalLeaves}
-                      />
-                     </Grid>}
+                  {selectedEmployee.gender == 'female' && <Grid item xs={12} sm={3} md={3}>
+                    <ChartCard
+                      count={+selectedEmployee.availableParentalLeave}
+                      name={'Parental Leave'}
+                      taken={+selectedEmployee.takenParentalLeaves}
+                    />
+                  </Grid>}
                 </Grid>
               )}
 
