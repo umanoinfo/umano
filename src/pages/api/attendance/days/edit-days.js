@@ -66,7 +66,7 @@ export default async function handler(req, res) {
         event.type = 'Holiday'
         event.users = []
         event.status = 'active'
-        event.created_at = new Date().toISOString()()
+        event.created_at = new Date().toISOString()
         event.company_id = myUser.company_id
         event.user_id = myUser._id
         const newEvent = await client.db().collection('events').insertOne(event)
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
     Module: 'Company',
     Action: 'Edit',
     Description: 'Edit company (' + company.name + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

@@ -894,6 +894,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
           <StepAttendance
             getEmployee={getEmployee}
             employee={selectedEmployee}
+            salaryFormula={salaryFormulaDataSource}
             shifts={shiftsDataSource}
             handleNext={handleNext}
           />

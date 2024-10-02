@@ -91,7 +91,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
           data = { type: 'Flexible', title: data.title };
         }
         data.status = 'active'
-        data.created_at = new Date().toISOString()()
+        data.created_at = new Date().toISOString()
         setLoading(true)
         setLoadingDescription('Form is inserting')
         axios
@@ -180,13 +180,28 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         name='type'
                         accepter={SelectPicker}
                         data={FormulaType}
+                        onChange={() => {
+                          console.log(formValue?.type)
+                        }}
                         block
                       />
                     </Grid>
-                    <Grid item sm={12} md={8}>
+                    <Grid item sm={formValue?.type != 'MonthlyTotalHours' ? 12 : 6} md={formValue?.type != 'MonthlyTotalHours' ? 8 : 4}>
                       <small>Title</small>
                       <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
                     </Grid>
+                    {
+                      formValue?.type == 'MonthlyTotalHours' ?
+                        <Grid item sm={6} md={4} >
+                          <small>Total Hours</small>
+                          <Form.Control controlId='totalHours' size='sm' name='totalHours' placeholder='Total Hours'
+                            type='number'
+                          />
+                        </Grid>
+                        :
+                        <></>
+                    }
+
                     {
                       formValue.type != 'Flexible' ?
                         <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>

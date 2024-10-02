@@ -90,10 +90,13 @@ export const FormType = [
 ]
 
 export const FormulaType = [
+  // do not change the value of this it will break salary formula calculation (it uses the name to calculate the salary)
   { label: 'Monthly', value: 'Monthly' },
-  { label: 'Weekly', value: 'Weekly' },
-  { label: 'Daily', value: 'Daily' },
-  { label: 'Hourly', value: 'Hourly' },
+  { label: 'Monthly total hours', value: "MonthlyTotalHours"},
+  
+  // { label: 'Weekly', value: 'Weekly' },
+  // { label: 'Daily', value: 'Daily' },
+  // { label: 'Hourly', value: 'Hourly' },
   { label: 'Flexible' , value: 'Flexible'}
 ]
 

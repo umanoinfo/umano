@@ -97,7 +97,7 @@ const Img = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
-const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
+const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryFormula }) => {
   const [employeeId, setEmployeeId] = useState('')
   const [plan, setPlan] = useState('')
   const [userStatus, setUserStatus] = useState('')
@@ -117,6 +117,8 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   const [salaryChanges, setSalaryChanges] = useState()
   const [salaryChange, setSalaryChange] = useState()
   const [startChangeDate, setStartChangeDate] = useState(new Date().toISOString().substring(0, 10))
+  const [employeeSalaryFormula , setEmployeeSalaryFormula] = useState();
+
   const formRef = useRef()
   const [formError, setFormError] = useState()
 
@@ -145,6 +147,12 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
   // ----------------------- bulid -----------------------------
 
   useEffect(() => {
+    console.log(employee);
+    salaryFormula?.map((item)=>{
+      if(item?._id == employee?.salary_formula_id){
+        setEmployeeSalaryFormula(item);
+      }
+    })
     if (!employee) {
       return (
         <>
@@ -254,17 +262,28 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts }) => {
         <Grid container spacing={1}>
           {/* --------------------------- View ------------------------------------ */}
           <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600, fontSize: 20, color: 'blue' }} style={{cursor:'pointer'}} onClick={()=>router.push('/company-dashboard/attendance/list')}>Attendance</Typography>
-          <Grid xs={12} md={7} lg={12} sx={{ px: 1, mt: 2 }}>
-            <small>Change Shift</small>
+          {
 
-            <SelectPicker
-              data={shiftsOptions}
-              value={selectedShiftID}
-              onChange={e => {
-                changeShift(e)
-              }}
-              block
-            />
+          }
+          <Grid xs={12} md={7} lg={12} sx={{ px: 1, mt: 2 }}>
+            {
+              employeeSalaryFormula?.type != 'MonthlyTotalHours' ? 
+              <>
+                <small>Change Shift</small>
+
+                <SelectPicker
+                  data={shiftsOptions}
+                  value={selectedShiftID}
+                  onChange={e => {
+                    changeShift(e)
+                  }}
+                  block
+                />
+              </>
+              :<>
+              </>
+            }
+            
 
             {selectedTimes.timeIn && (
               <Card xs={12} md={12} lg={12} sx={{ mt: 3 }}>

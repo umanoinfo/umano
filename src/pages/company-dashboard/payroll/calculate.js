@@ -479,7 +479,8 @@ const AllDocumentsList = () => {
           employee.yearlyTakenSickLeaves = employeeLeavesForThisYear.takenSickLeaves ; 
           employee.yearlyTakenParentalLeaves = employeeLeavesForThisYear.takenParentalLeaves ; 
         }
- 
+        console.log(employee.salaries_info[0]);
+        
         //   --------------------------- Assume OverTime -------------------------------------------------
  
         setSelectedEmployee(employee)

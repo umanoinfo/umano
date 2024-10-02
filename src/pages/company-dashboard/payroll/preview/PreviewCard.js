@@ -275,6 +275,22 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                             </Typography>
                           </MUITableCell>
                         </TableRow>
+                        {
+                          data?.totalWorkingHours ? 
+                            <TableRow>
+                              <MUITableCell>
+                                <Typography variant='body2'> Total Hours :</Typography>
+                              </MUITableCell>
+                              <MUITableCell>
+                                <Typography variant='body2' px={5}>
+                                  <strong>{(data?.totalWorkingHours)}</strong>
+                                  <small style={{paddingLeft:5}}> AED</small>
+                                </Typography>
+                              </MUITableCell>
+                            </TableRow>
+                            :
+                            <></>
+                        }
                       </TableBody>
                       
                     </Table>
@@ -473,7 +489,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                     data.totalEarlyValue ?
                     <TableRow>
                       <TableCell>Early and late Hours</TableCell>
-                      <TableCell>{data.totalEarlyHours + data.totalLateHours}</TableCell>
+                      <TableCell>{(data.totalEarlyHours + data.totalLateHours).toFixed(3).toLocaleString()}</TableCell>
                       <TableCell>
                         {(+data.salaryFormulas_info[0].notJustifiedAbsenceHoure * data.hourlySalary * -1).toFixed(2).toLocaleString("en-US")}
                         <small> AED</small>

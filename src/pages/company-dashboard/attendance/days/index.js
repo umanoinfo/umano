@@ -11,11 +11,13 @@ import CardHeader from '@mui/material/CardHeader'
 import {
   Breadcrumbs,
   Divider,
+  FormControl,
   IconButton,
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  Select,
   Tab,
   TextField,
   Typography
@@ -31,7 +33,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import en from 'date-fns/locale/en-US'; 
 
-import { CheckboxGroup, Checkbox, Form, Schema , Input } from 'rsuite'
+import { CheckboxGroup, Checkbox, Form, Schema , Input, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -55,6 +57,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession()
   const formRef = useRef()
   const [formError, setFormError] = useState()
+  const [weekStart , setWeekStart] = useState();
   
   // --------------forms values--------------------------------
 
@@ -110,7 +113,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...MyCompany, ...formValue }
+        let data = { ...MyCompany, ...formValue , weekStart  }
+
         console.log(formValue);
         setLoading(true)
 
@@ -212,6 +216,35 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <Checkbox value='Friday'>Friday</Checkbox>
                       </Form.Control>
                     </Form.Group>
+                    <Grid item size='sm' sm={12} md={12} sx={{mt:1 , mb:8}}>
+                    <Form.Group>
+                      <FormControl>
+                        <SelectPicker
+                          size='md'
+                          name='week_start'
+                          placeholder="Week start"
+                          value={''}
+                          data={[
+                            {value:'Saturday'},
+                            {value:'Sunday'},
+                            {value:'Monday'},
+                            {value:'Tuesday'},
+                            {value:'Wednesday'},
+                            {value:'Thursday'},
+                            {value:'Friday'},
+                          ]}
+
+                          onChange={(e)=>{
+                            console.log(e);
+                            setWeekStart(e)
+                          }}
+                          labelKey='value'
+                          valueKey='value'
+                          block
+                        />
+                      </FormControl>
+                    </Form.Group>
+                    </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 1, mb: 8 }}>
                       <Typography sx={{ mb: 1, fontWeight: '500' }}>Holiday Days:</Typography>
                       <Grid item sm={12} md={5}>
