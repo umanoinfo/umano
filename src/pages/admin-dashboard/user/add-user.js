@@ -141,7 +141,7 @@ const DialogAddUser = () => {
     else {
       data.roles = [roleId];
     }
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     axios
       .post('/api/user/add-user', {
         data

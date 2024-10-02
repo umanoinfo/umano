@@ -175,7 +175,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.end_at = end_at
     data.status = status
     data.logo = logo
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     axios
       .post('/api/company/add-company', {
         data

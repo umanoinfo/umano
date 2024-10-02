@@ -286,7 +286,7 @@ const RolesComponent = () => {
     data.type = 'company'
     data.company_id = session.user.company_id
     data.status = 'Active'
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     axios
       .post('/api/company-role/add-role', {
         data: data,

@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       Module: 'User',
       Action: `${req.body.visit ? 'visit' : 'leave'} company`,
       Description: `${myUser.name} ${req.body.visit ? 'visited' : 'left'} company with id: ${myUser.company_id}  `,
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
 
     return res.status(200).json({ success: true, data: user })

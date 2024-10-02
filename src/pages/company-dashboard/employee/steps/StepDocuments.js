@@ -142,7 +142,7 @@ const StepDocuments = ({ handleNext, employee }) => {
         }
         if (action == 'add') {
           data.file = tempFile
-          data.created_at = new Date().toISOString()()
+          data.created_at = new Date().toISOString()
           axios
             .post('/api/employee-document/add-document', {
               data

@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       Module: 'Employee Deduction',
       Action: 'Restore',
       Description: 'Restore employee deduction (' + selectedDeduction.reason + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       Module: 'Employee Deduction',
       Action: 'Delete',
       Description: 'Delete employee deduction (' + selectedDeduction.reason + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     Module: 'Subscription',
     Action: 'ADD',
     Description: 'ADD Subscription (' + subscription.start_at + ' ' + subscription.end_at + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

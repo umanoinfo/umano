@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   let log = {
     user_id: req.body.user._id,
     Module: 'Permission',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
 
   if (permission?.deleted_at) {

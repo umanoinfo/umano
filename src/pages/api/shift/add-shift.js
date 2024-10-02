@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
   shift.company_id = myUser.company_id
   shift.user_id = myUser._id
-  shift.created_at = new Date().toISOString()()
+  shift.created_at = new Date().toISOString()
 
   const newShift = await client.db().collection('shifts').insertOne(shift)
   const insertedShift = await client.db().collection('shifts').findOne({ _id: newShift.insertedId })
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     Module: 'Shift',
     Action: 'Add',
     Description: 'Add shift (' + insertedShift.title + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

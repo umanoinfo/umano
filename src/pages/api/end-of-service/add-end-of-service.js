@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   }
   endOfService.company_id = myUser.company_id
   endOfService.user_id = myUser._id
-  endOfService.created_at = new Date().toISOString()()
+  endOfService.created_at = new Date().toISOString()
 
   const newEndOfService = await client.db().collection('endOfServices').insertOne(endOfService)
   const insertedEndOfService = await client.db().collection('endOfServices').findOne({ _id: newEndOfService.insertedId })
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     Action: 'Add',
     linked_id: insertedEndOfService._id,
     Description: 'Add End of service for employee (' + endOfService.name + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

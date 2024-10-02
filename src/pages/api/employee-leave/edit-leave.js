@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     Module: 'Employee Leave',
     Action: 'Edit',
     Description: 'Edit employee leave (' + employeeLeave.reason + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

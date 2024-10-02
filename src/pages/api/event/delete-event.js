@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       Module: 'Form',
       Action: 'Restore',
       Description: 'Restore event (' + selectedEvent.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
       Module: 'Form',
       Action: 'Event',
       Description: 'Delete event (' + selectedEvent.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

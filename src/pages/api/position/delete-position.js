@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       Module: 'Position',
       Action: 'Restore',
       Description: 'Restore Positoin (' + position.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
   }
   else {
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
       Module: 'Position',
       Action: 'Delete',
       Description: 'Delete Positoin (' + position.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
   }
 

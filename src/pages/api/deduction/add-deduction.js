@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
   deduction.company_id = myUser.company_id
   deduction.user_id = myUser._id
-  deduction.created_at = new Date().toISOString()()
+  deduction.created_at = new Date().toISOString()
   deduction.status = 'active'
   deduction.date = new Date(deduction.date).toISOString()
   const newDeduction = await client.db().collection('deductions').insertOne(deduction)
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     Module: 'Deduction',
     Action: 'Add',
     Description: 'Add deduction (' + insertedDeduction.title + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

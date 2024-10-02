@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
   compensation.company_id = myUser.company_id
   compensation.user_id = myUser._id
-  compensation.created_at = new Date().toISOString()()
+  compensation.created_at = new Date().toISOString()
   compensation.status = 'active'
 
   const newCompensation = await client.db().collection('compensations').insertOne(compensation)
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     Module: 'Compensation',
     Action: 'Add',
     Description: 'Add compensation (' + insertedCompensation.title + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

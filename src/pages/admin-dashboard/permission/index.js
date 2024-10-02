@@ -177,7 +177,7 @@ const PermissionsTable = () => {
       group: group,
       type: type,
       status: 'Active',
-      created_at: new Date().toISOString()(),
+      created_at: new Date().toISOString(),
       updated_at: new Date(),
       deleted_at: null
     }

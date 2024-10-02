@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     Module: 'Employee document',
     Action: 'Delete File',
     Description: 'Delete file document (' + file + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

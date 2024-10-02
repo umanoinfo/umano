@@ -233,7 +233,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         if (action == 'add') {
           setLoading(true)
           setLoadingDescription('Document is loading')
-          data.created_at = new Date().toISOString()()
+          data.created_at = new Date().toISOString()
           axios
             .post('/api/document/add-document', {
               data
@@ -252,7 +252,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   data.linked_id = doc_id
                   data.type = 'document'
                   data.url = response.data
-                  data.created_at = new Date().toISOString()()
+                  data.created_at = new Date().toISOString()
                   axios
                     .post('/api/file/add-file', {
                       data

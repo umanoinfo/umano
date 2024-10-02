@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     attendance.company_id = myUser.company_id
     attendance.date = new Date(attendance.date).toISOString()
     attendance.user_id = myUser._id
-    attendance.created_at = new Date().toISOString()()
+    attendance.created_at = new Date().toISOString()
     attendance.status = 'active'
     attendance.employee_id = attendance.employee_id;
     attendancesQuery.push({ date: attendance.date, employee_no: attendance.employee_no, $or: [{ deleted_at: { $exists: false }, deleted_at: null }] });
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     Module: 'Attendance',
     Action: 'Add',
     Description: 'Add attendances ',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

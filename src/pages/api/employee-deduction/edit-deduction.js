@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     Module: 'Employee Deduction',
     Action: 'Edit',
     Description: 'Edit employee deduction (' + employeeDeduction.reason + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

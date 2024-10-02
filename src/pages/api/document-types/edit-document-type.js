@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     Module: "documentTypes",
     Action: 'Edit',
     Description: `Edit Document ${documentType.name}`,
-    created_at: new Date().toISOString()(),
+    created_at: new Date().toISOString(),
   });
 
   return res.status(200).json({ success: true, data: documentType })

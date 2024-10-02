@@ -175,7 +175,7 @@ const AddEventSidebar = props => {
         let data = {}
         data = values
         data.status = 'active'
-        data.created_at = new Date().toISOString()()
+        data.created_at = new Date().toISOString()
         setIsLoading(true)
 
         axios

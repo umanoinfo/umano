@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
   employeeLeave.company_id = myUser.company_id
   employeeLeave.user_id = myUser._id
-  employeeLeave.created_at = new Date().toISOString()()
+  employeeLeave.created_at = new Date().toISOString()
   employeeLeave.status = 'active'
 
   // employeeLeave.date_from_1 = employeeLeave.date_from ;
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     Module: 'Employee Leave',
     Action: 'Add',
     Description: 'Add Employee leave (' + insertedLeave.reason + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     event.status = 'active'
     event.company_id = myUser.company_id
     event.user_id = myUser._id
-    event.created_at = new Date().toISOString()()
+    event.created_at = new Date().toISOString()
     event.document_id = insertedDocument._id
     const newEvent = await client.db().collection('events').insertOne(event)
   }
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     Action: 'Add',
     linked_id: insertedDocument._id,
     Description: 'Add Document (' + insertedDocument.title + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

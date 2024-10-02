@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       Module: 'File',
       Action: 'Restore',
       Description: 'Restore file (' + selectedFile.name + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
 
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       Action: 'Restore',
       linked_id: ObjectId(selectedFile.linked_id),
       Description: 'Restore File (' + selectedFile.name + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBookDoc = await client.db().collection('logBook').insertOne(logDog)
 
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
       Module: 'Files',
       Action: 'Delete',
       Description: 'Delete file (' + selectedFile.name + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
 
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
       Action: 'Delete',
       linked_id: ObjectId(selectedFile.linked_id),
       Description: 'Delete File (' + selectedFile.name + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBookDoc = await client.db().collection('logBook').insertOne(logDog)
 

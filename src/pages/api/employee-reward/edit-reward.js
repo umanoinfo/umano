@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     Module: 'Employee Reward',
     Action: 'Edit',
     Description: 'Edit employee reward (' + employeeReward.reason + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

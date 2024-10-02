@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     Module: 'User',
     Action: 'Delete',
     Description: 'Delete user (' + selectedUser.name + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
 
   return res.status(200).json({ success: true, data: user })

@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       Module: 'Employee position',
       Action: 'Restore',
       Description: 'Restore employee position (' + selectedEmployeePosition.positionTitle + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
       Module: 'Employee position',
       Action: 'Delete',
       Description: 'Delete employee position (' + selectedEmployeePosition.positionTitle + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }

@@ -206,7 +206,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         }
         data.status = newStatus
         data.user_id = userID
-        data.created_at = new Date().toISOString()()
+        data.created_at = new Date().toISOString()
         console.log(data)
 
         axios

@@ -248,7 +248,7 @@ const StepSalary = ({ handleNext, employee }) => {
         data.employee_id = employee._id
         data.overtimeSalary = data.lumpySalary;
         if (action == 'add') {
-          data.created_at = new Date().toISOString()()
+          data.created_at = new Date().toISOString()
           axios
             .post('/api/employee-salary/add-salary', {
               data

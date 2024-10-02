@@ -99,7 +99,7 @@ const DialogAddUser = ({ id }) => {
     data.company_id = id
     data.start_at = start_at
     data.end_at = end_at
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     axios
       .post('/api/subscription/add-subscription', {
         data

@@ -958,7 +958,7 @@ const AddEmployee = ({ popperPlacement, id }) => {
         data.gender = gender
         data.logo = newLogo
         data.status = newStatus
-        data.created_at = new Date().toISOString()()
+        data.created_at = new Date().toISOString()
         data.type = position;
         axios
           .post('/api/company-employee/add-employee', {

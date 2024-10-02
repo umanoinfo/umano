@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   // ---------------- Insert ---------------------------------------------
 
   const employeeSalary = req.body.data
-  employeeSalary.created_at = new Date().toISOString()()
+  employeeSalary.created_at = new Date().toISOString()
   employeeSalary.startChangeDate = new Date(employeeSalary.startChangeDate)
 
   employeeSalary.company_id = myUser.company_id
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     Module: 'Employee Salary',
     Action: 'Add',
     Description: 'Add Employee salary (' + employeeSalary.employee_id + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

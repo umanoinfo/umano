@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const employee = await client.db().collection('employees').findOne({ idNo: attendance.employee_no });
   attendance.employee_id = String(employee._id);
 
-  attendance.created_at = new Date().toISOString()()
+  attendance.created_at = new Date().toISOString()
   attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
   attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
   attendance.status = 'active'
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     Module: 'Attendance',
     Action: 'Add',
     Description: 'Add attendance ',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

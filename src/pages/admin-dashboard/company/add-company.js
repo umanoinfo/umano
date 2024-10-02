@@ -228,7 +228,7 @@ const DialogAddUser = ({ popperPlacement }) => {
     data.user_id = userID;
     data.status = 'pending'
     data.logo = logo
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     data.fingerprintDeviceId = fingerprintDeviceId;
     axios
       .post('/api/company/add-company', {

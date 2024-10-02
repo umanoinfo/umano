@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       Module: 'User',
       Action: 'Change Password',
       Description: 'Change password (' + updatedUser.name + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
 
     return res.status(200).json({ success: true, data: user })

@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     Action: 'Add',
     linked_id: ObjectId(file.linked_id),
     Description: 'Add File (' + file.name + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

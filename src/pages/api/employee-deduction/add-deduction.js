@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     newEmp.employee_id = empId
     newEmp.company_id = myUser.company_id
     newEmp.user_id = myUser._id
-    newEmp.created_at = new Date().toISOString()()
+    newEmp.created_at = new Date().toISOString()
     newEmp.status = 'active'
     newEmp.date = new Date(newEmp.date).toISOString()
 
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       Module: 'Employee Deductions',
       Action: 'Add',
       Description: 'Add Employee deductions (' + newEmployeeDeduction?.reason + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   })

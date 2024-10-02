@@ -310,7 +310,7 @@ const Steppositions = ({ handleNext, employee }) => {
 
         if (action == 'add') {
           data.file = tempFile
-          data.created_at = new Date().toISOString()()
+          data.created_at = new Date().toISOString()
           axios
             .post('/api/employee-position/add-position', {
               data

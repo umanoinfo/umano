@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   formula.company_id = myUser.company_id
   formula.user_id = myUser._id
-  formula.created_at = new Date().toISOString()()
+  formula.created_at = new Date().toISOString()
   formula.status = 'active'
 
   const newFormula = await client.db().collection('salaryFormula').insertOne(formula)
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     Module: 'Salary Formula',
     Action: 'Add',
     Description: 'Add Salary Formula (' + insertedFormula.title + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

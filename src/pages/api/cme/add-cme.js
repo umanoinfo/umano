@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     amount: req.body.amount,
     employee_id: req.body.employee_id,
     company_id: myUser.company_id,
-    created_at: new Date().toISOString()(),
+    created_at: new Date().toISOString(),
     description: req.body.description,
     date: new Date(req.body.date).toISOString()
   });
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     Module: 'CME',
     Action: 'Add',
     Description: 'Add CME ',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
 
   const newlogBook = await client.db().collection('logBook').insertOne(log)

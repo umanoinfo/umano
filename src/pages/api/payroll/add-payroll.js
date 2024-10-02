@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   }
   payroll.company_id = myUser.company_id
   payroll.user_id = myUser._id
-  payroll.created_at = new Date().toISOString()()
+  payroll.created_at = new Date().toISOString()
 
   const newPayroll = await client.db().collection('payrolls').insertOne(payroll)
   const insertedPayroll = await client.db().collection('payrolls').findOne({ _id: newPayroll.insertedId })
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     Action: 'Add',
     linked_id: insertedPayroll._id,
     Description: 'Add Payroll for employee (' + payroll.name + ')',
-    created_at: new Date().toISOString()()
+    created_at: new Date().toISOString()
   }
   const newlogBook = await client.db().collection('logBook').insertOne(log)
 

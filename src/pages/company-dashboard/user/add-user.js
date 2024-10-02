@@ -111,7 +111,7 @@ const DialogAddUser = () => {
     data.status = userStatus
     data.permissions = []
     data.roles = []
-    data.created_at = new Date().toISOString()()
+    data.created_at = new Date().toISOString()
     axios
       .post('/api/company-user/add-user', {
         data: data,

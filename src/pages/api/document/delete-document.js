@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       event.status = 'active'
       event.company_id = myUser.company_id
       event.user_id = myUser._id
-      event.created_at = new Date().toISOString()()
+      event.created_at = new Date().toISOString()
       event.document_id = selectedDocument._id
       const newEvent = await client.db().collection('events').insertOne(event)
     }
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       Module: 'Document',
       Action: 'Restore',
       Description: 'Restore document (' + selectedDocument.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   } else {
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
       Action: 'Delete',
       linked_id: selectedDocument._id,
       Description: 'Delete document (' + selectedDocument.title + ')',
-      created_at: new Date().toISOString()()
+      created_at: new Date().toISOString()
     }
     const newlogBook = await client.db().collection('logBook').insertOne(log)
   }
