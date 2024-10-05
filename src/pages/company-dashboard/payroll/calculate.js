@@ -153,7 +153,7 @@ const AllDocumentsList = () => {
     }
     const leaves = employee.all_leaves_info
     
-    const range1 = employee.shift_info[0].times.map(time => {
+    const range1 = employee?.shift_info?.[0]?.times?.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
 
@@ -183,15 +183,25 @@ const AllDocumentsList = () => {
       }
     })
     console.log('1',rangePaidLeave);
-
-    let totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+    
+    let totalMinutes = 0 ;
+    let shiftType = employee?.shift_info?.[0]?.shiftType ; 
+    if(shiftType == 'times'){
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+    }
+    else{
+      totalMinutes = employee?.shift_info?.[0]?.totalHours * 60 ;
+    }
+    
     console.log('2',totalMinutes);
+    
     employee.takenPaidLeaves += +(
-      1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave)) / totalMinutes
+        1 -
+        (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave , shiftType )) / totalMinutes
     ).toFixed(2)
+    
     console.log(employee.takenPaidLeaves);
 
     // Unpaid Leave
@@ -211,12 +221,9 @@ const AllDocumentsList = () => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
     employee.takenUnpaidLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave, shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Sick Leave
@@ -236,12 +243,10 @@ const AllDocumentsList = () => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenSickLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeSick)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeSick, shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Maternity Leave
@@ -261,12 +266,10 @@ const AllDocumentsList = () => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenMaternityLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave, shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Parental Leave
@@ -286,12 +289,10 @@ const AllDocumentsList = () => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenParentalLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave, shiftType)) / totalMinutes
     ).toFixed(2)
 
     return employee
@@ -388,9 +389,21 @@ const AllDocumentsList = () => {
     })
   }
 
-  function calculateIntersectionValue(timeRanges1, timeRanges2) { // return total intersection in minutes
+  function calculateIntersectionValue(timeRanges1, timeRanges2, shiftType) { // return total intersection in minutes
 
     let totalIntersection = 0
+    console.log(shiftType)
+    if(shiftType == 'totalWorkingHours'){
+      for(let i =0 ; i <timeRanges2.length ;i++ ){
+        const range2 = timeRanges2[j]
+        const start2 = convertToMinutes(range2.start)
+        const end2 = convertToMinutes(range2.end)
+        totalIntersection += end2- start2 ;
+        
+      }
+
+      return totalIntersection;
+    }
 
     for (let i = 0; i < timeRanges1.length; i++) {
       const range1 = timeRanges1[i]
@@ -490,7 +503,7 @@ const AllDocumentsList = () => {
     }
     catch(err){
       // console.log(err?.response?.data?.message , err.toString());
-      console.log('err');
+      console.log(err);
       if(err?.response?.data?.message)
       {
         err.response.data.message.map((msg)=>{

@@ -505,8 +505,10 @@ export const functions = {
     // ================================== MonthlyTotalHours ==================================
     // =======================================================================================
     "MonthlyTotalHours": (data) => {
+        
         console.log('Calculating MonthlyTotalHours Salary');
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
+        console.log(employee?.shift_info?.[0]?.totalHours);
         employee.absenseDays = 0;
         let lumpySalary = 0;
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
@@ -533,7 +535,7 @@ export const functions = {
 
 
         // this here because of flexible
-        if (!employee.salaryFormulas_info || !employee.salaryFormulas_info[0] || !employee?.shift_info || !employee?.shift_info[0] || (!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)) || ((!company?.working_days || company?.working_days?.length == 0))) {
+        if (!employee.salaryFormulas_info || !employee.salaryFormulas_info[0] || !employee?.shift_info || !employee?.shift_info?.[0] || (!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)) || ((!company?.working_days || company?.working_days?.length == 0))) {
             let message = [];
             if (!employee.salaryFormulas_info || !employee.salaryFormulas_info?.[0]) {
                 message.push('Error: define Sarlary Formula for this employee first');
@@ -552,6 +554,8 @@ export const functions = {
 
             return res.status(400).json({ success: false, message: message });
         }
+        console.log(employee?.shift_info?.[0]?.shiftType );
+        
         if(employee?.shift_info?.[0]?.shiftType =='times'){
             return res.status(400).json({success:false , message : [
                'Error: Shift for this employee is defined as times which does not work with selected salary formula , assign total hours shift then try again'   
@@ -644,14 +648,7 @@ export const functions = {
                     return date;
                 }
 
-                let shift_in = setUTCHours(employee.shift_info?.[0]?.times?.[0].timeIn.toString());
-                let shift_out = setUTCHours(employee.shift_info?.[0]?.times?.[0].timeOut.toString())
-                let shiftOverTime1 = setUTCHours(employee.shift_info?.[0]?.times?.[0]['1st'].toString())
-                let shiftOverTime2 = setUTCHours(employee.shift_info?.[0]?.times?.[0]['2nd'].toString())
-                let shiftOverTime3 = setUTCHours(employee.shift_info?.[0]?.times?.[0]['3rd'].toString())
-
-
-
+                
                 // -------------------------------------------------------------
 
                 if (employee?.attendances_info) {
@@ -661,7 +658,7 @@ export const functions = {
                                 _in = setUTCHours(att.timeIn.toString());
                                 _out = setUTCHours(att.timeOut.toString());
                                 totalHours = (
-                                    (Math.min(shift_out, _out) - Math.max(shift_in, _in)) / 3600000
+                                    (( _out) - (_in)) / 3600000
                                 )
                                 totalWorkingHours += totalHours;
                                 _in = _in.toISOString().substr(11, 8)
@@ -739,9 +736,6 @@ export const functions = {
 
         if (employee.leaves_info) {
             let totalLeave = 0;// this value will be subtracted from total salary
-            let shift_out = new Date('1/1/2023 ' + employee.shift_info?.[0]?.times?.[0].timeOut.toString() + ' UTC')
-            let shift_in = new Date('1/1/2023 ' + employee.shift_info?.[0]?.times?.[0].timeIn.toString() + ' UTC')
-
             employee.leaves_info.map(leave => {
                 let from = new Date(leave.date_from).setUTCHours(0, 0, 0, 0)
                 let to = new Date(leave.date_to).setUTCHours(0, 0, 0, 0)
@@ -757,6 +751,7 @@ export const functions = {
                         }
                         cur = new Date(cur.getTime() + 1000 * 60 * 60 * 24);
                     }
+                    
                     let totalHours = Number(employee?.shift_info?.[0]?.totalHours ?? 0)
                     leave.time = (((totalHours) * intersectedDays) / 3600000)
                     leave.days = intersectedDays

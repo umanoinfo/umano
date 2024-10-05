@@ -337,7 +337,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
                 </Grid>
               </Card>
             )}
-            {selectedTimes && (
+            {selectedShift && (
               <>
                 <Divider sx={{ pt: 2 }}></Divider>
                 <small>Available Leaves</small>
@@ -446,7 +446,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
             <Box sx={{ display: 'flex', alignItems: 'right', minHeight: 40, mt: 7 }}>
               {!loading && (
                 <>
-                  {selectedTimes && (
+                  {selectedShift && (
                     <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
                       Save
                     </Button>
