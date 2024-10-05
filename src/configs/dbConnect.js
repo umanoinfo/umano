@@ -4,13 +4,10 @@ export async function connectToDatabase() {
   const client = await MongoClient.connect(
 
 
-    'mongodb+srv://umanoinfo00:B4l0jIYvEdtOzNDE@umanosing.6seqopc.mongodb.net/UmanoDB?retry/Writes=true&w=majority'
+    'mongodb+srv://umanoinfo00:B4l0jIYvEdtOzNDE@umanosing.6seqopc.mongodb.net/UmanoDB?retry/Writes=false&w=majority'
 
     // 'mongodb://127.0.0.1:27017/umano?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.4'
-    , 
-    {
-      retry_writes: false
-    }
+  
   )
 
   setTimeout(() => {
