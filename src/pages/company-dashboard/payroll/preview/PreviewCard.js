@@ -279,7 +279,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           data?.totalWorkingHours ? 
                             <TableRow>
                               <MUITableCell>
-                                <Typography variant='body2'> Total Hours :</Typography>
+                                <Typography variant='body2'> Total Working Hours :</Typography>
                               </MUITableCell>
                               <MUITableCell>
                                 <Typography variant='body2' px={5}>
@@ -681,8 +681,8 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                       <small> %</small>
                     </TableCell>
                     <TableCell>
-                      { leave.type == 'hourly' && <strong> - {Number(((Number(leave.time) * data.hourlySalary) * (100 - Number(leave.paidValue)))/100).toFixed(3)}</strong>}
-                      { leave.type == 'daily' && <strong> - {( Number((Number(leave.days)* data.dailySalary * (100 - Number(leave.paidValue)))/100).toFixed(3)) }</strong>}
+                      { leave.type == 'hourly' && <strong> - {(leave?.value)}</strong>}
+                      { leave.type == 'daily' && <strong> - {(leave?.value) }</strong>}
                       <small> AED</small>
                     </TableCell>
                   </TableRow>

@@ -88,8 +88,8 @@ const AddLeave = ({ popperPlacement, id }) => {
   const default_value = {
     type: 'daily',
     employee_id: '',
-    date_from: null,
-    date_to: null,
+    date_from: new Date('1970-01-01'),
+    date_to:  new Date('1970-01-01'),
     resolution_number: 0,
     description: '',
     status_reason: 'paidLeave',

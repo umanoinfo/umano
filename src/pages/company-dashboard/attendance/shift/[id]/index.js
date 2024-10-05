@@ -41,6 +41,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const formRef = useRef()
   const [formError, setFormError] = useState({})
   const [Errors, setErrors] = useState([])
+  const [totalHours , setTotalHours] = useState(0);
 
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
@@ -66,8 +67,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const getShift =   () => {
     setLoading(true);
     axios.get('/api/shift/' + id, {}).then(res => {
-      setFormValue(res.data.data[0])
-      setNewStatus(res.data.data[0].status)
+      setFormValue(res?.data?.data?.[0])
+      setNewStatus(res?.data?.data?.[0]?.status)
+      setTotalHours(res?.data?.data?.[0]?.totalHours);
       setLoading(false);
     }).catch((err)=>{})
   } 
@@ -174,7 +176,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
         if (valid) {
           setLoading(true)
-          const data = { ...formValue, times: times }
+          const data = { ...formValue, times: times , status: newStatus , totalHours , totalHours}
           axios
             .post('/api/shift/edit-shift', {
               data
@@ -361,7 +363,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           
                         </Box>
                       ))}
-
+                      <Grid item sm={12} md={4}>
+                        <small>Total Hours</small>
+                        <Form.Control
+                          size='sm'
+                          type='number'
+                          name='totalHours'
+                          placeholder='Total Hours'
+                          value={totalHours}
+                          onChange={(e)=>{
+                            setTotalHours(e);
+                          }}
+                        />
+                      </Grid>
                     </Grid>
                     <Grid item sm={2} xs={12} mt={2}>
                       <small>Select status</small>

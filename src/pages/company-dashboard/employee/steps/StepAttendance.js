@@ -266,23 +266,18 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
 
           }
           <Grid xs={12} md={7} lg={12} sx={{ px: 1, mt: 2 }}>
-            {
-              employeeSalaryFormula?.type != 'MonthlyTotalHours' ? 
-              <>
-                <small>Change Shift</small>
+    
+          <small>Change Shift</small>
 
-                <SelectPicker
-                  data={shiftsOptions}
-                  value={selectedShiftID}
-                  onChange={e => {
-                    changeShift(e)
-                  }}
-                  block
-                />
-              </>
-              :<>
-              </>
-            }
+          <SelectPicker
+            data={shiftsOptions}
+            value={selectedShiftID}
+            onChange={e => {
+              changeShift(e)
+            }}
+            block
+          />
+          
             
 
             {selectedTimes.timeIn && (
