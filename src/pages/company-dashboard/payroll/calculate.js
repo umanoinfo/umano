@@ -395,7 +395,7 @@ const AllDocumentsList = () => {
     console.log(shiftType)
     if(shiftType == 'totalWorkingHours'){
       for(let i =0 ; i <timeRanges2.length ;i++ ){
-        const range2 = timeRanges2[j]
+        const range2 = timeRanges2[i]
         const start2 = convertToMinutes(range2.start)
         const end2 = convertToMinutes(range2.end)
         totalIntersection += end2- start2 ;
