@@ -9,14 +9,14 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import CardHeader from '@mui/material/CardHeader'
 import Icon from 'src/@core/components/icon'
-import { Breadcrumbs, Divider, Typography } from '@mui/material'
+import { Breadcrumbs, Divider, Select, Typography } from '@mui/material'
 
 import CustomChip from 'src/@core/components/mui/chip'
 
 import toast from 'react-hot-toast'
 
 // ** Rsuite Imports
-import { Form, Schema , SelectPicker } from 'rsuite'
+import { Dropdown, Form, Schema , SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -45,7 +45,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formError, setFormError] = useState({})
   const [Errors, setErrors] = useState([])
   const [totalHours , setTotalHours] = useState(0);
-
+  const [shiftType , setShiftType] = useState();
 
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
@@ -128,43 +128,59 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let times = [...formValue.times].map((val, index) => {
-          return { ...val, index: index }
-        })
-        times = [
-          ...times.sort(function (a, b) {
-            return a.timeIn.localeCompare(b.timeIn)
+        let times ;
+        if(shiftType== 'times'){
+          
+          times = [...formValue.times].map((val, index) => {
+            return { ...val, index: index }
           })
-        ]
+          times = [
+            ...times.sort(function (a, b) {
+              return a.timeIn.localeCompare(b.timeIn)
+            })
+          ]
 
-        times = times.map(time => {
-          if (time['1st'] == '') {
-            time['1st'] = time.timeOut
-          }
-          if (time['1st'] != '') {
-            if (time['2nd'] == '') {
-              time['2nd'] = time['1st']
+          times = times.map(time => {
+            if (time['1st'] == '') {
+              time['1st'] = time.timeOut
             }
-            if (time['3rd'] == '') {
-              time['3rd'] = time['2nd']
+            if (time['1st'] != '') {
+              if (time['2nd'] == '') {
+                time['2nd'] = time['1st']
+              }
+              if (time['3rd'] == '') {
+                time['3rd'] = time['2nd']
+              }
             }
-          }
-          if (time.availableLate == '') {
-            time.availableLate = time.timeIn
-          }
-          if (time.availableEarly == '') {
-            time.availableEarly = time.timeOut
-          }
+            if (time.availableLate == '') {
+              time.availableLate = time.timeIn
+            }
+            if (time.availableEarly == '') {
+              time.availableEarly = time.timeOut
+            }
 
-          return time
-        })
+            return time
+          })
+        }
 
-        let { valid, errors } = valid_input(times)
-        setErrors(errors)
+        let valid = true  , errors ; 
+        
+        if(shiftType == 'times'){
+          let _ = valid_input(times)
+          errors = _.errors 
+          valid = _.valid ;
+          setErrors(errors)
+        }
 
         if (valid) {
           setLoading(true)
-          const data = { ...formValue, times: times , status:newStatus , totalHours : totalHours }
+          let data = { ...formValue, times: times , status:newStatus , shiftType }
+          if(shiftType == 'times'){
+            data = {...data , times };
+          }
+          else if(shiftType== 'totalWorkingHours'){
+            data = {...data , totalHours: totalHours}
+          }
           axios
             .post('/api/shift/add-shift', {
               data
@@ -265,10 +281,28 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <small>Title</small>
                       <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
                     </Grid>
+                    <Grid  item sm={12} md={8}>
+                      <div> Shift type</div>
+                      <SelectPicker
+                        data={[
+                          {value:'totalWorkingHours',label:'Total Hours'},
+                          {value:'times',label:'Times'}
+                        ]}
+                        labelKey='label'
+                        valueKey='value'
+                        onChange={(e)=>{setShiftType(e) ;}}
+                        searchable={false}
+                      >
+
+                      </SelectPicker>
+                    </Grid>
+
                     <Grid item sm={12} md={4}></Grid>
+                  { shiftType == 'times' ?
                     <Grid item sm={12} md={12}>
                       <Typography sx={{ mt: 5, mb: 3 }}>Times</Typography>
-                      {formValue.times.map((val, index) => (
+                      {
+                      formValue.times.map((val, index) => (
                         <Box key={index} sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Grid key={index} container spacing={1}>
                             <Grid item sm={12} md={1.33}>
@@ -357,19 +391,31 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
                         </Box>
                       ))}
-                      <Grid item sm={12} md={4}>
-                          <small>Total Hours</small>
-                          <Form.Control
-                            size='sm'
-                            type='number'
-                            name='totalHours'
-                            placeholder='Total Hours'
-                            onChange={(e)=>{
-                              setTotalHours(e);
-                            }}
-                          />
-                      </Grid>
+                  
                     </Grid>
+                    :
+                    <></>
+                  }
+                  <Grid item sm={12} md={12}>
+                    {
+                        shiftType== 'totalWorkingHours'?
+                            <Grid item sm={12} md={4}>
+                              <small>Total Hours</small>
+                              <Form.Control
+                                size='sm'
+                                type='number'
+                                name='totalHours'
+                                placeholder='Total Hours'
+                                onChange={(e)=>{
+                                  setTotalHours(e);
+                                }}
+                              />
+                            </Grid>
+                          :
+                          <></>
+                      }
+                    </Grid>
+
                     <Grid item sm={2} xs={12} mt={2}>
                       <small>Select status</small>
                       <Form.Control

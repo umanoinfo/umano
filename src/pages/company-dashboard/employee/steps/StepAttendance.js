@@ -118,7 +118,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
   const [salaryChange, setSalaryChange] = useState()
   const [startChangeDate, setStartChangeDate] = useState(new Date().toISOString().substring(0, 10))
   const [employeeSalaryFormula , setEmployeeSalaryFormula] = useState();
-
+  const [shiftTotalHours , setShiftTotalHours] = useState(0);
   const formRef = useRef()
   const [formError, setFormError] = useState()
 
@@ -144,7 +144,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
     type: StringType().isRequired('This field is required.')
   })
 
-  // ----------------------- bulid -----------------------------
+  // ----------------------- build -----------------------------
 
   useEffect(() => {
     console.log(employee);
@@ -195,7 +195,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
       setSelectedShift(shifts.find(x => x._id == employee.shift_id))
       if (employee.shift_id && shifts && shifts?.find && shifts[0]  && shifts[0]._id != undefined) {
         setSelectedShiftID(employee.shift_id)
-        setSelectedTimes(shifts.find(x => x._id == employee.shift_id).times[0])
+        setSelectedTimes(shifts.find(x => x._id == employee.shift_id)?.times?.[0])
         setFormValue({
           availablePaidLeave: employee.availablePaidLeave,
           availableUnpaidLeave: employee.availableUnpaidLeave,
@@ -247,7 +247,13 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
   const changeShift = e => {
     setSelectedShift(shifts.find(x => x._id == e))
     setSelectedShiftID(shifts.find(x => x._id == e)._id)
-    setSelectedTimes(shifts.find(x => x._id == e).times[0])
+    let s_shift = shifts.find(x => x._id == e);
+    if(s_shift?.times?.[0]){
+      setSelectedTimes(s_shift.times[0])
+    }
+    else{
+      setShiftTotalHours(s_shift?.totalHours);
+    }
   }
 
   // ------------------------------- handle Edit --------------------------------------
@@ -277,10 +283,18 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
             }}
             block
           />
-          
+            {
+              selectedShift?.shiftType=='totalWorkingHours'  && (
+                <Card xs={12} md={12} lg={12} sx={{ mt: 3 }}>
+                    
+                    <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600 }}>Total Hours </Typography>
+                    <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600 }}> {selectedShift?.totalHours} hour/s </Typography>
+                </Card>
+              )
+            }
             
 
-            {selectedTimes.timeIn && (
+            { selectedShift?.shiftType == 'times' &&   selectedTimes.timeIn && (
               <Card xs={12} md={12} lg={12} sx={{ mt: 3 }}>
                 <Grid item sm={12} md={12}>
                   <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600 }}>Times</Typography>
@@ -323,7 +337,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
                 </Grid>
               </Card>
             )}
-            {selectedTimes.timeIn && (
+            {selectedTimes && (
               <>
                 <Divider sx={{ pt: 2 }}></Divider>
                 <small>Available Leaves</small>
@@ -432,7 +446,7 @@ const StepAttendance = ({ handleNext, employee, getEmployee, shifts , salaryForm
             <Box sx={{ display: 'flex', alignItems: 'right', minHeight: 40, mt: 7 }}>
               {!loading && (
                 <>
-                  {selectedTimes.timeIn && (
+                  {selectedTimes && (
                     <Button color='success' onClick={handleSubmit} variant='contained' sx={{ mr: 3 }}>
                       Save
                     </Button>

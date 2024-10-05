@@ -16,7 +16,7 @@ const EmployeeViewAttendance = ({ employee }) => {
   const [tabValue, setTabValue] = useState('Over Time')
 
   const router = useRouter()
-  
+
   const handleEditRowOptions = () => {
     router.push('/company-dashboard/employee/' + employee._id + '/edit-employee/?tab=3')
   }
@@ -24,7 +24,7 @@ const EmployeeViewAttendance = ({ employee }) => {
   return (
     <Card>
 
-      <Typography variant='h6' style={{padding:'10px'}} >Attendance <small><a href="#" onClick={handleEditRowOptions} ><IconifyIcon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+      <Typography variant='h6' style={{ padding: '10px' }} >Attendance <small><a href="#" onClick={handleEditRowOptions} ><IconifyIcon style={{ fontSize: '15px', marginLeft: '7px' }} icon='fa-regular:edit' /></a></small></Typography>
 
       <Divider sx={{ m: '0 !important' }} />
 
@@ -32,42 +32,42 @@ const EmployeeViewAttendance = ({ employee }) => {
         <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
           <Grid item sm={12} md={12}>
             <Typography sx={{ mt: 2, mb: 3, px: 2, fontWeight: 600 }}>Times</Typography>
-            {employee.shift_info[0].times[0].timeIn && (
+            {employee.shift_info?.[0]?.times?.[0].timeIn && (
               <Box sx={{ p: 2, mb: 1, display: 'flex', alignItems: 'center' }}>
                 <Grid container spacing={1}>
                   <Grid item sm={12} md={3}>
                     <small>Time in</small>
-                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0].timeIn}</Typography>
+                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info?.[0]?.times?.[0].timeIn}</Typography>
                   </Grid>
                   <Grid item sm={12} md={3}>
                     <small>Time out</small>
-                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0].timeOut}</Typography>
+                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info?.[0]?.times?.[0].timeOut}</Typography>
                   </Grid>
 
                   <Grid item sm={12} md={3}>
                     <small>Available late</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>
-                      {employee.shift_info[0].times[0].availableLate}
+                      {employee.shift_info?.[0]?.times?.[0].availableLate}
                     </Typography>
                   </Grid>
                   <Grid item sm={12} md={3}>
                     <small>Available early</small>
                     <Typography sx={{ mb: 3, fontWeight: 500 }}>
-                      {employee.shift_info[0].times[0].availableEarly}
+                      {employee.shift_info?.[0]?.times?.[0].availableEarly}
                     </Typography>
                   </Grid>
 
                   {/* <Grid item sm={12} md={1.7}>
                     <small>1st overtime</small>
-                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0]['1st']}</Typography>
+                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info?.[0]?.times?.[0]['1st']}</Typography>
                   </Grid>
                   <Grid item sm={12} md={1.7}>
                     <small>2nd overtime</small>
-                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0]['2nd']}</Typography>
+                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info?.[0]?.times?.[0]['2nd']}</Typography>
                   </Grid>
                   <Grid item sm={12} md={1.7}>
                     <small>3rd overtime</small>
-                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info[0].times[0]['3rd']}</Typography>
+                    <Typography sx={{ mb: 3, fontWeight: 500 }}>{employee.shift_info?.[0]?.times?.[0]['3rd']}</Typography>
                   </Grid> */}
                 </Grid>
               </Box>

@@ -271,8 +271,8 @@ const ShiftList = () => {
       renderCell: ({ row , index }) => {
         return (
           <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {/* {row.times[0].timeIn} */}
-            {row.timeIn}
+            {row?.times?.[0]?.timeIn ?? '-'}
+            {/* {row.timeIn} */}
           </Typography>
         )
       }
@@ -285,8 +285,8 @@ const ShiftList = () => {
       renderCell: ({ row , index }) => {
         return (
           <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {/* {row.times[0].timeOut} */}
-            {row.timeOut }
+            {row?.times?.[0]?.timeOut ?? '-'}
+            {/* {row.timeOut } */}
           </Typography>
         )
       }
@@ -299,8 +299,8 @@ const ShiftList = () => {
       renderCell: ({ row , index }) => {
         return (
           <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {/* {row.times[0].availableLate} */}
-            {row.maxTimeIn}
+            {row?.times?.[0]?.availableLate ?? '-'}
+            {/* {row.maxTimeIn} */}
           </Typography>
         )
       }
@@ -313,13 +313,27 @@ const ShiftList = () => {
       renderCell: ({ row , index }) => {
         return (
           <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {/* {row.times[0].availableEarly} */}
-            {row.maxTimeOut}
+            {row?.times?.[0]?.availableEarly ?? '-'}
+            {/* {row.maxTimeOut} */}
           </Typography>
         )
       }
     },
 
+    {
+      flex: 0.17,
+      minWidth: 100,
+      field: 'totalHours',
+      headerName: 'Total Hours',
+      renderCell: ({ row , index }) => {
+        return (
+          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row?.totalHours ?? '-'}
+            {/* {row.maxTimeOut} */}
+          </Typography>
+        )
+      }
+    },
     {
       flex: 0.07,
       minWidth: 120,

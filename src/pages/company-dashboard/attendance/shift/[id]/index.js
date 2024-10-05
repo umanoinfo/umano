@@ -42,6 +42,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formError, setFormError] = useState({})
   const [Errors, setErrors] = useState([])
   const [totalHours , setTotalHours] = useState(0);
+  const [shiftType , setShiftType]= useState();
 
   const [statusDataSource, setStatusTypesDataSource] = useState([
     { label: 'Active', value: 'active' },
@@ -70,6 +71,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setFormValue(res?.data?.data?.[0])
       setNewStatus(res?.data?.data?.[0]?.status)
       setTotalHours(res?.data?.data?.[0]?.totalHours);
+      setShiftType(res?.data?.data?.[0]?.shiftType)
       setLoading(false);
     }).catch((err)=>{})
   } 
@@ -272,8 +274,26 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <small>Title</small>
                       <Form.Control controlId='title' size='sm' name='title' placeholder='Title' />
                     </Grid>
+                    <Grid  item sm={12} md={8}>
+                      <div> Shift type</div>
+                      <SelectPicker
+                        data={[
+                          {value:'totalWorkingHours',label:'Total Hours'},
+                          {value:'times',label:'Times'}
+                        ]}
+                        labelKey='label'
+                        valueKey='value'
+                        value={shiftType}
+                        onChange={(e)=>{setShiftType(e) ;}}
+                        searchable={false}
+                      >
+
+                      </SelectPicker>
+                    </Grid>
                     <Grid item sm={12} md={4}></Grid>
-                    <Grid item sm={12} md={12}>
+                    {
+                      shiftType== 'times' ?
+                      <Grid item sm={12} md={12}>
                       <Typography sx={{ mt: 5, mb: 3 }}>Times</Typography>
                       {formValue.times.map((val, index) => (
                         <Box key={index} sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -363,19 +383,29 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           
                         </Box>
                       ))}
-                      <Grid item sm={12} md={4}>
-                        <small>Total Hours</small>
-                        <Form.Control
-                          size='sm'
-                          type='number'
-                          name='totalHours'
-                          placeholder='Total Hours'
-                          value={totalHours}
-                          onChange={(e)=>{
-                            setTotalHours(e);
-                          }}
-                        />
-                      </Grid>
+                    </Grid>
+                    :<>
+                    </>
+
+                    }
+                    <Grid item sm={12} md={12}>
+                    {
+                        shiftType== 'totalWorkingHours'?
+                            <Grid item sm={12} md={4}>
+                              <small>Total Hours</small>
+                              <Form.Control
+                                size='sm'
+                                type='number'
+                                name='totalHours'
+                                placeholder='Total Hours'
+                                onChange={(e)=>{
+                                  setTotalHours(e);
+                                }}
+                              />
+                            </Grid>
+                          :
+                          <></>
+                      }
                     </Grid>
                     <Grid item sm={2} xs={12} mt={2}>
                       <small>Select status</small>
@@ -391,6 +421,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         block
                       />
                     </Grid>
+                  
                     <div style={{ marginTop: '10px', marginBottom: '10px', width: '100%' }}>
                       {Errors.map((err, index1) => {
                         return (

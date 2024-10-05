@@ -56,14 +56,14 @@ const renderClient = employee => {
 
 
 const PreviewCard = ({ data, fromDate, toDate }) => {
-  console.log('employee--' , data);
+  console.log('employee--', data);
 
 
   // ** Hook
   const theme = useTheme()
   if (data) {
     return (
-      <Card sx={{ mb:3}}>
+      <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container>
             <Grid item sm={6} xs={12} sx={{ mb: { sm: 0, xs: 4 } }}>
@@ -111,7 +111,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   <Typography variant='body2'>
                     <MUITableCell>
                       <Typography variant='body2'>
-                      Date Of Birth : {new Date (data.dateOfBirth).toLocaleDateString()} 
+                        Date Of Birth : {new Date(data.dateOfBirth).toLocaleDateString()}
                       </Typography>
                     </MUITableCell>
                   </Typography>
@@ -124,7 +124,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                   </Typography>
                   <Typography variant='body2'>
                     <MUITableCell>
-                      <Typography variant='body2' sx={{fontWeight:'bold'}}>
+                      <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                         Daily Basic Salary : {((data.lumpySalary)).toFixed(2)}  <small>AED</small>
                       </Typography>
                     </MUITableCell>
@@ -133,22 +133,22 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               </Box>
             </Grid>
             <Grid item sm={6} xs={12}>
-            
+
               <Box >
-                <Typography sx={{textAlign : 'start' }} variant='h6'>End of service gratuity</Typography>
+                <Typography sx={{ textAlign: 'start' }} variant='h6'>End of service gratuity</Typography>
                 <Table sx={{ maxWidth: '300px' }}>
                   <TableHead>
-                   
+
                   </TableHead>
                   <TableBody>
-                  <TableRow>
+                    <TableRow>
                       <MUITableCell>
                         <Typography variant='body2'>Joining Date :</Typography>
                       </MUITableCell>
                       {data.joiningDate && (
                         <MUITableCell>
                           <Typography variant='body2'>
-                            <strong>{new Date(data.joiningDate).toLocaleDateString()}</strong> 
+                            <strong>{new Date(data.joiningDate).toLocaleDateString()}</strong>
                           </Typography>
                         </MUITableCell>
                       )}
@@ -160,7 +160,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       {fromDate && (
                         <MUITableCell>
                           <Typography variant='body2'>
-                             {new Date(fromDate).toLocaleDateString()} to {new Date(toDate).toLocaleDateString()}
+                            {new Date(fromDate).toLocaleDateString()} to {new Date(toDate).toLocaleDateString()}
                           </Typography>
                         </MUITableCell>
                       )}
@@ -181,7 +181,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                       </MUITableCell>
                       <MUITableCell>
                         <Typography variant='body2'>
-                          {data.shift_info[0].times[0].timeIn} - {data.shift_info[0].times[0].timeOut}
+                          {data.shift_info?.[0]?.times?.[0].timeIn} - {data.shift_info?.[0]?.times?.[0].timeOut}
                         </Typography>
                       </MUITableCell>
                     </TableRow>
@@ -214,7 +214,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <Typography variant='body2'>Service Years:</Typography>
                       </MUITableCell>
                       <MUITableCell>
-                        <Typography variant='body2' sx={{fontWeight: 'bold'}}>{data.actualYears} Year</Typography>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold' }}>{data.actualYears} Year</Typography>
                       </MUITableCell>
                     </TableRow>
                     <TableRow>
@@ -222,7 +222,7 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
                         <Typography variant='body2'> Absense Days:</Typography>
                       </MUITableCell>
                       <MUITableCell>
-                        <Typography variant='body2' sx={{fontWeight: 'bold'}}>{data.absenseDays} Days</Typography>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold' }}>{data.absenseDays} Days</Typography>
                       </MUITableCell>
                     </TableRow>
                   </TableBody>
@@ -232,61 +232,61 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
           </Grid>
         </CardContent>
         <Divider sx={{ mt: theme => `${theme.spacing(6.5)} !important`, mb: '0 !important' }} />
-        { (Number(data.allDays) - Number(data.unpaidLeaveTotal)) >= 365 &&
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Item</TableCell>
-                <TableCell>QTY (Days)</TableCell>
-                <TableCell>Value</TableCell>
-                <TableCell>Total</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {
-              ((data.actualYears > 1) ) && <TableRow>
-                <TableCell>For first 5 years</TableCell>
-                <TableCell>{(((data.lessThanFiveDays) ) )}<small> Day</small></TableCell>
-                
-                <TableCell>
-                  {Number(((data.salaries_info[0].lumpySalary/30).toFixed(2))).toLocaleString()} <small>AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{Number(data.lessThanFiveValue).toLocaleString()}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
-            }
-            {
-              ((data.actualYears > 5) ) && <TableRow>
-                <TableCell>For more 5 years</TableCell>
-                <TableCell>{(((data.moreThanFiveDays)))}<small> Day</small></TableCell>
-                
-                <TableCell>
-                  {Number(((data.salaries_info[0].lumpySalary/30).toFixed(2))).toLocaleString()} <small>AED</small>
-                </TableCell>
-                <TableCell>
-                  <strong>{Number(data.moreThanFiveValue).toLocaleString()}</strong>
-                  <small> AED</small>
-                </TableCell>
-              </TableRow>
-            }
+        {(Number(data.allDays) - Number(data.unpaidLeaveTotal)) >= 365 &&
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Item</TableCell>
+                  <TableCell>QTY (Days)</TableCell>
+                  <TableCell>Value</TableCell>
+                  <TableCell>Total</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  ((data.actualYears > 1)) && <TableRow>
+                    <TableCell>For first 5 years</TableCell>
+                    <TableCell>{(((data.lessThanFiveDays)))}<small> Day</small></TableCell>
 
-            </TableBody>
-          </Table>
-        </TableContainer>}
+                    <TableCell>
+                      {Number(((data.salaries_info[0].lumpySalary / 30).toFixed(2))).toLocaleString()} <small>AED</small>
+                    </TableCell>
+                    <TableCell>
+                      <strong>{Number(data.lessThanFiveValue).toLocaleString()}</strong>
+                      <small> AED</small>
+                    </TableCell>
+                  </TableRow>
+                }
+                {
+                  ((data.actualYears > 5)) && <TableRow>
+                    <TableCell>For more 5 years</TableCell>
+                    <TableCell>{(((data.moreThanFiveDays)))}<small> Day</small></TableCell>
 
-        { (Number(data.allDays) - Number(data.unpaidLeaveTotal) - Number(data.parentalLeaveOver60) ) < 365 &&
-        <Typography sx={{textAlign:'center' }} p={4} width={'100%'} variant='body2'>
+                    <TableCell>
+                      {Number(((data.salaries_info[0].lumpySalary / 30).toFixed(2))).toLocaleString()} <small>AED</small>
+                    </TableCell>
+                    <TableCell>
+                      <strong>{Number(data.moreThanFiveValue).toLocaleString()}</strong>
+                      <small> AED</small>
+                    </TableCell>
+                  </TableRow>
+                }
+
+              </TableBody>
+            </Table>
+          </TableContainer>}
+
+        {(Number(data.allDays) - Number(data.unpaidLeaveTotal) - Number(data.parentalLeaveOver60)) < 365 &&
+          <Typography sx={{ textAlign: 'center' }} p={4} width={'100%'} variant='body2'>
             <MUITableCell>
               <Typography variant='body2'>
-                Days Less than 365  
+                Days Less than 365
               </Typography>
             </MUITableCell>
           </Typography>
-       }
-       <CardContent sx={{ pt: 8 }}>
+        }
+        <CardContent sx={{ pt: 8 }}>
           <Grid container>
             <Grid item xs={12} sm={7} lg={9} sx={{ order: { sm: 1, xs: 2 } }}>
               <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
@@ -313,14 +313,14 @@ const PreviewCard = ({ data, fromDate, toDate }) => {
               <CalcWrapper>
                 <Typography variant='body2'>Total:</Typography>
                 <Typography variant='body2' sx={{ color: 'text.primary', letterSpacing: '.25px', fontWeight: 600 }}>
-                {Number(Number(data.endOfServeceTotalValue).toFixed(2)).toLocaleString()}
+                  {Number(Number(data.endOfServeceTotalValue).toFixed(2)).toLocaleString()}
                 </Typography>
               </CalcWrapper>
             </Grid>
           </Grid>
         </CardContent>
 
-        
+
       </Card>
     )
   } else {

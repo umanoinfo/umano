@@ -174,7 +174,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                           </MUITableCell>
                           <MUITableCell>
                             <Typography variant='body2'>
-                              {data.shift_info[0].times[0].timeIn} - {data.shift_info[0].times[0].timeOut}
+                              {data.shift_info[0]?.times?.[0]?.timeIn} - {data.shift_info[0]?.times?.[0]?.timeOut}
                             </Typography>
                           </MUITableCell>
                         </TableRow>
@@ -670,7 +670,7 @@ const PreviewCard = ({ data, fromDate, toDate , lumpySalary }) => {
                     </TableCell>
                     {
                       leave.type == 'daily' && 
-                      <TableCell>{(leave.time / ( ((new Date('1970-1-1 ' + data.shift_info[0].times[0].timeOut) - new Date('1970-1-1 ' + data.shift_info[0].times[0].timeIn)) / (1000 * 60 * 60) )  ) ).toFixed(2)} day</TableCell>
+                      <TableCell>{(leave.time / ( ((new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeOut) - new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeIn)) / (1000 * 60 * 60) )  ) ).toFixed(2)} day</TableCell>
                     }
                     {
                       leave.type == 'hourly' && 

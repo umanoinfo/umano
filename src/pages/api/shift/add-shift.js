@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   const shift = req.body.data
 
-  if (!shift.title || !shift.times) {
+  if (!shift.title || (!shift.times && !shift.totalHours)) {
     return res.status(422).json({
       message: 'Invalid input'
     })
