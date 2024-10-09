@@ -168,33 +168,33 @@ const DepartmentList = ({ apiData }) => {
 
   const orgchart = useRef()
 
-  const getDepartmentInfo = (dep)=>{
+  const getDepartmentInfo = (dep) => {
     console.log(dep);
     const department1 = {}
     department1.id = dep._id
     department1.name = dep.name
     department1.title = dep.name
-    department1.mng = dep?.user_info?.[0] ? dep.user_info[0]?.firstName +" "+ dep.user_info[0]?.lastName: '' ;
-    department1.logo = dep.user_info[0]?.logo 
+    department1.mng = dep?.user_info?.[0] ? dep.user_info[0]?.firstName + " " + dep.user_info[0]?.lastName : '';
+    department1.logo = dep.user_info[0]?.logo
     department1.children_info = dep.children_info
     department1.employeesCount = dep.employeesCount
-    department1.employees = dep.employees ;
-    
-    return department1 ;
+    department1.employees = dep.employees;
+
+    return department1;
   }
 
-  const getChildren = (department)=>{
-    if(department?.children_info ){
+  const getChildren = (department) => {
+    if (department?.children_info) {
       department.children = [];
-      for(let dep of department.children_info){
+      for (let dep of department.children_info) {
         let child_dep = getDepartmentInfo(dep);
         getChildren(child_dep);
         department.children.push(child_dep);
       }
-      
-      return department ;
+
+      return department;
     }
-    else{
+    else {
       return getDepartmentInfo(department);
     }
   }
@@ -240,40 +240,40 @@ const DepartmentList = ({ apiData }) => {
     setFileextension(event.target.value)
   }
 
-  const getMainDepartment =  () => {
+  const getMainDepartment = () => {
     setLoading(true);
- 
+
     axios.get('/api/company-department/main-departments', {}).then(function (response) {
-        setMainDepartments(response.data.data)
-        response.data.data.map(department => {
-          if (department.children_info) {
-            const arr = []
-            department.children_info.map(child => {
-              const find = response.data.data.filter(e => {
-                return e._id == child._id
-              })
-              arr.push(find[0])
+      setMainDepartments(response.data.data)
+      response.data.data.map(department => {
+        if (department.children_info) {
+          const arr = []
+          department.children_info.map(child => {
+            const find = response.data.data.filter(e => {
+              return e._id == child._id
             })
-            department.children_info = arr
-          }
-        })
-        drawChart(response.data.data)
-        setLoading(false);
-    }).catch(err=>{
-        
-        toast.error(err.toString() , {duration: 5000 , position: 'bottom-right'}) ;
-        setLoading(false);
+            arr.push(find[0])
+          })
+          department.children_info = arr
+        }
+      })
+      drawChart(response.data.data)
+      setLoading(false);
+    }).catch(err => {
+
+      toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
+      setLoading(false);
     })
-    
-    
+
+
   };
-  
+
 
   useEffect(() => {
     getMainDepartment()
   }, []);
 
- 
+
 
   //   -------------------------------- View -----------------------------------------
 
@@ -281,7 +281,7 @@ const DepartmentList = ({ apiData }) => {
 
   if (session && session.user && !session.user.permissions.includes('ViewDepartment'))
     return <NoPermission header='No Permission' description='No permission to view departments'></NoPermission>
-  
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

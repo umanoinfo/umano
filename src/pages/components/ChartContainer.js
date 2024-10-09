@@ -203,15 +203,15 @@ const ChartContainer = forwardRef(
         const doc =
           canvasWidth > canvasHeight
             ? new jsPDF({
-                orientation: 'landscape',
-                unit: 'px',
-                format: [canvasWidth, canvasHeight]
-              })
+              orientation: 'landscape',
+              unit: 'px',
+              format: [canvasWidth, canvasHeight]
+            })
             : new jsPDF({
-                orientation: 'portrait',
-                unit: 'px',
-                format: [canvasHeight, canvasWidth]
-              })
+              orientation: 'portrait',
+              unit: 'px',
+              format: [canvasHeight, canvasWidth]
+            })
         doc.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0)
         doc.save(exportFilename + '.pdf')
       })
@@ -305,7 +305,7 @@ const ChartContainer = forwardRef(
           onMouseMove={pan && panning ? panHandler : undefined}
         >
           <ul>
-            
+
             <ChartNode
               datasource={attachRel(ds, '00')}
               NodeTemplate={NodeTemplate}
@@ -313,17 +313,17 @@ const ChartContainer = forwardRef(
               collapsible={collapsible}
               multipleSelect={multipleSelect}
               changeHierarchy={changeHierarchy}
-              onClickNode={onClickNode} 
+              onClickNode={onClickNode}
             />
-            
+
           </ul>
         </div>
-        
+
         <a className='oc-download-btn hidden' ref={downloadButton} href={dataURL} download={download}>
           &nbsp;
         </a>
-   
-    
+
+
         <div className={`oc-mask ${exporting ? '' : 'hidden'}`}>
           <i className='oci oci-spinner spinner'></i>
         </div>

@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { dragNodeService, selectNodeService } from './service'
-import {  AccordionDetails, AccordionSummary, Avatar, Box, Card, CardActions, CardContent, Icon, Typography } from '@mui/material'
+import { AccordionDetails, AccordionSummary, Avatar, Box, Card, CardActions, CardContent, Icon, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import MuiAccordion from '@mui/material/Accordion'
 
 const Accordion = styled(MuiAccordion)(({ theme }) => ({
   boxShadow: 'blue !important',
-  width:'10rem',
+  width: '10rem',
 
   // backgroundColor: '#189ab4' ,
   // color:'white',
@@ -17,7 +17,7 @@ const Accordion = styled(MuiAccordion)(({ theme }) => ({
   },
   '&:before': {
     display: 'none',
-    width:'13rem'
+    width: '13rem'
   },
   '&.Mui-expanded': {
     // margin: 'auto',
@@ -66,11 +66,11 @@ const ChartNode = ({
 
   // const expandIcon = value =>
   console.log(datasource);
-  
+
   // datasource.employees = datasource.employees.filter((employee)=>{
   //   return employee != undefined && employee?.firstName != undefined  && employee.lastName != undefined;
   // })
-  
+
   const [isChildrenCollapsed, setIsChildrenCollapsed] = useState(false)
   const [topEdgeExpanded, setTopEdgeExpanded] = useState()
   const [rightEdgeExpanded, setRightEdgeExpanded] = useState()
@@ -273,57 +273,57 @@ const ChartNode = ({
         ) : (
 
           <Card sx={{ border: 0, boxShadow: 0, color: 'common.white', backgroundColor: '#189ab4' }}>
-            
-          <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
-            <Typography
-              variant='h6'
-              sx={{ display: 'flex', mr: 2.75, alignItems: '', color: 'common.white', '& svg': { mr: 2.5 } }}
-            >
-              {datasource.name}
-          
-            </Typography>
-           <Typography  sx={{ color: '#D8D8D8' }}>
-             <small>{datasource.employeesCount ?? 0} Employees</small> 
-              </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-                <Avatar alt={datasource.logo} src={datasource.logo} sx={{ width: 34, height: 34, mr: 2.75 , borderStyle:'solid' , borderWidth:'1px' , borderColor:'#808080'}} />
-                <Typography variant='body2' sx={{ color: 'common.white' }}>
-                  {datasource.mng}
-                </Typography>
-              </Box>
-            
-            </Box>
-            <Accordion slotProps={{textField:{size: 'small', fullWidth: false } }} expandIcon={ '+' }
-            >
-              <AccordionSummary>
-                Employees
-              </AccordionSummary>
-              <AccordionDetails>
-              <Typography>
-                <ul>
-                  {
-                    datasource.employees && 
-                    datasource.employees?.map((employee)=>{
-                      employee = employee?.[0];
-                      console.log('abc',employee);
-                      if(!employee){
-                        return <></>;
-                      }
 
-                      return (
-                        <li key={employee?.id}>
-                          {employee?.firstName + " " + employee?.lastName}
-                        </li>
-                      )
-                    })
-                  }
-                </ul>
+            <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
+              <Typography
+                variant='h6'
+                sx={{ display: 'flex', mr: 2.75, alignItems: '', color: 'common.white', '& svg': { mr: 2.5 } }}
+              >
+                {datasource.name}
+
               </Typography>
-            </AccordionDetails>
-            </Accordion>
-          </CardContent>
-        </Card>
+              <Typography sx={{ color: '#D8D8D8' }}>
+                <small>{datasource.employeesCount ?? 0} Employees</small>
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+                  <Avatar alt={datasource.logo} src={datasource.logo} sx={{ width: 34, height: 34, mr: 2.75, borderStyle: 'solid', borderWidth: '1px', borderColor: '#808080' }} />
+                  <Typography variant='body2' sx={{ color: 'common.white' }}>
+                    {datasource.mng}
+                  </Typography>
+                </Box>
+
+              </Box>
+              <Accordion sx={{ backgroundColor: '#f3f3f3' }} slotProps={{ textField: { size: 'small', fullWidth: false } }} expandIcon={'+'}
+              >
+                <AccordionSummary>
+                  <small >Employees List</small>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    <div>
+                      {
+                        datasource.employees &&
+                        datasource.employees?.map((employee) => {
+                          employee = employee?.[0];
+                          console.log('abc', employee);
+                          if (!employee) {
+                            return <></>;
+                          }
+
+                          return (
+                            <div key={employee?.id}>
+                              <small >{employee.idNo} - </small>{employee?.firstName + " " + employee?.lastName}
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </CardContent>
+          </Card>
 
           // <>
           //   <div className='oc-heading'>{datasource.name}</div>
@@ -332,55 +332,53 @@ const ChartNode = ({
         )}
         {collapsible && datasource.relationship && datasource.relationship.charAt(0) === '1' && (
           <i
-            className={`oc-edge verticalEdge topEdge oci ${
-              topEdgeExpanded === undefined ? '' : topEdgeExpanded ? 'oci-chevron-down' : 'oci-chevron-up'
-            }`}
+            className={`oc-edge verticalEdge topEdge oci ${topEdgeExpanded === undefined ? '' : topEdgeExpanded ? 'oci-chevron-down' : 'oci-chevron-up'
+              }`}
             onClick={topEdgeClickHandler}
           />
         )}
         {collapsible && datasource.relationship && datasource.relationship.charAt(1) === '1' && (
           <>
             <i
-              className={`oc-edge horizontalEdge rightEdge oci ${
-                rightEdgeExpanded === undefined ? '' : rightEdgeExpanded ? 'oci-chevron-left' : 'oci-chevron-right'
-              }`}
+              className={`oc-edge horizontalEdge rightEdge oci ${rightEdgeExpanded === undefined ? '' : rightEdgeExpanded ? 'oci-chevron-left' : 'oci-chevron-right'
+                }`}
               onClick={hEdgeClickHandler}
             />
             <i
-              className={`oc-edge horizontalEdge leftEdge oci ${
-                leftEdgeExpanded === undefined ? '' : leftEdgeExpanded ? 'oci-chevron-right' : 'oci-chevron-left'
-              }`}
+              className={`oc-edge horizontalEdge leftEdge oci ${leftEdgeExpanded === undefined ? '' : leftEdgeExpanded ? 'oci-chevron-right' : 'oci-chevron-left'
+                }`}
               onClick={hEdgeClickHandler}
             />
           </>
         )}
         {collapsible && datasource.relationship && datasource.relationship.charAt(2) === '1' && (
           <i
-            className={`oc-edge verticalEdge bottomEdge oci ${
-              bottomEdgeExpanded === undefined ? '' : bottomEdgeExpanded ? 'oci-chevron-up' : 'oci-chevron-down'
-            }`}
+            className={`oc-edge verticalEdge bottomEdge oci ${bottomEdgeExpanded === undefined ? '' : bottomEdgeExpanded ? 'oci-chevron-up' : 'oci-chevron-down'
+              }`}
             onClick={bottomEdgeClickHandler}
           />
         )}
       </div>
-      {datasource.children && datasource.children.length > 0 && (
-        <ul className={isChildrenCollapsed ? 'hidden' : ''}>
-          {datasource.children.map(node => (
-            <ChartNode
-              datasource={node}
-              NodeTemplate={NodeTemplate}
-              id={node.id}
-              key={node.id}
-              draggable={draggable}
-              collapsible={collapsible}
-              multipleSelect={multipleSelect}
-              changeHierarchy={changeHierarchy}
-              onClickNode={onClickNode}
-            />
-          ))}
-        </ul>
-      )}
-    </li>
+      {
+        datasource.children && datasource.children.length > 0 && (
+          <ul className={isChildrenCollapsed ? 'hidden' : ''}>
+            {datasource.children.map(node => (
+              <ChartNode
+                datasource={node}
+                NodeTemplate={NodeTemplate}
+                id={node.id}
+                key={node.id}
+                draggable={draggable}
+                collapsible={collapsible}
+                multipleSelect={multipleSelect}
+                changeHierarchy={changeHierarchy}
+                onClickNode={onClickNode}
+              />
+            ))}
+          </ul>
+        )
+      }
+    </li >
   )
 }
 

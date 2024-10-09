@@ -24,7 +24,10 @@ export default async function handler(req, res) {
     })
   }
   employeeDocument.company_id = myUser.company_id
-  employeeDocument.expiryDate = new Date(employeeDocument.expiryDate).toISOString();
+  if (employeeDocument.expiryDate) {
+    employeeDocument.expiryDate = new Date(employeeDocument.expiryDate).toISOString();
+  }
+
 
   const newEmployeeDocument = await client.db().collection('employeeDocuments').insertOne(employeeDocument)
 
