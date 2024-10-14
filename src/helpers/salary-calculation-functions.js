@@ -86,7 +86,7 @@ export const functions = {
         employee.absenseDays = 0;
         let lumpySalary = 0;
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
-        employee.flexible = true;
+        employee.flexible = false;
         lumpySalary = Number(req.body.data.lumpySalary);
         employee.salaries_info = [{ lumpySalary: lumpySalary }];
 
@@ -130,10 +130,12 @@ export const functions = {
 
             return res.status(400).json({ success: false, message: message });
         }
-        if(employee?.shift_info?.[0]?.shiftType !='times'){
-            return res.status(400).json({success:false , message : [
-               'Error: Shift for this employee is defined as Total hours which does not work with selected salary formula , assign times shift then try again'   
-            ]});
+        if (employee?.shift_info?.[0]?.shiftType != 'times') {
+            return res.status(400).json({
+                success: false, message: [
+                    'Error: Shift for this employee is defined as Total hours which does not work with selected salary formula , assign times shift then try again'
+                ]
+            });
         }
 
         let start = new Date(fromDate)
@@ -505,7 +507,7 @@ export const functions = {
     // ================================== MonthlyTotalHours ==================================
     // =======================================================================================
     "MonthlyTotalHours": (data) => {
-        
+
         console.log('Calculating MonthlyTotalHours Salary');
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
         console.log(employee?.shift_info?.[0]?.totalHours);
@@ -554,12 +556,14 @@ export const functions = {
 
             return res.status(400).json({ success: false, message: message });
         }
-        console.log(employee?.shift_info?.[0]?.shiftType );
-        
-        if(employee?.shift_info?.[0]?.shiftType =='times'){
-            return res.status(400).json({success:false , message : [
-               'Error: Shift for this employee is defined as times which does not work with selected salary formula , assign total hours shift then try again'   
-            ]});
+        console.log(employee?.shift_info?.[0]?.shiftType);
+
+        if (employee?.shift_info?.[0]?.shiftType == 'times') {
+            return res.status(400).json({
+                success: false, message: [
+                    'Error: Shift for this employee is defined as times which does not work with selected salary formula , assign total hours shift then try again'
+                ]
+            });
         }
 
         let totalRequiredHours = Number(employee.salaryFormulas_info[0].totalHours)
@@ -648,7 +652,7 @@ export const functions = {
                     return date;
                 }
 
-                
+
                 // -------------------------------------------------------------
 
                 if (employee?.attendances_info) {
@@ -658,7 +662,7 @@ export const functions = {
                                 _in = setUTCHours(att.timeIn.toString());
                                 _out = setUTCHours(att.timeOut.toString());
                                 totalHours = (
-                                    (( _out) - (_in)) / 3600000
+                                    ((_out) - (_in)) / 3600000
                                 )
                                 totalWorkingHours += totalHours;
                                 _in = _in.toISOString().substr(11, 8)
@@ -751,7 +755,7 @@ export const functions = {
                         }
                         cur = new Date(cur.getTime() + 1000 * 60 * 60 * 24);
                     }
-                    
+
                     let totalHours = Number(employee?.shift_info?.[0]?.totalHours ?? 0)
                     leave.time = (((totalHours) * intersectedDays) / 3600000)
                     leave.days = intersectedDays
