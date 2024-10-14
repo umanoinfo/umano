@@ -84,13 +84,13 @@ export const functions = {
         console.log('Calculating Monthly Salary');
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
         employee.absenseDays = 0;
-        let lumpySalary = 0;
+
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
         employee.flexible = false;
-        lumpySalary = Number(req.body.data.lumpySalary);
-        employee.salaries_info = [{ lumpySalary: lumpySalary }];
 
-        lumpySalary = Number(lumpySalary);
+        // employee.salaries_info = [{ lumpySalary: lumpySalary }];
+
+        let lumpySalary = Number(employee?.salaries_info?.[0]?.lumpySalary);
         employee.lumpySalary = lumpySalary;
         employee.dailySalary = Number(lumpySalary / 30);
 
