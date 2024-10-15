@@ -58,7 +58,7 @@ const AttendanceList = ({ attendances }) => {
       renderCell: ({ row }) => {
         return (
           <>
-            {new Date(row.date).getDate() + "-" + new Date(row.date).getMonth() + "-" + new Date(row.date).getFullYear()} {row.day}
+            {new Date(row.date).getDate() + "-" + (Number(new Date(row.date).getMonth()) + 1) + "-" + new Date(row.date).getFullYear()} {row.day}
           </>
         )
       }
