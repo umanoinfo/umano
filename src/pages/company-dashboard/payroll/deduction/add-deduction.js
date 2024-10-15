@@ -68,11 +68,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...formValue ,  fixedValue : Number(formValue.fixedValue.replaceAll(',','') ) , percentageValue:  Number(formValue.percentageValue.replaceAll(',','') ) }
-        if( isNaN(data.fixedValue)  || isNaN(data.percentageValue)) {
-          toast.error('fixed value & percentage value must be a number' , {duration:5000 , position:'bottom-right'});
+        let data = { ...formValue, fixedValue: Number(formValue.fixedValue.replaceAll(',', '')), percentageValue: Number(formValue.percentageValue.replaceAll(',', '')) }
+        if (isNaN(data.fixedValue) || isNaN(data.percentageValue)) {
+          toast.error('fixed value & percentage value must be a number', { duration: 5000, position: 'bottom-right' });
 
-          return ;
+          return;
         }
         setLoading(true)
         setLoadingDescription('Deduction is inserting')
@@ -100,7 +100,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
     })
   }
 
-  
+
 
   // -------------------------------- Routes -----------------------------------------------
 
@@ -128,16 +128,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         <Grid item xs={12}>
           <Card>
             <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/payroll/deduction/'>
-            Deductions
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-            Add Deduction
-            </Typography>
-          </Breadcrumbs>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/payroll/deduction/'>
+                Deductions
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Add Deduction
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={12} md={12} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -169,7 +169,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <Grid item sm={12} md={4}>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                            Fixed value :
+                            Fixed value (AED):
                           </Typography>
                           <Form.Control
                             controlId='fixedValue'

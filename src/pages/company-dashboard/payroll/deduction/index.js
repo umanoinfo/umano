@@ -104,7 +104,7 @@ const DeductionsList = () => {
         deductionStatus,
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
   }, [dispatch, deductionType, deductionStatus, value])
 
   // ----------------------- Handle ------------------------------
@@ -292,7 +292,7 @@ const DeductionsList = () => {
       flex: 0.17,
       minWidth: 100,
       field: 'fixedValue',
-      headerName: 'Fixed Value',
+      headerName: 'Fixed Value (AED)',
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
@@ -301,7 +301,7 @@ const DeductionsList = () => {
         )
       }
     },
-    
+
     // {
     //   flex: 0.17,
     //   minWidth: 100,
@@ -471,20 +471,20 @@ const DeductionsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{
-          loading ?
-            <Loading header='Please Wait' description='Payroll Deductions are loading'></Loading>:
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-}          
+          {
+            loading ?
+              <Loading header='Please Wait' description='Payroll Deductions are loading'></Loading> :
+              <DataGrid
+                autoHeight
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+          }
         </Card>
       </Grid>
 
