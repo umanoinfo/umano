@@ -313,7 +313,7 @@ export const functions = {
                     day: weekday[new Date(x).getDay()] + " --- " + new Date(x).getUTCDay() + " --- " + new Date(x).getDay(),
                     workingDay: workingDay,
                     id: index,
-                    date: new Date(x),
+                    date: new Date(x).toLocaleDateString(),
                     dateuts: new Date(x).getUTCDate(),
                     datelocal: new Date(x).toLocaleDateString(),
                     datex: x,
