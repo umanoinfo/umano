@@ -310,7 +310,7 @@ export const functions = {
                     employee.absenseDays++;
                 }
                 attendances.push({
-                    day: weekday[day],
+                    day: weekday[new Date(x).getDay()] + " --- " + new Date(x).getUTCDay() + " --- " + new Date(x).getDay(),
                     workingDay: workingDay,
                     id: index,
                     date: new Date(x),
