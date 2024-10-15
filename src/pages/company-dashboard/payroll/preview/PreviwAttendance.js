@@ -45,7 +45,7 @@ const AttendanceList = ({ attendances }) => {
   const [loading, setLoading] = useState(false)
 
   const { data: session, status } = useSession()
-  console.log('.',attendances)
+  console.log('.', attendances)
 
   // ------------------------------- Table columns --------------------------------------------
 
@@ -58,7 +58,7 @@ const AttendanceList = ({ attendances }) => {
       renderCell: ({ row }) => {
         return (
           <>
-            {new Date(row.date).toLocaleDateString()} {row.day}
+            {new Date(row.date).getDate() + "-" + new Date(row.date).getMonth() + "-" + new Date(row.date).getFullYear()} {row.day}
           </>
         )
       }
@@ -162,27 +162,27 @@ const AttendanceList = ({ attendances }) => {
       headerName: 'leave Time',
       renderCell: ({ row }) => {
         return (
-          <>          
           <>
-            {row.workingDay && row.leaveHourly && (
-              <>
-              {
-              row.leaves.map((leave)=>{
-                return (<>
-                <div>{new Date(leave.date_from).getUTCHours()}:{new Date(leave.date_from).getUTCMinutes()}-{new Date(leave.date_to).getUTCHours()}:{new Date(leave.date_to).getUTCMinutes()} {"   ,   "}</div> <br/>
-                </>)
-              })
-              }
-              </>
-            )}
-          </>
-          <>
-          {row.workingDay && row.leaveDay && (
             <>
-              All Day
+              {row.workingDay && row.leaveHourly && (
+                <>
+                  {
+                    row.leaves.map((leave) => {
+                      return (<>
+                        <div>{new Date(leave.date_from).getUTCHours()}:{new Date(leave.date_from).getUTCMinutes()}-{new Date(leave.date_to).getUTCHours()}:{new Date(leave.date_to).getUTCMinutes()} {"   ,   "}</div> <br />
+                      </>)
+                    })
+                  }
+                </>
+              )}
             </>
-          )}
-        </>
+            <>
+              {row.workingDay && row.leaveDay && (
+                <>
+                  All Day
+                </>
+              )}
+            </>
           </>
 
         )
@@ -257,21 +257,21 @@ const AttendanceList = ({ attendances }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-{
-        loading ? 
-          <Loading header='Please Wait' description='Attendances are loading'></Loading>:
-        <DataGrid
-          autoHeight
-          rows={attendances}
-          columns={columns}
-          pageSize={pageSize}
-          disableSelectionOnClick
-          rowsPerPageOptions={[10, 25, 50]}
-          sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          getRowHeight={() => 'auto'}
-        />
-}
+        {
+          loading ?
+            <Loading header='Please Wait' description='Attendances are loading'></Loading> :
+            <DataGrid
+              autoHeight
+              rows={attendances}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              getRowHeight={() => 'auto'}
+            />
+        }
       </Grid>
     </Grid>
   )
