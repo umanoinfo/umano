@@ -45,7 +45,7 @@ const AttendanceList = ({ attendances }) => {
   const [loading, setLoading] = useState(false)
 
   const { data: session, status } = useSession()
-
+  console.log('.', attendances)
 
   // ------------------------------- Table columns --------------------------------------------
 
@@ -58,7 +58,7 @@ const AttendanceList = ({ attendances }) => {
       renderCell: ({ row }) => {
         return (
           <>
-            {new Date(row.date).getDate() + "-" + (Number(new Date(row.date).getMonth()) + 1) + "-" + new Date(row.date).getFullYear()} {row.day}
+            {new Date(row.date).getDate() + "-" + new Date(row.date).getMonth() + "-" + new Date(row.date).getFullYear()} {row.day}
           </>
         )
       }
