@@ -29,7 +29,6 @@ export default async function handler(req, res) {
 
   let fromDate = new Date(new Date(selectedEmployee.fromDate).setUTCHours(23, 59, 59, 999) + 1);
   let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23, 59, 59, 999) + 1);
-  console.log(fromDate, toDate);
 
   // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
   // toDate = new Date( toDate - 1000 * 60 * 60 * 24  );
@@ -230,7 +229,6 @@ export default async function handler(req, res) {
     return res.status(404).json({ success: false, message: ['No employee with this ID'] });
   }
   employee = employee?.[0];
-  console.log(employee);
   let data = { employee, company, fromDate, toDate, req, working_days, res };
 
   if (employee) {
@@ -249,7 +247,6 @@ export default async function handler(req, res) {
     if (!employee.salaryFormulas_info || !employee.salaryFormulas_info?.[0]) {
       message.push('Error: define Sarlary Formula for this employee first');
     }
-    console.log(employee?.shift_info, !employee?.shift_info);
     if (!employee?.shift_info || !employee?.shift_info?.[0]) {
       message.push('Error: define Shift info for this employee first');
     }

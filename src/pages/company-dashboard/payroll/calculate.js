@@ -107,8 +107,8 @@ const AllDocumentsList = () => {
 
   const [employeesList, setEmployeesList] = useState([])
 
-  const [employee , setEmployee ] = useState() ;
-  const [lumpySalary , setLumpySalary] = useState(0);
+  const [employee, setEmployee] = useState();
+  const [lumpySalary, setLumpySalary] = useState(0);
 
   // ** Hooks
 
@@ -118,30 +118,30 @@ const AllDocumentsList = () => {
   const [employeesDataSource, setEmployeesDataSource] = useState([])
   const [attendances, setAttendances] = useState([])
   const [employeesFullInfo, setEmployeesFullInfo] = useState([])
-  const [done , setDone ] = useState(false) ;
+  const [done, setDone] = useState(false);
   const router = useRouter()
-  const [notAuthorized, setNotAuthorized ] = useState([]) ;
+  const [notAuthorized, setNotAuthorized] = useState([]);
   const dispatch = useDispatch()
   const store = useSelector(state => state.attendance)
 
   useEffect(() => {
     setLoading(true);
-      dispatch(
-        fetchData({
-          fromDate: fromDate,
-          toDate: toDate,
-          employee_no: value
-        })
-      ).then( () => {
-        getEmployees().then(()=>{
-          setLoading(false)
-        })
+    dispatch(
+      fetchData({
+        fromDate: fromDate,
+        toDate: toDate,
+        employee_no: value
       })
+    ).then(() => {
+      getEmployees().then(() => {
+        setLoading(false)
+      })
+    })
   }, [dispatch, value])
 
   //   ----------------------------------------------------------------------------------
 
-  const calcLeaves = ({...employee},type='year') => {
+  const calcLeaves = ({ ...employee }, type = 'year') => {
     employee = {
       ...employee,
       takenPaidLeaves: 0,
@@ -152,12 +152,11 @@ const AllDocumentsList = () => {
       takenOthers: 0
     }
     const leaves = employee.all_leaves_info
-    
+
     const range1 = employee?.shift_info?.[0]?.times?.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
 
-    console.log(leaves,type);
     const rangePaidLeave = []
     const rangeUnpaidLeave = []
     const rangeSick = []
@@ -182,27 +181,22 @@ const AllDocumentsList = () => {
         return val
       }
     })
-    console.log('1',rangePaidLeave);
-    
-    let totalMinutes = 0 ;
-    let shiftType = employee?.shift_info?.[0]?.shiftType ; 
-    if(shiftType == 'times'){
+
+    let totalMinutes = 0;
+    let shiftType = employee?.shift_info?.[0]?.shiftType;
+    if (shiftType == 'times') {
       totalMinutes = range1.reduce((acc, cu) => {
         return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
       }, 0)
     }
-    else{
-      totalMinutes = employee?.shift_info?.[0]?.totalHours * 60 ;
+    else {
+      totalMinutes = employee?.shift_info?.[0]?.totalHours * 60;
     }
-    
-    console.log('2',totalMinutes);
-    
+
     employee.takenPaidLeaves += +(
-        1 -
-        (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave , shiftType )) / totalMinutes
+      1 -
+      (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave, shiftType)) / totalMinutes
     ).toFixed(2)
-    
-    console.log(employee.takenPaidLeaves);
 
     // Unpaid Leave
 
@@ -296,7 +290,7 @@ const AllDocumentsList = () => {
     ).toFixed(2)
 
     return employee
-   
+
   }
 
   // ------------------------------- Get Employees --------------------------------------
@@ -308,12 +302,12 @@ const AllDocumentsList = () => {
       let employees = res.data.data
       employees.map(employee => {
         // if (employee.shift_info[0]) {
-        let salaryFormulaType =  '' 
-        if(employee?.salaryFormulas_info[0]?.type )
-          salaryFormulaType =  employee.salaryFormulas_info[0].type;
+        let salaryFormulaType = ''
+        if (employee?.salaryFormulas_info[0]?.type)
+          salaryFormulaType = employee.salaryFormulas_info[0].type;
         arr.push({
           label: employee.idNo + ' - ' + employee.firstName + ' ' + employee.lastName + ' (' + employee.email + ')',
-          value: {id: employee._id , salaryFormulaType }
+          value: { id: employee._id, salaryFormulaType }
         })
 
         // }
@@ -322,17 +316,17 @@ const AllDocumentsList = () => {
       setEmployeesFullInfo(employees)
       setLoading(false)
 
-    }).catch(err=>{
-      let message = err?.response?.data?.message || err.toString() ;
+    }).catch(err => {
+      let message = err?.response?.data?.message || err.toString();
       setEmployeesDataSource([{
-        label: <div style={{color:'red'}}> no permission to view Employees </div>,
+        label: <div style={{ color: 'red' }}> no permission to view Employees </div>,
         value: undefined
       }])
-      if(err.response.status == 401){
-        setNotAuthorized([...notAuthorized , 'ViewEmployee' ])
+      if (err.response.status == 401) {
+        setNotAuthorized([...notAuthorized, 'ViewEmployee'])
         message = 'Error : Failed to fetch employeees ( not Permissin'
       }
-      toast.error(message , {duration : 5000 , position: 'bottom-right'}) ; 
+      toast.error(message, { duration: 5000, position: 'bottom-right' });
       setLoading(false);
     })
   }
@@ -343,45 +337,45 @@ const AllDocumentsList = () => {
     return parseInt(hours) * 60 + parseInt(minutes)
   }
 
-  const calcDeffTime = (val,type='year') => {
-   
+  const calcDeffTime = (val, type = 'year') => {
+
     return val.map(val => {
       if (val.type == 'daily') {
-        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))+1
-        const diffDays =  (diffTime / (1000 * 60 * 60 * 24))
-        let curDate = new Date( val.date_from ) ;
-        let totalDays =0  ;
-        for(let i =0  ;i < diffDays ;i++){
-          if(type == 'year'){
-            if(curDate.getFullYear() == new Date().getFullYear())
+        const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from)) + 1
+        const diffDays = (diffTime / (1000 * 60 * 60 * 24))
+        let curDate = new Date(val.date_from);
+        let totalDays = 0;
+        for (let i = 0; i < diffDays; i++) {
+          if (type == 'year') {
+            if (curDate.getFullYear() == new Date().getFullYear())
               totalDays++;
           }
-          else{
-            if(curDate >= fromDate && curDate <= toDate){
-              totalDays++; 
+          else {
+            if (curDate >= fromDate && curDate <= toDate) {
+              totalDays++;
             }
           }
-          curDate= new Date(curDate.getTime() + 1000 * 60 * 60 * 24 ) ; 
+          curDate = new Date(curDate.getTime() + 1000 * 60 * 60 * 24);
         }
-        
+
         return { ...val, leave_value: totalDays }
       } else {
         const diffTime = Math.abs(new Date(val.date_to) - new Date(val.date_from))
         const diffDays = (diffTime / (1000 * 60))
-        if(type == 'year'){
-          if(new Date(val.date_from).getFullYear() == new Date().getFullYear()){
+        if (type == 'year') {
+          if (new Date(val.date_from).getFullYear() == new Date().getFullYear()) {
             return { ...val, leave_value: diffDays };
           }
-          else{
-            return {...val , leave_value: 0 } ;
-          }  
-        }
-        else{
-          if(new Date(val.date_from) >= fromDate && new Date(val.date_from) <= toDate){
-            return {...val , leave_value: diffDays} ;
+          else {
+            return { ...val, leave_value: 0 };
           }
-          else{
-            return {...val , leave_value: 0 } ; 
+        }
+        else {
+          if (new Date(val.date_from) >= fromDate && new Date(val.date_from) <= toDate) {
+            return { ...val, leave_value: diffDays };
+          }
+          else {
+            return { ...val, leave_value: 0 };
           }
         }
 
@@ -392,14 +386,13 @@ const AllDocumentsList = () => {
   function calculateIntersectionValue(timeRanges1, timeRanges2, shiftType) { // return total intersection in minutes
 
     let totalIntersection = 0
-    console.log(shiftType)
-    if(shiftType == 'totalWorkingHours'){
-      for(let i =0 ; i <timeRanges2.length ;i++ ){
+    if (shiftType == 'totalWorkingHours') {
+      for (let i = 0; i < timeRanges2.length; i++) {
         const range2 = timeRanges2[i]
         const start2 = convertToMinutes(range2.start)
         const end2 = convertToMinutes(range2.end)
-        totalIntersection += end2- start2 ;
-        
+        totalIntersection += end2 - start2;
+
       }
 
       return totalIntersection;
@@ -417,8 +410,8 @@ const AllDocumentsList = () => {
 
         const start = Math.max(start1, start2)
         const end = Math.min(end1, end2)
-        
-        if(start2 >= start1 && end2 >= end1 ){
+
+        if (start2 >= start1 && end2 >= end1) {
           const intersection = Math.max(0, end - start)
           totalIntersection += intersection
         }
@@ -427,91 +420,86 @@ const AllDocumentsList = () => {
 
     return totalIntersection
   }
-  
+
 
   const calculate = async (e) => {
     let data = {}
     data._id = e.id
-    
 
-    let from_date = new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000 )) ;
-    from_date = new Date(from_date.getFullYear() , from_date.getMonth() , 1 ) ;
-    let to_date = new Date(from_date.getFullYear() , from_date.getMonth() + 1, 0 );
-    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000 )) ;
-    
-    data.fromDate = from_date ;
+
+    let from_date = new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000));
+    from_date = new Date(from_date.getFullYear(), from_date.getMonth(), 1);
+    let to_date = new Date(from_date.getFullYear(), from_date.getMonth() + 1, 0);
+    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000));
+
+    data.fromDate = from_date;
     data.toDate = to_date;
-    
-    toDate = to_date; 
-    fromDate = from_date ;
+
+    toDate = to_date;
+    fromDate = from_date;
     setFromDate(from_date);
     setToDate(to_date);
-    console.log('date_1:' , fromDate, toDate);
-    console.log('date_2:' , from_date , to_date) ;
-    data.lumpySalary = lumpySalary ;
-    if(e.salaryFormulaType == 'Flexible' && lumpySalary == 0 ){
+    data.lumpySalary = lumpySalary;
+    if (e.salaryFormulaType == 'Flexible' && lumpySalary == 0) {
       setSelectedEmployeeID(e);
       setDone(1);
-      
-      return ;
+
+      return;
     }
-    
+
     setLoading(true);
-    try{
+    try {
       let res = await axios.post('/api/payroll/byEmployee', { data });
-      
+
       // .then(res => 
-        // checked: daily salary , taken leaves , 
-        // not checked:
-        let error = 0 ;
-        if(!res.data?.data || res.status != 200 ){
-          error = 1 ;
-          toast.error(res.data.message , {duration:5000, position:'bottom-right'});
-          
-          return ;
-        }
-        let employee = res.data.data[0]
-         if(employee.flexible || e.salaryFormulaType == 'Flexible'){
-            employee.salaries_info= [{lumpySalary}]
+      // checked: daily salary , taken leaves , 
+      // not checked:
+      let error = 0;
+      if (!res.data?.data || res.status != 200) {
+        error = 1;
+        toast.error(res.data.message, { duration: 5000, position: 'bottom-right' });
 
-            // employee.totalWorkingDaysCount = Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24) ;
-            
-         }
-        
-        // if(!employee.flexible && (!employee.salaries_info || employee.salaries_info.length == 0)){
-        //     throw new Error('Add salary first (no salary defined!)')
-        // }
-        
+        return;
+      }
+      let employee = res.data.data[0]
+      if (employee.flexible || e.salaryFormulaType == 'Flexible') {
+        employee.salaries_info = [{ lumpySalary }]
 
-        //   ----------------------- Assume Leave -------------------------------
-        if(!employee.flexible){
-          let employeeLeavesForThisYear = calcLeaves(employee,'year');
-          employee = calcLeaves(employee,'range');
-          employee.yearlyTakenPaidLeaves = employeeLeavesForThisYear.takenPaidLeaves ; 
-          employee.yearlyTakenUnpaidLeaves = employeeLeavesForThisYear.takenUnpaidLeaves ; 
-          employee.yearlyTakenSickLeaves = employeeLeavesForThisYear.takenSickLeaves ; 
-          employee.yearlyTakenParentalLeaves = employeeLeavesForThisYear.takenParentalLeaves ; 
-        }
-        console.log(employee.salaries_info[0]);
-        
-        //   --------------------------- Assume OverTime -------------------------------------------------
- 
-        setSelectedEmployee(employee)
-        if(!employee.flexible)
-          setAttendances(res.data.attendances)
-        setDone(2);
+        // employee.totalWorkingDaysCount = Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24) ;
+
+      }
+
+      // if(!employee.flexible && (!employee.salaries_info || employee.salaries_info.length == 0)){
+      //     throw new Error('Add salary first (no salary defined!)')
+      // }
+
+
+      //   ----------------------- Assume Leave -------------------------------
+      if (!employee.flexible) {
+        let employeeLeavesForThisYear = calcLeaves(employee, 'year');
+        employee = calcLeaves(employee, 'range');
+        employee.yearlyTakenPaidLeaves = employeeLeavesForThisYear.takenPaidLeaves;
+        employee.yearlyTakenUnpaidLeaves = employeeLeavesForThisYear.takenUnpaidLeaves;
+        employee.yearlyTakenSickLeaves = employeeLeavesForThisYear.takenSickLeaves;
+        employee.yearlyTakenParentalLeaves = employeeLeavesForThisYear.takenParentalLeaves;
+      }
+
+      //   --------------------------- Assume OverTime -------------------------------------------------
+
+      setSelectedEmployee(employee)
+
+      if (!employee.flexible)
+        setAttendances(res.data.attendances)
+      setDone(2);
     }
-    catch(err){
-      // console.log(err?.response?.data?.message , err.toString());
-      console.log(err);
-      if(err?.response?.data?.message)
-      {
-        err.response.data.message.map((msg)=>{
-          toast.error( msg , {duration:5000 , position:'bottom-right'});
+    catch (err) {
+      if (err?.response?.data?.message) {
+        err.response.data.message.map((msg) => {
+          toast.error(msg, { duration: 5000, position: 'bottom-right' });
         })
       }
-      else{
-         toast.error(err.toString(), {duration:5000 , position:'bottom-right'});
+      else {
+        toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
       }
       setSelectedEmployee(null);
     }
@@ -538,7 +526,7 @@ const AllDocumentsList = () => {
     setOpenExcel(false)
   }
 
- 
+
   // -------------------------- Add Document -----------------------------------------------
 
   const addAttendance = () => {
@@ -571,7 +559,7 @@ const AllDocumentsList = () => {
       handleRowOptionsClose()
     }
 
- 
+
 
     // ------------------------------ Table Definition ---------------------------------
 
@@ -607,7 +595,7 @@ const AllDocumentsList = () => {
               Edit
             </MenuItem>
           )}
-          
+
         </Menu>
       </>
     )
@@ -642,8 +630,8 @@ const AllDocumentsList = () => {
     return time
       ? daytime
       : new Date(0, 0, excel_date, 0, -new Date(0).getTimezoneOffset(), 0).toLocaleDateString(navigator.language, {}) +
-          ' ' +
-          daytime
+      ' ' +
+      daytime
   }
 
   const onFileChange = event => {
@@ -875,7 +863,7 @@ const AllDocumentsList = () => {
           </Breadcrumbs>
           <Divider sx={{ pb: 0, mb: 0 }} />
           <Grid container spacing={2} sx={{ px: 5, pt: 0, mt: -2 }}>
-          <Grid item sm={4} xs={12}>
+            <Grid item sm={4} xs={12}>
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Employee</small>
                 <SelectPicker
@@ -902,7 +890,7 @@ const AllDocumentsList = () => {
                     setFromDate(e)
                   }}
                   format='MMM/yyyy'
-                  
+
                 />
               </FormControl>
             </Grid>
@@ -921,41 +909,41 @@ const AllDocumentsList = () => {
                 />
               </FormControl>
             </Grid> */}
-          
-            {
-              done == 1?
-                  <Grid item sm={2} xs={12}>
-                    <FormControl  size='sm' sx={{ mt: 0 }}>
-                      <small>Basic Salary </small>
-                      <TextField
-                        value={lumpySalary}
-                        onChange={e => {
-                            setLumpySalary(e.target.value)
-                        }}
-                        type='number'
-                        size='small'
 
-                        // label='Lumpy Salary'
-                        placeholder='Lumpy Salary'
-                        />
-                    </FormControl>
-                    
-                  </Grid>
-                  :
+            {
+              done == 1 ?
+                <Grid item sm={2} xs={12}>
+                  <FormControl size='sm' sx={{ mt: 0 }}>
+                    <small>Basic Salary </small>
+                    <TextField
+                      value={lumpySalary}
+                      onChange={e => {
+                        setLumpySalary(e.target.value)
+                      }}
+                      type='number'
+                      size='small'
+
+                      // label='Lumpy Salary'
+                      placeholder='Lumpy Salary'
+                    />
+                  </FormControl>
+
+                </Grid>
+                :
                 <></>
             }
             <Grid item sm={2} xs={12}>
               <Button
-              sx={{ mt: 8 }}
-              size='sm'
-              variant='contained'
-              onClick={() => {
-                if(selectedEmployeeID)
-                  calculate({id:selectedEmployeeID})
-              }}
-            >
-              Calculate
-            </Button>
+                sx={{ mt: 8 }}
+                size='sm'
+                variant='contained'
+                onClick={() => {
+                  if (selectedEmployeeID)
+                    calculate({ id: selectedEmployeeID })
+                }}
+              >
+                Calculate
+              </Button>
             </Grid>
           </Grid>
 
@@ -963,8 +951,8 @@ const AllDocumentsList = () => {
 
           {/* -------------------------- Table ----------------------------------- */}
           {
-            selectedEmployee && 
-            <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} lumpySalary={lumpySalary}/>
+            selectedEmployee &&
+            <Preview employee={selectedEmployee} attendances={attendances} fromDate={fromDate} toDate={toDate} lumpySalary={lumpySalary} />
           }
         </Card>
       </Grid>

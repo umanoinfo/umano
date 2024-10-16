@@ -19,6 +19,9 @@ import AddPaymentDrawer from 'src/views/apps/invoice/shared-drawer/AddPaymentDra
 import SendInvoiceDrawer from 'src/views/apps/invoice/shared-drawer/SendInvoiceDrawer'
 
 const InvoicePreview = ({ employee, attendances, fromDate, toDate, lumpySalary }) => {
+
+  console.log("55555555555555555", attendances, employee)
+
   // ** State
   const [error, setError] = useState(false)
   const [data, setData] = useState(null)

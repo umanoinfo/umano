@@ -45,7 +45,7 @@ const AttendanceList = ({ attendances }) => {
   const [loading, setLoading] = useState(false)
 
   const { data: session, status } = useSession()
-  console.log('.', attendances)
+
 
   // ------------------------------- Table columns --------------------------------------------
 

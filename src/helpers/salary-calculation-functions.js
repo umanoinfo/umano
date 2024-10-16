@@ -81,7 +81,7 @@ export const functions = {
     // ================================== Monthly ==================================
     // =============================================================================
     "Monthly": (data) => {
-        console.log('Calculating Monthly Salary');
+
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
         employee.absenseDays = 0;
 
@@ -116,7 +116,7 @@ export const functions = {
             if (!employee.salaryFormulas_info || !employee.salaryFormulas_info?.[0]) {
                 message.push('Error: define Sarlary Formula for this employee first');
             }
-            console.log(employee?.shift_info, !employee?.shift_info);
+
             if (!employee?.shift_info || !employee?.shift_info?.[0]) {
                 message.push('Error: define Shift info for this employee first');
             }
@@ -153,7 +153,7 @@ export const functions = {
         }
         employee.absenseDays = 0;
         let totalWorkingDaysCount = 0;
-        console.log(start, end);
+
         if (employee)
             for (let x = start; x <= end;) {
 
@@ -209,8 +209,6 @@ export const functions = {
                 }
 
                 // -----------------------------------------------------------------
-                // console.log(employee) ;
-
 
                 const setUTCHours = (time) => {
                     let date = new Date('1/1/2023');
@@ -241,6 +239,9 @@ export const functions = {
                 if (employee?.attendances_info) {
                     if (!leaveDay) {
                         employee.attendances_info?.map(att => {
+
+                            console.log("********", new Date(x).toLocaleDateString(), new Date(att.date).toLocaleDateString(), new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString())
+
                             if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
 
                                 _in = setUTCHours(att.timeIn.toString());
@@ -310,7 +311,7 @@ export const functions = {
                     employee.absenseDays++;
                 }
                 attendances.push({
-                    day: weekday[new Date(x).getDay()] + " --- " + new Date(x).getUTCDay() + " --- " + new Date(x).getDay(),
+                    day: weekday[new Date(x).getDay()],
                     workingDay: workingDay,
                     id: index,
                     date: new Date(x).toLocaleDateString(),
@@ -463,7 +464,7 @@ export const functions = {
     // ================================== Flexible ==================================
     // ==============================================================================
     "Flexible": (data) => {
-        console.log('Calculating Flexible Salary');
+
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
         let lumpySalary = 0;
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
@@ -511,9 +512,8 @@ export const functions = {
     // =======================================================================================
     "MonthlyTotalHours": (data) => {
 
-        console.log('Calculating MonthlyTotalHours Salary');
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
-        console.log(employee?.shift_info?.[0]?.totalHours);
+
         employee.absenseDays = 0;
         let lumpySalary = 0;
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
@@ -545,7 +545,7 @@ export const functions = {
             if (!employee.salaryFormulas_info || !employee.salaryFormulas_info?.[0]) {
                 message.push('Error: define Sarlary Formula for this employee first');
             }
-            console.log(employee?.shift_info, !employee?.shift_info);
+
             if (!employee?.shift_info || !employee?.shift_info?.[0]) {
                 message.push('Error: define Shift info for this employee first');
             }
@@ -559,7 +559,7 @@ export const functions = {
 
             return res.status(400).json({ success: false, message: message });
         }
-        console.log(employee?.shift_info?.[0]?.shiftType);
+
 
         if (employee?.shift_info?.[0]?.shiftType == 'times') {
             return res.status(400).json({
@@ -588,7 +588,7 @@ export const functions = {
         employee.absenseDays = 0;
         let totalWorkingDaysCount = 0;
         let totalWorkingHours = 0;
-        console.log(start, end);
+
         if (employee)
             for (let x = start; x <= end;) {
 
@@ -644,7 +644,7 @@ export const functions = {
                 }
 
                 // -----------------------------------------------------------------
-                // console.log(employee) ;
+
 
 
                 const setUTCHours = (time) => {
@@ -657,10 +657,11 @@ export const functions = {
 
 
                 // -------------------------------------------------------------
-
+                console.log("---------")
                 if (employee?.attendances_info) {
                     if (!leaveDay) {
                         employee.attendances_info?.map(att => {
+                            console.log("-->", new Date(x).toLocaleDateString(), "****", new Date(att.date).toLocaleDateString())
                             if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
                                 _in = setUTCHours(att.timeIn.toString());
                                 _out = setUTCHours(att.timeOut.toString());
