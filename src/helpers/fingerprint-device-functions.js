@@ -19,7 +19,7 @@ export const functions = {
         return string;
       };
       let map = new Map();
-      for (let i = 0; i < lines.length; i++) {
+      for (let i = 0; i < lines.length - 1; i++) {
         let line = lines[i];
         line = line.replaceAll('\t', ' ');
         let values = [];
@@ -51,18 +51,15 @@ export const functions = {
       let attendances = [];
       for (const [key, value] of map.entries()) {
         let [idNo, date] = key.split('_');
-
-        if (date == undefined || date == null) continue;
         let mn = new Date(date + 'T' + value[0] + 'Z');
         let mx = new Date(date + 'T' + value[0] + 'Z');
-
-
         if (mn == 'Invalid Date' || mx == 'Invalid Date') {
-          // toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
-          continue;
+          toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
+
+          return;
         }
         for (let j = 0; j < value.length; j++) {
-          let time = new Date(date + 'T' + value[0] + 'Z');
+          let time = new Date(date + 'T' + value[j] + 'Z');
           mn = Math.min(mn, time);
           mx = Math.max(mx, time);
         }
