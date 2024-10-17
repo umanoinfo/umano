@@ -35,97 +35,97 @@ const Home = () => {
   // ** Hooks
   const auth = useAuth()
   const router = useRouter()
-  const [loading , setLoading]=useState(true)
-  const [data , setData]=useState()
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState()
 
   useEffect(() => {
 
     getDashboard()
 
     let num = 1000.010;
-    
+
 
   }, [])
 
-  const getDashboard = ()=>{
+  const getDashboard = () => {
     setLoading(true)
     axios
-    .post('/api/dashboard', {
-    }).then((data)=>{
-      setLoading(false)
-      setData(data?.data?.data)
-    }).catch((err)=>{})
+      .post('/api/dashboard', {
+      }).then((data) => {
+        setLoading(false)
+        setData(data?.data?.data)
+      }).catch((err) => { })
   }
 
 
-  if(loading){
+  if (loading) {
     return <Spinner sx={{ height: '100%' }} />
   }
-  
+
   return (
     <>
 
-    {/* 1111 */}
+      {/* 1111 */}
+      testtesttesttesttesttesttest
+      <ApexChartWrapper>
+        <Grid container spacing={6} className='match-height'>
+          <Grid item xs={12} md={4}>
+            <CrmAward />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            {data && <CardStatisticsVertical
+              stats={data.employees_count}
+              color='primary'
+              title='Employees'
+              chipText='Last 4 Month'
+              icon={<Icon icon='mdi-account-box-outline' />}
+            />}
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            {data && <CardStatisticsVertical
+              stats={data.active_users_count + '/' + data.users_count}
+              color='warning'
+              title='Users'
+              chipText='Last Six Month'
+              icon={<Icon icon='mdi-account' />}
+            />}
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            {data && <CardStatisticsVertical
+              stats={data.documents_count}
+              color='success'
+              title='Documents'
+              icon={<Icon icon='mdi-file-outline' />}
+            />}
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            {data && <CrmTotalGrowth
+              expiaryDocuments_count={data.expiaryDocuments_count}
+              documents_count={data.documents_count}
+            />}
+          </Grid>
 
-        <ApexChartWrapper>
-          <Grid container spacing={6} className='match-height'>
-            <Grid item xs={12} md={4}>
-              <CrmAward />
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              { data && <CardStatisticsVertical
-                stats={ data.employees_count}
-                color='primary'
-                title='Employees'
-                chipText='Last 4 Month'
-                icon={<Icon icon='mdi-account-box-outline' />}
-              />}
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              {data && <CardStatisticsVertical
-                stats={ data.active_users_count + '/' + data.users_count  }
-                color='warning'
-                title='Users'
-                chipText='Last Six Month'
-                icon={<Icon icon='mdi-account' />}
-              />}
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              {data && <CardStatisticsVertical
-                stats={data.documents_count}
-                color='success'
-                title='Documents'
-                icon={<Icon icon='mdi-file-outline' />}
-              />}
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              { data && <CrmTotalGrowth 
-                expiaryDocuments_count = {data.expiaryDocuments_count}   
-                documents_count ={data.documents_count}
-              />}
-            </Grid>
-
-            {/* <Grid item xs={12} md={12}>
+          {/* <Grid item xs={12} md={12}>
               <CrmProjectTimeline />
             </Grid>  */}
 
-            <Grid item xs={12} md={8}>
-              <CrmTable data={data.documentsExpired} type={'expired'}/>
-            </Grid>
-            
-            <Grid item xs={12} md={8}>
-              <CrmTable data={data.recentDocuments} type={'recent'} />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <CrmMeetingSchedule birthdays={data.birthdays}/>
-            </Grid>
-        
+          <Grid item xs={12} md={8}>
+            <CrmTable data={data.documentsExpired} type={'expired'} />
           </Grid>
-        </ApexChartWrapper>
+
+          <Grid item xs={12} md={8}>
+            <CrmTable data={data.recentDocuments} type={'recent'} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <CrmMeetingSchedule birthdays={data.birthdays} />
+          </Grid>
+
+        </Grid>
+      </ApexChartWrapper>
     </>
   )
 
-  
+
 }
 
 export default Home
