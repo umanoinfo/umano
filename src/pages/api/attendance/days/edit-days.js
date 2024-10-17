@@ -60,8 +60,8 @@ export default async function handler(req, res) {
         event.title = day.name
         event.allDay = true
         event.description = day.name
-        event.startDate = new Date(day.date)
-        event.endDate = new Date(day.date)
+        event.startDate = new Date(day.date + ' UTC')
+        event.endDate = new Date(day.date + ' UTC')
         event.type = 'Holiday'
         event.users = []
         event.status = 'active'
