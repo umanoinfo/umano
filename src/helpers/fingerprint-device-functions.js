@@ -55,15 +55,11 @@ export const functions = {
         let [idNo, date] = key.split('_');
         date = date.replaceAll('-', '/');
 
-        console.log(date, "*******", times[0], "*******", new Date(date + ' ' + times[0]).toLocaleString(), ' ', new Date(new Date(date + ' ' + times[0]).toLocaleString()))
+        // console.log(date, "*******", times[0], "*******", new Date(date + 'T' + times[0] + 'Z'), "*******", new Date(date + '' + times[0]).toLocaleString(), "*******", new Date(date + 'T' + times[0] + 'Z').toLocaleString())
 
-        let mn = new Date(new Date(date + ' ' + times[0]).toLocaleString()) //new Date(date + ' ' + times[0] + ' UTC'); ///new Date(date + 'T' + value[0] + 'Z')
-        let mx = new Date(new Date(date + ' ' + times[0]).toLocaleString())  //new Date(date + ' ' + times[0] + ' UTC');  //// new Date(date + 'T' + value[0] + 'Z')
-
-        // mn = new Date(mn.getTime() + Math.abs(mn.getTimezoneOffset() * 60000))
-        // mx = new Date(mx.getTime() + Math.abs(mx.getTimezoneOffset() * 60000))
-        console.log('This is what is stored ', mn);
-        ``
+        let mn = times[0] 
+        let mx = times[0]
+        
         if (mn == 'Invalid Date' || mx == 'Invalid Date') {
           toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
 
@@ -73,20 +69,25 @@ export const functions = {
 
         for (let j = 0; j < times.length; j++) {
           // let time = new Date(date + 'T' + times[j] + 'Z');
-          let time = new Date(date + ' ' + times[j] + ' UTC');
-          time = new Date(time.getTime() + Math.abs(time.getTimezoneOffset() * 60000));
-          mn = Math.min(mn, time);
-          mx = Math.max(mx, time);
+          let time = times[j] ;
+          if(time < mn ) {
+            mn = time ; 
+          }
+          if(time > mx ){
+            mx = time ; 
+          }
         }
+      
 
+        // mn = excelDateToJSDate(mn);
+        // mx = excelDateToJSDate(mx);
+        // console.log(mn  , mx ) ;
 
+        // mn = new Date(mn).toLocaleTimeString('en-US', { hour12: false })
+        // mx = new Date(mx).toLocaleTimeString('en-US', { hour12: false })
 
-        mn = new Date(mn).toLocaleTimeString('en-US', { hour12: false })
-        mx = new Date(mx).toLocaleTimeString('en-US', { hour12: false })
+        // console.log(mn, mx);
 
-        console.log(mn, mx);
-
-        // return ;
 
         attendances.push({
           'Emp No.': idNo,
