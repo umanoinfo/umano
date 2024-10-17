@@ -101,6 +101,7 @@ const AttendanceList = ({ attendances }) => {
         )
       }
     },
+
     // {
     //   flex: 0.07,
     //   minWidth: 150,
