@@ -58,7 +58,7 @@ const AttendanceList = ({ attendances }) => {
       renderCell: ({ row }) => {
         return (
           <>
-            {new Date(row.date).getDate() + "-" + new Date(row.date).getMonth() + "-" + new Date(row.date).getFullYear()} {row.day}
+            {new Date(row.date).toLocaleDateString()} {row.day}
           </>
         )
       }
@@ -101,26 +101,26 @@ const AttendanceList = ({ attendances }) => {
         )
       }
     },
+    // {
+    //   flex: 0.07,
+    //   minWidth: 150,
+    //   field: 'earlyOverTime',
+    //   headerName: 'Early OverTime',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <>
+    //         {row.earlyOverTimeHours != 0 && (
+    //           <Typography sx={{ fontSize: 14, color: 'green' }}>{row.earlyOverTimeHours}</Typography>
+    //         )}
+    //       </>
+    //     )
+    //   }
+    // },
     {
       flex: 0.07,
-      minWidth: 150,
-      field: 'earlyOverTime',
-      headerName: 'Early OverTime',
-      renderCell: ({ row }) => {
-        return (
-          <>
-            {row.earlyOverTimeHours != 0 && (
-              <Typography sx={{ fontSize: 14, color: 'green' }}>{row.earlyOverTimeHours}</Typography>
-            )}
-          </>
-        )
-      }
-    },
-    {
-      flex: 0.07,
-      minWidth: 150,
+      minWidth: 80,
       field: 'lateOverTime',
-      headerName: 'Late overTime',
+      headerName: 'overTime',
       renderCell: ({ row }) => {
         return (
           <>
@@ -157,7 +157,7 @@ const AttendanceList = ({ attendances }) => {
     },
     {
       flex: 0.07,
-      minWidth: 200,
+      minWidth: 100,
       field: 'leavePayment',
       headerName: 'leave Time',
       renderCell: ({ row }) => {

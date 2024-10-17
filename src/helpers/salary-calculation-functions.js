@@ -95,6 +95,7 @@ export const functions = {
         employee.dailySalary = Number(lumpySalary / 30);
 
         // Assume Compensations 
+
         employee.totalSalary = lumpySalary;
         generalFunctions.calculateCompensations(data);
         employee.totalSalary += employee.totalCompensations;
@@ -144,6 +145,7 @@ export const functions = {
         let index = 0
         const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         let holidays = [];
+
         if (company.holidays) {
             holidays = company.holidays.map(day => {
                 let holidayDate = new Date(day.date).toLocaleDateString().split('/');
@@ -151,6 +153,8 @@ export const functions = {
                 return holidayDate[0] + '/' + holidayDate[1];
             })
         }
+
+
         employee.absenseDays = 0;
         let totalWorkingDaysCount = 0;
 
@@ -186,6 +190,7 @@ export const functions = {
 
 
                 // ----------------------- leaves ------------------------------------
+
                 let totalLeaveHours = 0;
                 if (employee?.leaves_info) { // each day we may have more than one leave 
                     employee.leaves_info?.map(leave => {
@@ -226,6 +231,7 @@ export const functions = {
                 let shiftOverTime2 = setUTCHours(employee.shift_info?.[0]?.times?.[0]['2nd'].toString())
                 let shiftOverTime3 = setUTCHours(employee.shift_info?.[0]?.times?.[0]['3rd'].toString())
 
+
                 // ----------------------- Absence days -----------------------------------------
 
                 if (!leaveDay && !holidayDay && workingDay) {
@@ -240,7 +246,6 @@ export const functions = {
                     if (!leaveDay) {
                         employee.attendances_info?.map(att => {
 
-                            console.log("********", new Date(x).toLocaleDateString(), new Date(att.date).toLocaleDateString(), new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString())
 
                             if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
 
@@ -258,18 +263,20 @@ export const functions = {
                                 )
 
                                 // ---------------- late ---------------------
+
                                 if (!holidayDay && workingDay) // in holidays & off days lateness doesn't count
-                                    if (_in > availableEarly) {
+                                    if (_in > availableLate) {
                                         lateFlag = true
                                         lateHours = (Math.abs(_in - shift_in) / 3600000).toFixed(2)
                                     }
                                 if (!holidayDay && workingDay) // in holidays & off days lateness doesn't count
-                                    if (_out < availableLate) {
+                                    if (_out < availableEarly) {
                                         earlyFlag = true
                                         earlyHours = (Math.abs(shift_out - _out) / 3600000).toFixed(2)
                                     }
 
                                 // -------------------- overtime -----------------------
+
                                 if (workingDay) {
                                     if (_in < shift_in) {
                                         earlyOvertimeFlag = true
@@ -657,11 +664,10 @@ export const functions = {
 
 
                 // -------------------------------------------------------------
-                console.log("---------")
+
                 if (employee?.attendances_info) {
                     if (!leaveDay) {
                         employee.attendances_info?.map(att => {
-                            console.log("-->", new Date(x).toLocaleDateString(), "****", new Date(att.date).toLocaleDateString())
                             if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
                                 _in = setUTCHours(att.timeIn.toString());
                                 _out = setUTCHours(att.timeOut.toString());

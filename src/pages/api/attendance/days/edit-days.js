@@ -25,7 +25,6 @@ export default async function handler(req, res) {
     working_days: company.working_days,
     holidays: company.holidays
   };
-  console.log(myUser.company_id);
 
   const currentCompany = await client.db().collection('companies').findOne({ _id: ObjectId(myUser.company_id) });
   if (!currentCompany) {

@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   const att = await client.db().collection('attendances').findOne({ _id: ObjectId(req.body.id) });
 
-  console.log(att);
+
 
   // return res.json(['d']);
 
@@ -45,7 +45,6 @@ export default async function handler(req, res) {
   }
 
   employee = employee[0];
-  console.log(employee);
 
   if (employee?.shift_info?.[0]?.times?.[0]) {
     const updated = await client.db().collection('attendances').updateOne({ _id: att._id },
