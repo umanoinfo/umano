@@ -154,7 +154,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       
       let dates = [];
       while(from.getTime() <= (new Date(NewHoliday.toDate)).getTime() ){
-        dates.push({date: from , name: NewHoliday.name });
+        dates.push({date: new Date(from.getTime() + from.getTimezoneOffset() * 60000) , name: NewHoliday.name });
         console.log(from);
         from= new Date(from.getTime() + 1000 * 60 * 60 * 24);
         console.log(from);
