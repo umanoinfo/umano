@@ -51,18 +51,29 @@ export const functions = {
       let attendances = [];
       for (const [key, value] of map.entries()) {
         let [idNo, date] = key.split('_');
-        let mn = new Date(date + 'T' + value[0] + 'Z');
-        let mx = new Date(date + 'T' + value[0] + 'Z');
+
+        console.log(date, "*******", value[0], "*******", new Date(date + 'T' + value[0] + 'Z'), "*******", new Date(date + '' + value[0]).toLocaleString(), "*******", new Date(date + 'T' + value[0] + 'Z').toLocaleString())
+
+        let mn = new Date(date + '' + value[0]).toLocaleString(); ///new Date(date + 'T' + value[0] + 'Z')
+        let mx = new Date(date + '' + value[0]).toLocaleString();  //// new Date(date + 'T' + value[0] + 'Z')
+
+
+
         if (mn == 'Invalid Date' || mx == 'Invalid Date') {
           toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
 
           return;
         }
+
+
         for (let j = 0; j < value.length; j++) {
           let time = new Date(date + 'T' + value[j] + 'Z');
           mn = Math.min(mn, time);
           mx = Math.max(mx, time);
         }
+
+
+
         mn = new Date(mn).toLocaleTimeString('en-US', { hour12: false })
         mx = new Date(mx).toLocaleTimeString('en-US', { hour12: false })
         attendances.push({
