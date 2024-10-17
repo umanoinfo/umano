@@ -53,8 +53,8 @@ export const functions = {
         let [idNo, date] = key.split('_');
 
         if (date == undefined || date == null) continue;
-        let mn = new Date(date + ' ' + value[0]);
-        let mx = new Date(date + ' ' + value[0]);
+        let mn = new Date(date + 'T' + value[0] + 'Z');
+        let mx = new Date(date + 'T' + value[0] + 'Z');
 
 
         if (mn == 'Invalid Date' || mx == 'Invalid Date') {
@@ -62,7 +62,7 @@ export const functions = {
           continue;
         }
         for (let j = 0; j < value.length; j++) {
-          let time = new Date(date + ' ' + value[j]);
+          let time = new Date(date + 'T' + value[0] + 'Z');
           mn = Math.min(mn, time);
           mx = Math.max(mx, time);
         }
