@@ -425,7 +425,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                             <MUITableCell>
                               <Typography variant='body2' px={5}>
                                 <strong>
-                                  {data.yearlyTakenParentalLeaves.toFixed(1)}/{data.availableParentalLeave}
+                                  {data.yearlyTakenParentalLeaves}/{data.availableParentalLeave}
                                 </strong>
                                 <small style={{ paddingLeft: 5 }}> Day</small>
                               </Typography>

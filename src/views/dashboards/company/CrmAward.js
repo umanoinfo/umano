@@ -82,7 +82,7 @@ const StyledGrid1 = styled(Grid)(({ theme }) => ({
 // Styled Grid component
 const StyledGrid2 = styled(Grid)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-end',
   justifyContent: 'center',
   [theme.breakpoints.up('md')]: {
     paddingLeft: '0 !important'
@@ -123,7 +123,7 @@ const CrmAward = () => {
   
     <Card>
       <Grid container spacing={6}>
-        <StyledGrid1 item xs={12} md={9} lg={9}>
+        <StyledGrid1 item xs={7} md={4} lg={4}>
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
               {session && session?.user && session?.user?.company_info &&  session.user.company_info[0] && session.user.company_info[0].name}
@@ -139,12 +139,12 @@ const CrmAward = () => {
 
           </Box>
         </StyledGrid1>
-        <StyledGrid2 item xs={12} md={3} lg={3}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Grid item xs={5} md={8} lg={8}>
+          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' , width:'fit-content'}}>
             {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
             {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
           </CardContent>
-        </StyledGrid2>
+        </Grid>
       </Grid>
     </Card>
   )

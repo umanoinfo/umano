@@ -895,12 +895,13 @@ const EditLeave = ({ popperPlacement, id }) => {
             <div>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    let i = !days.includes(val.getDay())
-                    let j = holyDays.includes(val.toDateString())
 
-                    return i || j
-                  }}
+                  // shouldDisableDate={val => {
+                  //   let i = !days.includes(val.getDay())
+                  //   let j = holyDays.includes(val.toDateString())
+
+                  //   return i || j
+                  // }}
                   controlid='date_from'
                   format='yyyy-MM-dd '
                   name='date_from'
@@ -918,13 +919,14 @@ const EditLeave = ({ popperPlacement, id }) => {
             <div>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    let i = !days.includes(val.getDay())
 
-                    let j = holyDays.includes(val.toDateString())
+                  // shouldDisableDate={val => {
+                  //   let i = !days.includes(val.getDay())
 
-                    return i || j
-                  }}
+                  //   let j = holyDays.includes(val.toDateString())
+
+                  //   return i || j
+                  // }}
                   controlid='date_to'
                   format=' yyyy-MM-dd'
                   name='date_to'
@@ -954,12 +956,13 @@ const EditLeave = ({ popperPlacement, id }) => {
             <div style={{ display: 'flex' }}>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    let i = !days.includes(val.getDay())
-                    let j = holyDays.includes(val.toDateString())
 
-                    return i || j
-                  }}
+                  // shouldDisableDate={val => {
+                  //   let i = !days.includes(val.getDay())
+                  //   let j = holyDays.includes(val.toDateString())
+
+                  //   return i || j
+                  // }}
                   controlid='date_from'
                   format='yyyy-MM-dd '
                   name='date_from'
@@ -975,9 +978,10 @@ const EditLeave = ({ popperPlacement, id }) => {
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    return !disableDates(val)
-                  }}
+
+                  // shouldDisableDate={val => {
+                  //   return !disableDates(val)
+                  // }}
                   controlid='date_from'
                   format='HH:mm'
                   size='small'
@@ -996,13 +1000,14 @@ const EditLeave = ({ popperPlacement, id }) => {
             <div style={{ display: 'flex' }}>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    let i = !days.includes(val.getDay())
 
-                    let j = holyDays.includes(val.toDateString())
+                  // shouldDisableDate={val => {
+                  //   let i = !days.includes(val.getDay())
 
-                    return i || j
-                  }}
+                  //   let j = holyDays.includes(val.toDateString())
+
+                  //   return i || j
+                  // }}
                   controlid='date_to'
                   format=' yyyy-MM-dd'
                   name='date_to'
@@ -1015,9 +1020,10 @@ const EditLeave = ({ popperPlacement, id }) => {
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                 <Form.Control
-                  shouldDisableDate={val => {
-                    return !disableDates(val)
-                  }}
+                
+                  // shouldDisableDate={val => {
+                  //   return !disableDates(val)
+                  // }}
                   controlid='date_to'
                   format=' HH:mm'
                   name='date_to'

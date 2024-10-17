@@ -174,7 +174,8 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               expiryDate: {
-                $gt: new Date(from30Date).toISOString()
+                $lt: new Date(from30Date).toISOString(),
+                $gt: new Date()
               }
             },
           ]

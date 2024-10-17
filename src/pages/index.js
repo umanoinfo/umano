@@ -66,7 +66,6 @@ const Home = () => {
     <>
 
       {/* 1111 */}
-      testtesttesttesttesttesttest
       <ApexChartWrapper>
         <Grid container spacing={6} className='match-height'>
           <Grid item xs={12} md={4}>
