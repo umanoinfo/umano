@@ -492,7 +492,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                 !data.flexible ?
                   <>
                     {
-                      data.totalEarlyValue ?
+                      data.totalEarlyValue || data.totalEarlyHours ?
                         <TableRow>
                           <TableCell>Early and late Hours</TableCell>
                           <TableCell>{(data.totalEarlyHours + data.totalLateHours).toFixed(3).toLocaleString()}</TableCell>
@@ -676,7 +676,20 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                     </TableCell>
                     {
                       leave.type == 'daily' &&
-                      <TableCell>{(leave.time / (((new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeOut) - new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeIn)) / (1000 * 60 * 60)))).toFixed(2)} day</TableCell>
+                      <TableCell>
+                        {
+                          data.shift_info[0]?.shiftType == 'totalWorkingHours' ?
+                            (leave.time / (data.shift_info[0]?.totalHours / (1000 * 60 * 60))).toFixed(2) :
+                            ''
+                        }
+
+                        {
+                          data.shift_info[0]?.shiftType == 'times' ?
+                            (leave.time / (((new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeOut) - new Date('1970-1-1 ' + data.shift_info[0]?.times?.[0]?.timeIn)) / (1000 * 60 * 60)))).toFixed(2) :
+                            ''
+                        }
+                        day
+                      </TableCell>
                     }
                     {
                       leave.type == 'hourly' &&

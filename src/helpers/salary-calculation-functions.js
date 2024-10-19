@@ -418,8 +418,6 @@ export const functions = {
                 Number(employee.hourlySalary) *
                 -1)
 
-
-
         //   --------------------------- Assume Leaves -------------------------------------------------
 
         if (employee.leaves_info) {
@@ -431,16 +429,15 @@ export const functions = {
                 let from = new Date(leave.date_from).setUTCHours(0, 0, 0, 0)
                 let to = new Date(leave.date_to).setUTCHours(0, 0, 0, 0)
                 if (leave.type == "daily") {
-
                     let days = ((to - from) / (1000 * 60 * 60 * 24)) + 1
-                    let cur = new Date(leave.date_from + ' UTC');
+                    let cur = new Date(leave.date_from).setUTCHours(0, 0, 0, 0);
                     let intersectedDays = 0;
                     for (let i = 0; i < days; i++) {
-
-                        if (cur >= fromDate && cur <= toDate) {
+                        // console.log(cur >= fromDate.getTime() && cur <= toDate.getTime(), cur, fromDate, toDate)
+                        if (cur >= fromDate.getTime() && cur <= toDate.getTime()) {
                             intersectedDays++;
                         }
-                        cur = new Date(cur.getTime() + 1000 * 60 * 60 * 24);
+                        cur = (cur + 1000 * 60 * 60 * 24);
                     }
 
                     leave.time = (((shift_out - shift_in) * intersectedDays) / 3600000)
@@ -462,7 +459,7 @@ export const functions = {
         }
 
         employee = [employee];
-
+        console.log('..................................................................');
         return res.status(200).json({ success: true, data: employee, attendances: attendances })
 
     },
@@ -528,7 +525,7 @@ export const functions = {
         lumpySalary = Number(employee?.salaries_info?.[0]?.lumpySalary);
         employee.lumpySalary = Number(lumpySalary)
         employee.dailySalary = Number(lumpySalary / 30);
-        employee.hourlySalary = Number(lumpySalary / Number(employee.salaryFormulas_info[0].totalHours));
+        employee.hourlySalary = Number(employee.dailySalary / Number(employee?.shift_info[0]?.totalHours));
 
         // Assume Compensations 
         employee.totalSalary = lumpySalary;
@@ -638,6 +635,7 @@ export const functions = {
                         if (dateCheck >= dateFrom && dateCheck <= dateTo) {
                             if (leave.type == 'daily') {
                                 leaveDay = true
+                                // totalLeaveHours += 
                             }
                             if (leave.type == 'hourly') {
                                 leaveHourly = true
@@ -756,19 +754,20 @@ export const functions = {
                 if (leave.type == "daily") {
 
                     let days = ((to - from) / (1000 * 60 * 60 * 24)) + 1
-                    let cur = new Date(leave.date_from + ' UTC');
+                    let cur = new Date(leave.date_from).setUTCHours(0, 0, 0, 0);
                     let intersectedDays = 0;
                     for (let i = 0; i < days; i++) {
-
-                        if (cur >= fromDate && cur <= toDate) {
+                        console.log(cur >= fromDate.getTime() && cur <= toDate.getTime(), cur, fromDate, toDate)
+                        if (cur >= fromDate.getTime() && cur <= toDate.getTime()) {
                             intersectedDays++;
                         }
-                        cur = new Date(cur.getTime() + 1000 * 60 * 60 * 24);
+                        cur = (cur + 1000 * 60 * 60 * 24);
                     }
 
                     let totalHours = Number(employee?.shift_info?.[0]?.totalHours ?? 0)
-                    leave.time = (((totalHours) * intersectedDays) / 3600000)
+                    leave.time = (((totalHours) * intersectedDays) / 3600000) ///////
                     leave.days = intersectedDays
+                    // console.log('+++++++++', 'time', leave.time, 'days', leave.days, 'inter', intersectedDays, 'tot', days);
                     totalLeave = totalLeave + Number(((intersectedDays * employee.dailySalary * (leave.paidValue)) / 100))
                     leave.value = (Number((Number(leave.days) * employee.dailySalary * (Number(leave.paidValue))) / 100));
 
@@ -799,19 +798,25 @@ export const functions = {
             +employee.hourlySalary *
             +employee.salaryFormulas_info[0].firstOverTime
         )
-
-        employee.totalholidayValue = (
-            +totalholidayHours *
-            +employee.hourlySalary *
-            +employee.salaryFormulas_info[0].holidayOverTime
-        )
-
         employee.totalOffDayHours = totalOffDayHours
-        employee.totalOffDayValue = (
-            +totalOffDayHours *
-            +employee.hourlySalary *
-            +employee.salaryFormulas_info[0].weekendOverTime
-        )
+
+        // employee.totalholidayValue = (
+        //     +totalholidayHours *
+        //     +employee.hourlySalary *
+        //     +employee.salaryFormulas_info[0].holidayOverTime
+        // )
+        // employee.totalOffDayValue = (
+        //     +totalOffDayHours *
+        //     +employee.hourlySalary *
+        //     +employee.salaryFormulas_info[0].weekendOverTime
+        // )
+        /////////////////////// IF there is holiday & off day comment the below & uncomment the above ///////////////////////////////////////
+        employee.totalholidayValue = 0;  // in monthlyTotalHours there is not holiday 
+        employee.totalOffDayValue = 0; // // in monthlyTotalHours there is not off day
+        employee.totalholidayHours = 0;
+        employee.totalOffDayHours = 0;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         employee.totalEarlyHours = totalEarlyHours
         employee.totalLateHours = totalLateHours
         employee.totalEarlyValue =

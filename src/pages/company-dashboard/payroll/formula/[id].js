@@ -286,7 +286,40 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             <TabPanel value='Absence'>
                               <Grid container spacing={1} sx={{ px: 5 }}>
                                 <Grid item sm={12} md={6}>
-                                  <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
+                                  {/* <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s </Typography>
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='justifiedAbsenceHoure'
+                                      type='number'
+                                      size='sm'
+                                      name='justifiedAbsenceHoure'
+                                      placeholder='Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Hour/s
+                                    </Typography>
+                                  </Box> */}
+                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
+                                      Not Justified :
+                                    </Typography>
+                                    <Form.Control
+                                      controlId='notJustifiedAbsenceHoure'
+                                      type='number'
+                                      size='sm'
+                                      name='notJustifiedAbsenceHoure'
+                                      placeholder='Not Justified'
+                                    />
+                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
+                                      Hour/s
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item sm={12} md={6}>
+                                  {/* <Typography sx={{ mt: 5, mb: 1 }}>Absence Days</Typography>
                                   <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                     <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                                       Justified :
@@ -316,41 +349,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                     <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
                                       Day/s
                                     </Typography>
-                                  </Box>
+                                  </Box> */}
                                 </Grid>
-                                <Grid item sm={12} md={6}>
-                                  <Typography sx={{ mt: 5, mb: 1 }}>Absence Hour/s </Typography>
-                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                      Justified :
-                                    </Typography>
-                                    <Form.Control
-                                      controlId='justifiedAbsenceHoure'
-                                      type='number'
-                                      size='sm'
-                                      name='justifiedAbsenceHoure'
-                                      placeholder='Justified'
-                                    />
-                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                      Hour/s
-                                    </Typography>
-                                  </Box>
-                                  <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                    <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
-                                      Not Justified :
-                                    </Typography>
-                                    <Form.Control
-                                      controlId='notJustifiedAbsenceHoure'
-                                      type='number'
-                                      size='sm'
-                                      name='notJustifiedAbsenceHoure'
-                                      placeholder='Not Justified'
-                                    />
-                                    <Typography variant='body2' sx={{ ml: 2, width: '100%' }}>
-                                      Hour/s
-                                    </Typography>
-                                  </Box>
-                                </Grid>
+
                               </Grid>
                             </TabPanel>
 
