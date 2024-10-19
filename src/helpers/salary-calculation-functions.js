@@ -460,6 +460,7 @@ export const functions = {
 
         employee = [employee];
         console.log('..................................................................');
+
         return res.status(200).json({ success: true, data: employee, attendances: attendances })
 
     },
@@ -635,6 +636,7 @@ export const functions = {
                         if (dateCheck >= dateFrom && dateCheck <= dateTo) {
                             if (leave.type == 'daily') {
                                 leaveDay = true
+
                                 // totalLeaveHours += 
                             }
                             if (leave.type == 'hourly') {
@@ -767,6 +769,7 @@ export const functions = {
                     let totalHours = Number(employee?.shift_info?.[0]?.totalHours ?? 0)
                     leave.time = (((totalHours) * intersectedDays) / 3600000) ///////
                     leave.days = intersectedDays
+
                     // console.log('+++++++++', 'time', leave.time, 'days', leave.days, 'inter', intersectedDays, 'tot', days);
                     totalLeave = totalLeave + Number(((intersectedDays * employee.dailySalary * (leave.paidValue)) / 100))
                     leave.value = (Number((Number(leave.days) * employee.dailySalary * (Number(leave.paidValue))) / 100));
@@ -815,6 +818,7 @@ export const functions = {
         employee.totalOffDayValue = 0; // // in monthlyTotalHours there is not off day
         employee.totalholidayHours = 0;
         employee.totalOffDayHours = 0;
+        
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         employee.totalEarlyHours = totalEarlyHours
