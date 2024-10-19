@@ -20,8 +20,6 @@ import SendInvoiceDrawer from 'src/views/apps/invoice/shared-drawer/SendInvoiceD
 
 const InvoicePreview = ({ employee, attendances, fromDate, toDate, lumpySalary }) => {
 
-  console.log("55555555555555555", attendances, employee)
-
   // ** State
   const [error, setError] = useState(false)
   const [data, setData] = useState(null)
@@ -46,10 +44,10 @@ const InvoicePreview = ({ employee, attendances, fromDate, toDate, lumpySalary }
     return (
       <>
         <Grid container px={5} spacing={6}>
-          <Grid item xl={9} md={8} xs={12}>
+          <Grid item xl={9} md={9} xs={12}>
             <PreviewCard data={employee} fromDate={fromDate} toDate={toDate} />
           </Grid>
-          <Grid item xl={3} md={4} xs={12}>
+          <Grid item xl={3} md={3} xs={12}>
             <PreviewActions
               employee={employee} attendances={attendances} fromDate={fromDate} toDate={toDate} lumpySalary={lumpySalary}
             />

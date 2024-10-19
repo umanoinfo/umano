@@ -91,8 +91,14 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
     return (
       <Card>
         <CardContent>
-          <Grid container>
-            <Grid item sm={6} xs={12} sx={{ mb: { sm: 0, xs: 4 } }}>
+          <Grid container sx={{
+            mb: 1,
+            width: '100%',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between'
+          }}>
+            <Grid item sm={6} md={4} xs={12} sx={{ mb: { sm: 0, xs: 4 } }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {renderClient(data)}
@@ -137,9 +143,9 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={6} md={8} xs={12}>
               <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-                <Table sx={{ maxWidth: '300px' }}>
+                <Table sx={{ maxWidth: '400px' }}>
                   <TableHead>
                     <Typography variant='h6'> Payroll</Typography>
                   </TableHead>
