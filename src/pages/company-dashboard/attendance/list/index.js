@@ -620,7 +620,13 @@ const AllDocumentsList = () => {
       field: 'timeIn',
       headerName: 'Time in',
       renderCell: ({ row }) => {
-        return <>{row.timeIn}</>
+        let color = '' ;
+        if(row?.shift_info?.[0]?.times){
+          color = row?.timeIn < row?.shift_info?.[0]?.times?.[0]?.timeIn ? 'green' : color ;
+          color = row?.timeIn > row?.shift_info?.[0]?.times?.[0]?.timeIn ? 'red' : color ;
+        }
+
+        return <span style={{color:color}}>{row.timeIn}</span>
       }
     },
     {
@@ -629,7 +635,52 @@ const AllDocumentsList = () => {
       field: 'timeOut',
       headerName: 'Time out',
       renderCell: ({ row }) => {
-        return <>{row.timeOut}</>
+        let color = '' ;
+        if(row?.shift_info?.[0]?.times){
+          color = row?.timeOut > row?.shift_info?.[0]?.times?.[0]?.timeOut ? 'green' : color ;
+          color = row?.timeOut < row?.shift_info?.[0]?.times?.[0]?.timeOut ? 'red' : color ;
+        }
+
+        return <span style={{color:color}}>{row.timeOut}</span>
+      }
+    },
+    {
+      flex: 0.11,
+      minWidth: 120,
+      field: 'timeInDif',
+      headerName: 'Time In difference',
+      renderCell: ({ row }) => {
+        let diff = '-'; 
+
+        if(row?.shift_info?.[0]?.times?.[0]){
+          let timeIn = new Date('1970-01-01 ' + row?.shift_info?.[0]?.times?.[0]?.timeIn).getTime();
+          let empTimeIn = new Date('1970-01-01 ' + row?.timeIn).getTime();
+          diff = new Date(Math.abs( timeIn - empTimeIn ))
+          diff = diff.toUTCString().substr(17,diff.toUTCString().length ).substr(0,8);
+          diff =( timeIn <  empTimeIn ? '-'  : '+' ) + diff ;
+        }
+
+        return <span >{diff }</span>
+      }
+    },
+    {
+      flex: 0.11,
+      minWidth: 120,
+      field: 'timeOutDif',
+      headerName: 'Time out difference',
+      renderCell: ({ row }) => {
+         let diff = '-'; 
+
+        if(row?.shift_info?.[0]?.times?.[0]){
+          let timeOut = new Date('1970-01-01 ' + row?.shift_info?.[0]?.times?.[0]?.timeOut).getTime();
+          let empTimeOut = new Date('1970-01-01 ' + row?.timeOut).getTime();
+          diff = new Date(Math.abs( timeOut - empTimeOut ))
+          diff = diff.toUTCString().substr(17,diff.toUTCString().length ).substr(0,8);
+          diff =( timeOut > empTimeOut ? '-'  : '+' ) + diff ;
+        }
+        
+        return <span >{diff }</span>
+
       }
     },
     {

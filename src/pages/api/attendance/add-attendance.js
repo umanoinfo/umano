@@ -36,6 +36,9 @@ export default async function handler(req, res) {
   attendance.created_at = new Date().toISOString()
   attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
   attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
+  attendance.originalTimeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
+  attendance.originalTimeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
+  
   attendance.status = 'active'
   const existing = await client.db().collection('attendances').findOne({ date: attendance.date, employee_id: attendance.employee_id });
   if (!existing) {

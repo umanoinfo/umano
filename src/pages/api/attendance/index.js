@@ -56,6 +56,36 @@ export default async function handler(req, res) {
           as: 'employee_info'
         }
       },
+      {
+        $unwind: {
+          path: '$employee_info',
+          preserveNullAndEmptyArrays: true // Optional, if you want to keep documents without employee_info
+        }
+      },
+      {
+        $lookup: {
+          from: 'shifts',
+          let: { shift_id: { $toObjectId: '$employee_info.shift_id' } },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ['$_id', '$$shift_id']
+                }
+              }
+            },
+            {
+              $match: {
+                $or: [
+                  { deleted_at: { $exists: false } },
+                  { deleted_at: null }
+                ]
+              }
+            }
+          ],
+          as: 'shift_info'
+        }
+      },
     
       {
         $sort: {
