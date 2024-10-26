@@ -32,13 +32,14 @@ export default async function handler(req, res) {
     if (is12Format(attendance.timeIn) || is12Format(attendance.timeOut)) {
       attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
       attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
-      attendance.originalTimeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8);
-      attendances.originalTimeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8);
-      
+
       // attendance.timeIn = new Date(attendance.timeIn.getTime() + Math.abs(attendance.timeIn.getTime() * 60000 ) ).toLocaleTimeString('en-US', { hour12: false })
       // attendance.timeOut = new Date(attendance.timeOut.getTime() + Math.abs(attendance.timeOut.getTime() * 60000 )).toLocaleTimeString('en-US', { hour12: false })
 
     }
+    attendance.originalTimeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8); 
+    attendance.originalTimeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8);
+
     attendance.company_id = myUser.company_id
     attendance.date = new Date(attendance.date).toISOString()
     attendance.user_id = myUser._id

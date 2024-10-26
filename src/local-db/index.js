@@ -93,6 +93,7 @@ export const FormulaType = [
   // do not change the value of this it will break salary formula calculation (it uses the name to calculate the salary)
   { label: 'Monthly', value: 'Monthly' },
   { label: 'Monthly total hours', value: "MonthlyTotalHours"},
+  { label: 'Daily total hours' , value: 'DailyTotalHours'},
   
   // { label: 'Weekly', value: 'Weekly' },
   // { label: 'Daily', value: 'Daily' },

@@ -182,7 +182,7 @@ const AllDocumentsList = () => {
       }
     })
 
-    let totalMinutes = 0;
+    let totalMinutes = employee?.shift_info?.[0]?.totalHours ; 
     let shiftType = employee?.shift_info?.[0]?.shiftType;
     if (shiftType == 'times') {
       totalMinutes = range1.reduce((acc, cu) => {
@@ -386,7 +386,7 @@ const AllDocumentsList = () => {
   function calculateIntersectionValue(timeRanges1, timeRanges2, shiftType) { // return total intersection in minutes
 
     let totalIntersection = 0
-    if (shiftType == 'totalWorkingHours') {
+    if (shiftType == 'totalWorkingHours' || shiftType == 'DailyTotalWorkingHours') {
       for (let i = 0; i < timeRanges2.length; i++) {
         const range2 = timeRanges2[i]
         const start2 = convertToMinutes(range2.start)

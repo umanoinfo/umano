@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, createRef, Fragment } from 'react'
 // ** Next Imports
 import Link from 'next/link'
 
-import * as XLSX from 'xlsx'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -357,32 +356,7 @@ const AllDocumentsList = () => {
     myRef.current.click()
   }
 
-  function ExcelDateToJSDate(date) {
-    return isNaN(date) ? null : new Date(Math.round((date - 25569) * 86400 * 1000))
-  }
-
-  function excelDateToJSDate(excel_date, time = false) {
-    let day_time = excel_date % 1
-    let meridiem = 'AMPM'
-    let hour = Math.floor(day_time * 24)
-    let minute = Math.floor(Math.abs(day_time * 24 * 60) % 60)
-    let second = Math.floor(Math.abs(day_time * 24 * 60 * 60) % 60)
-    if (isNaN(second) || isNaN(minute) || isNaN(hour) || isNaN(day_time)) {
-      return null
-    }
-    hour >= 12 ? (meridiem = meridiem.slice(2, 4)) : (meridiem = meridiem.slice(0, 2))
-    hour > 12 ? (hour = hour - 12) : (hour = hour)
-    hour = hour < 10 ? '0' + hour : hour
-    minute = minute < 10 ? '0' + minute : minute
-    second = second < 10 ? '0' + second : second
-    let daytime = '' + hour + ':' + minute + ':' + second + ' ' + meridiem
-
-    return time
-      ? daytime
-      : new Date(0, 0, excel_date, 0, -new Date(0).getTimezoneOffset(), 0).toLocaleDateString(navigator.language, {}) +
-      ' ' +
-      daytime
-  }
+  
 
   const onFileChange = event => {
     
@@ -395,12 +369,16 @@ const AllDocumentsList = () => {
       return;
     }
     const filename = event.target.files[0].name;
-    console.log(setCompanyFingerprintDevice?.functionName)
+    console.log(companyFingerprintDevice?.functionName)
     if(companyFingerprintDevice?.functionName){
       onCustomFileChange(event);
     }
     else {
-      onExcelFileChange(event);
+      let functions_ = {
+        setOpenExcel ,
+        setUnvalid 
+      };
+      functions["excel"](event , employeesList, handleSubmit , functions_ );
     }
 
 
@@ -414,96 +392,17 @@ const AllDocumentsList = () => {
 
       return ;
     }
-    
-    functions[companyFingerprintDevice?.functionName](event , employeesList, handleSubmit);
+
+    let functions_ = {
+      setOpenExcel ,
+      setUnvalid 
+    };
+    console.log(companyFingerprintDevice?.functionName == 'excel');
+    console.log(functions );
+    functions[companyFingerprintDevice?.functionName](event , employeesList, handleSubmit , functions_ );
   }
 
-  const onExcelFileChange = (event)=>{
 
-    const target = event.target
-
-
-    if (target.files.length != 0) {
-      if (target.files.length !== 1) {
-        throw new Error('Cannot use multiple files')
-      } else {
-        const reader = new FileReader()
-        reader.readAsBinaryString(target.files[0])
-        reader.onload = e => {
-          /* create workbook */
-          const binarystr = e.target.result
-          const wb = XLSX.read(binarystr, { type: 'binary' })
-
-          /* selected the first sheet */
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-
-          /* save data */
-          const data = XLSX.utils.sheet_to_json(ws) // to get 2d array pass 2nd parameter as object {header: 1}
-          let EmployeesIds = new Map();
-
-          let ids = employeesList.map(val => {
-            EmployeesIds.set(String(val.idNo) , val._id) ;
-            
-            return String(val.idNo)
-          })
-          console.log(EmployeesIds);
-
-          let d = data.map((val, index) => {
-            let timeOut = excelDateToJSDate(val['Clock Out']);
-            let timeIn = excelDateToJSDate(val['Clock In']);
-
-            timeOut = new Date(timeOut).toLocaleTimeString('en-US', { hour12: false });
-            timeIn = new Date(timeIn).toLocaleTimeString('en-US', { hour12: false });
-            
-            return {
-              'employee_id' : EmployeesIds.get(String(val['Emp No.'])),
-              'Emp No.': val['Emp No.'],
-              'Date': ExcelDateToJSDate(val['Date']),
-              'Clock Out': timeOut,
-              'Clock In': timeIn,
-              index: index + 1 ,
-            }
-          })
-
-
-       
-          
-
-          let unValid = d.filter(val => {
-            let i = !val['Emp No.']
-            let i2 = !val['Date']
-            let i3 = !val['Clock Out']
-            let k3 = val['Clock Out'].toUpperCase().includes('AM') || val['Clock Out'].toUpperCase().includes('PM')
-            let i4 = !val['Clock In']
-            let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM');
-            let j = !ids.includes(val['Emp No.'].toString())
-            console.log(val['Emp No.'], ids, ids.includes(val['Emp No.'].toString()));
-            let k5 = val['Clock In'] > val['Clock Out'];
-            val.reasons = []
-            val.reasons = i ? [...val.reasons, 'Emp No.'] : val.reasons
-            val.reasons = i2 ? [...val.reasons, 'Date'] : val.reasons
-            val.reasons = i3 ? [...val.reasons, 'Clock Out'] : val.reasons
-            val.reasons = i4 ? [...val.reasons, 'Clock In'] : val.reasons
-            val.reasons = j ? [...val.reasons, 'not in the system'] : val.reasons
-            val.reasons = k3 ? [...val.reasons, 'Clock out should be in 24 hour format'] : val.reasons;
-            val.reasons = k4 ? [...val.reasons, 'Clock In should be in 24 hour format'] : val.reasons;
-            val.reasons = k5 ? [...val.reasons, 'Clock In should be smaller than clock out (double check its 24 hour format)'] : val.reasons;
-
-            return i || i2 || i3 || i4 || j || k3 || k4
-          })
-
-          if (unValid.length > 0) {
-            setOpenExcel(true)
-            setUnvalid(unValid)
-          } else {
-            handleSubmit(d)
-          }
-        }
-      }
-    }
-    
-  }
 
   const downloadExcel = () => {
     const link = document.getElementById('attendanceTemplate');
@@ -598,6 +497,8 @@ const AllDocumentsList = () => {
       field: 'name',
       headerName: 'Name',
       renderCell: ({ row }) => {
+        console.log(row.employee_info)
+
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName}

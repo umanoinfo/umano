@@ -234,12 +234,23 @@ export default async function handler(req, res) {
   if (employee) {
     if (employee?.salaryFormulas_info?.[0]?.type == 'Flexible') {
       functions.Flexible(data);
+
+      return ;
     }
     else if (employee?.salaryFormulas_info?.[0]?.type == 'Monthly') {
       functions.Monthly(data);
+
+      return ;
     }
     else if (employee?.salaryFormulas_info?.[0]?.type == 'MonthlyTotalHours') {
       functions.MonthlyTotalHours(data);
+
+      return ;
+    }
+    else if(employee?.salaryFormulas_info?.[0]?.type == 'DailyTotalHours'){
+      functions.DailyTotalHours(data);
+
+      return ;
     }
   }
   if (!employee.salaryFormulas_info || !employee.salaryFormulas_info[0] || !employee?.shift_info || !employee?.shift_info[0] || (!employee?.salaryFormulas_info?.[0]?.type != 'Flexible' && (!employee.salaries_info || employee.salaries_info.length == 0)) || ((!company?.working_days || company?.working_days?.length == 0))) {

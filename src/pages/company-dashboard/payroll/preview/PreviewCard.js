@@ -282,7 +282,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                             </MUITableCell>
                           </TableRow>
                           {
-                            data?.totalWorkingHours ?
+                            data?.totalWorkingHours != undefined ?
                               <TableRow>
                                 <MUITableCell>
                                   <Typography variant='body2'> Total Working Hours :</Typography>
@@ -290,7 +290,39 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                                 <MUITableCell>
                                   <Typography variant='body2' px={5}>
                                     <strong>{(data?.totalWorkingHours)}</strong>
-                                    <small style={{ paddingLeft: 5 }}> AED</small>
+                                    <small style={{ paddingLeft: 5 }}> H/s</small>
+                                  </Typography>
+                                </MUITableCell>
+                              </TableRow>
+                              :
+                              <></>
+                          }
+                          {
+                              data?.totalRequiredHours != undefined ?
+                              <TableRow>
+                                <MUITableCell>
+                                  <Typography variant='body2'> Total Required Hours :</Typography>
+                                </MUITableCell>
+                                <MUITableCell>
+                                  <Typography variant='body2' px={5}>
+                                    <strong>{(data?.totalRequiredHours)}</strong>
+                                    <small style={{ paddingLeft: 5 }}> H/s</small>
+                                  </Typography>
+                                </MUITableCell>
+                              </TableRow>
+                              :
+                              <></>
+                          }
+                          {
+                              data?.workingHoursDifference != undefined ?
+                              <TableRow>
+                                <MUITableCell>
+                                  <Typography variant='body2'> Total Hours difference :</Typography>
+                                </MUITableCell>
+                                <MUITableCell>
+                                  <Typography variant='body2' px={5}>
+                                    <strong>{(data?.workingHoursDifference)}</strong>
+                                    <small style={{ paddingLeft: 5 }}> H/s</small>
                                   </Typography>
                                 </MUITableCell>
                               </TableRow>

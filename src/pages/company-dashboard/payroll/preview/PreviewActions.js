@@ -42,7 +42,13 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalEmployeeDeductions = employee.totalEmployeeDeductions
     data.totalEmployeeRewards = employee.totalEmployeeRewards
     data.totalWorkingDaysCount = employee.totalWorkingDaysCount
-    data.flexible = employee.flexible; 
+    data.flexible = employee.flexible;
+    data.totalWorkingHours = employee.totalWorkingHours
+    data.totalRequiredHours = employee.totalRequiredHours 
+    data.workingHoursDifference = employee.workingHoursDifference 
+    data.shiftType = employee.shift_info[0].shiftType ; 
+    data.salaryFormulaType = (employee?.salaryFormulas_info?.[0]?.type);
+    
     if(!data.flexible){
       data.totalEarlyHours = employee.totalEarlyHours
       data.totalLateHours = employee.totalLateHours

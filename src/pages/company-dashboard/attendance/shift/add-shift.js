@@ -285,8 +285,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       <div> Shift type</div>
                       <SelectPicker
                         data={[
-                          {value:'totalWorkingHours',label:'Total Hours'},
-                          {value:'times',label:'Times'}
+                          {value:'totalWorkingHours',label:'Monthly Total Hours'},
+                          {value:'times',label:'Times'},
+                          {value:'DailyTotalWorkingHours',label:'Daily Total Hours'}
                         ]}
                         labelKey='label'
                         valueKey='value'
@@ -398,7 +399,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   }
                   <Grid item sm={12} md={12}>
                     {
-                        shiftType== 'totalWorkingHours'?
+                        shiftType== 'totalWorkingHours' || shiftType == 'DailyTotalWorkingHours' ?
                             <Grid item sm={12} md={4}>
                               <small>Total Hours</small>
                               <Form.Control

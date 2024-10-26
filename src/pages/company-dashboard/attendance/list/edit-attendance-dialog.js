@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import { TextField, Select, MenuItem, InputLabel, FormControl} from '@mui/material'
+import { TextField, Select, MenuItem, InputLabel, FormControl, Divider} from '@mui/material'
 import { TimePicker } from '@mui/x-date-pickers'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
@@ -42,18 +42,30 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
   let new_date_out = attendance.date.split('T')
   new_date_out[1] = attendance.timeOut
 
-
-
+  new_date_in = new_date_in.join('T') + '.000Z';
+  new_date_out = new_date_out.join('T') + '.000Z';
+  
   const statusData = [{ label: 'active', value: 'active' }]
-
+  
   // ** States
   const [date, setDate] = useState(new Date(new_date_in))
   const [timeIn , setTimeIn] = useState(new Date(new_date_in))
-  const [timeOut , setTimeOut] = useState(new Date(new_date_out))
+  const [timeOut , setTimeOut] = useState(new Date(new_date_out ))
+  const [originalTimeIn , setOriginalTimeIn ] = useState(new Date(attendance.date.split('T')[0] + 'T' + attendance.originalTimeIn + '.000Z' ));
+  const [originalTimeOut , setOriginalTimeOut ] = useState(new Date(attendance.date.split('T')[0] + 'T' + attendance.originalTimeOut + '.000Z' ));
+  console.log(originalTimeIn , originalTimeOut, timeIn , timeOut );
   const [status, setStatus] = useState(attendance.status)
+  console.log(attendance);
 
   if (!open) {
     return <></>
+    originalTimeIn
+  }
+
+  const returnToOriginal = ()=>{
+
+    setTimeIn(originalTimeIn);
+    setTimeOut(originalTimeOut);
   }
 
   const handleSubmit = () => {
@@ -104,6 +116,7 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
             Edit Attendance Information
           </Typography>
         </Box>
+
         <Form>
           <Grid container mb={3}>
             <Grid item xs={6} mb={3}>
@@ -112,7 +125,7 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                   <small>Employee Name</small>
                   <Form.Control
                     size='md'
-                    value={attendance.employee_info[0].firstName + ' ' + attendance.employee_info[0].lastName}
+                    value={attendance?.employee_info?.[0]?.firstName + ' ' + attendance?.employee_info?.[0]?.lastName}
                     name='user name'
                     placeholder='user name'
                     disabled
@@ -120,20 +133,57 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                 </Form.Group>
               </div>
             </Grid>
-
-            <Grid container spacing={2}>
-              <Grid container spacing={2}>
-                <Grid item sm={6} xs={12}>
+            <Grid item sm={6} xs={12}>
                   
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                     <DatePicker
                       label="Date"
                       value={date}
                       onChange={e => setDate(e)}
+                      disabled
                     />
                   </LocalizationProvider>
                     
                 </Grid>
+            <Grid container spacing={2}>
+              <Grid container spacing={2}>
+               
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                      <TimePicker
+                        label="Original Time in"
+                        type="time"
+                        value={(originalTimeIn) }
+                        onChange={e => setTimeIn(e)}
+                        fullWidth
+                        disabled
+                      />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item sm={3} xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                    <TimePicker
+                      label="Original Time out"
+                      type="time"
+                      value={(originalTimeOut) }
+                      onChange={e => setTimeOut(e) }
+                      fullWidth
+                      disabled
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                
+              </Grid>
+            </Grid>
+
+            <Divider  component={'li'} />
+            
+            ___________________________________________
+            
+            <Divider  component={'li'} />
+            <Grid container spacing={2}>
+              <Grid container spacing={2}>
+               
                 <Grid item sm={3} xs={4}>
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                       <TimePicker
@@ -158,7 +208,7 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                 </Grid>
                 
               </Grid>
-              </Grid>
+            </Grid>
 
           </Grid>
         </Form>
@@ -166,6 +216,9 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
       <DialogActions sx={{ pb: { xs: 8, sm: 12.5  }, justifyContent: 'start' }}>
         <Button variant='contained' sx={{ mr: 2 , ml:10 }} onClick={() => handleSubmit()}>
           Submit
+        </Button>
+        <Button variant='contained' sx={{ mr: 2 , ml:10 }} onClick={() => returnToOriginal()}>
+          Return to original
         </Button>
         <Button variant='outlined' color='secondary' onClick={() => setOpen(false)}>
           Discard

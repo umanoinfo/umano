@@ -226,24 +226,35 @@ const AddLeave = ({ popperPlacement, id }) => {
     })
   }
 
-  function calculateIntersectionValue(timeRanges1, timeRanges2) {
+  function calculateIntersectionValue(timeRanges1, timeRanges2 ,shiftType) {
 
     let totalIntersection = 0
+    if (shiftType == 'totalWorkingHours' || shiftType == 'DailyTotalWorkingHours') {
+      for (let i = 0; i < timeRanges1?.length; i++) {
+        const range1 = timeRanges1[i]
+        const start1 = convertToMinutes(range1.start)
+        const end1 = convertToMinutes(range1.end)
 
-    for (let i = 0; i < timeRanges1.length; i++) {
-      const range1 = timeRanges1[i]
-      const start1 = convertToMinutes(range1.start)
-      const end1 = convertToMinutes(range1.end)
+        for (let j = 0; j < timeRanges2.length; j++) {
+          const range2 = timeRanges2[j]
+          const start2 = convertToMinutes(range2.start)
+          const end2 = convertToMinutes(range2.end)
 
+          const start = Math.max(start1, start2)
+          const end = Math.min(end1, end2)
+
+          const intersection = Math.max(0, end - start)
+          totalIntersection += intersection
+        }
+      }
+    }
+    else{
       for (let j = 0; j < timeRanges2.length; j++) {
         const range2 = timeRanges2[j]
         const start2 = convertToMinutes(range2.start)
         const end2 = convertToMinutes(range2.end)
 
-        const start = Math.max(start1, start2)
-        const end = Math.min(end1, end2)
-
-        const intersection = Math.max(0, end - start)
+        const intersection = end2 - start2 ; // because there is not shift in & out all the leave range taken
         totalIntersection += intersection
       }
     }
@@ -279,8 +290,8 @@ const AddLeave = ({ popperPlacement, id }) => {
       takenOthers: 0
     }
     const leaves = employee.leaves_info
-
-    const range1 = employee.shift_info[0].times.map(time => {
+    
+    const range1 = employee?.shift_info?.[0]?.times?.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
 
@@ -310,13 +321,17 @@ const AddLeave = ({ popperPlacement, id }) => {
       }
     })
 
-    let totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+    let totalMinutes = employee?.shift_info?.[0]?.totalHours ; 
+    let shiftType = employee?.shift_info?.[0]?.shiftType; // defin
 
+    if (shiftType == 'times') {
+      totalMinutes = range1.reduce((acc, cu) => {
+        return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+      }, 0)
+    }
     employee.takenPaidLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangePaidLeave,shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Unpaid Leave
@@ -336,12 +351,10 @@ const AddLeave = ({ popperPlacement, id }) => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenUnpaidLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeUnpaidLeave,shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Sick Leave
@@ -361,12 +374,10 @@ const AddLeave = ({ popperPlacement, id }) => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenSickLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeSick)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeSick,shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Maternity Leave
@@ -386,12 +397,10 @@ const AddLeave = ({ popperPlacement, id }) => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenMaternityLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeMaternityLeave,shiftType)) / totalMinutes
     ).toFixed(2)
 
     // Parental Leave
@@ -411,12 +420,10 @@ const AddLeave = ({ popperPlacement, id }) => {
         return val
       }
     })
-    totalMinutes = range1.reduce((acc, cu) => {
-      return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-    }, 0)
+
     employee.takenParentalLeaves += +(
       1 -
-      (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave)) / totalMinutes
+      (totalMinutes - calculateIntersectionValue(range1, rangeParentalLeave,shiftType)) / totalMinutes
     ).toFixed(2)
 
     return employee
@@ -531,14 +538,20 @@ const AddLeave = ({ popperPlacement, id }) => {
         const data_request = { ...formValue }
         console.log(formValue);
 
+        let shiftType = selectedEmployee?.shift_info[0]?.shiftType; // defin
 
-        const range1 = selectedEmployee?.shift_info[0].times.map(time => {
+        const range1 = selectedEmployee?.shift_info[0]?.times?.map(time => {
           return { start: time.timeIn, end: time.timeOut }
         })
 
-        const totalMinutes = range1.reduce((acc, cu) => {
-          return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
-        }, 0)
+        
+        let totalMinutes =0 ;
+
+        if (shiftType == 'times') {
+          totalMinutes = range1.reduce((acc, cu) => {
+            return acc + (convertToMinutes(cu.end) - convertToMinutes(cu.start))
+          }, 0)
+        }
 
         const newRange = [
           {
@@ -560,8 +573,10 @@ const AddLeave = ({ popperPlacement, id }) => {
 
           return
         }
+        
 
-        const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange)) / totalMinutes).toFixed(2)
+
+        const newHours = +(1 - (totalMinutes - calculateIntersectionValue(range1, newRange,shiftType)) / totalMinutes).toFixed(2)
 
         if (data.type == 'hourly') {
           if (data.status_reason == 'paidLeave') {
@@ -758,7 +773,7 @@ const AddLeave = ({ popperPlacement, id }) => {
   }
 
   const disableDates = val => {
-    const range1 = selectedEmployee?.shift_info[0].times.map(time => {
+    const range1 = selectedEmployee?.shift_info[0]?.times?.map(time => {
       return { start: time.timeIn, end: time.timeOut }
     })
 

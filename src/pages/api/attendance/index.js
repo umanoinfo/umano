@@ -86,7 +86,20 @@ export default async function handler(req, res) {
           as: 'shift_info'
         }
       },
-    
+      {
+          $group: {
+            _id: '$_id',
+            originalFields: { $first: '$$ROOT' },
+            employee_info: { $push: '$employee_info' },
+          }
+      },
+      {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: ['$originalFields', { employee_info: '$employee_info'}]
+            }
+          }
+      },
       {
         $sort: {
           date: -1
