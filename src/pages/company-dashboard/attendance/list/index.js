@@ -379,7 +379,9 @@ const AllDocumentsList = () => {
         setUnvalid 
       };
       functions["excel"](event , employeesList, handleSubmit , functions_ );
+
     }
+    event.target.value = '' ;
 
 
     // if(target.files[0])

@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     attendance.employee_id = attendance.employee_id;
     attendancesQuery.push({ date: attendance.date, employee_no: attendance.employee_no, $or: [{ deleted_at: { $exists: false }, deleted_at: null }] });
   }
-
+  console.log(attendancesQuery);
   const curAttendances = await client.db().collection('attendances').find({ $or: attendancesQuery }).toArray();
   const nonExistingAttendances = [];
   for (const attendance of attendances) {

@@ -110,6 +110,7 @@ const DialogAddUser = ({ popperPlacement, id }) => {
           setEnd_at(response.data.data[0].end_at)
           setNewState(response.data.data[0].state)
           setFingerprintDeviceId(response.data.data[0].fingerprintDeviceId)
+          console.log(response.data.data[0].fingerprintDeviceId);
 
 
           const index = allCountries.findIndex(i => i._id == response.data.data[0].country_id)
@@ -240,7 +241,8 @@ const DialogAddUser = ({ popperPlacement, id }) => {
 
   
   const handleFingerprintDeviceChange= (event , newValue)=>{
-    setFingerprintDeviceId(newValue._id);
+    
+    setFingerprintDeviceId(event);
   }
 
 
@@ -266,7 +268,12 @@ const DialogAddUser = ({ popperPlacement, id }) => {
     axios
     .get('/api/fingerprint-device')
     .then(function (response) {
-      setFingerprintDevicesDataSource(response?.data?.data);
+      setFingerprintDevicesDataSource(response?.data?.data?.map((_)=>{
+         _.label = _.companyName + ' ' + _.model ;
+
+         return _ ;
+      }));
+
       
     })
     .catch(function (error) {
@@ -431,14 +438,16 @@ const DialogAddUser = ({ popperPlacement, id }) => {
                       <Form.Group>
                         <small>Fingerprint device </small>                                              
                           <FormControl fullWidth sx={{ mb: 3 }} value={fingerprintDeviceId} >
-                          <Autocomplete
+                          <SelectPicker
                             size='small'
-                            options={fingerprintDevicesDataSource}
+                            data={fingerprintDevicesDataSource}
                             value={fingerprintDeviceId}
+                            labelKey='label'
+                            valueKey='_id'
+
                             onChange={handleFingerprintDeviceChange}
                             id='autocomplete-outlined'
-                            getOptionLabel={option => option?.companyName + ' '+ option?.model}
-                            renderInput={params => <TextField {...params} label='Fingerprint Device' value={fingerprintDeviceId}   error={Boolean(false)}  />}
+                            
                           />
                           
                           {/* {errors.manager && (

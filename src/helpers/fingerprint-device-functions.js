@@ -89,7 +89,9 @@ export const functions = {
 
         // console.log(mn, mx);
 
-
+        if(EmployeesIds.get(String(idNo))){
+          continue ;
+        }
         attendances.push({
           'Emp No.': idNo,
           'Clock In': mn,
@@ -158,7 +160,8 @@ export const functions = {
             
             return String(val.idNo)
           })
-          console.log(EmployeesIds);
+
+          // console.log(EmployeesIds);
 
           let d = data.map((val, index) => {
             let timeOut = excelDateToJSDate(val['Clock Out']);
@@ -175,6 +178,8 @@ export const functions = {
               'Clock In': timeIn,
               index: index + 1 ,
             }
+          }).filter((val )=>{
+            return val?.employee_id ;
           })
 
 
@@ -189,7 +194,8 @@ export const functions = {
             let i4 = !val['Clock In']
             let k4 = val['Clock In'].toUpperCase().includes('AM') || val['Clock In'].toUpperCase().includes('PM');
             let j = !ids.includes(val['Emp No.'].toString())
-            console.log(val['Emp No.'], ids, ids.includes(val['Emp No.'].toString()));
+            
+            // console.log(val['Emp No.'], ids, ids.includes(val['Emp No.'].toString()));
             let k5 = val['Clock In'] > val['Clock Out'];
             val.reasons = []
             val.reasons = i ? [...val.reasons, 'Emp No.'] : val.reasons
@@ -200,9 +206,9 @@ export const functions = {
             val.reasons = k3 ? [...val.reasons, 'Clock out should be in 24 hour format'] : val.reasons;
             val.reasons = k4 ? [...val.reasons, 'Clock In should be in 24 hour format'] : val.reasons;
             val.reasons = k5 ? [...val.reasons, 'Clock In should be smaller than clock out (double check its 24 hour format)'] : val.reasons;
-
+            
             return i || i2 || i3 || i4 || j || k3 || k4
-          })
+          })  
 
           if (unValid.length > 0) {
             setOpenExcel(true)

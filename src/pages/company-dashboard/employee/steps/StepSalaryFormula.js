@@ -52,6 +52,7 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
       setSalaryFormulaOptions(tempSalary)
       setSelectedSalaryFormula(salaryFormula.find(x => x._id == employee.salary_formula_id))
       setSelectedSalaryFormulaID(employee.salary_formula_id)
+      console.log(employee);
     }
 
     if (compensations) {
@@ -152,14 +153,14 @@ const StepSalary = ({ handleNext, getEmployee, employee, salaryFormula, deductio
             <SelectPicker
               data={salaryFormulaOptions}
 
-              // value={selectedSalaryFormulaID}
+              value={selectedSalaryFormulaID}
               onChange={e => {
 
                 changeSalary(e)
               }}
               block
             />
-            {setSelectedSalaryFormula && (
+            {selectedSalaryFormula && (
               <Grid item size='sm' sm={12} md={12} sx={{ mt: 2 }}>
                 <TabContext value={tabValue}>
                   <TabList variant='fullWidth' onChange={handleChange} aria-label='full width tabs example'>
