@@ -54,7 +54,8 @@ export default async function handler(req, res) {
 
     const usersCount = await client.db().collection('users').countDocuments({
       company_id: (id),
-      $or: [{deleted_at : {$exists: false }} , { deleted_at: null }]
+      $or: [{deleted_at : {$exists: false }} , { deleted_at: null }],
+      type: {$ne:'admin'}
     }) ;
     console.log(id , employeesCount, usersCount);
 
