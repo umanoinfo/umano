@@ -42,18 +42,20 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
   let new_date_out = attendance.date.split('T')
   new_date_out[1] = attendance.timeOut
 
-  new_date_in = new_date_in.join('T') + '.000Z';
-  new_date_out = new_date_out.join('T') + '.000Z';
-  
+  let original_date_in = attendance.date.split('T');
+  original_date_in[1] = attendance.originalTimeIn;
+  let original_date_out = attendance.date.split('T');
+  original_date_out[1] = attendance.originalTimeOut;
+
   const statusData = [{ label: 'active', value: 'active' }]
-  
+
   // ** States
   const [date, setDate] = useState(new Date(new_date_in))
-  const [timeIn , setTimeIn] = useState(new Date(new_date_in))
-  const [timeOut , setTimeOut] = useState(new Date(new_date_out ))
-  const [originalTimeIn , setOriginalTimeIn ] = useState(new Date(attendance.date.split('T')[0] + 'T' + attendance.originalTimeIn + '.000Z' ));
-  const [originalTimeOut , setOriginalTimeOut ] = useState(new Date(attendance.date.split('T')[0] + 'T' + attendance.originalTimeOut + '.000Z' ));
-  console.log(originalTimeIn , originalTimeOut, timeIn , timeOut );
+  const [timeIn, setTimeIn] = useState(new Date(new_date_in))
+  const [timeOut, setTimeOut] = useState(new Date(new_date_out))
+  const [originalTimeIn, setOriginalTimeIn] = useState(new Date(original_date_in));
+  const [originalTimeOut, setOriginalTimeOut] = useState(new Date(original_date_out));
+  console.log(originalTimeIn, originalTimeOut, timeIn, timeOut);
   const [status, setStatus] = useState(attendance.status)
   console.log(attendance);
 
