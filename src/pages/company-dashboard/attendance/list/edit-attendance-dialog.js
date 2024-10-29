@@ -69,9 +69,9 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
   }
 
   const handleSubmit = () => {
-    const new_data = { ...attendance, timeIn: timeIn.toLocaleTimeString(), timeOut : timeOut.toLocaleTimeString() , date: date, status: status }
-    const { employee_info, ...data } = new_data
-
+    let  new_data = { ...attendance, timeIn: timeIn.toLocaleTimeString(), timeOut : timeOut.toLocaleTimeString() , date: date, status: status }
+    let { employee_info, ...data } = new_data
+    delete data.shift_info ;
     axios
       .post('/api/attendance/edit-attendance', {
         data
@@ -157,6 +157,8 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                         onChange={e => setTimeIn(e)}
                         fullWidth
                         disabled
+                        ampm={false}
+
                       />
                   </LocalizationProvider>
                 </Grid>
@@ -169,6 +171,8 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                       onChange={e => setTimeOut(e) }
                       fullWidth
                       disabled
+                      ampm={false}
+
                     />
                   </LocalizationProvider>
                 </Grid>
@@ -192,6 +196,8 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                         value={timeIn }
                         onChange={e => setTimeIn(e)}
                         fullWidth
+                        ampm={false}
+
                       />
                   </LocalizationProvider>
                 </Grid>
@@ -203,6 +209,8 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                       value={timeOut }
                       onChange={e => setTimeOut(e) }
                       fullWidth
+                      ampm={false}
+
                     />
                   </LocalizationProvider>
                 </Grid>
