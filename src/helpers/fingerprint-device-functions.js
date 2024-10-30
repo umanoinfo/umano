@@ -174,7 +174,8 @@ export const functions = {
           let map = new Map();
           data?.map((row) => {
             let idNo = row[0].replace("'", '').replace("ID", "")
-            let date = new Date(ExcelDateToJSDate(row[3])).toLocaleDateString();
+            let date = new Date(excelDateToJSDate(row[3])).toLocaleDateString();
+            
             // let time = new Date(ExcelDateToJSDate(row[3])).toLocaleTimeString('en-US', { hour12: false });
             let time = new Date(ExcelDateToJSDate(row[3])).toISOString().split('T')[1].substr(0, 8)
             let key = idNo + "_" + date;
