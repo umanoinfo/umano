@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx'
 export const functions = {
   // ================================== ZKT_UA300 ==================================
 
-  "ZKT_UA300": (data, employeesList, handleSubmit , functions ) => {
+  "ZKT_UA300": (data, employeesList, handleSubmit, functions) => {
     const target = event.target;
     const reader = new FileReader()
     reader.readAsBinaryString(target.files[0])
@@ -58,27 +58,27 @@ export const functions = {
 
         // console.log(date, "*******", times[0], "*******", new Date(date + 'T' + times[0] + 'Z'), "*******", new Date(date + '' + times[0]).toLocaleString(), "*******", new Date(date + 'T' + times[0] + 'Z').toLocaleString())
 
-        let mn = times[0] 
+        let mn = times[0]
         let mx = times[0]
-        
-        if (mn == 'Invalid Date' || mx == 'Invalid Date') {
-          toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
 
-          return;
-        }
+        // if (mn == 'Invalid Date' || mx == 'Invalid Date') {
+        //   toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
+
+        //   return;
+        // }
 
 
         for (let j = 0; j < times.length; j++) {
           // let time = new Date(date + 'T' + times[j] + 'Z');
-          let time = times[j] ;
-          if(time < mn ) {
-            mn = time ; 
+          let time = times[j];
+          if (time < mn) {
+            mn = time;
           }
-          if(time > mx ){
-            mx = time ; 
+          if (time > mx) {
+            mx = time;
           }
         }
-      
+
 
         // mn = excelDateToJSDate(mn);
         // mx = excelDateToJSDate(mx);
@@ -89,8 +89,8 @@ export const functions = {
 
         // console.log(mn, mx);
 
-        if(!EmployeesIds.get(String(idNo))){
-          continue ;
+        if (!EmployeesIds.get(String(idNo))) {
+          continue;
         }
         attendances.push({
           'Emp No.': idNo,
@@ -110,6 +110,9 @@ export const functions = {
     let { setOpenExcel, setUnvalid } = functions;
     let event = data;
     const target = event.target
+
+    console.log(data)
+
     function ExcelDateToJSDate(date) {
       return isNaN(date) ? null : new Date(Math.round((date - 25569) * 86400 * 1000))
     }
@@ -172,7 +175,8 @@ export const functions = {
           data?.map((row) => {
             let idNo = row[0].replace("'", '').replace("ID", "")
             let date = new Date(ExcelDateToJSDate(row[3])).toLocaleDateString();
-            let time = new Date(excelDateToJSDate(row[3])).toLocaleTimeString('en-US', { hour12: false });
+            // let time = new Date(ExcelDateToJSDate(row[3])).toLocaleTimeString('en-US', { hour12: false });
+            let time = new Date(ExcelDateToJSDate(row[3])).toISOString().split('T')[1].substr(0, 8)
             let key = idNo + "_" + date;
 
             if (map.has(key)) {
@@ -200,6 +204,8 @@ export const functions = {
           })
 
           let attendances = [];
+
+
           for (const [key, times] of map.entries()) {
             // key is : employeeIdNo (underscore) date
             // times contains all the times for that employee in that date 
@@ -209,11 +215,11 @@ export const functions = {
             let mn = times[0]
             let mx = times[0]
 
-            if (mn == 'Invalid Date' || mx == 'Invalid Date') {
-              toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
+            // if (mn == 'Invalid Date' || mx == 'Invalid Date') {
+            //   toast.error('Invalid Date format in your file please correct it to be like following: 1970-01-01');
 
-              return;
-            }
+            //   return;
+            // }
 
 
             for (let j = 0; j < times.length; j++) {
