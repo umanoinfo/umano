@@ -23,7 +23,8 @@ export default async function handler(req, res) {
   delete company._id
   company = {
     working_days: company.working_days,
-    holidays: company.holidays
+    holidays: company.holidays,
+    weekStart: company.weekStart
   };
 
   const currentCompany = await client.db().collection('companies').findOne({ _id: ObjectId(myUser.company_id) });

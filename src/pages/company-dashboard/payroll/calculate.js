@@ -182,7 +182,7 @@ const AllDocumentsList = () => {
       }
     })
 
-    let totalMinutes = employee?.shift_info?.[0]?.totalHours ; 
+    let totalMinutes = employee?.shift_info?.[0]?.totalHours;
     let shiftType = employee?.shift_info?.[0]?.shiftType;
     if (shiftType == 'times') {
       totalMinutes = range1.reduce((acc, cu) => {

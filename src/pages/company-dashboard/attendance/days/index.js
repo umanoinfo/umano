@@ -31,9 +31,9 @@ import toast from 'react-hot-toast'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US'; 
+import en from 'date-fns/locale/en-US';
 
-import { CheckboxGroup, Checkbox, Form, Schema , Input, SelectPicker } from 'rsuite'
+import { CheckboxGroup, Checkbox, Form, Schema, Input, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
@@ -57,8 +57,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const { data: session, status } = useSession()
   const formRef = useRef()
   const [formError, setFormError] = useState()
-  const [weekStart , setWeekStart] = useState();
-  
+  const [weekStart, setWeekStart] = useState();
+
   // --------------forms values--------------------------------
 
   const default_value = {
@@ -88,15 +88,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
         })
       }
       setFormValue({ working_days: val.working_days, holidays: val.holidays })
+      setWeekStart(val.weekStart)
       setMyCompany(val)
       setLoading(false);
-    }).catch((err)=>{})
+    }).catch((err) => { })
   }
 
   const default_newHoliday = {
     name: '',
-    fromDate: null ,
-    toDate: null 
+    fromDate: null,
+    toDate: null
   }
   const [NewHoliday, setNewHoliday] = useState({ ...default_newHoliday })
 
@@ -113,7 +114,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
-        let data = { ...MyCompany, ...formValue , weekStart  }
+        let data = { ...MyCompany, ...formValue, weekStart }
 
         console.log(formValue);
         setLoading(true)
@@ -151,12 +152,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
     console.log(NewHoliday);
     if (NewHoliday.name && NewHoliday.fromDate && NewHoliday.toDate) {
       let from = new Date(NewHoliday.fromDate);
-      
+
       let dates = [];
-      while(from.getTime() <= (new Date(NewHoliday.toDate)).getTime() ){
-        dates.push({date: new Date(from.getTime() + from.getTimezoneOffset() * 60000) , name: NewHoliday.name });
+      while (from.getTime() <= (new Date(NewHoliday.toDate)).getTime()) {
+        dates.push({ date: new Date(from.getTime() + from.getTimezoneOffset() * 60000), name: NewHoliday.name });
         console.log(from);
-        from= new Date(from.getTime() + 1000 * 60 * 60 * 24);
+        from = new Date(from.getTime() + 1000 * 60 * 60 * 24);
         console.log(from);
       }
       setFormValue({ ...formValue, holidays: [...formValue.holidays, ...dates] })
@@ -183,14 +184,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Days Definition
-            </Typography>
-          </Breadcrumbs>
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Days Definition
+              </Typography>
+            </Breadcrumbs>
             <CardHeader title='Days Definition' sx={{ pb: 0, pt: 2 }} />
             <Divider />
             <Grid container>
@@ -216,74 +217,87 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <Checkbox value='Friday'>Friday</Checkbox>
                       </Form.Control>
                     </Form.Group>
-                    <Grid item size='sm' sm={12} md={12} sx={{mt:1 , mb:8}}>
-                    <Form.Group>
-                      <FormControl>
-                        <SelectPicker
-                          size='md'
-                          name='week_start'
-                          placeholder="Week start"
-                          value={''}
-                          data={[
-                            {value:'Saturday'},
-                            {value:'Sunday'},
-                            {value:'Monday'},
-                            {value:'Tuesday'},
-                            {value:'Wednesday'},
-                            {value:'Thursday'},
-                            {value:'Friday'},
-                          ]}
+                    <Grid item size='sm' sm={12} md={12} sx={{ mt: 1, mb: 8 }}>
+                      <Form.Group>
+                        <Typography sx={{ mb: 1, fontWeight: '500' }}>Working Days:</Typography>
+                        <FormControl>
+                          <SelectPicker
+                            size='md'
+                            name='week_start'
+                            placeholder="Week start"
+                            value={weekStart}
+                            data={[
+                              { value: 'Saturday' },
+                              { value: 'Sunday' },
+                              { value: 'Monday' },
+                              { value: 'Tuesday' },
+                              { value: 'Wednesday' },
+                              { value: 'Thursday' },
+                              { value: 'Friday' },
+                            ]}
 
-                          onChange={(e)=>{
-                            console.log(e);
-                            setWeekStart(e)
-                          }}
-                          labelKey='value'
-                          valueKey='value'
-                          block
-                        />
-                      </FormControl>
-                    </Form.Group>
+                            onChange={(e) => {
+                              setWeekStart(e)
+                            }}
+
+                            style={{ width: '200px' }}
+                            labelKey='value'
+                            valueKey='value'
+                            block
+                          />
+                        </FormControl>
+                      </Form.Group>
                     </Grid>
                     <Grid item size='sm' sm={12} md={12} sx={{ mt: 1, mb: 8 }}>
                       <Typography sx={{ mb: 1, fontWeight: '500' }}>Holiday Days:</Typography>
                       <Grid item sm={12} md={5}>
-                        <Card sx={{ p: 3 }}>
+                        <Card sx={{ p: 3, width: '640px' }}>
                           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                            <DatePicker
-                              
-                              value={NewHoliday.fromDate}
-                              onChange={e => {
-                                setNewHoliday({ ...NewHoliday, fromDate : e })
-                              }}
-                              views={[ 'month' ,'day' ]}
-                              
-                              slotProps={{ textField: { size: 'small' , fullWidth: true }  }}
-                            />
-                            <DatePicker
-                              
-                              value={NewHoliday.toDate}
-                              onChange={e => {
-                                setNewHoliday({ ...NewHoliday, toDate : e })
-                              }}
-                              views={[ 'month' ,'day' ]}
-                              
-                              slotProps={{ textField: { size: 'small' , fullWidth: true }  }}
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                              <div>
+                                <Typography sx={{ mb: 0, fontWeight: '200' }}>From:</Typography>
+                                <DatePicker
+
+                                  value={NewHoliday.fromDate}
+                                  onChange={e => {
+                                    setNewHoliday({ ...NewHoliday, fromDate: e })
+                                  }}
+                                  views={['month', 'day']}
+                                  sx={{ mr: 1, mt: 0, width: '150px' }}
+                                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                                /></div>
+                              <div>
+                                <Typography sx={{ mb: 0, fontWeight: '200' }}>To:</Typography>
+                                <DatePicker
+
+                                  value={NewHoliday.toDate}
+                                  onChange={e => {
+                                    setNewHoliday({ ...NewHoliday, toDate: e })
+                                  }}
+                                  views={['month', 'day']}
+                                  sx={{ mr: 1, width: '150px' }}
+                                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                                /></div>
                             </LocalizationProvider>
-                            <Input
-                              size='sm'
-                              placeholder='Holiday title'
-                              value={NewHoliday.name}
-                              style={{ marginRight: 3, marginLeft: 3 , height:'2.5rem'}}
-                              onChange={e => {
-                                setNewHoliday({ ...NewHoliday, name : e })
-                              }}
-                            />
-                            <Button variant='outlined' size='small' style={{height:'2.5rem'}} onClick={addHoliday}>
-                              Add
-                            </Button>
+                            <div>
+                              <Typography sx={{ mb: 0, fontWeight: '200' }}>Holiday title:</Typography>
+                              <Input
+                                size='sm'
+                                placeholder='Holiday title'
+                                value={NewHoliday.name}
+                                sx={{ mr: 2, width: '150px' }}
+                                style={{ height: '2.5rem' }}
+                                onChange={e => {
+                                  setNewHoliday({ ...NewHoliday, name: e })
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <Typography sx={{ mb: 0, fontWeight: '200' }}>.</Typography>
+                              <Button variant='outlined' size='small' style={{ ml: 3, pl: 5, height: '2.5rem' }} onClick={addHoliday}>
+                                Add
+                              </Button>
+                            </div>
                           </Box>
                           <List>
                             {formValue.holidays.map((holiday, index) => {
@@ -293,7 +307,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                                     primary={
                                       <>
                                         <span style={{ color: 'blue', paddingRight: 20 }}>
-                                          {holiday.date.toLocaleDateString().slice(0,holiday.date.toLocaleDateString().lastIndexOf('/'))}
+                                          {holiday.date.toLocaleDateString().slice(0, holiday.date.toLocaleDateString().lastIndexOf('/'))}
                                         </span>{' '}
                                         <span>{holiday.name}</span>
                                       </>

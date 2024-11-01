@@ -20,13 +20,15 @@ export default async function handler(req, res) {
     .db()
     .collection('companies')
     .findOne({
-        _id: ObjectId(myUser.company_id)
+      _id: ObjectId(myUser.company_id)
     })
-  let working_days = company.working_days   ;
-  let holidays = company.holidays ;
+  let working_days = company.working_days;
+  let holidays = company.holidays;
+  let weekStart = company.weekStart;
   company = {
     working_days,
-    holidays
+    holidays,
+    weekStart
   }
 
   return res.status(200).json({ success: true, data: [company] })

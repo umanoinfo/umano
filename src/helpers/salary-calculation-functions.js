@@ -1,3 +1,5 @@
+import { WorkingHours } from "src/local-db";
+
 const generalFunctions = {
     "calculateCompensations": (data) => { // compensation defined in salary formula 
         let { employee, company, fromDate, toDate, req, working_days, res } = data;
@@ -86,9 +88,8 @@ export const functions = {
         employee.absenseDays = 0;
 
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
-        employee.flexible = false;
 
-        // employee.salaries_info = [{ lumpySalary: lumpySalary }];
+        employee.flexible = false;
 
         let lumpySalary = Number(employee?.salaries_info?.[0]?.lumpySalary);
         employee.lumpySalary = lumpySalary;
@@ -173,6 +174,7 @@ export const functions = {
                 let lateHours = 0
                 let earlyOverTimeHours = 0
                 let lateOverTimeHours = 0
+                let WorkingHoursNew = 0
                 let day = ''
                 let holidayDay = false
                 let leaveDay = false
@@ -257,6 +259,7 @@ export const functions = {
                                 lateFlag = false
                                 lateHours = 0
 
+                                WorkingHoursNew = ((Math.min(_out) - Math.max(_in)) / 3600000)
 
                                 totalHours = (
                                     (Math.min(shift_out, _out) - Math.max(shift_in, _in)) / 3600000
@@ -340,6 +343,7 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
+                    WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);
@@ -709,6 +713,7 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
+                    WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);
@@ -818,7 +823,7 @@ export const functions = {
         employee.totalOffDayValue = 0; // // in monthlyTotalHours there is not off day
         employee.totalholidayHours = 0;
         employee.totalOffDayHours = 0;
-        
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         employee.totalEarlyHours = totalEarlyHours
@@ -845,8 +850,8 @@ export const functions = {
         let lumpySalary = 0;
 
         employee.totalWorkingDaysCount = Math.ceil(Math.abs(new Date(fromDate) - new Date(toDate)) / (1000 * 60 * 60 * 24));
-        employee.totalCompanyWorkingDays = 0  ;        
-        employee.shiftTotalHours = employee.shift_info?.[0]?.totalHours ;
+        employee.totalCompanyWorkingDays = 0;
+        employee.shiftTotalHours = employee.shift_info?.[0]?.totalHours;
         lumpySalary = Number(employee?.salaries_info?.[0]?.lumpySalary);
         employee.lumpySalary = Number(lumpySalary)
         employee.dailySalary = Number(lumpySalary / 30);
@@ -989,11 +994,11 @@ export const functions = {
 
 
                 // -------------------------------------------------------------
-                if(workingDay && !holidayDay){
-                    employee.totalCompanyWorkingDays++ ;
+                if (workingDay && !holidayDay) {
+                    employee.totalCompanyWorkingDays++;
                 }
-                
-                
+
+
 
                 if (employee?.attendances_info) {
                     if (!leaveDay) {
@@ -1039,6 +1044,7 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
+                    WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);
@@ -1104,7 +1110,7 @@ export const functions = {
                     // totalLeave = totalLeave + Number(((intersectedDays * employee.dailySalary * (leave.paidValue)) / 100))
 
                     // leave.value = (Number((Number(leave.days) * employee.dailySalary * (Number(leave.paidValue))) / 100));
-                    leave.value = 0 ; // this is because this formula leave does not affect salary
+                    leave.value = 0; // this is because this formula leave does not affect salary
 
                 }
                 if (leave.type == "hourly") {
@@ -1116,7 +1122,7 @@ export const functions = {
                     }
 
                     // leave.value = Number(((Number(leave.time) * employee.hourlySalary) * (Number(leave.paidValue))) / 100);
-                    leave.value = 0 ; // this is because this formula leave does not affect salary
+                    leave.value = 0; // this is because this formula leave does not affect salary
                 }
             })
 
@@ -1124,10 +1130,10 @@ export const functions = {
         }
         totalEarlyHours = (totalWorkingHours > totalRequiredHours ? totalWorkingHours - totalRequiredHours : 0);
         totalLateHours = (totalWorkingHours < totalRequiredHours ? totalRequiredHours - totalWorkingHours : 0);
-        
+
         employee.totalWorkingHours = totalWorkingHours;
-        employee.totalRequiredHours = (employee.shiftTotalHours * employee.totalCompanyWorkingDays) ;
-        employee.workingHoursDifference =  employee.totalWorkingHours - employee.totalRequiredHours  ; 
+        employee.totalRequiredHours = (employee.shiftTotalHours * employee.totalCompanyWorkingDays);
+        employee.workingHoursDifference = employee.totalWorkingHours - employee.totalRequiredHours;
 
         employee.totalLateOverTimeValue = (
             +totalLateOverTimeHours *
@@ -1156,7 +1162,7 @@ export const functions = {
         employee.totalOffDayValue = 0; // // in monthlyTotalHours there is not off day
         employee.totalholidayHours = 0;
         employee.totalOffDayHours = 0;
-        
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         employee.totalEarlyHours = totalEarlyHours

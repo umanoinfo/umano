@@ -17,20 +17,20 @@ const EmployeeViewSalary = ({ employee }) => {
     })
   }
 
-  const colorChip =(data)=>{
-    if(data > 0)
-    return 'success'
-    if(data < 0)
-    return 'error'
+  const colorChip = (data) => {
+    if (data > 0)
+      return 'success'
+    if (data < 0)
+      return 'error'
   }
 
-  const labelChip =(data)=>{
-    if(data > 0)
-    return (data + '%')
-    if(data < 0)
-    return (data + '%')
-    if(data == '-')
-    return ('-')
+  const labelChip = (data) => {
+    if (data > 0)
+      return (data + '%')
+    if (data < 0)
+      return (data + '%')
+    if (data == '-')
+      return ('-')
   }
 
   const columns = [
@@ -49,7 +49,7 @@ const EmployeeViewSalary = ({ employee }) => {
       field: 'Total Salary',
       headerName: 'Total Salary',
       renderCell: ({ row }) => (
-        <Typography variant='body2'> {row.totalSalary ?? '-'} </Typography>
+        <Typography variant='body2'> {new Intl.NumberFormat().format(row.totalSalary ?? '-')} AED </Typography>
       )
     },
     {
@@ -90,7 +90,7 @@ const EmployeeViewSalary = ({ employee }) => {
   return (
     <Card>
 
-      <Typography variant='h6' style={{padding:'10px'}} >Salaries<small><a href="#" onClick={handleEditRowOptions} ><Icon style={{fontSize: '15px' , marginLeft : '7px'}} icon='fa-regular:edit' /></a></small></Typography>
+      <Typography variant='h6' style={{ padding: '10px' }} >Salaries<small><a href="#" onClick={handleEditRowOptions} ><Icon style={{ fontSize: '15px', marginLeft: '7px' }} icon='fa-regular:edit' /></a></small></Typography>
 
       <Divider sx={{ m: '0 !important' }} />
 

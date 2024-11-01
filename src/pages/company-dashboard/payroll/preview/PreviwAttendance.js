@@ -1,51 +1,22 @@
 // ** React Imports
 import { useState, useEffect, createRef } from 'react'
 
-// ** Next Imports
-
-import * as XLSX from 'xlsx'
-
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
 import { DataGrid } from '@mui/x-data-grid'
-import MenuItem from '@mui/material/MenuItem'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
-// ** Store Imports
-import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 
-import { fetchData } from 'src/store/apps/attendance'
-
-// ** Third Party Components
-import axios from 'axios'
-
 import { useSession } from 'next-auth/react'
-import NoPermission from 'src/views/noPermission'
 
 const AttendanceList = ({ attendances }) => {
-
-  console.log(attendances)
 
   const [pageSize, setPageSize] = useState(32)
 
   const [loading, setLoading] = useState(false)
 
-  const { data: session, status } = useSession()
-  console.log('.', attendances)
 
   // ------------------------------- Table columns --------------------------------------------
 
@@ -79,6 +50,15 @@ const AttendanceList = ({ attendances }) => {
       headerName: 'Out',
       renderCell: ({ row }) => {
         return <>{row._out}</>
+      }
+    },
+    {
+      flex: 0.07,
+      minWidth: 80,
+      field: 'working',
+      headerName: 'Working Hours',
+      renderCell: ({ row }) => {
+        return <>{row.WorkingHoursNew != 0 && <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(row.WorkingHoursNew).toFixed(2)}</Typography>}</>
       }
     },
     {
