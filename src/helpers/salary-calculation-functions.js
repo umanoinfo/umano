@@ -713,7 +713,8 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
-                    WorkingHoursNew: WorkingHoursNew,
+
+                    //WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);
@@ -1044,7 +1045,8 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
-                    WorkingHoursNew: WorkingHoursNew,
+
+                    //WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);
