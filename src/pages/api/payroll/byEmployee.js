@@ -53,7 +53,7 @@ export default async function handler(req, res) {
             { $addFields: { formula_id: { $toObjectId: '$_id' } } },
             { $match: { $expr: { $eq: ['$formula_id', { $toObjectId: '$$salary_formula_id' }] } } },
 
-            // { $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } },
+            { $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } },
 
           ],
           as: 'salaryFormulas_info'
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_no', '$$employee_no'] } } },
             {
-              $match: { date: { $gte: new Date(fromDate).toISOString(), $lte: new Date(toDate).toISOString() } }
+              $match: { date: { $gte: new Date(fromDate).toISOString(), $lte: new Date(toDate + 1000 * 60 * 60 * 24).toISOString() } }
             },
             {
               $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
