@@ -427,11 +427,12 @@ const AllDocumentsList = () => {
     data._id = e.id
 
 
-    let from_date = new Date(fromDate.getTime() + Math.abs(fromDate.getTimezoneOffset() * 60000));
+    let from_date = new Date(fromDate.toLocaleString() + ' UTC')
     from_date = new Date(from_date.getFullYear(), from_date.getMonth(), 1);
+    from_date = new Date(from_date.toLocaleString() + ' UTC');
     let to_date = new Date(from_date.getFullYear(), from_date.getMonth() + 1, 0);
-    to_date = new Date(to_date.getTime() + Math.abs(to_date.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24));
-
+    to_date = new Date(to_date.toLocaleString() + ' UTC');
+    
     data.fromDate = from_date;
     data.toDate = to_date;
 
