@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   // let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999))
 
   let fromDate = new Date(new Date(selectedEmployee.fromDate));
-  let toDate = new Date(new Date(selectedEmployee.toDate) + 1000 * 60 * 60 * 24);
+  let toDate = new Date(new Date(selectedEmployee.toDate));
 
   // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
   // toDate = new Date( toDate - 1000 * 60 * 60 * 24  );

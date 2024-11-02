@@ -41,8 +41,7 @@ export default async function handler(req, res) {
     attendance.originalTimeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8);
 
     attendance.company_id = myUser.company_id
-    attendance.date = new Date(attendance.date).toISOString()
-    attendance.user_id = myUser._id
+    attendance.date = attendance.date = new Date(new Date(attendance.date).toISOString().slice(0, 10)).toISOString();    attendance.user_id = myUser._id
     attendance.created_at = new Date().toISOString()
     attendance.status = 'active'
     attendance.employee_id = attendance.employee_id;

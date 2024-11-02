@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   attendance.user_id = myUser._id
   attendance.timeIn = new Date('2000-01-01 ' + attendance.timeIn + ' UTC').toISOString().substr(11, 8)
   attendance.timeOut = new Date('2000-01-01 ' + attendance.timeOut + ' UTC').toISOString().substr(11, 8)
-  attendance.date = new Date(attendance.date).toISOString()
+  attendance.date = attendance.date = new Date(new Date(attendance.date).toISOString().slice(0, 10)).toISOString();
 
   const newAttendance = await client
     .db()

@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   const attendance = req.body
   attendance.company_id = myUser.company_id
-  attendance.date = new Date(attendance.date).toISOString()
+  attendance.date = attendance.date = new Date(new Date(attendance.date).toISOString().slice(0, 10)).toISOString();
 
   // attendance.user_id = myUser._id
 
