@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   // let toDate = new Date(new Date(selectedEmployee.toDate).setUTCHours(23,59,59,999))
 
   let fromDate = new Date(new Date(selectedEmployee.fromDate));
-  let toDate = new Date(new Date(selectedEmployee.toDate));
+  let toDate = new Date(new Date(selectedEmployee.toDate) + 1000 * 60 * 60 * 24);
 
   // fromDate = new Date( fromDate - 1000 * 60 * 60 * 24  );
   // toDate = new Date( toDate - 1000 * 60 * 60 * 24  );
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
           pipeline: [
             { $match: { $expr: { $eq: ['$employee_no', '$$employee_no'] } } },
             {
-              $match: { date: { $gte: new Date(fromDate).toISOString(), $lte: new Date(toDate + 1000 * 60 * 60 * 24).toISOString() } }
+              $match: { date: { $gte: new Date(fromDate).toISOString(), $lte: new Date(toDate ).toISOString() } }
             },
             {
               $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
