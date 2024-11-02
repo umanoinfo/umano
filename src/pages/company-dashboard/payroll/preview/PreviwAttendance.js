@@ -40,7 +40,7 @@ const AttendanceList = ({ attendances }) => {
       field: 'timeIn',
       headerName: 'In',
       renderCell: ({ row }) => {
-        return <>{row._in}</>
+        return <>{row._in?.split(':')?.slice(0,2)?.join(':')}</>
       }
     },
     {
@@ -49,7 +49,7 @@ const AttendanceList = ({ attendances }) => {
       field: 'timeOut',
       headerName: 'Out',
       renderCell: ({ row }) => {
-        return <>{row._out}</>
+        return <>{row._out?.split(':')?.slice(0,2)?.join(':')}</>
       }
     },
     {
@@ -58,7 +58,24 @@ const AttendanceList = ({ attendances }) => {
       field: 'working',
       headerName: 'Working Hours',
       renderCell: ({ row }) => {
-        return <>{row.WorkingHoursNew != 0 && <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(row.WorkingHoursNew).toFixed(2)}</Typography>}</>
+        // return <>{row.WorkingHoursNew != 0 && <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(row.totalWorkingHours ).toFixed(2)}</Typography>}</>
+        if(!row?._in || !row?._out )
+          return <Typography sx={{ fontSize: 14, color: 'green' }}> 0 </Typography>;
+
+          const setUTCHours = (time) => {
+            let date = new Date('1/1/2023');
+            date.setUTCHours(Number(time.split(':')[0]), Number(time.split(':')[1]));
+            date = new Date(date);
+
+            return date;
+        }
+
+        let _in = setUTCHours(row?._in ); 
+        let _out  = setUTCHours(row?._out); 
+        console.log(_in , _out);
+        let workingHours =  ((Math.min(_out) - Math.max(_in)) / 3600000);
+
+        return <>{workingHours != 0 && <Typography sx={{ fontSize: 14, color: 'green' }}>{Number(workingHours ).toFixed(2)}</Typography>}</>
       }
     },
     {

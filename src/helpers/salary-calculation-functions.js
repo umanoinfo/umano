@@ -174,7 +174,8 @@ export const functions = {
                 let lateHours = 0
                 let earlyOverTimeHours = 0
                 let lateOverTimeHours = 0
-                let WorkingHoursNew = 0
+
+                // let WorkingHoursNew = 0
                 let day = ''
                 let holidayDay = false
                 let leaveDay = false
@@ -243,10 +244,10 @@ export const functions = {
 
 
                 // -------------------------------------------------------------
-
+                console.log(employee?.attendances_info);
                 if (employee?.attendances_info) {
                     if (!leaveDay) {
-                        employee.attendances_info?.map(att => {
+                        employee.attendances_info?.map(att => { 
 
 
                             if (new Date(x).toLocaleDateString() == new Date(att.date).toLocaleDateString()) {
@@ -259,11 +260,12 @@ export const functions = {
                                 lateFlag = false
                                 lateHours = 0
 
-                                WorkingHoursNew = ((Math.min(_out) - Math.max(_in)) / 3600000)
+                                // WorkingHoursNew = ((Math.min(_out) - Math.max(_in)) / 3600000)
 
                                 totalHours = (
                                     (Math.min(shift_out, _out) - Math.max(shift_in, _in)) / 3600000
                                 )
+                                console.log((Math.min(shift_out, _out) - Math.max(shift_in, _in)) / 3600000)
 
                                 // ---------------- late ---------------------
 
@@ -343,7 +345,8 @@ export const functions = {
                     leaveDay: leaveDay,
                     leaveHourly: leaveHourly,
                     leaves: leaves,
-                    WorkingHoursNew: WorkingHoursNew,
+                    
+                    // WorkingHoursNew: WorkingHoursNew,
                     totalLeaveHours: totalLeaveHours
                 })
                 x = new Date(x.getTime() + 1000 * 60 * 60 * 24);

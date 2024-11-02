@@ -52,7 +52,9 @@ export default async function handler(req, res) {
           pipeline: [
             { $addFields: { formula_id: { $toObjectId: '$_id' } } },
             { $match: { $expr: { $eq: ['$formula_id', { $toObjectId: '$$salary_formula_id' }] } } },
-            { $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } },
+
+            // { $match: { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] } },
+
           ],
           as: 'salaryFormulas_info'
         }
