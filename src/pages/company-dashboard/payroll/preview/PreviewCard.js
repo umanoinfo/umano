@@ -305,7 +305,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                                 </MUITableCell>
                                 <MUITableCell>
                                   <Typography variant='body2' px={5}>
-                                    <strong>{(data?.totalRequiredHours)}</strong>
+                                    <strong>{(data?.totalRequiredHours).toFixed(2)}</strong>
                                     <small style={{ paddingLeft: 5 }}> H/s</small>
                                   </Typography>
                                 </MUITableCell>
@@ -321,7 +321,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                                 </MUITableCell>
                                 <MUITableCell>
                                   <Typography variant='body2' px={5}>
-                                    <strong>{(data?.workingHoursDifference)}</strong>
+                                    <strong>{(data?.workingHoursDifference).toFixed(2)}</strong>
                                     <small style={{ paddingLeft: 5 }}> H/s</small>
                                   </Typography>
                                 </MUITableCell>

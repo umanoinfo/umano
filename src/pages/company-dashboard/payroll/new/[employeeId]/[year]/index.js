@@ -300,6 +300,33 @@ const PayrollList = classNamec => {
       }
     },
     {
+      flex: 0.02,
+      minWidth: 250,
+      field: 'name',
+      headerName: 'Employee name',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
+          {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName }
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.02,
+      minWidth: 250,
+      field: 'fromDate',
+      headerName: 'Month',
+      renderCell: ({ row }) => {
+        
+        return (
+          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
+          {new Date(row?.fromDate).getMonth() }
+          </Typography>
+        )
+      }
+    },
+    {
       flex: 0.2,
       minWidth: 250,
       field: 'total',
@@ -308,7 +335,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.total}
+              {row.total.toFixed(2)}
             </Typography>
           </Box>
         )
@@ -474,7 +501,7 @@ const PayrollList = classNamec => {
                 autoHeight
                 rows={payrolls}
                 columns={columns}
-                getRowId={(row)=>row.employee_id}
+                getRowId={(row)=>(row.index + 1)}
                 pageSize={pageSize}
                 disableSelectionOnClick
                 rowsPerPageOptions={[10, 25, 50]}

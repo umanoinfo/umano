@@ -299,6 +299,19 @@ const PayrollList = classNamec => {
       }
     },
     {
+      flex: 0.02,
+      minWidth: 250,
+      field: 'name',
+      headerName: 'Employee name',
+      renderCell: ({ row }) => {
+        return (
+          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
+          {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName }
+          </Typography>
+        )
+      }
+    },
+    {
       flex: 0.2,
       minWidth: 250,
       field: 'total',

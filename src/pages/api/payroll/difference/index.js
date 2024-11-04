@@ -38,10 +38,24 @@ export default async function handler(req, res) {
           { company_id: myUser.company_id },
         ]}
       }
+      ,
+      {
+        $lookup: {
+          from: 'employees',
+          let: { employee_id: { $toObjectId: '$employee_id' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$employee_id'] } } } , 
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
+          as: 'employee_info'
+        }
+      }
     ])
     .toArray();
 
     let payrollsByUser = new Map() ;
+    let employeesById = new Map() ; 
+
     payrolls.map((payroll)=>{
         let key = payroll.idNo  + '_' + payroll.employee_id;
         if(payrollsByUser.has(key)){
@@ -52,7 +66,11 @@ export default async function handler(req, res) {
         else{
             payrollsByUser.set(key , Number(payroll.workingHoursDifference)) ;
         }
+        employeesById.set(payroll.employee_id , payroll.employee_info) ;
+
     });
+
+   
 
     payrolls = [] ;
     for(const [key , value ] of payrollsByUser){
@@ -61,7 +79,8 @@ export default async function handler(req, res) {
         payrolls.push({
             employee_id, 
             employee_no,
-            total: value 
+            total: value ,
+            employee_info: employeesById.get(employee_id)
         });
     }
 

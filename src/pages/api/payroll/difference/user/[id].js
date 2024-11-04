@@ -38,18 +38,29 @@ export default async function handler(req, res) {
           { employee_id: employee_id},
           { company_id: myUser.company_id },
         ]}
+      },
+      {
+        $lookup: {
+          from: 'employees',
+          let: { employee_id: { $toObjectId: '$employee_id' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$employee_id'] } } } , 
+            { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
+          as: 'employee_info'
+        }
       }
     ])
     .toArray();
 
-    console.log(payrolls);
-    payrolls = payrolls.map((payroll)=>{
+    payrolls = payrolls?.map((payroll , index )=>{
       payroll.total = payroll.workingHoursDifference
       payroll.employee_no = payroll.idNo ;
-      
+      payroll.index = index ;
+
+
       return payroll ;
     });
-
 
     return res.status(200).json({ success: true, data: payrolls })
 
