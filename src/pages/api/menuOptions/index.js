@@ -280,6 +280,10 @@ export default async function handler(req, res) {
         path: '/company-dashboard/payroll/'
       })
       children.push({
+        title:'Payroll new',
+        path:'/company-dashboard/payroll/new'
+      })
+      children.push({
         title: 'End of service',
         path: '/company-dashboard/payroll/endOfService/'
       });
