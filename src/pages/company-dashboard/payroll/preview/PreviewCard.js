@@ -55,6 +55,8 @@ const renderClient = employee => {
 }
 
 const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
+
+
   let totalSalary = 0;
 
   if (data.flexible) {
@@ -88,6 +90,8 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
   // ** Hook
   const theme = useTheme()
   if (data) {
+    console.log(data)
+
     return (
       <Card>
         <CardContent>
@@ -289,7 +293,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                                 </MUITableCell>
                                 <MUITableCell>
                                   <Typography variant='body2' px={5}>
-                                    <strong>{(data?.totalWorkingHours)}</strong>
+                                    <strong>{(data?.totalWorkingHours).toFixed(2)}</strong>
                                     <small style={{ paddingLeft: 5 }}> H/s</small>
                                   </Typography>
                                 </MUITableCell>
@@ -298,7 +302,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                               <></>
                           }
                           {
-                              data?.totalRequiredHours != undefined ?
+                            data?.totalRequiredHours != undefined ?
                               <TableRow>
                                 <MUITableCell>
                                   <Typography variant='body2'> Total Required Hours :</Typography>
@@ -314,7 +318,7 @@ const PreviewCard = ({ data, fromDate, toDate, lumpySalary }) => {
                               <></>
                           }
                           {
-                              data?.workingHoursDifference != undefined ?
+                            data?.workingHoursDifference != undefined ?
                               <TableRow>
                                 <MUITableCell>
                                   <Typography variant='body2'> Total Hours difference :</Typography>

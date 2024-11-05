@@ -102,9 +102,9 @@ export default async function handler(req, res) {
     })
   }
 
-  if (myUser && (myUser.permissions.includes('ViewDepartment')  || myUser.permissions.includes('ViewPosition')) ) {
-    let children = [] ;
-    if(myUser.permissions.includes('ViewDepartment')){
+  if (myUser && (myUser.permissions.includes('ViewDepartment') || myUser.permissions.includes('ViewPosition'))) {
+    let children = [];
+    if (myUser.permissions.includes('ViewDepartment')) {
       children.push(
         {
           title: 'List',
@@ -112,15 +112,15 @@ export default async function handler(req, res) {
         }
       )
       children.push(
-      {
+        {
           title: 'Structure',
           path: '/company-dashboard/department/organizational-structure/'
-      }
+        }
       )
     }
-    if(myUser.permissions.includes('ViewPosition')){
+    if (myUser.permissions.includes('ViewPosition')) {
       children.push({
-        title:'Positions',
+        title: 'Positions',
         path: '/company-dashboard/position'
       })
     }
@@ -277,11 +277,11 @@ export default async function handler(req, res) {
     if (checkForPermissions(['ViewPayroll'], myUser.permissions)) {
       children.push({
         title: 'Payroll List',
-        path: '/company-dashboard/payroll/'
+        path: '/company-dashboard/payroll'
       })
       children.push({
-        title:'Payroll Difference',
-        path:'/company-dashboard/payroll/new'
+        title: 'Payroll Difference',
+        path: '/company-dashboard/payroll/new'
       })
       children.push({
         title: 'End of service',

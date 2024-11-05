@@ -116,29 +116,29 @@ const PayrollList = classNamec => {
   const [loading, setLoading] = useState(true)
 
   const [selectedEmployee, setSelectedEmployee] = useState()
-  const [payrolls , setPayrolls ] =useState([]);
+  const [payrolls, setPayrolls] = useState([]);
   const { data: session, status } = useSession()
-  
+
   // ** Hooks
 
   const dispatch = useDispatch()
   const store = useSelector(state => state.payroll)
   const router = useRouter()
-  
-  const {year , employeeId} = router.query ;
+
+  const { year, employeeId } = router.query;
 
   useEffect(() => {
     setLoading(true);
-    console.log(employeeId , year);
+    console.log(employeeId, year);
     axios
-    .get('/api/payroll/difference/user/' + employeeId + '?year=' + year , {
-    })
-    .then(function (response) {
+      .get('/api/payroll/difference/user/' + employeeId + '?year=' + year, {
+      })
+      .then(function (response) {
         console.log(response.data.data)
         setPayrolls(response.data.data);
         setLoading(false);
-    })
-  }, [dispatch, year ])
+      })
+  }, [dispatch, year])
 
   const handleClose = () => {
     setOpen(false)
@@ -281,7 +281,7 @@ const PayrollList = classNamec => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.index}
+            {row.index + 1}
           </Typography>
         )
       }
@@ -293,8 +293,8 @@ const PayrollList = classNamec => {
       headerName: 'ID NO  .',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
-          <a href="#" >{row.employee_no}</a> 
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            <a href="#" >{row.employee_no}</a>
           </Typography>
         )
       }
@@ -306,8 +306,8 @@ const PayrollList = classNamec => {
       headerName: 'Employee name',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
-          {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName }
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName}
           </Typography>
         )
       }
@@ -318,10 +318,10 @@ const PayrollList = classNamec => {
       field: 'fromDate',
       headerName: 'Month',
       renderCell: ({ row }) => {
-        
+
         return (
-          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
-          {new Date(row?.fromDate).getMonth() }
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {new Date(row?.fromDate).getMonth()}
           </Typography>
         )
       }
@@ -341,7 +341,7 @@ const PayrollList = classNamec => {
         )
       }
     },
-    
+
     // {
     //   flex: 0.08,
     //   minWidth: 10,
@@ -496,18 +496,18 @@ const PayrollList = classNamec => {
             loading && <Loading header='Please Wait' description='Employee are loading'></Loading>
           }
           {
-            !loading && 
-              <DataGrid
-                autoHeight
-                rows={payrolls}
-                columns={columns}
-                getRowId={(row)=>(row.index + 1)}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-              />
+            !loading &&
+            <DataGrid
+              autoHeight
+              rows={payrolls}
+              columns={columns}
+              getRowId={(row) => (row.index + 1)}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
           }
         </Card>
       </Grid>

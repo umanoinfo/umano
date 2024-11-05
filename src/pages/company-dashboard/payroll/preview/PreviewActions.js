@@ -14,12 +14,12 @@ import Loading from 'src/views/loading'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 
-const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
+const PreviewActions = ({ employee, attendances, fromDate, toDate }) => {
 
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const save = ()=>{
+  const save = () => {
 
     setLoading(true)
 
@@ -44,12 +44,13 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
     data.totalWorkingDaysCount = employee.totalWorkingDaysCount
     data.flexible = employee.flexible;
     data.totalWorkingHours = employee.totalWorkingHours
-    data.totalRequiredHours = employee.totalRequiredHours 
-    data.workingHoursDifference = employee.workingHoursDifference 
-    data.shiftType = employee.shift_info[0].shiftType ; 
+    data.totalRequiredHours = employee.totalRequiredHours
+    data.workingHoursDifference = employee.workingHoursDifference
+    data.shiftType = employee.shift_info[0].shiftType;
+    data.shift_info = employee.shift_info[0];
     data.salaryFormulaType = (employee?.salaryFormulas_info?.[0]?.type);
-    
-    if(!data.flexible){
+
+    if (!data.flexible) {
       data.totalEarlyHours = employee.totalEarlyHours
       data.totalLateHours = employee.totalLateHours
       data.totalEarlyValue = employee.totalEarlyValue
@@ -63,7 +64,7 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
       data.totalEarlyOverTimeHours = employee.totalEarlyOverTimeHours
       data.totalLateOverTimeHours = employee.totalLateOverTimeHours
     }
-    if(employee.flexible){
+    if (employee.flexible) {
       data.total = ((
 
         // Number(data.lumpySalary * (data.totalWorkingDaysCount / 30 )) - old payroll technique
@@ -73,32 +74,32 @@ const PreviewActions = ({ employee , attendances , fromDate , toDate }) => {
         Number(data.totalEmployeeDeductions) +
         Number(data.totalEmployeeRewards)).toFixed(3)).toLocaleString('en-US');
     }
-    else{
-      data.total  = 
-      Number(employee.totalOffDayValue) +
+    else {
+      data.total =
+        Number(employee.totalOffDayValue) +
         Number(employee.totalholidayValue) +
 
-          // Number(employee.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) + old payroll technique
-          Number(employee.salaries_info[0].lumpySalary * (1)) +
-            Number(employee.totalEarlyValue) -
-              Number(employee.totalDeductions) +
-                Number(employee.totalCompensations) -
-                  Number(employee.totalEmployeeDeductions) +
-                    Number(employee.totalEmployeeRewards) -
-                      Number(employee.totalLeave)+
-                        Number(employee.totalLateOverTimeValue)+
-                          Number(employee.totalEarlyOverTimeValue)
-      
+        // Number(employee.salaries_info[0].lumpySalary * (data.totalWorkingDaysCount / 30 )) + old payroll technique
+        Number(employee.salaries_info[0].lumpySalary * (1)) +
+        Number(employee.totalEarlyValue) -
+        Number(employee.totalDeductions) +
+        Number(employee.totalCompensations) -
+        Number(employee.totalEmployeeDeductions) +
+        Number(employee.totalEmployeeRewards) -
+        Number(employee.totalLeave) +
+        Number(employee.totalLateOverTimeValue) +
+        Number(employee.totalEarlyOverTimeValue)
+
 
     }
-    axios.post('/api/payroll/add-payroll', data).then((res)=>{
-      router.push('/company-dashboard/payroll/slip/'+res.data.data._id)
+    axios.post('/api/payroll/add-payroll', data).then((res) => {
+      router.push('/company-dashboard/payroll/slip/' + res.data.data._id)
       toast.success('Payroll (' + res.data.data.name + ') Inserted Successfully.', {
         delay: 3000,
         position: 'bottom-right'
       })
       setLoading(false)
-    }).catch((err)=>{})
+    }).catch((err) => { })
   }
 
   if (loading) return <Loading header='Please Wait' description="Payroll Inserting"></Loading>

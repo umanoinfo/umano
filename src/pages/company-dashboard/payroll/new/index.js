@@ -89,27 +89,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-// ** renders client column
-const renderClient = row => {
-  if (row.logo) {
-    return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
-  } else {
-    return (
-      <CustomAvatar
-        skin='light'
-        color={row.avatarColor || 'primary'}
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
-        {getInitials(row.firstName ? row.firstName + ' ' + row.lastName : '@')}
-      </CustomAvatar>
-    )
-  }
-}
 
 const PayrollList = classNamec => {
   // ** State
   const [no, setNo] = useState('')
-  const [year, setYear] = useState((new Date()))  
+  const [year, setYear] = useState((new Date()))
   const [month, setMonth] = useState(new Date().getMonth())
   const [value, setValue] = useState('')
   const [pageSize, setPageSize] = useState(10)
@@ -117,7 +101,7 @@ const PayrollList = classNamec => {
   const [loading, setLoading] = useState(true)
 
   const [selectedEmployee, setSelectedEmployee] = useState()
-  const [payrolls , setPayrolls ] =useState([]);
+  const [payrolls, setPayrolls] = useState([]);
   const { data: session, status } = useSession()
 
   // ** Hooks
@@ -130,14 +114,14 @@ const PayrollList = classNamec => {
   useEffect(() => {
     setLoading(true);
     axios
-    .get('/api/payroll/difference?year='+year.getFullYear() , {
-    })
-    .then(function (response) {
+      .get('/api/payroll/difference?year=' + year.getFullYear(), {
+      })
+      .then(function (response) {
         console.log(response.data.data)
         setPayrolls(response.data.data);
         setLoading(false);
-    })
-  }, [dispatch, year ])
+      })
+  }, [dispatch, year])
 
   const handleClose = () => {
     setOpen(false)
@@ -222,7 +206,7 @@ const PayrollList = classNamec => {
     }
 
     const handleRowView = (row) => {
-      router.push('/company-dashboard/payroll/new/'+ row?.employee_id + '/' + year.getFullYear() )
+      router.push('/company-dashboard/payroll/new/' + row?.employee_id + '/' + year.getFullYear())
       handleRowOptionsClose()
     }
 
@@ -252,7 +236,7 @@ const PayrollList = classNamec => {
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           {session && session.user.permissions.includes('ViewEmployee') && (
-            <MenuItem onClick={()=>handleRowView(row)} sx={{ '& svg': { mr: 2 } }}>
+            <MenuItem onClick={() => handleRowView(row)} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
@@ -272,19 +256,19 @@ const PayrollList = classNamec => {
   // ----------------------------- Columns --------------------------------------------
 
   const columns = [
-    {
-      flex: 0.02,
-      minWidth: 50,
-      field: 'index',
-      headerName: '#',
-      renderCell: ({ row }) => {
-        return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.index}
-          </Typography>
-        )
-      }
-    },
+    // {
+    //   flex: 0.02,
+    //   minWidth: 50,
+    //   field: 'index',
+    //   headerName: '#',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+    //         {row.index + 1}
+    //       </Typography>
+    //     )
+    //   }
+    // },
     {
       flex: 0.02,
       minWidth: 100,
@@ -292,8 +276,8 @@ const PayrollList = classNamec => {
       headerName: 'ID NO  .',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
-          <a href="#" >{row.employee_no}</a> 
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            <a href="#" >{row.employee_no}</a>
           </Typography>
         )
       }
@@ -305,8 +289,8 @@ const PayrollList = classNamec => {
       headerName: 'Employee name',
       renderCell: ({ row }) => {
         return (
-          <Typography variant='subtitle1'  noWrap sx={{ textTransform: 'capitalize' }}>
-          {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName }
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row?.employee_info?.[0]?.firstName + ' ' + row?.employee_info?.[0]?.lastName}
           </Typography>
         )
       }
@@ -320,7 +304,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.total}
+              {(row.total).toFixed(2)}
             </Typography>
           </Box>
         )
@@ -455,11 +439,11 @@ const PayrollList = classNamec => {
                 />
               </FormControl> */}
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                  <DatePicker label={'Year'} views={[ 'year']} 
-                    slotProps={{ textField: { size: 'small' } }}
-                    size='sm'
-                    onChange={(e)=>{setYear(e)}}
-                  />
+                <DatePicker label={'Year'} views={['year']}
+                  slotProps={{ textField: { size: 'small' } }}
+                  size='sm'
+                  onChange={(e) => { setYear(e) }}
+                />
               </LocalizationProvider>
             </Box>
 
@@ -486,18 +470,18 @@ const PayrollList = classNamec => {
             loading && <Loading header='Please Wait' description='Employee are loading'></Loading>
           }
           {
-            !loading && 
-              <DataGrid
-                autoHeight
-                rows={payrolls}
-                columns={columns}
-                getRowId={(row)=>row.employee_id}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-              />
+            !loading &&
+            <DataGrid
+              autoHeight
+              rows={payrolls}
+              columns={columns}
+              getRowId={(row) => row.employee_id}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
           }
         </Card>
       </Grid>
