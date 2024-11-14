@@ -315,9 +315,16 @@ export const functions = {
           let d = data.map((val, index) => {
             let timeOut = excelDateToJSDate(val['Clock Out']);
             let timeIn = excelDateToJSDate(val['Clock In']);
+            timeIn = new Date(timeIn);
+            timeOut = new Date(timeOut);
 
+            let diff = 1000 * 60 * 60 * 2;
+            timeIn = new Date(timeIn.getTime() + diff)
+            timeOut = new Date(timeOut.getTime() + diff)
+            console.log(timeIn, timeOut);
             timeOut = new Date(timeOut).toLocaleTimeString('en-US', { hour12: false });
             timeIn = new Date(timeIn).toLocaleTimeString('en-US', { hour12: false });
+            console.log(timeIn, timeOut);
             
             return {
               'employee_id' : EmployeesIds.get(String(val['Emp No.'])),
