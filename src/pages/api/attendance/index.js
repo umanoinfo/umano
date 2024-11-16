@@ -51,8 +51,8 @@ export default async function handler(req, res) {
       {
         $lookup: {
           from: 'employees',
-          let: { employee_no:  { $toString: '$employee_no'}  },
-          pipeline: [{ $match: { $expr: { $eq: ['$idNo', '$$employee_no'] } } }],
+          let: { employee_id:  { $toObjectId: '$employee_id'}  },
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$employee_id'] } } }],
           as: 'employee_info'
         }
       },

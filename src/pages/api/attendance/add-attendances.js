@@ -45,14 +45,14 @@ export default async function handler(req, res) {
     attendance.created_at = new Date().toISOString()
     attendance.status = 'active'
     attendance.employee_id = attendance.employee_id;
-    attendancesQuery.push({ date: attendance.date, employee_no: attendance.employee_no, $or: [{ deleted_at: { $exists: false }, deleted_at: null }] });
+    attendancesQuery.push({ date: attendance.date , company_id: myUser.company_id, employee_id: attendance.employee_id, $or: [{ deleted_at: { $exists: false }, deleted_at: null }] });
   }
   console.log(attendancesQuery);
   const curAttendances = await client.db().collection('attendances').find({ $or: attendancesQuery }).toArray();
   const nonExistingAttendances = [];
   for (const attendance of attendances) {
     const existing = curAttendances.filter((att) => {
-      return att.employee_no == attendance.employee_no &&
+      return att.employee_id == attendance.employee_id &&
         new Date(att.date).toLocaleDateString() == new Date(attendance.date).toLocaleDateString();
     })
     console.log(existing, attendance);
