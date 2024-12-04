@@ -13,7 +13,9 @@ export default async function handler(req, res) {
     let arr = req.query.documentTypes.split(',')
     req.query.type = arr
   }
-
+  if(!req.query.documentStatus && !req.query.documentTypes  && !req.query.q){
+    return res.json({success:true , data:[]});
+  }
   const client = await connectToDatabase()
 
   // -------------------- Token --------------------------------------------------

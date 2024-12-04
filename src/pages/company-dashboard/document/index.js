@@ -158,7 +158,11 @@ const AllDocumentsList = () => {
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          documentTypes: AllDocumentTypes ,
+          documentStatus,
+          q: value
+        })).then(() => {
           toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'

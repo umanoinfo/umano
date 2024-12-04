@@ -68,7 +68,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
   const [tags, setTags] = useState([]);
 
-  const getDocumentTypes = async () => {
+  const getDocumentTypes = async (resolve,reject) => {
     setLoading(true);
     try {
       const res = await axios.get('/api/document-types');
@@ -85,22 +85,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
         setDocumentTypeCategory(map);
         setAllDocumentTypes(data);
         setLoading(false);
-
+        resolve();
       }
 
     } catch (err) {
       toast.error('Failed to fetch documents types', { duration: 5000, position: 'bottom-right' });
-
+      reject();
+      setLoading(false);
     }
+  }
+  
+  const fetchOnInit = async ()=>{
+    await new Promise( (resolve , reject )=> {getDocumentTypes(resolve,reject) });
+    await new Promise((resolve, reject) => {getDocument(resolve,reject)})
   }
 
   useEffect(() => {
-    (new Promise((resolve, reject) => getDocumentTypes(resolve))).then(() => {
-      (new Promise((resolve, reject) => getDocument(resolve))).then(() => {
-
-      })
-
-    })
+    fetchOnInit();
   }, [])
 
   const goToIndex = () => {
@@ -111,35 +112,36 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ Get Document ------------------------------------
 
-  const getDocument = async (resolve) => {
+  const getDocument = async (resolve,reject) => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       if (response.data.data[0]) {
-        setSelectedDocument(response.data.data[0])
-        setExpiryDateFlag(response.data.data[0].expiryDateFlag)
-        setIssueDate(response.data.data[0].issueDate)
-        setNotifyBeforeDays(response.data.data[0].notifyBeforeDays)
+        setSelectedDocument(response?.data?.data?.[0])
+        setExpiryDateFlag(response?.data?.data?.[0]?.expiryDateFlag)
+        setIssueDate(response?.data?.data?.[0]?.issueDate)
+        setNotifyBeforeDays(response?.data?.data?.[0]?.notifyBeforeDays)
         let tempArr = []
-        response.data.data[0].files_info.map((file, index) => {
-          if (!file.deleted_at) {
+        response?.data?.data?.[0]?.files_info?.map((file, index) => {
+          console.log(file);
+          if (!file?.deleted_at) {
             tempArr.push({
-              _id: file._id,
-              name: file.name,
+              _id: file?._id,
+              name: file?.name,
               fileKey: index,
-
-              // url: 'https://robin-sass.pioneers.network/assets/testFiles/document/' + file.url,
-
-              created_at: new Date().toISOString()(file.created_at).toISOString().substring(0, 10)
+              url:'https://umanu.blink-techno.com/' + file?.url, 
+              created_at: new Date((file?.created_at)).toISOString().substring(0, 10)
             })
           }
         })
-        setFiles(tempArr)
+        setFiles(tempArr);
+
+        // setFiles(response.data.data[0].files_info.map((file)=>{return file.originalFileObject}))
         setFormValue(response.data.data[0])
         resolve()
+        setLoading(false);
       }
-
       setLoading(false)
-    }).catch((err) => { })
+    }).catch((err) => { reject()  ; setLoading(false)})
   };
 
 
@@ -253,7 +255,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const addToFiles = e => {
     let temp = files
-    temp.push(e.blobFile)
+    temp.push(e)
     setFiles(temp)
   }
 
@@ -269,7 +271,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
 
   const removeFile = e => {
+    let temp = files.filter((file)=>{
+      return e.fileKey != file.fileKey ;
+    })
     axios.post('/api/file/delete-file', e).then(response => { }).catch((err) => { })
+    setFiles(temp);
   }
 
   // ------------------------------ View ---------------------------------
