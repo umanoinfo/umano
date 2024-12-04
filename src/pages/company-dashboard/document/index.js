@@ -442,6 +442,19 @@ const AllDocumentsList = () => {
       }
     },
     {
+      flex: 0.11,
+      minWidth: 180,
+      field: 'files_info',
+      headerName: 'Files Count',
+      renderCell: ({ row }) => {
+        return (
+          <>
+            {row?.files_info?.length}
+          </>
+        )
+      }
+    },
+    {
       flex: 0.07,
       minWidth: 100,
       field: 'status',
