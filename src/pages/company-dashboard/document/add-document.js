@@ -238,39 +238,44 @@ const AddDepartment = ({ popperPlacement, id }) => {
             .post('/api/document/add-document', {
               data
             })
-            .then(function (response) {
-              let doc_id = response.data.data._id
-              let count = 0
-              files.map(async _file => {
-                const file = _file.blobFile;
-
-                setLoadingDescription(file.name + ' is uploading')
-                let formData = new FormData()
-                formData.append('file', file)
-                formData.append('type', 'document')
-                axios.post('https://umanu.blink-techno.com/api/upload', formData).then(response => {
-                  let data = {}
-                  data.name = file.name
-                  data.linked_id = doc_id
-                  data.type = 'document'
-                  data.url = response.data
-                  data.created_at = new Date().toISOString()
-                  data.originalFileObject = _file ;
-                  axios
-                    .post('/api/file/add-file', {
-                      data
-                    })
-                    .then(res => { }).catch((err) => { })
-                }).catch((err) => { })
-                goToIndex()
-              })
-
-              toast.success('Document (' + data.title + ') Inserted Successfully.', {
-                delay: 3000,
-                position: 'bottom-right'
-              })
-
-              close()
+            .then(async function (response) {
+             
+                  let doc_id = response.data.data._id
+                  let count = 0
+                  
+                  await new Promise((resolve , reject )=>{
+                      files.map(async (_file, index) => {
+                          const file = _file.blobFile;
+                          setLoadingDescription(file.name + ' is uploading')
+                          let formData = new FormData()
+                          formData.append('file', file)
+                          formData.append('type', 'document')
+                          try{
+                            const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                            let data = {}
+                            data.name = file.name
+                            data.linked_id = doc_id
+                            data.type = 'document'
+                            data.url = response.data
+                            data.created_at = new Date().toISOString()
+                            data.originalFileObject = _file ;
+                            const res2= await axios.post('/api/file/add-file', {data})
+                          }
+                          catch(err){
+                            toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
+                          }
+                          if(index == files.length- 1){
+                            resolve();
+                          }
+                        })
+                  })
+                  toast.success('Document (' + data.title + ') Inserted Successfully.', {
+                    delay: 3000,
+                    position: 'bottom-right'
+                  })
+                  goToIndex()
+                  close()
+                  setLoading(false);
             })
             .catch(function (error) {
               toast.error('Error : ' + error.response.data.message + ' !', {
@@ -287,12 +292,41 @@ const AddDepartment = ({ popperPlacement, id }) => {
             .post('/api/employee-document/edit-document', {
               data
             })
-            .then(function (response) {
-
+            .then(async function (response) {
+              let doc_id = response.data.data._id
+              let count = 0
+              await new Promise((resolve , reject )=>{
+                files.map(async (_file, index) => {
+                    const file = _file.blobFile;
+                    setLoadingDescription(file.name + ' is uploading')
+                    let formData = new FormData()
+                    formData.append('file', file)
+                    formData.append('type', 'document')
+                    try{
+                      const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                      let data = {}
+                      data.name = file.name
+                      data.linked_id = doc_id
+                      data.type = 'document'
+                      data.url = response.data
+                      data.created_at = new Date().toISOString()
+                      data.originalFileObject = _file ;
+                      const res2= await axios.post('/api/file/add-file', {data})
+                    }
+                    catch(err){
+                      toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
+                    }
+                    if(index == files.length- 1){
+                      resolve();
+                    }
+                  })
+            })
               toast.success('Document (' + data.title + ') Inserted Successfully.', {
                 delay: 3000,
                 position: 'bottom-right'
               })
+              goToIndex()
+              close()
               setForm(false)
               setLoading(false)
 
