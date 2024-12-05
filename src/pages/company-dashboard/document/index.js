@@ -158,7 +158,11 @@ const AllDocumentsList = () => {
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          documentTypes: AllDocumentTypes ,
+          documentStatus,
+          q: value
+        })).then(() => {
           toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
@@ -433,6 +437,19 @@ const AllDocumentsList = () => {
                 sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
               />
             )}
+          </>
+        )
+      }
+    },
+    {
+      flex: 0.11,
+      minWidth: 180,
+      field: 'files_info',
+      headerName: 'Files Count',
+      renderCell: ({ row }) => {
+        return (
+          <>
+            {row?.files_info?.length}
           </>
         )
       }

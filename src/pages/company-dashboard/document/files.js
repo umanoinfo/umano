@@ -126,7 +126,7 @@ const AllDocumentsList = () => {
     ).then( () => setLoading(false))
     getDocumentTypes();
 
-  }, [dispatch, fileTypes , fileStatus, value])
+  }, [ fileTypes , fileStatus, value])
 
   // ----------------------- Handle ------------------------------
 
@@ -155,7 +155,11 @@ const AllDocumentsList = () => {
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          fileTypes,
+          fileStatus,
+          q: value
+        })).then(() => {
           toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'

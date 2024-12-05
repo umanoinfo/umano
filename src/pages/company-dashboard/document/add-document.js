@@ -241,7 +241,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
             .then(function (response) {
               let doc_id = response.data.data._id
               let count = 0
-              files.map(async file => {
+              files.map(async _file => {
+                const file = _file.blobFile;
+
                 setLoadingDescription(file.name + ' is uploading')
                 let formData = new FormData()
                 formData.append('file', file)
@@ -253,6 +255,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   data.type = 'document'
                   data.url = response.data
                   data.created_at = new Date().toISOString()
+                  data.originalFileObject = _file ;
                   axios
                     .post('/api/file/add-file', {
                       data
@@ -314,11 +317,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const addToFiles = e => {
     let temp = files
-    temp.push(e.blobFile)
+    temp.push(e)
     setFiles(temp)
   }
 
-  const removeFile = e => { }
+  const removeFile = e => {
+    let temp = files.filter((file)=>{
+      return e.fileKey != file.fileKey ;
+    });
+    setFiles(temp);
+  }
 
   // const Textarea = forwardRef((props, ref) => <Input as='textarea' />)
 
