@@ -208,7 +208,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.issueDate = issueDate
         data.expiryDateFlag = expiryDateFlag
 
-        if (tags.includes('Vendors')) {
+        // if (tags.includes('Vendors')) 
+        {
           data.companyEmail = formValue.companyEmail;
           data.companyName = formValue.companyName;
           data.companyMobile = formValue.companyMobile;
@@ -217,7 +218,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
           data.companyContactPerson = formValue.companyContactPerson;
         }
 
-        if (tags.includes('Third Party Contracts')) {
+        // if (tags.includes('Third Party Contracts')) 
+        {
           data.thirdPartyContractorsEmail = formValue.thirdPartyContractorsEmail;
           data.thirdPartyContractorsLandline = formValue.thirdPartyContractorsLandline;
         }
@@ -586,7 +588,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Box>
                   </Card>
                   {
-                    tags.includes('Vendors') ?
+
+                    // tags.includes('Vendors') ?
                       <>
                         <Grid item sm={12} md={12} pr={1}  >
                           <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
@@ -624,12 +627,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         </Grid>
 
                       </>
-                      :
-                      <>
-                      </>
+
+                      // :
+                      // <>
+                      // </>
                   }
                   {
-                    tags.includes('Third Party Contracts') ?
+
+                    // tags.includes('Third Party Contracts') ?
                       <>
                         <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
                           Third Party Contractors Information
@@ -643,8 +648,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
                         </Grid>
                       </>
-                      :
-                      <></>
+                      
+                      // :
+                      // <></>
                   }
 
                 </Grid>
