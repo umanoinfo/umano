@@ -162,11 +162,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
   })
 
   const handleTagsChange = (e) => {
-    if (notAuthorized.includes('ViewDocumentTypes'));
-    {
+    console.log(e , documentTypeCategory , notAuthorized);
+    
+    // if (notAuthorized.includes('ViewDocumentTypes'));
+    // {
 
-      return;
-    }
+    //   return;
+    // }
 
     let categories = new Set(e?.map((type) => {
 
