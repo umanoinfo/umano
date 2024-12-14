@@ -68,7 +68,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
   const [tags, setTags] = useState([]);
 
-  const getDocumentTypes = async (resolve,reject) => {
+  const getDocumentTypes = async (resolve, reject) => {
     setLoading(true);
     try {
       const res = await axios.get('/api/document-types');
@@ -94,10 +94,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
       setLoading(false);
     }
   }
-  
-  const fetchOnInit = async ()=>{
-    await new Promise( (resolve , reject )=> {getDocumentTypes(resolve,reject) });
-    await new Promise((resolve, reject) => {getDocument(resolve,reject)})
+
+  const fetchOnInit = async () => {
+    await new Promise((resolve, reject) => { getDocumentTypes(resolve, reject) });
+    await new Promise((resolve, reject) => { getDocument(resolve, reject) })
   }
 
   useEffect(() => {
@@ -112,7 +112,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   // ------------------------------ Get Document ------------------------------------
 
-  const getDocument = async (resolve,reject) => {
+  const getDocument = async (resolve, reject) => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       if (response.data.data[0]) {
@@ -128,7 +128,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
               _id: file?._id,
               name: file?.name,
               fileKey: index,
-              url:'https://umanu.blink-techno.com/' + file?.url, 
+              url: 'https://umanu.blink-techno.com/' + file?.url,
               created_at: new Date((file?.created_at)).toISOString().substring(0, 10)
             })
           }
@@ -141,7 +141,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
         setLoading(false);
       }
       setLoading(false)
-    }).catch((err) => { reject()  ; setLoading(false)})
+    }).catch((err) => { reject(); setLoading(false) })
   };
 
 
@@ -274,8 +274,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
 
   const removeFile = e => {
-    let temp = files.filter((file)=>{
-      return e.fileKey != file.fileKey ;
+    let temp = files.filter((file) => {
+      return e.fileKey != file.fileKey;
     })
     axios.post('/api/file/delete-file', e).then(response => { }).catch((err) => { })
     setFiles(temp);
@@ -528,67 +528,48 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
                   // tags.includes('Vendors') ?
 
-                    <>
-                      <Grid item sm={12} md={12} pr={1}  >
-                        <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
-                          Company Information
-                        </Typography>
+                  <>
+                    <Grid item sm={12} md={12} pr={1}  >
+                      <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
+                        Company Information
+                      </Typography>
+                    </Grid>
+                    <Grid item sm={12} md={8} pr={2} pt={3}>
+                      <small> Company Name </small>
+                      <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
+                    </Grid>
+                    <Grid container sm={12} md={12} pt={3}>
+                      <Grid item sm={6} md={6} pr={2}>
+                        <small> Company Mobile </small>
+                        <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
                       </Grid>
-                      <Grid item sm={12} md={8} pr={2}>
-                        <small> Company Name </small>
-                        <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
+                      <Grid item sm={6} md={6} pr={2}>
+                        <small> Company Email </small>
+                        <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
                       </Grid>
-                      <Grid container sm={12} md={12}>
-                        <Grid item sm={6} md={6} pr={2}>
-                          <small> Company Mobile </small>
-                          <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
-                        </Grid>
-                        <Grid item sm={6} md={6} pr={2}>
-                          <small> Company Email </small>
-                          <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
-                        </Grid>
+                    </Grid>
+                    <Grid container sm={12} md={12} pt={3}>
+                      <Grid item sm={6} md={6} pr={2}>
+                        <small> Company Landline </small>
+                        <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
                       </Grid>
-                      <Grid container sm={12} md={12}>
-                        <Grid item sm={6} md={6} pr={2}>
-                          <small> Fax </small>
-                          <Form.Control controlId='companyFax' size='sm' name='companyFax' placeholder='Company Fax' />
-                        </Grid>
-                        <Grid item sm={6} md={6} pr={2}>
-                          <small> Company Landline </small>
-                          <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
-                        </Grid>
-                      </Grid>
+                    </Grid>
 
-                      <Grid item sm={12} md={8} pr={2}>
-                        <small> Company Contact Person </small>
-                        <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
-                      </Grid>
+                    <Grid item sm={12} md={8} pr={2} pt={3}>
+                      <small> Company Contact Person </small>
+                      <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
+                    </Grid>
 
-                    </>
+                  </>
 
-                    // :
-                    // <>
-                    // </>
+                  // :
+                  // <>
+                  // </>
                 }
                 {
-                
-                  // tags.includes('Third Party Contracts') ?
-                    <>
-                      <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
-                        Third Party Contractors Information
-                      </Typography>
-                      <Grid item sm={12} md={8} pr={2}>
-                        <small> Email </small>
-                        <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
-                      </Grid>
-                      <Grid item sm={12} md={8} pr={2}>
-                        <small> LandLine </small>
-                        <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
-                      </Grid>
-                    </>
 
-                    // :
-                    // <></>
+                  // :
+                  // <></>
                 }
               </Grid>
             </Grid>

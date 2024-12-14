@@ -241,43 +241,43 @@ const AddDepartment = ({ popperPlacement, id }) => {
               data
             })
             .then(async function (response) {
-             
-                  let doc_id = response.data.data._id
-                  let count = 0
-                  
-                  await new Promise((resolve , reject )=>{
-                      files.map(async (_file, index) => {
-                          const file = _file.blobFile;
-                          setLoadingDescription(file.name + ' is uploading')
-                          let formData = new FormData()
-                          formData.append('file', file)
-                          formData.append('type', 'document')
-                          try{
-                            const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
-                            let data = {}
-                            data.name = file.name
-                            data.linked_id = doc_id
-                            data.type = 'document'
-                            data.url = response.data
-                            data.created_at = new Date().toISOString()
-                            data.originalFileObject = _file ;
-                            const res2= await axios.post('/api/file/add-file', {data})
-                          }
-                          catch(err){
-                            toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
-                          }
-                          if(index == files.length- 1){
-                            resolve();
-                          }
-                        })
-                  })
-                  toast.success('Document (' + data.title + ') Inserted Successfully.', {
-                    delay: 3000,
-                    position: 'bottom-right'
-                  })
-                  goToIndex()
-                  close()
-                  setLoading(false);
+
+              let doc_id = response.data.data._id
+              let count = 0
+
+              await new Promise((resolve, reject) => {
+                files.map(async (_file, index) => {
+                  const file = _file.blobFile;
+                  setLoadingDescription(file.name + ' is uploading')
+                  let formData = new FormData()
+                  formData.append('file', file)
+                  formData.append('type', 'document')
+                  try {
+                    const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                    let data = {}
+                    data.name = file.name
+                    data.linked_id = doc_id
+                    data.type = 'document'
+                    data.url = response.data
+                    data.created_at = new Date().toISOString()
+                    data.originalFileObject = _file;
+                    const res2 = await axios.post('/api/file/add-file', { data })
+                  }
+                  catch (err) {
+                    toast.error('Error uploading document ' + data.name, { delay: 1000, position: 'bottom-right' });
+                  }
+                  if (index == files.length - 1) {
+                    resolve();
+                  }
+                })
+              })
+              toast.success('Document (' + data.title + ') Inserted Successfully.', {
+                delay: 3000,
+                position: 'bottom-right'
+              })
+              goToIndex()
+              close()
+              setLoading(false);
             })
             .catch(function (error) {
               toast.error('Error : ' + error.response.data.message + ' !', {
@@ -297,32 +297,32 @@ const AddDepartment = ({ popperPlacement, id }) => {
             .then(async function (response) {
               let doc_id = response.data.data._id
               let count = 0
-              await new Promise((resolve , reject )=>{
+              await new Promise((resolve, reject) => {
                 files.map(async (_file, index) => {
-                    const file = _file.blobFile;
-                    setLoadingDescription(file.name + ' is uploading')
-                    let formData = new FormData()
-                    formData.append('file', file)
-                    formData.append('type', 'document')
-                    try{
-                      const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
-                      let data = {}
-                      data.name = file.name
-                      data.linked_id = doc_id
-                      data.type = 'document'
-                      data.url = response.data
-                      data.created_at = new Date().toISOString()
-                      data.originalFileObject = _file ;
-                      const res2= await axios.post('/api/file/add-file', {data})
-                    }
-                    catch(err){
-                      toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
-                    }
-                    if(index == files.length- 1){
-                      resolve();
-                    }
-                  })
-            })
+                  const file = _file.blobFile;
+                  setLoadingDescription(file.name + ' is uploading')
+                  let formData = new FormData()
+                  formData.append('file', file)
+                  formData.append('type', 'document')
+                  try {
+                    const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                    let data = {}
+                    data.name = file.name
+                    data.linked_id = doc_id
+                    data.type = 'document'
+                    data.url = response.data
+                    data.created_at = new Date().toISOString()
+                    data.originalFileObject = _file;
+                    const res2 = await axios.post('/api/file/add-file', { data })
+                  }
+                  catch (err) {
+                    toast.error('Error uploading document ' + data.name, { delay: 1000, position: 'bottom-right' });
+                  }
+                  if (index == files.length - 1) {
+                    resolve();
+                  }
+                })
+              })
               toast.success('Document (' + data.title + ') Inserted Successfully.', {
                 delay: 3000,
                 position: 'bottom-right'
@@ -358,8 +358,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
 
   const removeFile = e => {
-    let temp = files.filter((file)=>{
-      return e.fileKey != file.fileKey ;
+    let temp = files.filter((file) => {
+      return e.fileKey != file.fileKey;
     });
     setFiles(temp);
   }
@@ -590,67 +590,64 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   {
 
                     // tags.includes('Vendors') ?
-                      <>
-                        <Grid item sm={12} md={12} pr={1}  >
-                          <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
-                            Company Information
-                          </Typography>
+                    <>
+                      <br></br>
+                      <Grid item sm={12} md={12} pr={1} pt={6}  >
+                        <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
+                          Company Information
+                        </Typography>
+                      </Grid>
+                      <Grid item sm={12} md={8} pr={2} pt={3}>
+                        <small> Company Name </small>
+                        <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
+                      </Grid>
+                      <Grid container sm={12} md={12} pt={3}>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Mobile </small>
+                          <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
                         </Grid>
-                        <Grid item sm={12} md={8} pr={2}>
-                          <small> Company Name </small>
-                          <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Email </small>
+                          <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
                         </Grid>
-                        <Grid container sm={12} md={12}>
-                          <Grid item sm={6} md={6} pr={2}>
-                            <small> Company Mobile </small>
-                            <Form.Control type='number' controlId='companyMobile' size='sm' name='companyMobile' placeholder='Company Mobile' />
-                          </Grid>
-                          <Grid item sm={6} md={6} pr={2}>
-                            <small> Company Email </small>
-                            <Form.Control type='email' controlId='companyEmail' size='sm' name='companyEmail' placeholder='Company Email' />
-                          </Grid>
+                      </Grid>
+                      <Grid container sm={12} md={12} pt={3}>
+                        <Grid item sm={6} md={6} pr={2}>
+                          <small> Company Landline </small>
+                          <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
                         </Grid>
-                        <Grid container sm={12} md={12}>
-                          <Grid item sm={6} md={6} pr={2}>
-                            <small> Fax </small>
-                            <Form.Control controlId='companyFax' size='sm' name='companyFax' placeholder='Company Fax' />
-                          </Grid>
-                          <Grid item sm={6} md={6} pr={2}>
-                            <small> Company Landline </small>
-                            <Form.Control type='number' controlId='companyLandline' size='sm' name='companyLandline' placeholder='Company Landline' />
-                          </Grid>
-                        </Grid>
+                      </Grid>
 
-                        <Grid item sm={12} md={8} pr={2}>
-                          <small> Company Contact Person </small>
-                          <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
-                        </Grid>
+                      <Grid item sm={12} md={8} pr={2} pt={3}>
+                        <small> Company Contact Person </small>
+                        <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
+                      </Grid>
 
-                      </>
+                    </>
 
-                      // :
-                      // <>
-                      // </>
+                    // :
+                    // <>
+                    // </>
                   }
                   {
 
                     // tags.includes('Third Party Contracts') ?
-                      <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
-                          Third Party Contractors Information
-                        </Typography>
-                        <Grid item sm={12} md={8} pr={2}>
-                          <small> Email </small>
-                          <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
-                        </Grid>
-                        <Grid item sm={12} md={8} pr={2}>
-                          <small> LandLine </small>
-                          <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
-                        </Grid>
-                      </>
-                      
-                      // :
-                      // <></>
+                    // <>
+                    //   <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
+                    //     Third Party Contractors Information
+                    //   </Typography>
+                    //   <Grid item sm={12} md={8} pr={2}>
+                    //     <small> Email </small>
+                    //     <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
+                    //   </Grid>
+                    //   <Grid item sm={12} md={8} pr={2}>
+                    //     <small> LandLine </small>
+                    //     <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
+                    //   </Grid>
+                    // </>
+
+                    // :
+                    // <></>
                   }
 
                 </Grid>
