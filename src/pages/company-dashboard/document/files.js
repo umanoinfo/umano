@@ -269,6 +269,22 @@ const AllDocumentsList = () => {
       }
     },
     {
+      flex: 0.15,
+      field: 'exiryDate',
+      minWidth: 100,
+      headerName: 'Expiry Date',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
+            <Icon fontSize={20} />
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              { row.document_info[0] && row?.document_info?.[0]?.expiryDate?.substring(0,10)}
+            </div>
+          </Box>
+        )
+      }
+    },
+    {
       flex: 0.35,
       field: 'type',
       minWidth: 100,

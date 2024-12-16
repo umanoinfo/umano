@@ -27,15 +27,9 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, message: 'Not Auth' })
   }
 
-  const from3Date =new Date()
-  from3Date.setDate(new Date().getDate() - 3);
-  const to3Date = new Date()
-  to3Date.setDate(new Date().getDate() + 3);
-  
-  const from30Date =new Date()
-  from30Date.setDate(new Date().getDate() - 30);
-  const to30Date = new Date()
-  to30Date.setDate(new Date().getDate() + 30);
+  const from3Date =new Date(new Date() - 3 * (1000 * 60 * 60 * 24 ) )
+  const to3Date = new Date(new Date()  + 3 * ( 1000 * 60 * 60 * 24 ))
+  const from90Date =new Date(new Date() - 30 * (1000 * 60 * 60 * 24  ));
 
   // --------------------- Post ------------------------------------------
 
@@ -142,7 +136,7 @@ export default async function handler(req, res) {
     .toArray()
 
 
-    const expiary30Documents = await client
+    const expiary90Documents = await client
     .db()
     .collection('documents')
     .aggregate([
@@ -153,7 +147,8 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               expiryDate: {
-                $gt: new Date(from30Date).toISOString()
+                $lte: new Date(from90Date).toISOString(),
+                $gte: new Date().toISOString()
               }
             },
           ]
@@ -174,8 +169,8 @@ export default async function handler(req, res) {
             { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] },
             {
               expiryDate: {
-                $lt: new Date(from30Date).toISOString(),
-                $gt: new Date()
+                $lt: new Date(from90Date).toISOString(),
+                $gt: new Date().toISOString()
               }
             },
           ]
@@ -222,7 +217,7 @@ export default async function handler(req, res) {
     data.expiaryDocuments_count = expiaryDocuments.length ;
     data.birthdays = birthdays ;
     let documentsExpired = []
-    expiary30Documents.map((doc , index)=>{
+    expiary90Documents.map((doc , index)=>{
       let docTemp ={}
       docTemp.id = doc._id ;
       docTemp.icon = 'document'
@@ -244,6 +239,7 @@ export default async function handler(req, res) {
       docTemp.notifyBefore = doc.notifyBefore
       documentsExpired.push(docTemp)
     })
+    console.log(expiary90Documents , myUser.company_id)
 
     data.documentsExpired = documentsExpired
     let index = 1;

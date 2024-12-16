@@ -32,12 +32,11 @@ export default async function handler(req, res) {
     document.notifyBefore = 30
   }
   document.notifyBeforeDays = document.notifyBefore
-  var date = new Date(document.expiryDate);
-  date.setDate(date.getDate() - document.notifyBefore);
+  var date = new Date(new Date(document.expiryDate) - Number(document.notifyBefore) * (1000 * 60 * 60 * 24));
 
   document.notifyBefore = date
   document.company_id = myUser.company_id
-  document.expiryDate = new Date(document.expiryDate)
+  document.expiryDate = new Date(document.expiryDate).toISOString()
   const newDocument = await client.db().collection('documents').insertOne(document)
   const insertedDocument = await client.db().collection('documents').findOne({ _id: newDocument.insertedId })
 

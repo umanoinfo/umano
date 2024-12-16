@@ -41,11 +41,11 @@ export default async function handler(req, res) {
     document.notifyBefore = 30
   }
   document.notifyBeforeDays = document.notifyBefore
-  var date = new Date(document.expiryDate);
+  var date = new Date(new Date(document.expiryDate)- (Number(document.notifyBefore) * 1000 * 60 * 60 * 24 ));
   date.setDate(date.getDate() - document.notifyBefore);
   document.notifyBefore = date
 
-  document.expiryDate = new Date(document.expiryDate)
+  document.expiryDate = new Date(document.expiryDate).toISOString();
 
   const updateDocument = await client
     .db()
