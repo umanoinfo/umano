@@ -131,37 +131,35 @@ const CrmTable = ({data , type }) => {
       }
     )  
   }
-  else{
-    columns.push({
-      flex: 0.06,
-      minWidth: 200,
-      field: 'expiryDate',
-      headerName: 'Expiry Date',
-      renderCell: ({ row }) => {
-        return (
-        <>
-            <Typography variant='body2'>{new Date(row.expiryDate).toLocaleDateString()}</Typography>
-              {!row.expiryDateFlag && (
-                <CustomChip
-                  skin='light'
-                  size='small'
-                  label={
-                    Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
-                    ' Day'
-                  }
-                  color={dayColor(
-                    Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
-                  )}
-                  sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
-                />
-              )}
-        </>
-      )
-      }
-  
-  
-    })
-  }
+  columns.push({
+    flex: 0.06,
+    minWidth: 200,
+    field: 'expiryDate',
+    headerName: 'Expiry Date',
+    renderCell: ({ row }) => {
+      return (
+      <>
+          <Typography variant='body2'>{new Date(row.expiryDate).toLocaleDateString()}</Typography>
+            {!row.expiryDateFlag && (
+              <CustomChip
+                skin='light'
+                size='small'
+                label={
+                  Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
+                  ' Day'
+                }
+                color={dayColor(
+                  Math.floor((new Date(row.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
+                )}
+                sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
+              />
+            )}
+      </>
+    )
+    }
+
+
+  })
   columns = [
     ...columns,
     {
