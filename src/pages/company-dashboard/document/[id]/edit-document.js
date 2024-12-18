@@ -207,47 +207,53 @@ const AddDepartment = ({ popperPlacement, id }) => {
           .post('/api/document/edit-document', {
             data
           })
-          .then(function (response) {
+          .then(async function (response) {
             if (files.length == 0) {
               goToIndex()
             }
             let doc_id = response.data.data._id
             let count = 0
-            files.map(async file => {
-              if (!file.created_at) {
-                setLoadingDescription(file.name + ' is uploading')
-                let formData = new FormData()
-                formData.append('file', file)
-                formData.append('type', 'document')
-                axios.post('https://umanu.blink-techno.com/api/upload', formData).then(response => {
-                  let data = {}
-                  data.name = file.name
-                  data.linked_id = doc_id
-                  data.type = 'document'
-                  data.url = response.data
-                  data.created_at = new Date().toISOString()
-                  axios
-                    .post('/api/file/add-file', {
-                      data
-                    })
-                    .then(res => {
-
-                    }).catch((err) => { })
-                }).catch((err) => { })
-              }
-              goToIndex()
+            await new Promise((resolve , reject )=>{
+              files.map(async (_file, index) => {
+                  const file = _file?.blobFile;
+                  
+                  // for files that are already saved on server
+                  if(!_file?.blobFile){
+                    return ;
+                  }
+                  console.log(file);
+                  setLoadingDescription(file?.name + ' is uploading')
+                  let formData = new FormData()
+                  formData.append('file', file)
+                  formData.append('type', 'document')
+                  try{
+                    const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                    let data = {}
+                    data.name = file.name
+                    data.linked_id = doc_id
+                    data.type = 'document'
+                    data.url = response.data
+                    data.created_at = new Date().toISOString()
+                    data.originalFileObject = _file ;
+                    const res2= await axios.post('/api/file/add-file', {data})
+                  }
+                  catch(err){
+                    toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
+                  }
+                  if(index == files.length- 1){
+                    resolve();
+                  }
+                })
             })
+            goToIndex()
+            
 
             toast.success('Document (' + data.title + ') Inserted Successfully.', {
               delay: 3000,
               position: 'bottom-right'
             })
-          })
-          .catch(function (error) {
-            toast.error('Error : ' + error.response.data.message + ' !', {
-              delay: 3000,
-              position: 'bottom-right'
-            })
+          
+         
             setLoading(false)
           })
       }
@@ -259,6 +265,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const addToFiles = e => {
     let temp = files
     temp.push(e)
+    console.log(temp);
     setFiles(temp)
   }
 
