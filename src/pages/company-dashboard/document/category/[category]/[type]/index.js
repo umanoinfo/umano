@@ -188,7 +188,7 @@ const AllDocumentsList = () => {
   // -------------------------- Add Document -----------------------------------------------
 
   const addDocument = () => {
-    router.push('/company-dashboard/document/add-document')
+    router.push('/company-dashboard/document/add-document?category='+documentTypes)
   }
 
   // -------------------------- Row Options -----------------------------------------------

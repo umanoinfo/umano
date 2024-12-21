@@ -110,7 +110,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState({})
   const [AllDocumentTypes, setAllDocumentTypes] = useState();
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
-
+  const documentCategory = router.query?.category ;
+  console.log(documentCategory);
+  
   const getDocumentTypes = async () => {
     setLoading(true);
     try {
@@ -400,7 +402,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   Home
                 </Link>
                 <Link underline='hover' color='inherit' href='/company-dashboard/document/'>
-                  All Documents List
+                  {documentCategory ?? "All Documents List"}
                 </Link>
                 <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
                   Add Document
