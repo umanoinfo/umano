@@ -161,6 +161,12 @@ const AddDepartment = ({ popperPlacement, id }) => {
     version: StringType().isRequired('This field is required.')
   })
 
+  const renderThumbnail = (file) => { // Check if the file has a thumbnail, otherwise use the default
+    // const thumbnail = file.url ? file.url : defaultThumbnail;
+
+    return ( <img src={'/images/icons/file-icons/file.png'} alt="Document" style={{ width: 50, height: 50, objectFit: 'cover' }} /> );
+ };
+
   const handleTagsChange = (e) => {
     console.log(e , documentTypeCategory , notAuthorized);
     
@@ -260,7 +266,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     data.name = file.name
                     data.linked_id = doc_id
                     data.type = 'document'
-                    data.url = response.data
+                    data.url = res.data ;
                     data.created_at = new Date().toISOString()
                     data.originalFileObject = _file;
                     const res2 = await axios.post('/api/file/add-file', { data })
@@ -581,8 +587,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     <Divider />
                     <Box sx={{ p: 2 }}>
                       <Uploader
-                        listType='picture-text'
+                        listType='picture'
                         autoUpload
+                        renderThumbnail={renderThumbnail}
                         onRemove={e => removeFile(e)}
                         onUpload={e => addToFiles(e)}
                         action=''

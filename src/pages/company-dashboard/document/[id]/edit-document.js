@@ -33,6 +33,8 @@ import NoPermission from 'src/views/noPermission'
 import { styled } from '@mui/material/styles'
 import { grey } from '@mui/material/colors'
 
+import defaultThumbnail from '../../../../../public/images/avatars/1.png';
+
 const { StringType, ArrayType } = Schema.Types
 
 const styles = {
@@ -67,6 +69,13 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [AllDocumentTypes, setAllDocumentTypes] = useState([]);
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
   const [tags, setTags] = useState([]);
+
+  const renderThumbnail = (file) => { // Check if the file has a thumbnail, otherwise use the default
+    const thumbnail = file.url ? file.url : defaultThumbnail;
+    console.log('ldldlkdkdkd',file);
+
+     return ( <img src={'/images/icons/file-icons/file.png'} alt="Document" style={{ width: 50, height: 50, objectFit: 'cover' }} /> );
+  };
 
   const getDocumentTypes = async (resolve, reject) => {
     setLoading(true);
@@ -232,7 +241,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     data.name = file.name
                     data.linked_id = doc_id
                     data.type = 'document'
-                    data.url = response.data
+                    data.url = res.data ;
                     data.created_at = new Date().toISOString()
                     data.originalFileObject = _file ;
                     const res2= await axios.post('/api/file/add-file', {data})
@@ -240,6 +249,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   catch(err){
                     toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
                   }
+                  console.log(index , files.length -1 );
                   if(index == files.length- 1){
                     resolve();
                   }
@@ -509,6 +519,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       autoUpload
                       onRemove={e => removeFile(e)}
                       onUpload={e => addToFiles(e)}
+                      renderThumbnail={ renderThumbnail }
                       action=''
                       renderFileInfo={(file, fileElement) => {
                         return (

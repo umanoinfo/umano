@@ -181,11 +181,21 @@ export default async function handler(req, res) {
       },
       { company_id: myUser.company_id }]
     }).toArray();
-
+    
+    documents.sort((a, b) => {
+      if (!a?.order && !b?.order) return 0;
+      if (!a?.order) return 1;
+      if (!b?.order) return -1;
+      
+      return Number(a.order) - Number(b.order);
+    });
+    
   if (myUser && (myUser.permissions.includes('ViewDocument'))) {
     const children = documents.map((document) => {
       return { title: document.name, category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}/` }
     });
+
+    
 
     options.push({
       title: 'Documents',
