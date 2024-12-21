@@ -84,6 +84,8 @@ const StyledList = styled(List)(({ theme }) => ({
 
 const AddDepartment = ({ popperPlacement, id }) => {
   // ** States
+  const router = useRouter()
+  const documentCategory = router.query?.category ;
   const [employeeId, setEmployeeId] = useState('')
   const [plan, setPlan] = useState('')
   const [loadingDescription, setLoadingDescription] = useState('')
@@ -93,7 +95,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [loading, setLoading] = useState(false)
   const [files, setFiles] = useState([])
   const [selectedDocument, setSelectedDocument] = useState()
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(documentCategory ? [documentCategory] : []);
   const [notAuthorized, setNotAuthorized] = useState([]);
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
@@ -102,7 +104,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [preparedBy, setPreparedBy] = useState()
   const [approvedDate, setApprovedDate] = useState(new Date().toISOString().substring(0, 10))
   const [approvedBy, setApprovedBy] = useState()
-  const router = useRouter()
   const { data: session, status } = useSession
   const formRef = useRef()
   const inputFile = useRef(null)
@@ -110,8 +111,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState({})
   const [AllDocumentTypes, setAllDocumentTypes] = useState();
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
-  const documentCategory = router.query?.category ;
-  console.log(documentCategory);
   
   const getDocumentTypes = async () => {
     setLoading(true);
@@ -421,6 +420,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         accepter={TagPicker}
                         data={AllDocumentTypes}
                         style={{ width: '100%' }}
+                        defaultValue={tags}
                         onChange={(e) => handleTagsChange(e)}
                       />
                     </Grid>
