@@ -161,15 +161,21 @@ const AllDocumentsList = () => {
         selectedDocument
       })
       .then(function (response) {
-        dispatch(fetchData({})).then(() => {
+        dispatch(fetchData({
+          documentTypes: documentTypes,
+          documentStatus,
+          q: value
+        }))
+        
           toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
           })
+
           setOpen(false)
           setLoading(false);
         })
-      })
+      
       .catch(function (error) {
         toast.error('Error : ' + error.response.data.message + ' !', {
           delay: 1000,

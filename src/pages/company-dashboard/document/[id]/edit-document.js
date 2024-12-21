@@ -228,6 +228,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   
                   // for files that are already saved on server
                   if(!_file?.blobFile){
+                    if(index == files.length- 1){
+                      resolve();
+                    }
+                    
                     return ;
                   }
                   console.log(file);
