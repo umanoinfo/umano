@@ -108,7 +108,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const formRef = useRef()
   const inputFile = useRef(null)
   const [formError, setFormError] = useState({})
-  const [formValue, setFormValue] = useState({})
+  const [formValue, setFormValue] = useState({type: documentCategory ? [documentCategory] : []})
   const [AllDocumentTypes, setAllDocumentTypes] = useState();
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
   
@@ -190,11 +190,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     if (notAuthorized.includes('ViewDocumentTypes'))
       return;
-
+    
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = {}
-        console.log(formValue);
         data.title = formValue.title
         data.version = formValue.version
         data.type = formValue.type
@@ -255,6 +254,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
               let count = 0
 
               await new Promise((resolve, reject) => {
+                if(files.length == 0 ){
+                  resolve();
+                }
                 files.map(async (_file, index) => {
                   const file = _file.blobFile;
                   setLoadingDescription(file.name + ' is uploading')
@@ -420,7 +422,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         accepter={TagPicker}
                         data={AllDocumentTypes}
                         style={{ width: '100%' }}
-                        defaultValue={tags}
+                        defaultValue={documentCategory ? [documentCategory] : []}
                         onChange={(e) => handleTagsChange(e)}
                       />
                     </Grid>

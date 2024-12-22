@@ -223,6 +223,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
             let doc_id = response.data.data._id
             let count = 0
             await new Promise((resolve , reject )=>{
+              if(files.length == 0 ){
+                resolve();
+              }
               files.map(async (_file, index) => {
                   const file = _file?.blobFile;
                   
