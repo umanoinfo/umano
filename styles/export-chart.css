@@ -1,0 +1,37 @@
+.toolbar {
+  padding: 0.5rem;
+  margin: 10px;
+  border: 1px solid #aaa;
+}
+.line-through{
+  text-decoration: line-through;
+}
+
+
+/* button {
+  box-sizing: border-box;
+  padding: 6px 12px;
+  font-size: 1rem;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  color: #fff;
+  background-color: #05445e;
+  border: 2px solid #05445e;
+} */
+
+button[disabled] {
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.3;
+}
+
+button:hover,
+button:focus,
+button:active {
+  color: #05445e;
+  background-color: #dee5e9;
+}
