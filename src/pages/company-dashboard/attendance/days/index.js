@@ -31,7 +31,7 @@ import toast from 'react-hot-toast'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US';
+import en from 'date-fns/locale/en-GB';;
 
 import { CheckboxGroup, Checkbox, Form, Schema, Input, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'

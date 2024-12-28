@@ -29,7 +29,9 @@ import MuiStepper from '@mui/material/Stepper'
 import Loading from 'src/views/loading'
 import { EmployeesPositions, WorkingHours } from 'src/local-db'
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import en from 'date-fns/locale/en-US';
+import en from 'date-fns/locale/en-GB';
+
+;
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
@@ -120,7 +122,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
   const [unpaidLeaves, setUnpaidLeaves] = useState();
   const [parentalLeaves, setParentalLeaves] = useState();
   const [newEmployeeID, setNewEmployeeID] = useState();
-  const [workingHours , setWorkingHours] = useState('other');
+  const [workingHours, setWorkingHours] = useState('other');
   let [companyEmployeeID, setCompanyEmployeeID] = useState();
   const dispatch = useDispatch()
   const store = useSelector(state => state.companyEmployee)
@@ -271,7 +273,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
       setNewEmployeeID(String(data[0].idNo));
       setCompanyEmployeeID(companyIDRes.data.companyEmployeeID);
       console.log('...');
-      
+
       setWorkingHours(data[0].workingHours);
 
       // console.log(data[0].idNo , companyEmployeeID , data[0].idNo.split(companyEmployeeID)[1] , Number(data[0].idNo.split(companyEmployeeID)[1]))
@@ -466,12 +468,12 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                     </Grid>
                     <Grid item sm={12} xs={12} md={5} mt={9}>
                       <SelectPicker
-                          size='sm'
-                          name='workingHours'
-                          data={WorkingHours}
-                          value={workingHours} 
-                          onChange={(e)=>{setWorkingHours(e)}}
-                          block
+                        size='sm'
+                        name='workingHours'
+                        data={WorkingHours}
+                        value={workingHours}
+                        onChange={(e) => { setWorkingHours(e) }}
+                        block
                       >
                       </SelectPicker>
                     </Grid>
@@ -514,20 +516,21 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                       block
                     /> */}
                     <div>
-                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                         <DatePicker
-                          slotProps={{textField:{size:'small'}}}
+                          slotProps={{ textField: { size: 'small' } }}
                           name='dateOfBirth'
                           value={new Date(dateOfBirth)}
                           size='sm'
-                          
-                          onChange={(e)=>{
-                            setDateOfBirth(e.toISOString().substring(0,10))
+
+
+                          onChange={(e) => {
+                            setDateOfBirth(e.toISOString().substring(0, 10))
                           }}
                         />
-                    </LocalizationProvider>
+                      </LocalizationProvider>
                     </div>
-                    
+
                   </Grid>
                   <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
                     <Grid item sm={12} xs={12}>
@@ -764,18 +767,18 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
                       value={new Date(joiningDate)}
                       block
                     /> */}
-                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                        <DatePicker
-                          name='joiningDate'
-                          label='Joining Date'
-                          slotProps={{textField:{size:'small'}}}
-                          value={new Date(joiningDate)}
-                          size='sm'
-                          onChange={(e)=>{
-                            setJoiningDate(e.toISOString().substring(0,10))
-                          }}
-                        />
-                      </LocalizationProvider>
+                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                      <DatePicker
+                        name='joiningDate'
+                        label='Joining Date'
+                        slotProps={{ textField: { size: 'small' } }}
+                        value={new Date(joiningDate)}
+                        size='sm'
+                        onChange={(e) => {
+                          setJoiningDate(e.toISOString().substring(0, 10))
+                        }}
+                      />
+                    </LocalizationProvider>
                   </Grid>
                 </Grid>
 
@@ -938,7 +941,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
         if (isNaN(Number(data.idNo))) {
           toast.error('Id No must be a number', { duration: 1000, position: 'bottom-right' });
           setLoading(false);
-          
+
           return;
         }
         data._id = id
@@ -957,7 +960,7 @@ const EditEmployee = ({ popperPlacement, id, tab }) => {
         data.unpaidLeavesBeforeAddingToSystem = unpaidLeaves;
         data.idNo = newEmployeeID;
         data.type = position;
-        data.workingHours = workingHours ;
+        data.workingHours = workingHours;
 
         axios
           .post('/api/company-employee/edit-employee', {

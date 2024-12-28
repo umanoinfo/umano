@@ -580,6 +580,7 @@ const StepDocuments = ({ handleNext, employee }) => {
                                 }}
                                 value={new Date(expiryDate)}
                                 block
+                                format='dd/MM/yyyy'
                               />
                             </div>
                           )}

@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US'; 
+import en from 'date-fns/locale/en-GB';;
 
 import { DatePicker } from '@mui/x-date-pickers'
 import Select from '@mui/material/Select'
@@ -91,12 +91,12 @@ const CMEList = () => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedShift, setSelectedShift] = useState()
-  const [requiredCME , setRequiredCME ] = useState([]) ;
-  const [CMETypes , setCMETypes ] = useState() ;
+  const [requiredCME, setRequiredCME] = useState([]);
+  const [CMETypes, setCMETypes] = useState();
   const { data: session, status } = useSession()
-  const [startDate , setStartDate ] = useState() ; 
-  const [endDate , setEndDate] = useState() ; 
-  
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+
   // ** Hooks
 
   const dispatch = useDispatch()
@@ -111,29 +111,29 @@ const CMEList = () => {
         from_date: startDate,
         to_date: endDate
       })
-    ).then( () => setLoading(false))
-  }, [dispatch, value , startDate , endDate])
+    ).then(() => setLoading(false))
+  }, [dispatch, value, startDate, endDate])
 
   const exportToExcel = () => {
     const wb = XLSX.utils.book_new()
     let ex = [...store.data]
 
     ex = ex.map(val => {
-      let required = 0 ;
-      CMETypes?.map((type)=> {
-        if(type == val.type){
+      let required = 0;
+      CMETypes?.map((type) => {
+        if (type == val.type) {
           required = requiredCME.get(type);
         }
       });
 
-      
+
       let c = {
         'Employee Name': val.employee,
-        'Amount': val.amount ,
-        'Completed' :( val.amount >= required ? "YES" : "NO"),
+        'Amount': val.amount,
+        'Completed': (val.amount >= required ? "YES" : "NO"),
         'Percentage': (val.amount / required) * 100
       };
-      
+
       return c
     })
 
@@ -143,37 +143,37 @@ const CMEList = () => {
   }
 
 
-  const handleStartDateChange = useCallback( (e)=>{
-    setStartDate(e) ; 
-  },[])
+  const handleStartDateChange = useCallback((e) => {
+    setStartDate(e);
+  }, [])
 
-  const handleEndDateChange = useCallback( (e)=>{
-    setEndDate(e) ; 
-  },[])
+  const handleEndDateChange = useCallback((e) => {
+    setEndDate(e);
+  }, [])
 
-  const getRequiredCME =  async ()=>{
-      setLoading(true);
-      try{
-        const res = await axios.get('/api/cme/required' ); 
-        const data = res.data.data ;
-        let required = new Map() ;
-        let types = [ ] ; 
-        data.map((val)=>{
-          required.set(val.type , val.amount) ;
-          types.push(val.type) ;
-        })
-        setCMETypes(types) ;
-        setRequiredCME(required);
-      }
-      catch(err){
-        toast.error(err.toString() , {duraiton: 5000 , position:'bottom-right'})  ;
-      }
-      setLoading(false);
+  const getRequiredCME = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get('/api/cme/required');
+      const data = res.data.data;
+      let required = new Map();
+      let types = [];
+      data.map((val) => {
+        required.set(val.type, val.amount);
+        types.push(val.type);
+      })
+      setCMETypes(types);
+      setRequiredCME(required);
+    }
+    catch (err) {
+      toast.error(err.toString(), { duraiton: 5000, position: 'bottom-right' });
+    }
+    setLoading(false);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getRequiredCME()
-  },[])
+  }, [])
 
   // ----------------------- Handle ------------------------------
 
@@ -193,8 +193,8 @@ const CMEList = () => {
     setShiftType(e.target.value)
   }, [])
 
-  
-  
+
+
   // -------------------------- Add Document -----------------------------------------------
 
   const addShift = () => {
@@ -217,12 +217,12 @@ const CMEList = () => {
     }
 
     const handleRowView = () => {
-      router.push('/company-dashboard/cme/' + row._id )
+      router.push('/company-dashboard/cme/' + row._id)
       handleRowOptionsClose()
     }
 
- 
- 
+
+
     // ------------------------------ Table Definition ---------------------------------
 
     return (
@@ -246,7 +246,7 @@ const CMEList = () => {
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           {session && session.user && session.user.permissions.includes('ViewCME') && (
-            <MenuItem onClick={()=>handleRowView()} sx={{ '& svg': { mr: 2 } }}>
+            <MenuItem onClick={() => handleRowView()} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
@@ -277,9 +277,9 @@ const CMEList = () => {
       minWidth: 100,
       field: 'idNo',
       headerName: 'Id NO',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {row.idNo}
           </Typography>
         )
@@ -290,9 +290,9 @@ const CMEList = () => {
       minWidth: 100,
       field: 'employee',
       headerName: 'Employee',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {row.employee}
           </Typography>
         )
@@ -303,10 +303,10 @@ const CMEList = () => {
       minWidth: 100,
       field: 'amount',
       headerName: 'Amount',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              {row.amount} / { CMETypes?.map((type)=> type == row.type ? <> {requiredCME.get(type)} </> : <></>)}
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.amount} / {CMETypes?.map((type) => type == row.type ? <> {requiredCME.get(type)} </> : <></>)}
           </Typography>
         )
       }
@@ -317,17 +317,17 @@ const CMEList = () => {
       minWidth: 100,
       field: 'percentage',
       headerName: 'Percentage',
-      renderCell: ({ row , index }) => {
-        let required = 0 ; 
-        CMETypes?.map((type)=> {
-          if(type == row.type){
+      renderCell: ({ row, index }) => {
+        let required = 0;
+        CMETypes?.map((type) => {
+          if (type == row.type) {
             required = requiredCME.get(type);
           }
         })
-        
-      return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              {required != 0 ?(row.amount / required) * 100 : <></> } %
+
+        return (
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {required != 0 ? (row.amount / required) * 100 : <></>} %
           </Typography>
         )
       }
@@ -337,10 +337,10 @@ const CMEList = () => {
       minWidth: 100,
       field: 'completed',
       headerName: 'Completed',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              { CMETypes?.map((type)=> type == row.type ? <> {(row.amount >= requiredCME.get(type) ? "YES" : "NO") } </> : <></>)}
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {CMETypes?.map((type) => type == row.type ? <> {(row.amount >= requiredCME.get(type) ? "YES" : "NO")} </> : <></>)}
           </Typography>
         )
       }
@@ -388,32 +388,32 @@ const CMEList = () => {
                 />
               </FormControl>
             </Grid>
-              <Grid item sm={3} xs={12}>
-                               
-                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                    <DatePicker
-                      label="Start Date"
-                      value={startDate}
-                      onChange={handleStartDateChange}
-                      slotProps={{ textField: { size: 'small' } }} 
+            <Grid item sm={3} xs={12}>
 
-                      // defaultValue={}
-                    />
-                  </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  slotProps={{ textField: { size: 'small' } }}
+
+                // defaultValue={}
+                />
+              </LocalizationProvider>
             </Grid>
-               <Grid item sm={3} xs={12}>
-                                 
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                    <DatePicker
-                      label="End Date"
-                      value={endDate}
-                      onChange={handleEndDateChange}
-                      slotProps={{ textField: { size: 'small' } }} 
-                    />
-                  </LocalizationProvider>
-                    
+            <Grid item sm={3} xs={12}>
+
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </LocalizationProvider>
+
             </Grid>
-    
+
             <Grid item sm={3} xs={12} textAlign={right}>
 
               <Button
@@ -426,7 +426,7 @@ const CMEList = () => {
                 Export
               </Button>
               {session && session.user && session.user.permissions.includes('AddCME') && (
-                <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={()=> {router.push('/company-dashboard/cme/add-cme')}}>
+                <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={() => { router.push('/company-dashboard/cme/add-cme') }}>
                   Add Hour/s
                 </Button>
               )}
@@ -436,22 +436,22 @@ const CMEList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{          
-          loading ? 
-          <Loading header='Please Wait' description='CMEs are loading'></Loading>
-          :
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+          {
+            loading ?
+              <Loading header='Please Wait' description='CMEs are loading'></Loading>
+              :
+              <DataGrid
+                autoHeight
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
 
-}        </Card>
+          }        </Card>
       </Grid>
 
       {/* -------------------------- Delete Dialog -------------------------------------- */}
@@ -474,7 +474,7 @@ const CMEList = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-           <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleClose}>No</Button>
         </DialogActions>
       </Dialog>
     </Grid>

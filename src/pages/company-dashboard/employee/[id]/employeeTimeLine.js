@@ -95,7 +95,7 @@ const EmployeeTimeLine = ({ id }) => {
                               <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
                                 {time.title}
                               </Typography>
-                              <Typography variant='caption'>{new Date(time.date).toLocaleDateString()}</Typography>
+                              <Typography variant='caption'>{new Date(time.date).toLocaleDateString('en-GB')}</Typography>
                             </Box>
                             <Typography variant='body2' sx={{ color: 'text.primary' }}>
                               <span>{time.description}</span>

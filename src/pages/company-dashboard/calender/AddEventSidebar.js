@@ -25,7 +25,7 @@ import { MenuItem, Select } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US';
+import en from 'date-fns/locale/en-GB';;
 
 import 'rsuite/dist/rsuite.min.css'
 
@@ -481,7 +481,7 @@ const AddEventSidebar = props => {
                           <DatePicker
 
                             size='md'
-                            format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                            format={!values.allDay ? 'dd/MM/yyyy hh:mm' : 'dd/MM/yyyy'}
                             onChange={e => {
                               setValues({ ...values, startDate: e })
                             }}
@@ -507,7 +507,7 @@ const AddEventSidebar = props => {
                           <DatePicker
                             itemType='date'
                             showTimeSelect={!values.allDay}
-                            format={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                            format={!values.allDay ? 'dd/MM/yyyy hh:mm' : 'dd/MM/yyyy'}
                             size='md'
                             onChange={e => {
                               setValues({ ...values, endDate: e })

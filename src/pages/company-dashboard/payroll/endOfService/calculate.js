@@ -640,6 +640,7 @@ const AllDocumentsList = () => {
                   onChange={e => {
                     setFromDate(e)
                   }}
+                  format={'dd/MM/yyyy'}
                 />
               </FormControl>
             </Grid>
@@ -647,7 +648,7 @@ const AllDocumentsList = () => {
               <FormControl fullWidth size='small' sx={{ mt: 0 }}>
                 <small>Date To</small>
                 <DatePicker
-
+                  format={'dd/MM/yyyy'}
                   value={new Date(toDate)}
                   onChange={e => {
                     setToDate(e)

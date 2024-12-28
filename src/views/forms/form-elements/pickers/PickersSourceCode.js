@@ -53,7 +53,7 @@ const PickersBasic = ({ popperPlacement }) => {
 }
 
 export default PickersBasic
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersCallbacksJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -117,7 +117,7 @@ const PickersCallbacks = ({ popperPlacement }) => {
 }
 
 export default PickersCallbacks
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersCustomInputJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { forwardRef } from 'react'
@@ -135,7 +135,7 @@ const PickersComponent = forwardRef(({ ...props }, ref) => {
 })
 
 export default PickersComponent
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersIncludeExcludeJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -221,7 +221,7 @@ const PickersIncludeExclude = ({ popperPlacement }) => {
 }
 
 export default PickersIncludeExclude
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersMinMaxJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -269,7 +269,7 @@ const PickersMinMax = ({ popperPlacement }) => {
 }
 
 export default PickersMinMax
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersCustomizationJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -317,7 +317,7 @@ const PickersCustomization = ({ popperPlacement }) => {
 }
 
 export default PickersCustomization
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersLocaleJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -326,7 +326,7 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import fr from 'date-fns/locale/fr'
 import ar from 'date-fns/locale/ar-SA'
-import en from 'date-fns/locale/en-US'
+import en from 'date-fns/locale/en-GB';
 import { useTranslation } from 'react-i18next'
 import DatePicker, { registerLocale } from 'react-datepicker'
 
@@ -373,7 +373,7 @@ const PickersLocale = ({ popperPlacement }) => {
 }
 
 export default PickersLocale
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersMonthYearDropdownsJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -434,7 +434,7 @@ const PickersMonthYearDropdowns = ({ popperPlacement }) => {
 }
 
 export default PickersMonthYearDropdowns
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersRangeJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState, forwardRef } from 'react'
@@ -509,7 +509,7 @@ const PickersRange = ({ popperPlacement }) => {
 }
 
 export default PickersRange
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersMonthYearQuarterJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -569,7 +569,7 @@ const PickersMonthYear = ({ popperPlacement }) => {
 }
 
 export default PickersMonthYear
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersOptionsJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -654,7 +654,7 @@ const PickersOptions = ({ popperPlacement }) => {
 }
 
 export default PickersOptions
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersTimeJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -706,7 +706,7 @@ const PickersTime = ({ popperPlacement }) => {
 }
 
 export default PickersTime
-`}</code></pre>) 
+`}</code></pre>)
 
 export const PickersSpecificRangeJSXCode = (<pre className='language-jsx'><code className='language-jsx'>{`// ** React Imports
 import { useState } from 'react'
@@ -759,5 +759,5 @@ const PickersSpecificRange = ({ popperPlacement }) => {
 }
 
 export default PickersSpecificRange
-`}</code></pre>) 
+`}</code></pre>)
 

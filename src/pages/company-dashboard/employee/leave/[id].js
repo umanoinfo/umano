@@ -914,7 +914,7 @@ const EditLeave = ({ popperPlacement, id }) => {
                   //   return i || j
                   // }}
                   controlid='date_from'
-                  format='yyyy-MM-dd '
+                  format={'dd/MM/yyyy'}
                   name='date_from'
                   accepter={DatePicker}
                   value={formValue.date_from}
@@ -939,7 +939,7 @@ const EditLeave = ({ popperPlacement, id }) => {
                   //   return i || j
                   // }}
                   controlid='date_to'
-                  format=' yyyy-MM-dd'
+                  format={'dd/MM/yyyy'}
                   name='date_to'
                   accepter={DatePicker}
                   value={formValue.date_to}

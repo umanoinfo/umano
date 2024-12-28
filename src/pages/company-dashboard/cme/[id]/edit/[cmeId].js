@@ -337,6 +337,7 @@ const AddCME = ({ }) => {
                         controlid='date'
                         name='date'
                         accepter={DatePicker}
+                        format={'dd/MM/yyyy'}
                         block
                         oneTap
                         value={formValue.date}

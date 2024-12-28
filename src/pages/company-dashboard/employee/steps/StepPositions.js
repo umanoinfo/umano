@@ -838,6 +838,7 @@ const Steppositions = ({ handleNext, employee }) => {
                           value={startChangeType}
                           data={positionChangeStartTypes}
                           block
+                          format='dd/MM/yyyy'
                         />
                       </Grid>
                       <Grid item sm={6} xs={12} mt={2}>
@@ -852,6 +853,7 @@ const Steppositions = ({ handleNext, employee }) => {
                           }}
                           value={new Date(startChangeDate)}
                           block
+                          format='dd/MM/yyyy'
                         />
                       </Grid>
                     </Grid>

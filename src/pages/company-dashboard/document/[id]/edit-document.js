@@ -382,6 +382,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       oneTap
                       accepter={DatePicker}
                       name='issueDate'
+                      format={'dd/MM/yyyy'}
                       onChange={e => {
                         setIssueDate(e.toISOString().substring(0, 10))
                       }}
@@ -399,6 +400,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             oneTap
                             accepter={DatePicker}
                             name='expiryDate'
+                            format={'dd/MM/yyyy'}
                             onChange={e => {
                               setExpiryDate(e.toISOString().substring(0, 10))
                             }}

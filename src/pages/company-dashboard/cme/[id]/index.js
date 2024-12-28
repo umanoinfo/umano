@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US'; 
+import en from 'date-fns/locale/en-GB';;
 
 import { DatePicker } from '@mui/x-date-pickers'
 import Select from '@mui/material/Select'
@@ -60,7 +60,7 @@ import NoPermission from 'src/views/noPermission'
 import { right } from '@popperjs/core'
 import { Breadcrumbs } from '@mui/material'
 
-const EmployeeCmes = ({}) => {
+const EmployeeCmes = ({ }) => {
   // ** State
   const [ShiftType, setShiftType] = useState()
   const [shiftStatus, setShiftStatus] = useState('')
@@ -68,13 +68,13 @@ const EmployeeCmes = ({}) => {
   const [pageSize, setPageSize] = useState(10)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [selectedCME , setSelectedCME ] = useState() ;
-  const [requiredCME , setRequiredCME ] = useState([]) ;
-  const [CMETypes , setCMETypes ] = useState() ;
+  const [selectedCME, setSelectedCME] = useState();
+  const [requiredCME, setRequiredCME] = useState([]);
+  const [CMETypes, setCMETypes] = useState();
   const { data: session, status } = useSession()
-  const [startDate , setStartDate ] = useState() ; 
-  const [endDate , setEndDate] = useState() ; 
-  const [dataSource , setDataSource] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [dataSource, setDataSource] = useState();
 
   // ** Hooks
 
@@ -83,28 +83,28 @@ const EmployeeCmes = ({}) => {
   console.log(store);
   const router = useRouter()
 
-  const {id} = router.query ; 
+  const { id } = router.query;
 
   useEffect(() => {
-    if(id){
-      setLoading(true) ; 
+    if (id) {
+      setLoading(true);
       dispatch(fetchData({
         employee_id: id
-      })).then( () => setLoading(false));
+      })).then(() => setLoading(false));
     }
 
-  }, [dispatch , id ])
+  }, [dispatch, id])
 
-  const handleStartDateChange = useCallback( (e)=>{
-    setStartDate(e) ; 
-  },[])
+  const handleStartDateChange = useCallback((e) => {
+    setStartDate(e);
+  }, [])
 
-  const handleEndDateChange = useCallback( (e)=>{
-    setEndDate(e) ; 
-  },[])
+  const handleEndDateChange = useCallback((e) => {
+    setEndDate(e);
+  }, [])
 
-  
-  
+
+
   // ----------------------- Handle ------------------------------
 
   const handleClose = () => {
@@ -133,9 +133,9 @@ const EmployeeCmes = ({}) => {
       })
       .then(function (response) {
         dispatch(fetchData({
-          employee_id: id 
+          employee_id: id
         })).then(() => {
-          toast.success('CME (' +  ') Deleted Successfully.', {
+          toast.success('CME (' + ') Deleted Successfully.', {
             delay: 1000,
             position: 'bottom-right'
           })
@@ -160,10 +160,10 @@ const EmployeeCmes = ({}) => {
       let c = {
         'Employee No.': val.employee_info[0].idNo,
         'Date': new Date(val.date).toLocaleDateString(),
-        'Amount': val.amount ,
+        'Amount': val.amount,
         'Description': val.description
       };
-      
+
       return c
     })
 
@@ -172,7 +172,7 @@ const EmployeeCmes = ({}) => {
     XLSX.writeFile(wb, 'CME.xlsx')
   }
 
-   
+
 
   // -------------------------- Row Options -----------------------------------------------
 
@@ -193,12 +193,12 @@ const EmployeeCmes = ({}) => {
       window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
     }
 
-    const handleRowOptionsDelete = (_id) =>{
-      setSelectedCME(_id) ;
+    const handleRowOptionsDelete = (_id) => {
+      setSelectedCME(_id);
       setOpen(true);
     }
 
-    const handleRowOptionsEdit = (_id)=>{
+    const handleRowOptionsEdit = (_id) => {
       router.push(`/company-dashboard/cme/${id}/edit/${_id}`);
     }
 
@@ -218,30 +218,30 @@ const EmployeeCmes = ({}) => {
             vertical: 'bottom',
             horizontal: 'right'
           }}
-          transformOrigin={{  
+          transformOrigin={{
             vertical: 'top',
             horizontal: 'right'
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           {session && session.user && session.user.permissions.includes('ViewCME') && (
-            <MenuItem onClick={()=>open_file(row.url)} sx={{ '& svg': { mr: 2 } }}>
+            <MenuItem onClick={() => open_file(row.url)} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
               View
             </MenuItem>
           )}
           {session && session.user && session.user.permissions.includes('EditCME') && (
-            <MenuItem onClick={()=>handleRowOptionsEdit(row._id)} sx={{ '& svg': { mr: 2 } }}>
+            <MenuItem onClick={() => handleRowOptionsEdit(row._id)} sx={{ '& svg': { mr: 2 } }}>
               <Icon icon='mdi:edit-outline' fontSize={20} />
               Edit
             </MenuItem>
           )}
           {
             session && session.user && session.user.permissions.includes('DeleteCME') && (
-              <MenuItem onClick={()=>handleRowOptionsDelete(row._id)} sx={{ '& svg': { mr: 2 } }}>
-              <Icon icon='mdi:delete-outline' fontSize={20} />
-              Delete
-            </MenuItem>
+              <MenuItem onClick={() => handleRowOptionsDelete(row._id)} sx={{ '& svg': { mr: 2 } }}>
+                <Icon icon='mdi:delete-outline' fontSize={20} />
+                Delete
+              </MenuItem>
             )
           }
         </Menu>
@@ -270,9 +270,9 @@ const EmployeeCmes = ({}) => {
       minWidth: 100,
       field: 'date',
       headerName: 'Date',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             {new Date(row.date).toLocaleDateString()}
           </Typography>
         )
@@ -283,10 +283,10 @@ const EmployeeCmes = ({}) => {
       minWidth: 100,
       field: 'amount',
       headerName: 'Amount',
-      renderCell: ({ row , index }) => {
+      renderCell: ({ row, index }) => {
         return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              {row.amount}
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.amount}
           </Typography>
         )
       }
@@ -296,11 +296,11 @@ const EmployeeCmes = ({}) => {
       minWidth: 100,
       field: 'description',
       headerName: 'description',
-      renderCell: ({ row , index }) => {
-        
-      return (
-          <Typography key = {index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              {row?.description}
+      renderCell: ({ row, index }) => {
+
+        return (
+          <Typography key={index} variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row?.description}
           </Typography>
         )
       }
@@ -339,16 +339,16 @@ const EmployeeCmes = ({}) => {
           </Breadcrumbs>
           <Divider />
           <Grid container justify="flex-end" justifyContent="flex-end">
-            <Button 
-                variant='outlined'  
-                sx={{ mr: 4, mb: 2 , right:0 }}
-                color='secondary'
-                startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
-                onClick={exportToExcel}
-              >
+            <Button
+              variant='outlined'
+              sx={{ mr: 4, mb: 2, right: 0 }}
+              color='secondary'
+              startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+              onClick={exportToExcel}
+            >
               Export
             </Button>
-            </Grid>
+          </Grid>
           <Grid container spacing={6} sx={{ px: 5, pt: 3 }}>
             <Grid item sm={3} xs={12}>
               {/* <FormControl fullWidth size='small'>
@@ -363,7 +363,7 @@ const EmployeeCmes = ({}) => {
               </FormControl> */}
             </Grid>
 
-              {/* <Grid item sm={3} xs={12}>
+            {/* <Grid item sm={3} xs={12}>
                                
                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
                     <DatePicker
@@ -387,9 +387,9 @@ const EmployeeCmes = ({}) => {
                   </LocalizationProvider>
                     
             </Grid> */}
-    
+
             <Grid item sm={9} xs={12} textAlign={right}>
-                {/* 
+              {/* 
                 <Button
                   sx={{ mr: 4, mb: 2 }}
                   color='secondary'
@@ -398,7 +398,7 @@ const EmployeeCmes = ({}) => {
                 >
                   Export
                 </Button> */}
-                {/* {session && session.user && session.user.permissions.includes('AddCME') && (
+              {/* {session && session.user && session.user.permissions.includes('AddCME') && (
                   <Button type='button' variant='contained' sx={{ mb: 3 }} onClick={()=> {router.push('/company-dashboard/cme/add-cme')}}>
                     Add Hour/s
                   </Button>
@@ -409,21 +409,21 @@ const EmployeeCmes = ({}) => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{         
-          loading ?
-          <Loading header='Please Wait' description='Employee CMEs Records are loading'></Loading>
-          :
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-}
+          {
+            loading ?
+              <Loading header='Please Wait' description='Employee CMEs Records are loading'></Loading>
+              :
+              <DataGrid
+                autoHeight
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+          }
 
         </Card>
       </Grid>

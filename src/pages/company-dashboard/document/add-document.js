@@ -456,6 +456,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         oneTap
                         accepter={DatePicker}
                         name='issueDate'
+                        format={'dd/MM/yyyy'}
                         onChange={e => {
                           setIssueDate(e.toISOString().substring(0, 10))
                         }}
@@ -471,6 +472,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                             <Form.Control
                               size='sm'
                               oneTap
+                              format={'dd/MM/yyyy'}
                               accepter={DatePicker}
                               name='expiryDate'
                               onChange={e => {

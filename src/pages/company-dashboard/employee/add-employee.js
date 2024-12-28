@@ -30,7 +30,7 @@ import MuiStepper from '@mui/material/Stepper'
 import { Input, InputGroup, Row, Col, Radio, RadioGroup } from 'rsuite'
 import { Form, Schema, Panel } from 'rsuite'
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import en from 'date-fns/locale/en-US';
+import en from 'date-fns/locale/en-GB';
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 

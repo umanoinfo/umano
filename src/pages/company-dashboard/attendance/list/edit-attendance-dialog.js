@@ -11,14 +11,14 @@ import Typography from '@mui/material/Typography'
 import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import { TextField, Select, MenuItem, InputLabel, FormControl, Divider} from '@mui/material'
+import { TextField, Select, MenuItem, InputLabel, FormControl, Divider } from '@mui/material'
 import { TimePicker } from '@mui/x-date-pickers'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US';
+import en from 'date-fns/locale/en-GB';;
 import toast from 'react-hot-toast'
 
 import axios from 'axios'
@@ -26,7 +26,7 @@ import axios from 'axios'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-import { Form, SelectPicker  } from 'rsuite'
+import { Form, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
 
@@ -34,7 +34,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateData }) => {
+const DialogEditAttendance = ({ open, setOpen, attendance, setupdate, updateData }) => {
 
   let new_date_in = attendance.date.split('T')
   new_date_in[1] = attendance.timeIn
@@ -64,16 +64,16 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
     originalTimeIn
   }
 
-  const returnToOriginal = ()=>{
+  const returnToOriginal = () => {
 
     setTimeIn(originalTimeIn);
     setTimeOut(originalTimeOut);
   }
 
   const handleSubmit = () => {
-    let  new_data = { ...attendance, timeIn: timeIn.toLocaleTimeString(), timeOut : timeOut.toLocaleTimeString() , date: date, status: status }
+    let new_data = { ...attendance, timeIn: timeIn.toLocaleTimeString(), timeOut: timeOut.toLocaleTimeString(), date: date, status: status }
     let { employee_info, ...data } = new_data
-    delete data.shift_info ;
+    delete data.shift_info;
     axios
       .post('/api/attendance/edit-attendance', {
         data
@@ -102,7 +102,7 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
       open={open}
       maxWidth='md'
       scroll='body'
-      onClose={() => setOpen(false) }
+      onClose={() => setOpen(false)}
       onBackdropClick={() => setOpen(false)}
     >
       <DialogContent sx={{ pb: 6, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
@@ -136,32 +136,32 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
               </div>
             </Grid>
             <Grid item sm={6} xs={12}>
-                  
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                    <DatePicker
-                      label="Date"
-                      value={date}
-                      onChange={e => setDate(e)}
-                      disabled
-                    />
-                  </LocalizationProvider>
-                    
-                </Grid>
+
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
+                <DatePicker
+                  label="Date"
+                  value={date}
+                  onChange={e => setDate(e)}
+                  disabled
+                />
+              </LocalizationProvider>
+
+            </Grid>
             <Grid container spacing={2}>
               <Grid container spacing={2}>
-               
+
                 <Grid item sm={3} xs={4}>
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                      <TimePicker
-                        label="Original Time in"
-                        type="time"
-                        value={(originalTimeIn) }
-                        onChange={e => setTimeIn(e)}
-                        fullWidth
-                        disabled
-                        ampm={false}
+                    <TimePicker
+                      label="Original Time in"
+                      type="time"
+                      value={(originalTimeIn)}
+                      onChange={e => setTimeIn(e)}
+                      fullWidth
+                      disabled
+                      ampm={false}
 
-                      />
+                    />
                   </LocalizationProvider>
                 </Grid>
                 <Grid item sm={3} xs={4}>
@@ -169,8 +169,8 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                     <TimePicker
                       label="Original Time out"
                       type="time"
-                      value={(originalTimeOut) }
-                      onChange={e => setTimeOut(e) }
+                      value={(originalTimeOut)}
+                      onChange={e => setTimeOut(e)}
                       fullWidth
                       disabled
                       ampm={false}
@@ -178,29 +178,29 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                     />
                   </LocalizationProvider>
                 </Grid>
-                
+
               </Grid>
             </Grid>
 
-            <Divider  component={'li'} />
-            
+            <Divider component={'li'} />
+
             ___________________________________________
-            
-            <Divider  component={'li'} />
+
+            <Divider component={'li'} />
             <Grid container spacing={2}>
               <Grid container spacing={2}>
-               
+
                 <Grid item sm={3} xs={4}>
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={en} >
-                      <TimePicker
-                        label="Time in"
-                        type="time"
-                        value={timeIn }
-                        onChange={e => setTimeIn(e)}
-                        fullWidth
-                        ampm={false}
+                    <TimePicker
+                      label="Time in"
+                      type="time"
+                      value={timeIn}
+                      onChange={e => setTimeIn(e)}
+                      fullWidth
+                      ampm={false}
 
-                      />
+                    />
                   </LocalizationProvider>
                 </Grid>
                 <Grid item sm={3} xs={4}>
@@ -208,26 +208,26 @@ const DialogEditAttendance = ({ open, setOpen, attendance, setupdate , updateDat
                     <TimePicker
                       label="Time out"
                       type="time"
-                      value={timeOut }
-                      onChange={e => setTimeOut(e) }
+                      value={timeOut}
+                      onChange={e => setTimeOut(e)}
                       fullWidth
                       ampm={false}
 
                     />
                   </LocalizationProvider>
                 </Grid>
-                
+
               </Grid>
             </Grid>
 
           </Grid>
         </Form>
       </DialogContent>
-      <DialogActions sx={{ pb: { xs: 8, sm: 12.5  }, justifyContent: 'start' }}>
-        <Button variant='contained' sx={{ mr: 2 , ml:10 }} onClick={() => handleSubmit()}>
+      <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'start' }}>
+        <Button variant='contained' sx={{ mr: 2, ml: 10 }} onClick={() => handleSubmit()}>
           Submit
         </Button>
-        <Button variant='contained' sx={{ mr: 2 , ml:10 }} onClick={() => returnToOriginal()}>
+        <Button variant='contained' sx={{ mr: 2, ml: 10 }} onClick={() => returnToOriginal()}>
           Return to original
         </Button>
         <Button variant='outlined' color='secondary' onClick={() => setOpen(false)}>

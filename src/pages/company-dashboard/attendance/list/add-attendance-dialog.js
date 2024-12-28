@@ -14,7 +14,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { TimePicker } from '@mui/x-date-pickers'
-import { Grid, TextField, Select, MenuItem, InputLabel, FormControl} from '@mui/material'
+import { Grid, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
 import toast from 'react-hot-toast'
 
 import axios from 'axios'
@@ -22,19 +22,21 @@ import axios from 'axios'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-import { Form, SelectPicker  } from 'rsuite'
+import { Form, SelectPicker } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 import attendance from 'src/store/apps/attendance'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-US';
-import de from 'date-fns/locale/en-US'; 
+import en from 'date-fns/locale/en-GB';
+
+
+import de from 'date-fns/locale/en-GB';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogAddAttendance = ({ open, setOpen , dataSource}) => {
+const DialogAddAttendance = ({ open, setOpen, dataSource }) => {
   const statusData = [{ label: 'active', value: 'active' }]
 
   // ** States
@@ -92,10 +94,10 @@ const DialogAddAttendance = ({ open, setOpen , dataSource}) => {
       status: 'active',
       employee_no: employee
     }
-    
-    console.log(new_data) ; 
 
-    
+    console.log(new_data);
+
+
 
     setLoading(true)
     axios
@@ -108,7 +110,7 @@ const DialogAddAttendance = ({ open, setOpen , dataSource}) => {
           position: 'bottom-right'
         })
         setLoading(false)
-        
+
         setOpen(false)
       })
       .catch(function (error) {
@@ -145,63 +147,63 @@ const DialogAddAttendance = ({ open, setOpen , dataSource}) => {
               Add Attendance Information
             </Typography>
           </Box>
-          <Grid container mb={3}> 
-              <Grid container mb={3} >
-                <Grid item xs={6} mb={3} >
-                  <FormControl fullWidth>
-                    <InputLabel>Employee</InputLabel>
-                    
-                    <Select
-                      value={employee}
-                      onChange={e => setEmployee(e.target.value)}
-                    >
-                        {dataSource && dataSource.map(option => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+          <Grid container mb={3}>
+            <Grid container mb={3} >
+              <Grid item xs={6} mb={3} >
+                <FormControl fullWidth>
+                  <InputLabel>Employee</InputLabel>
+
+                  <Select
+                    value={employee}
+                    onChange={e => setEmployee(e.target.value)}
+                  >
+                    {dataSource && dataSource.map(option => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid container spacing={2}>
-                <Grid item sm={6} xs={12}>
-                  
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
-                    <DatePicker
-                      label="Date"
-                      value={date}
-                      onChange={handleDateChange}
-                    />
-                  </LocalizationProvider>
-                    
-                </Grid>
-                <Grid item sm={3} xs={4}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
-                      <TimePicker
-                        label="Time in"
-                        type="time"
-                        value={timeIn }
-                        onChange={e => setTimeIn(e)}
-                        fullWidth
-                        ampm={false}
-                      />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item sm={3} xs={4}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
-                    <TimePicker
-                      label="Time out"
-                      type="time"
-                      value={timeOut }
-                      onChange={e => setTimeOut(e) }
-                      fullWidth
-                      ampm={false}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item sm={6} xs={12}>
+
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                  <DatePicker
+                    label="Date"
+                    value={date}
+                    onChange={handleDateChange}
+                  />
+                </LocalizationProvider>
+
               </Grid>
+              <Grid item sm={3} xs={4}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                  <TimePicker
+                    label="Time in"
+                    type="time"
+                    value={timeIn}
+                    onChange={e => setTimeIn(e)}
+                    fullWidth
+                    ampm={false}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item sm={3} xs={4}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} >
+                  <TimePicker
+                    label="Time out"
+                    type="time"
+                    value={timeOut}
+                    onChange={e => setTimeOut(e)}
+                    fullWidth
+                    ampm={false}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+            </Grid>
 
           </Grid>
 

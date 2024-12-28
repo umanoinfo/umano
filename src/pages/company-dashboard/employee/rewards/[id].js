@@ -214,7 +214,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>
                             Date :
                           </Typography>
-                          <Form.Control block controlId='date' name='date' accepter={DatePicker} value={formValue.date} />
+                          <Form.Control block controlId='date' format={'dd/MM/yyyy'} name='date' accepter={DatePicker} value={formValue.date} />
                         </Box>
                         <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                           <Typography variant='body2' sx={{ mr: 1, width: '100%' }}>

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import fr from 'date-fns/locale/fr'
 import ar from 'date-fns/locale/ar-SA'
-import en from 'date-fns/locale/en-US'
+import en from 'date-fns/locale/en-GB';
 import { useTranslation } from 'react-i18next'
 import DatePicker, { registerLocale } from 'react-datepicker'
 
