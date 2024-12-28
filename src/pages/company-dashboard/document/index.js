@@ -421,7 +421,7 @@ const AllDocumentsList = () => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString() }
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB') }
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'

@@ -334,7 +334,7 @@ const DeductionsList = () => {
       field: 'date',
       headerName: 'Date',
       renderCell: ({ row }) => {
-        return <>{new Date(row.date).toISOString().substring(0, 10)}</>
+        return <>{new Date(row.date)?.toLocaleDateString('en-GB')}</>
       }
     },
     {

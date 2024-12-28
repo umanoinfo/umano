@@ -427,7 +427,7 @@ const StepDocuments = ({ handleNext, employee }) => {
       minWidth: 100,
       field: 'expiryDate',
       headerName: 'Expiry Date',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.expiryDate}</Typography>
+      renderCell: ({ row }) => <Typography variant='body2'>{new Date(row.expiryDate)?.toLocaleDateString('en-GB')}</Typography>
     },
     {
       flex: 0.15,

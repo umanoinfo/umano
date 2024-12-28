@@ -337,7 +337,7 @@ const CompensationsList = () => {
       field: 'created_at',
       headerName: 'Created at',
       renderCell: ({ row }) => {
-        return <>{new Date(row.created_at).toISOString().substring(0, 10)}</>
+        return <>{new Date(row.created_at)?.toLocaleDateString('en-GB')}</>
 
         // return <>{new Date(row.created_at)}</>
       }

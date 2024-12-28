@@ -423,7 +423,7 @@ const StepSalary = ({ handleNext, employee }) => {
       field: 'date',
       headerName: 'Date',
       renderCell: ({ row }) =>
-        <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString()}</Typography>
+        <Typography variant='body2'>{new Date(row.startChangeDate).toLocaleDateString('en-GB')}</Typography>
     },
     {
       flex: 0.15,

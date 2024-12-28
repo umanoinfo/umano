@@ -315,7 +315,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.fromDate ? row.fromDate.substring(0, 10) : ''}
+              {row.fromDate ? new Date(row.fromDate)?.toLocaleDateString('en-GB'): ''}
             </Typography>
           </Box>
         )
@@ -330,7 +330,7 @@ const PayrollList = classNamec => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography noWrap sx={{ color: 'text.primary', textTransform: 'capitalize' }}>
-              {row.toDate ? row.toDate.substring(0, 10) : ''}
+              {row.toDate ? new Date(row.toDate)?.toLocaleDateString('en-GB') : ''}
             </Typography>
           </Box>
         )

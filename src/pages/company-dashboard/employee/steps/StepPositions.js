@@ -565,14 +565,14 @@ const Steppositions = ({ handleNext, employee }) => {
       minWidth: 100,
       field: 'startAt',
       headerName: 'Start at',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.startChangeDate}</Typography>
+      renderCell: ({ row }) => <Typography variant='body2'>{new Date(row.startChangeDate)?.toLocaleDateString('en-GB')}</Typography>
     },
     {
       flex: 0.15,
       minWidth: 100,
       field: 'endAt',
       headerName: 'End at',
-      renderCell: ({ row }) => <Typography variant='body2'>{row.endChangeDate}</Typography>
+      renderCell: ({ row }) => <Typography variant='body2'>{row?.endChangeDate?new Date(row?.endChangeDate)?.toLocaleDateString('en-GB') : ''}</Typography>
     },
     {
       flex: 0.15,

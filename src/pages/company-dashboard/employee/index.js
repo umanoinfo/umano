@@ -472,7 +472,7 @@ const EmployeeList = classNamec => {
         return (
           <>
             {row.joiningDate && 
-                <span>{new Date(row.joiningDate).toISOString().substring(0, 10)}</span>
+                <span>{new Date(row.joiningDate).toLocaleDateString('en-GB')}</span>
             }
           </>
         )

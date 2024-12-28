@@ -123,7 +123,7 @@ const CrmTable = ({data , type }) => {
           
         return (
           <>
-              <Typography variant='body2'>{new Date(updated).toLocaleDateString()}</Typography>
+              <Typography variant='body2'>{new Date(updated).toLocaleDateString('en-GB')}</Typography>
   
           </>
         )
@@ -139,7 +139,7 @@ const CrmTable = ({data , type }) => {
     renderCell: ({ row }) => {
       return (
       <>
-          <Typography variant='body2'>{new Date(row.expiryDate).toLocaleDateString()}</Typography>
+          <Typography variant='body2'>{new Date(row.expiryDate).toLocaleDateString('en-GB')}</Typography>
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'

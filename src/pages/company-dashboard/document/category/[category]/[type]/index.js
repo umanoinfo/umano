@@ -363,7 +363,7 @@ const AllDocumentsList = () => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString() }
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB') }
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'
@@ -424,9 +424,9 @@ const AllDocumentsList = () => {
             <Link underline='hover' color='inherit' href='/'>
               Home
             </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+            {/* <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
               {category.updated_at}
-            </Typography>
+            </Typography> */}
             <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
               {documentTypes} Documents List
             </Typography>

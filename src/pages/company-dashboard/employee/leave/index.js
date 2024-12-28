@@ -367,7 +367,7 @@ const LeaveList = () => {
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_from.split('T')
 
-        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
+        return <>{new Date(date)?.toLocaleDateString('en-GB')} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
       }
     },
     {
@@ -378,7 +378,7 @@ const LeaveList = () => {
       renderCell: ({ row }) => {
         const [date, time, ...r] = row.date_to.split('T')
 
-        return <>{date} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
+        return <>{new Date(date)?.toLocaleDateString('en-GB')} { row.type == 'hourly' && <span style={{'paddingRight' : '5px' , 'paddingLeft' : '5px'}}>{ time.substring(0, 5)} </span>} </>
       }
     },
     {

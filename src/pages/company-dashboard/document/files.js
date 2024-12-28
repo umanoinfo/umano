@@ -278,7 +278,7 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { row.document_info[0] && row?.document_info?.[0]?.expiryDate?.substring(0,10)}
+              { row.document_info[0] && new Date(row?.document_info?.[0]?.expiryDate)?.toLocaleDateString('en-GB')}
             </div>
           </Box>
         )

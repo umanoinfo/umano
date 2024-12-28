@@ -472,7 +472,7 @@ const CompaniesList = () => {
       renderCell: ({ row }) => {
         return (
           <div className={row?.deleted_at  ? 'line-through' : ''}>
-            {row.end_at}
+            {new Date(row.end_at).toLocaleDateString('en-GB')}
             <CustomChip
               skin='light'
               size='small'

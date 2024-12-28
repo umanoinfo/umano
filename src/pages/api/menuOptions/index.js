@@ -24,6 +24,39 @@ export default async function handler(req, res) {
   }
 
   // ------------------------------ Fill View --------------------------------------
+  const userDocuments = await client
+  .db()
+  .collection('documents')
+  .aggregate([
+    {
+      $match: {
+        $and: [
+          { company_id: myUser.company_id },
+          { $or: [{ deleted_at: { $exists: false } }, { deleted_at: null }] }
+        ]
+      }
+    },
+    {
+      $lookup: {
+        from: 'files',
+        let: { id: { $toObjectId: '$_id' } },
+        pipeline: [
+          { $addFields: { linked_id: { $toObjectId: '$linked_id' } } },
+          {
+            $match: { $expr: { $eq: ['$linked_id', '$$id'] } }
+          },
+          { $match: { $or: [ {deleted_at: {$exists: false } } , {deleted_at: null }]  }},
+        ],
+        as: 'files_info'
+      }
+    },
+    {
+      $sort: {
+        created_at: -1
+      }
+    }
+  ])
+  .toArray()
 
   const options = []
 
@@ -191,8 +224,20 @@ export default async function handler(req, res) {
     });
     
   if (myUser && (myUser.permissions.includes('ViewDocument'))) {
+    documents.map((documentType)=>{
+      let counter =0 ;
+      userDocuments.map((userDocument)=>{
+        if(userDocument?.type?.includes(documentType?.name)){
+          counter++ ;
+        }
+      })
+      documentType.count = counter ;
+    })
+
     const children = documents.map((document) => {
-      return { title: document.name, category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}/` }
+      let title = document.name + ( document.count ? (" ("  + document.count  + ")") : '' )
+
+      return { title:title , category: document.category, path: `/company-dashboard/document/category/${document.category}/${document.name}/` }
     });
 
     
