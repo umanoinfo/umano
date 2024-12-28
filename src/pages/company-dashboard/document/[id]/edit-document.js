@@ -128,6 +128,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
       if (response.data.data[0]) {
         setSelectedDocument(response?.data?.data?.[0])
         setExpiryDateFlag(response?.data?.data?.[0]?.expiryDateFlag)
+        setExpiryDate(response?.data?.data?.[0]?.expiryDate)
         setIssueDate(response?.data?.data?.[0]?.issueDate)
         setNotifyBeforeDays(response?.data?.data?.[0]?.notifyBeforeDays)
         let tempArr = []
