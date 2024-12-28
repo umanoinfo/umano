@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-GB';;
+import en from 'date-fns/locale/en-GB';
 
 import { DatePicker } from '@mui/x-date-pickers'
 import Select from '@mui/material/Select'

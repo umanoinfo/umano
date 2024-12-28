@@ -64,7 +64,7 @@ import { Breadcrumbs } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import en from 'date-fns/locale/en-GB';;
+import en from 'date-fns/locale/en-GB';
 
 // ** Vars
 const userTypeObj = {
