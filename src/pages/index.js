@@ -20,7 +20,7 @@ import CrmAward from 'src/views/dashboards/company/CrmAward'
 import CrmTable from 'src/views/dashboards/company/CrmTable'
 import CrmTotalGrowth from 'src/views/dashboards/company/CrmTotalGrowth'
 import CrmMeetingSchedule from 'src/views/dashboards/company/CrmMeetingSchedule'
-import { Grid } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Axios Imports
@@ -109,10 +109,24 @@ const Home = () => {
             </Grid>  */}
 
           <Grid item xs={12} md={8}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center' }}
+            >
+              <Typography>
+                Expire in 90 days
+              </Typography>
+            </Box>
             <CrmTable data={data.documentsExpired} type={'expired'} />
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} marginTop={8}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center' }}
+            >
+              <Typography>
+                Recent Documents
+              </Typography>
+            </Box>
             <CrmTable data={data.recentDocuments} type={'recent'} />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>

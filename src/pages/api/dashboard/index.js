@@ -109,9 +109,10 @@ export default async function handler(req, res) {
         }
       },
       {
-        $sort: { updated_at: -1}
+        $sort: { updated_at: -1},
       }
     ])
+    .limit(10)
     .toArray()
 
     const expiaryDocuments = await client

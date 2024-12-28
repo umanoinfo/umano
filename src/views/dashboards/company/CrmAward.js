@@ -123,23 +123,23 @@ const CrmAward = () => {
   
     <Card>
       <Grid container spacing={6}>
-        <StyledGrid1 item xs={7} md={4} lg={4}>
+        <StyledGrid1 item xs={7} md={4} lg={4} >
           <Box sx={{ p: theme => `${theme.spacing(6)} !important` }}>
           <Typography variant='h6' sx={{ fontWeight: 600,  color: 'primary.main' }}>
               {session && session?.user && session?.user?.company_info &&  session.user.company_info[0] && session.user.company_info[0].name}
-            </Typography>
+          </Typography>
             
          
          <Typography sx={{  mt:10  }}>
            {days[new Date().getUTCDay()]}
          </Typography>
          <Typography variant='h6' sx={{ mb: 2  }}>
-           {new Date().toLocaleDateString()}
+           {new Date().toLocaleDateString('en-GB')}
          </Typography>
 
           </Box>
         </StyledGrid1>
-        <Grid item xs={5} md={8} lg={8}>
+        <Grid item xs={5} md={8} lg={8}  >
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' , width:'fit-content'}}>
             {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={session.user.company_info[0].logo} />}
             {session && session?.user && session?.user?.company_info && session?.user?.company_info[0] && !session?.user?.company_info[0]?.logo && <Img alt='Stumptown Roasters' src={'/images/apple-touch-icon.png'} />}
