@@ -2,8 +2,140 @@ import toast from "react-hot-toast";
 import * as XLSX from 'xlsx'
 
 export const functions = {
-  // ================================== ZKT_UA300 ==================================
 
+  "LCMC_AT_001":(data, employeesList, handleSubmit, functions) => {
+    let { setOpenExcel, setUnvalid } = functions;
+    let event = data;
+    const target = event.target
+
+
+    function ExcelDateToJSDate(date) {
+      return isNaN(date) ? null : new Date(Math.round((date - 25569) * 86400 * 1000))
+    }
+    function convertTo24HourFormat(time12h) {
+      // Split the time into components
+      const [time, modifier] = time12h.split(' ');
+      let [hours, minutes, seconds] = time.split(':');
+  
+      // Convert hours to 24-hour format
+      if (modifier === 'PM' && hours !== '12') {
+          hours = parseInt(hours, 10) + 12;
+      } else if (modifier === 'AM' && hours === '12') {
+          hours = '00';
+      }
+  
+      // Ensure hours are two digits
+      hours = hours.toString().padStart(2, '0');
+  
+      // Return the time in 24-hour format
+      return `${hours}:${minutes}:${seconds}`;
+    }
+  
+
+    if (target.files.length != 0) {
+      if (target.files.length !== 1) {
+        throw new Error('Cannot use multiple files')
+      } else {
+        const reader = new FileReader()
+        reader.readAsBinaryString(target.files[0])
+        reader.onload = e => {
+          /* create workbook */
+          const binarystr = e.target.result
+          const wb = XLSX.read(binarystr, { type: 'binary' })
+          
+          /* selected the first sheet */
+          const wsname = wb.SheetNames[0]
+          const ws = wb.Sheets[wsname]
+
+          /* save data */
+          let data = XLSX.utils.sheet_to_json(ws, { header: 1 }) // to get 2d array pass 2nd parameter as object {header: 1}
+          let EmployeesIds = new Map();
+          let singleRow = [];
+          let map = new Map();
+          data = data.slice(1 , data.length)
+          data?.map((row) => {
+            let idNo = row[2]
+            let date_ = new Date(row[3]);
+            
+            let date = date_.toLocaleDateString();
+            const [month, day, year] = date.split('/');
+            date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+            let time = convertTo24HourFormat(row[3].split(' ')[1] + ' ' + row[3].split(' ')[2]);
+            
+            let key = idNo + "_" + date;
+
+            let status = row[4] == 'C/In' ? 'in' : 'out';
+
+            if (map.has(key)) {
+              map.set(key, [...map.get(key), time + '_' + status]);
+            }
+            else {
+              map.set(key, [time + '_' + status]);
+            }
+
+            return {
+              "Emp No.": idNo,
+              "Date": date,
+              "Time": time,
+              "key": idNo + "_" + date
+            };
+          });
+
+          let ids = employeesList.map(val => {
+            EmployeesIds.set(String(val.idNo), val._id);
+
+            return String(val.idNo)
+          })
+
+          let attendances = [];
+
+
+          for (const [key, times] of map.entries()) {
+            let [idNo, date] = key.split('_');
+
+            let mx = times[0].split('_')[0];
+            let mn = times[0].split('_')[0];
+            
+            for (let j = 0; j < times.length; j++) {
+              let [time ,status ]= times[j].split('_');
+              if(status == 'in'){
+                if (time < mn) {
+                  mn = time;
+                } 
+              }
+              else{
+                if (time > mx) {
+                  mx = time;
+                }
+              }
+            }
+
+            if (!EmployeesIds.get(String(idNo))) {
+              console.log('Employee not id found: ' + idNo)
+              continue;
+            }
+            attendances.push({
+              'Emp No.': idNo,
+              'Clock In': mn,
+              'Clock Out': mx,
+              Date: date,
+              employee_id: EmployeesIds.get(String(idNo))
+            });
+          }
+          console.log(attendances);
+
+          // return ;
+
+          handleSubmit(attendances);
+
+        }
+      }
+    }
+
+  },
+
+  // ================================== ZKT_UA300 ==================================
   "ZKT_UA300": (data, employeesList, handleSubmit, functions) => {
     const target = event.target;
     const reader = new FileReader()
