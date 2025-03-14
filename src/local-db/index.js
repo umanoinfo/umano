@@ -3,10 +3,10 @@ export const companiesTypes = [
   { title: 'Clinic', icon: 'mdi:laptop', color: 'warning.main', value: 'clinic' }
 ]
 
-export const WorkingHours =   [
-  {label:'8 hours/day', value:'8 hours/day' } ,
-  {label:'48 hours/week',value:'48 hours/week'} , 
-  {label:'other',value:'other'}
+export const WorkingHours = [
+  { label: '8 hours/day', value: '8 hours/day' },
+  { label: '48 hours/week', value: '48 hours/week' },
+  { label: 'other', value: 'other' }
 ];
 
 export const EmployeesTypes = [
@@ -19,22 +19,28 @@ export const EmployeesTypes = [
 ]
 
 export const TerminationReasonsTyps = [
-  {label:'resignation', value:'resignation'},
-  {label:'other' , value:'other'},
+  { label: 'resignation', value: 'resignation' },
+  { label: 'other', value: 'other' },
 ]
 
 export const EmployeesPositions = [
-    {label: 'Nurse' , value:'Nurse'},
-    {label: 'Physician' , value:'Physician'},
-    {label: 'Dentist' , value:'Dentist'},
-    {label: 'Allied Health Pharmacist' , value:'Allied Health Pharmacist'},
-    {label: 'T&CAM' , value:'T&CAM'},
+  { label: 'Nurse', value: 'Nurse' },
+  { label: 'Physician', value: 'Physician' },
+  { label: 'Dentist', value: 'Dentist' },
+  { label: 'Allied Health Pharmacist', value: 'Allied Health Pharmacist' },
+  { label: 'T&CAM', value: 'T&CAM' },
 ];
 
 export const MaritalStatus = [
   { title: 'Single', value: 'Single' },
   { title: 'Married', value: 'Married' },
   { title: 'Divorced', value: 'Divorced' }
+]
+
+export const DocumentStatus = [
+  { title: 'Active', value: 'active' },
+  { title: 'Hidden', value: 'hidden' },
+  { title: 'Pending', value: 'pending' }
 ]
 
 export const SourceOfHire = [
@@ -54,7 +60,7 @@ export const PositionChangeStartTypes = [
   { title: 'Temporary Delegate', value: 'Temporary Delegate' },
   { title: 'Promotion', value: 'Promotion' },
   { title: 'Permanent Transfer', value: 'Permanent Transfer' },
-  { title: 'Existing Employee' , value:'Existing Employee'},
+  { title: 'Existing Employee', value: 'Existing Employee' },
   { title: 'other', value: 'other' }
 ]
 
@@ -71,7 +77,7 @@ export const SalaryChange = [
   { title: 'Violations', value: 'Violations' },
   { title: 'Fines', value: 'Fines' },
   { title: 'other', value: 'other' },
-  { title:'Joining Salary' , value:'Joining Salary'}
+  { title: 'Joining Salary', value: 'Joining Salary' }
 ]
 
 export const EventType = [
@@ -92,13 +98,13 @@ export const FormType = [
 export const FormulaType = [
   // do not change the value of this it will break salary formula calculation (it uses the name to calculate the salary)
   { label: 'Monthly', value: 'Monthly' },
-  { label: 'Monthly total hours', value: "MonthlyTotalHours"},
-  { label: 'Daily total hours' , value: 'DailyTotalHours'},
-  
+  { label: 'Monthly total hours', value: "MonthlyTotalHours" },
+  { label: 'Daily total hours', value: 'DailyTotalHours' },
+
   // { label: 'Weekly', value: 'Weekly' },
   // { label: 'Daily', value: 'Daily' },
   // { label: 'Hourly', value: 'Hourly' },
-  { label: 'Flexible' , value: 'Flexible'}
+  { label: 'Flexible', value: 'Flexible' }
 ]
 
 export const CompensationsType = [
@@ -130,7 +136,7 @@ export const EmployeeRewardsType = [
 
 export const countries = [
   {
-    "_id":"618e8986133c2b25923f2248",
+    "_id": "618e8986133c2b25923f2248",
     "name": "United Arab Emirates",
     "en": "United Arab Emirates (the)",
     "es": "Emiratos Árabes Unidos (los)",
@@ -149,7 +155,7 @@ export const countries = [
     "Capital": "Abu Dhabi",
     "Continent": "AS",
     "Languages": "ar-AE,fa,en,hi,ur",
-    "states":[{name:'Abu Dhabi'},{name:'Ajman'},{name:'Dubai'},{name:'Fujairah'},{name:'Ras al-Khaimah'},{name:'Umm al-Quwain'}]
+    "states": [{ name: 'Abu Dhabi' }, { name: 'Ajman' }, { name: 'Dubai' }, { name: 'Fujairah' }, { name: 'Ras al-Khaimah' }, { name: 'Umm al-Quwain' }]
   }
 ]
 

@@ -12,6 +12,8 @@ import { Divider, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 import { Breadcrumbs } from '@mui/material'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+
 
 // ** Rsuite Imports
 import { Form, Schema, DatePicker, TagPicker, Uploader, Checkbox } from 'rsuite'
@@ -24,13 +26,13 @@ import axios from 'axios'
 import { fetchData } from 'src/store/apps/company'
 
 // ** Store Imports
-import { useDispatch, useSelector } from 'react-redux'
+import { DocumentStatus } from 'src/local-db'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Loading from 'src/views/loading'
 import NoPermission from 'src/views/noPermission'
 
-import { styled } from '@mui/material/styles'
+import { SelectPicker } from 'rsuite'
 import { grey } from '@mui/material/colors'
 
 import defaultThumbnail from '../../../../../public/images/avatars/1.png';
@@ -41,7 +43,7 @@ const styles = {
   marginBottom: 10
 }
 
-const AddDepartment = ({ popperPlacement, id }) => {
+const AddDepartment = ({ popperPlacement, id, search }) => {
   // ** States
   const [employeeId, setEmployeeId] = useState('')
   const [plan, setPlan] = useState('')
@@ -52,7 +54,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [loading, setLoading] = useState(false)
   const [files, setFiles] = useState([])
   const [selectedDocument, setSelectedDocument] = useState()
-
   const [expiryDateFlag, setExpiryDateFlag] = useState(false)
   const [expiryDate, setExpiryDate] = useState(new Date().toISOString().substring(0, 10))
   const [preparedDate, setPreparedDate] = useState(new Date().toISOString().substring(0, 10))
@@ -66,14 +67,20 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const inputFile = useRef(null)
   const [formError, setFormError] = useState({})
   const [formValue, setFormValue] = useState({})
+  const [DocumentStatusDataSource, setDocumentStatusDataSource] = useState([]);
+  const [DocStatus, setDocStatus] = useState('active');
   const [AllDocumentTypes, setAllDocumentTypes] = useState([]);
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
   const [tags, setTags] = useState([]);
 
+
+
+
+
   const renderThumbnail = (file) => { // Check if the file has a thumbnail, otherwise use the default
     const thumbnail = file.url ? file.url : defaultThumbnail;
 
-    return <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6V1h5v2H4v3zm18 0V3h-3V1h5v5zM2 23v-5h2v3h3v2zm15 0v-2h3v-3h2v5zM7 20q-.825 0-1.412-.587T5 18V6q0-.825.588-1.412T7 4h10q.825 0 1.413.588T19 6v12q0 .825-.587 1.413T17 20zm2-10h6V8H9zm0 3h6v-2H9zm0 3h6v-2H9z"/></svg>
+    return <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6V1h5v2H4v3zm18 0V3h-3V1h5v5zM2 23v-5h2v3h3v2zm15 0v-2h3v-3h2v5zM7 20q-.825 0-1.412-.587T5 18V6q0-.825.588-1.412T7 4h10q.825 0 1.413.588T19 6v12q0 .825-.587 1.413T17 20zm2-10h6V8H9zm0 3h6v-2H9zm0 3h6v-2H9z" /></svg>
 
     //  return ( <img src={'/images/icons/file-icons/file.png'} alt="Document" style={{ width: 50, height: 50, objectFit: 'cover' }} /> );
   };
@@ -108,6 +115,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const fetchOnInit = async () => {
     await new Promise((resolve, reject) => { getDocumentTypes(resolve, reject) });
     await new Promise((resolve, reject) => { getDocument(resolve, reject) })
+    await new Promise((resolve, reject) => { getDocumentStatus(resolve, reject) })
+  }
+
+  const getDocumentStatus = async () => {
+    const documentStatus = DocumentStatus.map(type => ({
+      label: type.title,
+      value: type.value
+    }))
+
+    setDocumentStatusDataSource(documentStatus)
+
   }
 
   useEffect(() => {
@@ -115,7 +133,8 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }, [])
 
   const goToIndex = () => {
-    router.push('/company-dashboard/document')
+    const { type } = router.query;
+    router.push('/company-dashboard/document/category/Third Party Contracts/' + type)
   }
 
 
@@ -184,8 +203,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.renewing_name = formValue.renewing_name
         data.renewing_phone = formValue.renewing_phone
         data.renewing_email = formValue.renewing_email
+        data.another_renewing_name = formValue.another_renewing_name
+        data.another_renewing_phone = formValue.another_renewing_phone
+        data.another_renewing_email = formValue.another_renewing_email
         data.issueDate = issueDate
-        data.status = 'active'
+        data.status = DocStatus
 
         // if (tags.includes('Vendors')) 
         {
@@ -224,55 +246,55 @@ const AddDepartment = ({ popperPlacement, id }) => {
             }
             let doc_id = response.data.data._id
             let count = 0
-            await new Promise((resolve , reject )=>{
-              if(files.length == 0 ){
+            await new Promise((resolve, reject) => {
+              if (files.length == 0) {
                 resolve();
               }
               files.map(async (_file, index) => {
-                  const file = _file?.blobFile;
-                  
-                  // for files that are already saved on server
-                  if(!_file?.blobFile){
-                    if(index == files.length- 1){
-                      resolve();
-                    }
-                    
-                    return ;
-                  }
-                  console.log(file);
-                  setLoadingDescription(file?.name + ' is uploading')
-                  let formData = new FormData()
-                  formData.append('file', file)
-                  formData.append('type', 'document')
-                  try{
-                    const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
-                    let data = {}
-                    data.name = file.name
-                    data.linked_id = doc_id
-                    data.type = 'document'
-                    data.url = res.data ;
-                    data.created_at = new Date().toISOString()
-                    data.originalFileObject = _file ;
-                    const res2= await axios.post('/api/file/add-file', {data})
-                  }
-                  catch(err){
-                    toast.error('Error uploading document ' + data.name , { delay:1000 , position:'bottom-right'});
-                  }
-                  console.log(index , files.length -1 );
-                  if(index == files.length- 1){
+                const file = _file?.blobFile;
+
+                // for files that are already saved on server
+                if (!_file?.blobFile) {
+                  if (index == files.length - 1) {
                     resolve();
                   }
-                })
+
+                  return;
+                }
+                console.log(file);
+                setLoadingDescription(file?.name + ' is uploading')
+                let formData = new FormData()
+                formData.append('file', file)
+                formData.append('type', 'document')
+                try {
+                  const res = await axios.post('https://umanu.blink-techno.com/api/upload', formData)
+                  let data = {}
+                  data.name = file.name
+                  data.linked_id = doc_id
+                  data.type = 'document'
+                  data.url = res.data;
+                  data.created_at = new Date().toISOString()
+                  data.originalFileObject = _file;
+                  const res2 = await axios.post('/api/file/add-file', { data })
+                }
+                catch (err) {
+                  toast.error('Error uploading document ' + data.name, { delay: 1000, position: 'bottom-right' });
+                }
+                console.log(index, files.length - 1);
+                if (index == files.length - 1) {
+                  resolve();
+                }
+              })
             })
             goToIndex()
-            
+
 
             toast.success('Document (' + data.title + ') Inserted Successfully.', {
               delay: 3000,
               position: 'bottom-right'
             })
-          
-         
+
+
             setLoading(false)
           })
       }
@@ -305,6 +327,11 @@ const AddDepartment = ({ popperPlacement, id }) => {
     })
     axios.post('/api/file/delete-file', e).then(response => { }).catch((err) => { })
     setFiles(temp);
+  }
+
+  const changeDocumentStatus = selectedStatus => {
+    console.log(selectedStatus)
+    setDocStatus(selectedStatus)
   }
 
   // ------------------------------ View ---------------------------------
@@ -373,6 +400,22 @@ const AddDepartment = ({ popperPlacement, id }) => {
                   <Grid item sm={12} md={12} sx={{ mt: 2 }}>
                     <small>Description</small>
                     <Form.Control rows={2} name='description' controlId='description' />
+                  </Grid>
+
+                  <Grid item sm={6} md={8} xs={12} spacing={3} mt={2}>
+                    <Grid item sm={12} xs={12}>
+                      <small>Status</small>
+                      <SelectPicker
+                        size='sm'
+                        name='status'
+                        onChange={e => {
+                          changeDocumentStatus(e)
+                        }}
+                        value={DocStatus}
+                        data={DocumentStatusDataSource}
+                        block
+                      />
+                    </Grid>
                   </Grid>
 
 
@@ -490,6 +533,44 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Grid>
                         </Grid>
                       </div>
+
+                      <Grid item sm={12} xs={12} mt={5}>
+                        <strong pt={5} mt={5} className='px-5 pt-4'>Another Person in charge of renewing licences informations</strong >
+
+                        <div className='flex d-flex row-flex'>
+                          <small>Name</small>
+                          <Form.Control
+                            controlId='another_renewing_name'
+                            size='sm'
+                            type='text'
+                            name='another_renewing_name'
+                            placeholder='Name'
+                          />
+                          <Grid container sm={12} md={12}>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Phone</small>
+                              <Form.Control
+                                controlId='another_renewing_phone'
+                                size='sm'
+                                type='number'
+                                name='another_renewing_phone'
+                                placeholder='Phone'
+                              />
+                            </Grid>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Email</small>
+                              <Form.Control
+                                controlId='another_renewing_email'
+                                size='sm'
+                                type='text'
+                                name='another_renewing_email'
+                                placeholder='Email'
+                              />
+                            </Grid>
+                          </Grid>
+                        </div>
+
+                      </Grid>
                     </Grid>
 
                   </Grid>
@@ -530,7 +611,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       autoUpload
                       onRemove={e => removeFile(e)}
                       onUpload={e => addToFiles(e)}
-                      renderThumbnail={ renderThumbnail }
+                      renderThumbnail={renderThumbnail}
                       action=''
                       renderFileInfo={(file, fileElement) => {
                         return (

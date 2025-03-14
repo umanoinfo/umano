@@ -85,8 +85,8 @@ const AllDocumentsList = () => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
-  const [AllDocumentTypes , setAllDocumentTypes ] = useState();
-  const [documentTypesFetched , setDocumentTypesFetched ] = useState(false) ;
+  const [AllDocumentTypes, setAllDocumentTypes] = useState();
+  const [documentTypesFetched, setDocumentTypesFetched] = useState(false);
   const { data: session, status } = useSession()
 
   // ** Hooks
@@ -95,27 +95,27 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.document)
   const router = useRouter()
 
-  const documentTypes = router.query.type ;
-  const category = router.query.category  ;
+  const documentTypes = router.query.type;
+  const category = router.query.category;
 
-  const getDocumentTypes = async () =>{
+  const getDocumentTypes = async () => {
     setLoading(true);
-    try{
-        const res = await axios.get('/api/document-types');
-        if(res.status == 200 ){
-            const documents = new Map() ;
-            res?.data?.data?.map((document)=>{
-                documents[document.name] = document.category ; 
-            })
-            setAllDocumentTypes(documents);
-            setLoading(false);
-            setDocumentTypesFetched(true);
-        }
-
-    }catch(err){
-        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
-
+    try {
+      const res = await axios.get('/api/document-types');
+      if (res.status == 200) {
+        const documents = new Map();
+        res?.data?.data?.map((document) => {
+          documents[document.name] = document.category;
+        })
+        setAllDocumentTypes(documents);
         setLoading(false);
+        setDocumentTypesFetched(true);
+      }
+
+    } catch (err) {
+      toast.error('Failed to fetch documents types', { duration: 5000, position: 'bottom-right' });
+
+      setLoading(false);
     }
   }
 
@@ -127,9 +127,9 @@ const AllDocumentsList = () => {
         documentStatus,
         q: value
       })
-    ).then( () =>  getDocumentTypes() )
-   
-  }, [dispatch, type, documentStatus, value , documentTypes])
+    ).then(() => getDocumentTypes())
+
+  }, [dispatch, type, documentStatus, value, documentTypes])
 
   // ----------------------- Handle ------------------------------
 
@@ -146,10 +146,10 @@ const AllDocumentsList = () => {
   }, [])
 
   const handleClick = (data) => {
-    
-    if(documentTypesFetched)
+
+    if (documentTypesFetched)
       router.push(`/company-dashboard/document/category/${AllDocumentTypes[data]}/${data}`);
-    
+
   }
 
   // -------------------------- Delete Document --------------------------------
@@ -166,16 +166,16 @@ const AllDocumentsList = () => {
           documentStatus,
           q: value
         }))
-        
-          toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
-            delay: 1000,
-            position: 'bottom-right'
-          })
 
-          setOpen(false)
-          setLoading(false);
+        toast.success('Document (' + selectedDocument.name + ') Deleted Successfully.', {
+          delay: 1000,
+          position: 'bottom-right'
         })
-      
+
+        setOpen(false)
+        setLoading(false);
+      })
+
       .catch(function (error) {
         toast.error('Error : ' + error.response.data.message + ' !', {
           delay: 1000,
@@ -188,7 +188,7 @@ const AllDocumentsList = () => {
   // -------------------------- Add Document -----------------------------------------------
 
   const addDocument = () => {
-    router.push('/company-dashboard/document/add-document?category='+documentTypes)
+    router.push('/company-dashboard/document/add-document?category=' + documentTypes)
   }
 
   // -------------------------- Row Options -----------------------------------------------
@@ -207,7 +207,7 @@ const AllDocumentsList = () => {
     }
 
     const handleEditRowOptions = () => {
-      router.push('/company-dashboard/document/' + row._id + '/edit-document')
+      router.push('/company-dashboard/document/' + row._id + '/edit-document?type=' + documentTypes + '')
       handleRowOptionsClose()
     }
 
@@ -290,7 +290,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-             <Link href={{ pathname: '/company-dashboard/document/'+row._id }}>{row.title}</Link>
+            <Link href={{ pathname: '/company-dashboard/document/' + row._id }}>{row.title}</Link>
           </Typography>
         )
       }
@@ -313,7 +313,7 @@ const AllDocumentsList = () => {
       flex: 0.25,
       field: 'type',
       minWidth: 400,
-      sortable:false,
+      sortable: false,
       headerName: 'Tags',
       renderCell: ({ row }) => {
         return (
@@ -321,12 +321,12 @@ const AllDocumentsList = () => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.type.map((t, index) => {
-                if(index > 0 )
+                if (index > 0)
                   return <></>;
 
                 return (
                   <CustomChip
-                    onClick={() =>handleClick(t) }
+                    onClick={() => handleClick(t)}
                     key={index}
                     color='primary'
                     skin='light'
@@ -337,17 +337,17 @@ const AllDocumentsList = () => {
                 )
               })}
               {
-                row.type?.length -1 > 0?
-                <CustomChip                    
-                      key={1}
-                      color='primary'
-                      skin='light'
-                      size='small'
-                      sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                      label={`+${row.type?.length -1 } more categories`}
-                    />
-                :
-                <></>
+                row.type?.length - 1 > 0 ?
+                  <CustomChip
+                    key={1}
+                    color='primary'
+                    skin='light'
+                    size='small'
+                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                    label={`+${row.type?.length - 1} more categories`}
+                  />
+                  :
+                  <></>
               }
             </div>
           </Box>
@@ -363,7 +363,7 @@ const AllDocumentsList = () => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB') }
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB')}
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'
@@ -447,6 +447,7 @@ const AllDocumentsList = () => {
                 >
                   <MenuItem value=''>All Status</MenuItem>
                   <MenuItem value='active'>Active</MenuItem>
+                  <MenuItem value='hidden'>Hidden</MenuItem>
                   <MenuItem value='pending'>Pending</MenuItem>
                 </Select>
               </FormControl>
@@ -484,21 +485,21 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{
-          loading ?
-          <Loading header='Please Wait' description='Documents are loading'></Loading>:
-          <DataGrid
-            autoHeight
-            rowHeight={85}
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-}
+          {
+            loading ?
+              <Loading header='Please Wait' description='Documents are loading'></Loading> :
+              <DataGrid
+                autoHeight
+                rowHeight={85}
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+          }
         </Card>
       </Grid>
 

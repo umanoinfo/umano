@@ -28,6 +28,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
+import * as XLSX from 'xlsx'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -53,19 +54,19 @@ import { Breadcrumbs } from '@mui/material'
 // ** Status Obj
 
 const StatusColor = deleted_at => {
-  if(deleted_at){
+  if (deleted_at) {
     return 'error'
   }
-  if(!deleted_at){
+  if (!deleted_at) {
     return 'success'
   }
 }
 
 const StatusLabel = deleted_at => {
-  if(deleted_at){
+  if (deleted_at) {
     return 'Canceled'
   }
-  if(!deleted_at){
+  if (!deleted_at) {
     return 'Active'
   }
 }
@@ -83,8 +84,8 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
-  const [AllDocumentTypes , setAllDocumentTypes] = useState() ; 
-  const [documentTypeCategory , setDocumentTypeCategory ] = useState();
+  const [AllDocumentTypes, setAllDocumentTypes] = useState();
+  const [documentTypeCategory, setDocumentTypeCategory] = useState();
 
   // ** Hooks
 
@@ -92,41 +93,41 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.file)
   const router = useRouter()
 
-  const getDocumentTypes = async () =>{
+  const getDocumentTypes = async () => {
     setLoading(true);
-    try{
-        const res = await axios.get('/api/document-types');
-        if(res.status == 200 ){
-            let map = new Map() ;
+    try {
+      const res = await axios.get('/api/document-types');
+      if (res.status == 200) {
+        let map = new Map();
 
-            let documents = res?.data?.data?.map((document)=>{
-                map[document.name] = document.category ;
-                
-                return document.name ;
-            })
-            setDocumentTypeCategory(map);
-            setAllDocumentTypes(documents.toString());
-            setLoading(false);
-        }
+        let documents = res?.data?.data?.map((document) => {
+          map[document.name] = document.category;
 
-    }catch(err){
-        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
+          return document.name;
+        })
+        setDocumentTypeCategory(map);
+        setAllDocumentTypes(documents.toString());
         setLoading(false);
+      }
+
+    } catch (err) {
+      toast.error('Failed to fetch documents types', { duration: 5000, position: 'bottom-right' });
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    setLoading(true); 
+    setLoading(true);
     dispatch(
       fetchData({
         fileTypes,
         fileStatus,
         q: value
       })
-    ).then( () => setLoading(false))
+    ).then(() => setLoading(false))
     getDocumentTypes();
 
-  }, [ fileTypes , fileStatus, value])
+  }, [fileTypes, fileStatus, value])
 
   // ----------------------- Handle ------------------------------
 
@@ -139,11 +140,11 @@ const AllDocumentsList = () => {
   }, [])
 
 
-    // -------------------------- open_file ---------------------------------
+  // -------------------------- open_file ---------------------------------
 
-    const open_file = fileName => {
-      window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
-    }
+  const open_file = fileName => {
+    window.open('https://umanu.blink-techno.com/' + fileName, '_blank')
+  }
 
 
   // -------------------------- Delete Document --------------------------------
@@ -213,13 +214,55 @@ const AllDocumentsList = () => {
       setOpen(true)
     }
 
-   
+
   }
 
   const handleClick = (data) => {
     router.push(`/company-dashboard/document/category/${documentTypeCategory[data]}/${data}`);
   }
 
+  const handleExcelExport = () => {
+    let ex = store.data;
+    console.log(ex);
+
+    const wb = XLSX.utils.book_new()
+
+    ex = ex.map(val => {
+
+      let c = {
+        'Title': val.name,
+        'Document': val.document_info[0] && val.document_info[0].title,
+        'Expiry Date': val.document_info[0] && new Date(val?.document_info?.[0]?.expiryDate)?.toLocaleDateString('en-GB'),
+        'Type': val.document_info[0] && val.document_info[0].type.length + 'Category',
+        'Status': val.document_info[0] && val.document_info[0].status,
+
+      };
+
+      return c
+    })
+
+    let customMergeHeaders = [
+      "", "", "", "", ""
+    ];
+
+    let customHeaders = [
+      'Title',
+      'Document',
+      'Expiry Date',
+      'Type',
+      'Status',
+    ];
+    const ws = XLSX.utils.json_to_sheet(ex)
+    XLSX.utils.sheet_add_aoa(ws, [customMergeHeaders, customHeaders]);
+    XLSX.utils.sheet_add_json(ws, ex, {
+      skipHeader: true,
+      origin: -1,
+    });
+    ws['!merges'] = [{ s: { c: 10, r: 0 }, e: { c: 11, r: 0 } }];
+    ws['!cols'] = { alignment: { wrapText: '1' } };
+    XLSX.utils.book_append_sheet(wb, ws, 'hehe')
+    XLSX.writeFile(wb, 'documents.xlsx')
+  }
 
   // ------------------------------- Table columns --------------------------------------------
 
@@ -245,9 +288,9 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-              <a href='#' onClick={e => open_file(row.url)}>
-                {row.name}
-              </a>
+            <a href='#' onClick={e => open_file(row.url)}>
+              {row.name}
+            </a>
           </Typography>
         )
       }
@@ -262,7 +305,7 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { row.document_info[0] && row.document_info[0].title}
+              {row.document_info[0] && row.document_info[0].title}
             </div>
           </Box>
         )
@@ -278,7 +321,7 @@ const AllDocumentsList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { row.document_info[0] && new Date(row?.document_info?.[0]?.expiryDate)?.toLocaleDateString('en-GB')}
+              {row.document_info[0] && new Date(row?.document_info?.[0]?.expiryDate)?.toLocaleDateString('en-GB')}
             </div>
           </Box>
         )
@@ -289,40 +332,40 @@ const AllDocumentsList = () => {
       field: 'type',
       minWidth: 100,
       headerName: 'Tags',
-      sortable:false,
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: 250 }}>
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.document_info[0] && row.document_info[0].type.map((t, index) => {
-                if(index > 0 ) 
+                if (index > 0)
                   return <></>;
-                
+
                 return (
                   <CustomChip
                     key={index}
                     color='primary'
                     skin='light'
                     size='small'
-                    onClick={()=>handleClick(t)}
+                    onClick={() => handleClick(t)}
                     sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
                     label={t}
                   />
                 )
               })}
               {
-                row.document_info[0] && row.document_info[0].type?.length -1 > 0 ?
-                <CustomChip                    
+                row.document_info[0] && row.document_info[0].type?.length - 1 > 0 ?
+                  <CustomChip
                     key={1}
                     color='primary'
                     skin='light'
                     size='small'
                     sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                    label={`+${row.document_info[0].type?.length -1 } more categories`}
-                />
-                :
-                <></>
+                    label={`+${row.document_info[0].type?.length - 1} more categories`}
+                  />
+                  :
+                  <></>
               }
             </div>
           </Box>
@@ -336,9 +379,9 @@ const AllDocumentsList = () => {
       headerName: 'Date',
       renderCell: ({ row }) => {
         return (
-         <>
-         { row.document_info[0] && new Date(row.document_info[0].created_at).toLocaleString()}
-         </>
+          <>
+            {row.document_info[0] && new Date(row.document_info[0].created_at).toLocaleString()}
+          </>
         )
       }
     },
@@ -394,30 +437,33 @@ const AllDocumentsList = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid item sm={2} xs={6}></Grid>
+            <Grid item sm={4} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
+              <Button type='button' variant='contained' sx={{ mb: 3, margin: 1 }} onClick={() => handleExcelExport()}>
+                Export
+              </Button>
             </Grid>
           </Grid>
 
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{          
-          loading ?
-            <Loading header='Please Wait' description='Documents is loading'></Loading>:
+          {
+            loading ?
+              <Loading header='Please Wait' description='Documents is loading'></Loading> :
 
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-          
-}
+              <DataGrid
+                autoHeight
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+
+          }
         </Card>
       </Grid>
 

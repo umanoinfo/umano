@@ -59,13 +59,13 @@ const fileType = ex => {
   }
 }
 
-  const selectData = [
-    'Active',
-    'Canceled'
-  ].map(item => ({
-    label: item,
-    value: item
-  }))
+const selectData = [
+  'Active',
+  'Canceled'
+].map(item => ({
+  label: item,
+  value: item
+}))
 
 const StyledList = styled(List)(({ theme }) => ({
   '& .MuiListItem-container': {
@@ -135,27 +135,27 @@ const AddDepartment = ({ popperPlacement, id }) => {
     }
   }
 
-  const getDocument =  () => {
+  const getDocument = () => {
     setLoading(true)
     axios.get('/api/document/' + id, {}).then(response => {
       setSelectedDocument(response.data.data[0])
       setSelectedLogBook(response.data.logBook)
 
-      let files = response.data.data[0].files_info.filter((file)=>{
-        if(!file.deleted_at){
+      let files = response.data.data[0].files_info.filter((file) => {
+        if (!file.deleted_at) {
           return file
         }
       })
       setSelectedFiles(files)
       setLoading(false)
-    }).catch((err)=>{})
-  }  ;
+    }).catch((err) => { })
+  };
 
-  
+
   useEffect(() => {
     getDocument()
-    
-  }, [ ])
+
+  }, [])
 
   // -----------------------------------------------------------
 
@@ -182,18 +182,18 @@ const AddDepartment = ({ popperPlacement, id }) => {
   }
 
   const changeFileType = (e) => {
-    let files = selectedDocument.files_info.filter((file)=>{
-      if((!file.deleted_at && e.includes('Active')) ){
+    let files = selectedDocument.files_info.filter((file) => {
+      if ((!file.deleted_at && e.includes('Active'))) {
         return file
       }
-      if((file.deleted_at && e.includes('Canceled')) ){
+      if ((file.deleted_at && e.includes('Canceled'))) {
         return file
       }
     })
     setSelectedFiles(files)
   }
 
-  const removeFile = e => {}
+  const removeFile = e => { }
 
   // const Textarea = forwardRef((props, ref) => <Input as='textarea' />)
 
@@ -218,7 +218,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 All Documents
               </Link>
               <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              View Document
+                View Document
               </Typography>
             </Breadcrumbs>
             <Divider />
@@ -235,7 +235,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         {selectedDocument.type.map((t, index) => {
                           return (
                             <CustomChip
-                            key ={index}
+                              key={index}
                               skin='light'
                               size='small'
                               label={t}
@@ -258,236 +258,267 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
                     <CardContent>
                       <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
-                        <Box sx={{ pt: 2, pb: 1 }}>
-                          {selectedDocument.version && (
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Version:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {selectedDocument.version}
-                              </Typography>
-                            </Box>
-                          )}
-                          {selectedDocument.expiryDateFlag && (
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Expiry Date:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                              <span>-</span>
-                              </Typography>
-                            </Box>
-                          )}
-                          {!selectedDocument.expiryDateFlag && (
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Expiry Date:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                              {selectedDocument.expiryDate}
-                              </Typography>
-                              <CustomChip
-                                skin='light'
-                                size='small'
-                                label={
-                                  Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
-                                  ' Day'
-                                }
-                                color={dayColor(
-                                  Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
-                                )}
-                                sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
-                              />
-                            </Box>
-                          )}
-                          {selectedDocument.status && (
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Status:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {selectedDocument.status}
-                              </Typography>
-                            </Box>
-                          )}
-                          {selectedDocument.created_at && (
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Created at:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {new Date(selectedDocument.created_at).toISOString().substring(0, 10)}
-                              </Typography>
-                            </Box>
-                          )}
-                            <Box sx={{ display: 'flex', mb: 2.7 }}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                              Issue Date:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {new Date(selectedDocument.issueDate).toISOString().substring(0, 10)}
-                              </Typography>
-                            </Box>
-                            {
-                              selectedDocument.category.includes('Vendors') ? 
-                              <>
-                                <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
-                                <strong pt={5} className='px-5 pt-4'> Company Information </strong >
-                                </Typography>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Name:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyName}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Mobile:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyMobile}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Email:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyEmail}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Fax:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyFax}
-                                  </Typography>
-                                </Box>
-                                 <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Landline:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyLandline}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Company Contact Person:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.companyContactPerson}
-                                  </Typography>
-                                </Box>
-                              </>
-                              :
-                              <>
-                              </>
-                            }
-
-                            {
-                              selectedDocument.category.includes('Third Party Contracts') ? 
-                              <>
-                                <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
-                                <strong pt={5} className='px-5 pt-4'> Third Party Contracts Information </strong >
-                                </Typography>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Third Party Email:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.thirdPartyContractorsEmail}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                    Third Party Landline:
-                                  </Typography>
-                                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                    {selectedDocument.thirdPartyContractorsLandline}
-                                  </Typography>
-                                </Box>
-                              </>
-                              :
-                              <>
-                              </>
-                            }
-                            
-
-                            <Typography variant='subtitle2' sx={{ mt:5 , mr: 2, color: 'text.primary' }}>
-                                <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+                      <Box sx={{ pt: 2, pb: 1 }}>
+                        {selectedDocument.version && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Version:
                             </Typography>
-
-                            <Box sx={{ display: 'flex', mb: 2.7 , mt:3}}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Name:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {selectedDocument.renewing_name}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2.7 , mt:1}}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Phone:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {selectedDocument.renewing_phone}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2.7 , mt:1}}>
-                              <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                                Email:
-                              </Typography>
-                              <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                                {selectedDocument.renewing_email}
-                              </Typography>
-                            </Box>
-                         
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              {selectedDocument.version}
+                            </Typography>
+                          </Box>
+                        )}
+                        {selectedDocument.expiryDateFlag && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Expiry Date:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              <span>-</span>
+                            </Typography>
+                          </Box>
+                        )}
+                        {!selectedDocument.expiryDateFlag && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Expiry Date:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              {selectedDocument.expiryDate}
+                            </Typography>
+                            <CustomChip
+                              skin='light'
+                              size='small'
+                              label={
+                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1) +
+                                ' Day'
+                              }
+                              color={dayColor(
+                                Math.floor((new Date(selectedDocument.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24), 1)
+                              )}
+                              sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' }, ml: 3 }}
+                            />
+                          </Box>
+                        )}
+                        {selectedDocument.status && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Status:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              {selectedDocument.status}
+                            </Typography>
+                          </Box>
+                        )}
+                        {selectedDocument.created_at && (
+                          <Box sx={{ display: 'flex', mb: 2.7 }}>
+                            <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                              Created at:
+                            </Typography>
+                            <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                              {new Date(selectedDocument.created_at).toISOString().substring(0, 10)}
+                            </Typography>
+                          </Box>
+                        )}
+                        <Box sx={{ display: 'flex', mb: 2.7 }}>
+                          <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                            Issue Date:
+                          </Typography>
+                          <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                            {new Date(selectedDocument.issueDate).toISOString().substring(0, 10)}
+                          </Typography>
                         </Box>
-                        <div>
-                          <Accordion>
-                            <AccordionSummary
-                              id='panel-header-1'
-                              aria-controls='panel-content-1'
-                              expandIcon={<Icon icon='mdi:chevron-down' />}
-                            >
-                              <Typography >History</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                            {selectedLogBook && 
-                        <TableContainer component={Paper}>
-                          <Table sx={{ minWidth: 600 }} size='small' aria-label='a dense table'>
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align='left'>Date</TableCell>
-                                <TableCell align='left'>User</TableCell>
-                                <TableCell align='left'>Action</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {selectedLogBook.map((row , index) => (
-                                <TableRow key={row.index} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
-                                  <TableCell align='left'>{new Date(row.created_at).toLocaleString()}</TableCell>
-                                  <TableCell align='left'>{row.user_info[0].name}</TableCell>
-                                  <TableCell align='left'>{row.Description}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>}
-                            </AccordionDetails>
-                          </Accordion>
-                        </div>
+                        {
+                          selectedDocument.category.includes('Vendors') ?
+                            <>
+                              <Typography variant='subtitle2' sx={{ mt: 5, mr: 2, color: 'text.primary' }}>
+                                <strong pt={5} className='px-5 pt-4'> Company Information </strong >
+                              </Typography>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Name:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyName}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Mobile:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyMobile}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Email:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyEmail}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Fax:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyFax}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Landline:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyLandline}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Company Contact Person:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.companyContactPerson}
+                                </Typography>
+                              </Box>
+                            </>
+                            :
+                            <>
+                            </>
+                        }
+
+                        {
+                          selectedDocument.category.includes('Third Party Contracts') ?
+                            <>
+                              <Typography variant='subtitle2' sx={{ mt: 5, mr: 2, color: 'text.primary' }}>
+                                <strong pt={5} className='px-5 pt-4'> Third Party Contracts Information </strong >
+                              </Typography>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Third Party Email:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.thirdPartyContractorsEmail}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                                  Third Party Landline:
+                                </Typography>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                                  {selectedDocument.thirdPartyContractorsLandline}
+                                </Typography>
+                              </Box>
+                            </>
+                            :
+                            <>
+                            </>
+                        }
+
+                      </Box>
+                      <div>
+                        <Accordion>
+                          <AccordionSummary
+                            id='panel-header-1'
+                            aria-controls='panel-content-1'
+                            expandIcon={<Icon icon='mdi:chevron-down' />}
+                          >
+                            <Typography >History</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {selectedLogBook &&
+                              <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 600 }} size='small' aria-label='a dense table'>
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell align='left'>Date</TableCell>
+                                      <TableCell align='left'>User</TableCell>
+                                      <TableCell align='left'>Action</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {selectedLogBook.map((row, index) => (
+                                      <TableRow key={row.index} sx={{ '&:last-of-type  td, &:last-of-type  th': { border: 0 } }}>
+                                        <TableCell align='left'>{new Date(row.created_at).toLocaleString()}</TableCell>
+                                        <TableCell align='left'>{row.user_info[0].name}</TableCell>
+                                        <TableCell align='left'>{row.Description}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>}
+                          </AccordionDetails>
+                        </Accordion>
+                      </div>
                     </CardContent>
                   </Card>
                 )}
               </Grid>
               <Grid item xs={12} sm={6} md={6} sx={{ p: 2, px: 5, mb: 5 }}>
                 <Card>
+
+                  <Grid sx={{ p: 2, px: 5, mb: 5 }}>
+                    <Typography variant='subtitle2' sx={{ mt: 5, mr: 2, color: 'text.primary' }}>
+                      <strong pt={5} className='px-5 pt-4'>Person in charge of renewing licences informations</strong >
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Name:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.renewing_name}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 1 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Phone:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.renewing_phone}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 1 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Email:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.renewing_email}
+                      </Typography>
+                    </Box>
+
+                    <Typography variant='subtitle2' sx={{ mt: 5, mr: 2, color: 'text.primary' }}>
+                      <strong pt={5} className='px-5 pt-4'>Another Person in charge of renewing licences informations</strong >
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 3 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Name:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.another_renewing_name}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 1 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Phone:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.another_renewing_phone}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2.7, mt: 1 }}>
+                      <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                        Email:
+                      </Typography>
+                      <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                        {selectedDocument && selectedDocument.another_renewing_email}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <hr></hr>
                   <Box
                     sx={{
                       pt: 2,
@@ -498,20 +529,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
                       justifyContent: 'space-between'
                     }}
                   >
+
+
+
                     <Typography sx={{ fontWeight: 'bold' }}>Files</Typography>
-                      <>
-                        <TagPicker
-                            name='type'
-                            controlId='type'
-                            accepter={TagPicker}
-                            defaultValue={['Active']}
-                            data={selectData}
-                            style={{ width: '280px' }}
-                            onChange={changeFileType}
-                            placeholder="Select Status"
-                          />
-                      </>
-                     </Box>
+                    <>
+                      <TagPicker
+                        name='type'
+                        controlId='type'
+                        accepter={TagPicker}
+                        defaultValue={['Active']}
+                        data={selectData}
+                        style={{ width: '280px' }}
+                        onChange={changeFileType}
+                        placeholder="Select Status"
+                      />
+                    </>
+                  </Box>
 
                   <Divider />
                   <Box sx={{ p: 2 }}>

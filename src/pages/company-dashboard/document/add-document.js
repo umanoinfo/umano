@@ -85,7 +85,7 @@ const StyledList = styled(List)(({ theme }) => ({
 const AddDepartment = ({ popperPlacement, id }) => {
   // ** States
   const router = useRouter()
-  const documentCategory = router.query?.category ;
+  const documentCategory = router.query?.category;
   const [employeeId, setEmployeeId] = useState('')
   const [plan, setPlan] = useState('')
   const [loadingDescription, setLoadingDescription] = useState('')
@@ -108,10 +108,10 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const formRef = useRef()
   const inputFile = useRef(null)
   const [formError, setFormError] = useState({})
-  const [formValue, setFormValue] = useState({type: documentCategory ? [documentCategory] : []})
+  const [formValue, setFormValue] = useState({ type: documentCategory ? [documentCategory] : [] })
   const [AllDocumentTypes, setAllDocumentTypes] = useState();
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
-  
+
   const getDocumentTypes = async () => {
     setLoading(true);
     try {
@@ -164,14 +164,14 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const renderThumbnail = (file) => { // Check if the file has a thumbnail, otherwise use the default
     // const thumbnail = file.url ? file.url : defaultThumbnail;
-    return <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6V1h5v2H4v3zm18 0V3h-3V1h5v5zM2 23v-5h2v3h3v2zm15 0v-2h3v-3h2v5zM7 20q-.825 0-1.412-.587T5 18V6q0-.825.588-1.412T7 4h10q.825 0 1.413.588T19 6v12q0 .825-.587 1.413T17 20zm2-10h6V8H9zm0 3h6v-2H9zm0 3h6v-2H9z"/></svg>
+    return <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6V1h5v2H4v3zm18 0V3h-3V1h5v5zM2 23v-5h2v3h3v2zm15 0v-2h3v-3h2v5zM7 20q-.825 0-1.412-.587T5 18V6q0-.825.588-1.412T7 4h10q.825 0 1.413.588T19 6v12q0 .825-.587 1.413T17 20zm2-10h6V8H9zm0 3h6v-2H9zm0 3h6v-2H9z" /></svg>
 
     // return ( <img src={'/images/icons/file-icons/file.png'} alt="Document" style={{ width: 50, height: 50, objectFit: 'cover' }} /> );
- };
+  };
 
   const handleTagsChange = (e) => {
-    console.log(e , documentTypeCategory , notAuthorized);
-    
+    console.log(e, documentTypeCategory, notAuthorized);
+
     // if (notAuthorized.includes('ViewDocumentTypes'));
     // {
 
@@ -191,7 +191,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const handleSubmit = () => {
     if (notAuthorized.includes('ViewDocumentTypes'))
       return;
-    
+
     formRef.current.checkAsync().then(result => {
       if (!result.hasError) {
         let data = {}
@@ -213,6 +213,9 @@ const AddDepartment = ({ popperPlacement, id }) => {
         data.renewing_name = formValue.renewing_name
         data.renewing_phone = formValue.renewing_phone
         data.renewing_email = formValue.renewing_email
+        data.another_renewing_name = formValue.another_renewing_name
+        data.another_renewing_phone = formValue.another_renewing_phone
+        data.another_renewing_email = formValue.another_renewing_email
         data.status = 'active'
         data.issueDate = issueDate
         data.expiryDateFlag = expiryDateFlag
@@ -255,7 +258,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
               let count = 0
 
               await new Promise((resolve, reject) => {
-                if(files.length == 0 ){
+                if (files.length == 0) {
                   resolve();
                 }
                 files.map(async (_file, index) => {
@@ -270,7 +273,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     data.name = file.name
                     data.linked_id = doc_id
                     data.type = 'document'
-                    data.url = res.data ;
+                    data.url = res.data;
                     data.created_at = new Date().toISOString()
                     data.originalFileObject = _file;
                     const res2 = await axios.post('/api/file/add-file', { data })
@@ -560,6 +563,44 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Grid>
                         </div>
                       </Grid>
+
+                      <Grid item sm={12} xs={12} mt={5}>
+                        <strong pt={5} className='px-5 pt-4'>Another Person In-Charge of renewing licenses informations</strong >
+
+                        <div className='flex d-flex row-flex'>
+                          <small>Name</small>
+                          <Form.Control
+                            controlId='renewing_name'
+                            size='sm'
+                            type='text'
+                            name='another_renewing_name'
+                            placeholder='Name'
+                          />
+                          <Grid container sm={12} md={12}>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Phone</small>
+                              <Form.Control
+                                controlId='renewing_phone'
+                                size='sm'
+                                type='number'
+                                name='another_renewing_phone'
+                                placeholder='Phone'
+                              />
+                            </Grid>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Email</small>
+                              <Form.Control
+                                controlId='renewing_email'
+                                size='sm'
+                                type='text'
+                                name='another_renewing_email'
+                                placeholder='Email'
+                              />
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </Grid>
+
 
                     </Grid>
                   </Grid>

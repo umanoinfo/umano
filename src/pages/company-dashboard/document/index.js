@@ -28,7 +28,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import toast from 'react-hot-toast'
 import Loading from 'src/views/loading'
-import * as XLSX from 'xlsx'
+
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -89,9 +89,9 @@ const AllDocumentsList = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setselectedDocument] = useState()
   const { data: session, status } = useSession()
-  const [AllDocumentTypes , setAllDocumentTypes] = useState('') ;
-  const [documentTypeCategory , setDocumentTypeCategory] = useState();
-  const [isFetched , setIsFetched] = useState();
+  const [AllDocumentTypes, setAllDocumentTypes] = useState('');
+  const [documentTypeCategory, setDocumentTypeCategory] = useState();
+  const [isFetched, setIsFetched] = useState();
 
   // ** Hooks
 
@@ -99,41 +99,41 @@ const AllDocumentsList = () => {
   const store = useSelector(state => state.document)
   const router = useRouter()
 
- const getDocumentTypes = async () =>{
-  setLoading(true);
-    try{
-        const res = await axios.get('/api/document-types');
-        if(res.status == 200 ){
-            let map = new Map() ;
+  const getDocumentTypes = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get('/api/document-types');
+      if (res.status == 200) {
+        let map = new Map();
 
-            let documents = res?.data?.data?.map((document)=>{
-                map[document.name] = document.category ;
-                
-                return document.name ;
-            })
-            setDocumentTypeCategory(map);
-            setAllDocumentTypes(documents.toString());
-        }
-        setLoading(false);
+        let documents = res?.data?.data?.map((document) => {
+          map[document.name] = document.category;
 
-    }catch(err){
-        toast.error('Failed to fetch documents types' , {duration:5000 , position:'bottom-right' });
-        setLoading(false);
+          return document.name;
+        })
+        setDocumentTypeCategory(map);
+        setAllDocumentTypes(documents.toString());
+      }
+      setLoading(false);
+
+    } catch (err) {
+      toast.error('Failed to fetch documents types', { duration: 5000, position: 'bottom-right' });
+      setLoading(false);
     }
   }
-  
+
   useEffect(() => {
     setLoading(true);
     getDocumentTypes();
     dispatch(
       fetchData({
-        documentTypes: AllDocumentTypes ,
+        documentTypes: AllDocumentTypes,
         documentStatus,
         q: value
       })
-    ).then( () => setLoading(false) )
+    ).then(() => setLoading(false))
 
-  }, [dispatch, Types, documentStatus, value , AllDocumentTypes != '' ])
+  }, [dispatch, Types, documentStatus, value, AllDocumentTypes != ''])
 
   // ----------------------- Handle ------------------------------
 
@@ -159,7 +159,7 @@ const AllDocumentsList = () => {
       })
       .then(function (response) {
         dispatch(fetchData({
-          documentTypes: AllDocumentTypes ,
+          documentTypes: AllDocumentTypes,
           documentStatus,
           q: value
         }))
@@ -190,34 +190,34 @@ const AllDocumentsList = () => {
   }
 
   const handleExcelExport = () => {
-    let ex  = store.data ;
-    console.log(ex) ;
+    let ex = store.data;
+    console.log(ex);
 
     const wb = XLSX.utils.book_new()
 
     ex = ex.map(val => {
-      
+
       let c = {
-        'Contract Name': val.title ,
+        'Contract Name': val.title,
         'Mandatory by DOH': '',
-        'Scope of works':'',
+        'Scope of works': '',
         'Issue Date': new Date(val.issueDate).toLocaleDateString(),
-        'categories': val.category.toString() , 
+        'categories': val.category.toString(),
         'Expiray Date': new Date(val.expiryDate).toLocaleDateString(),
         'Amount': '',
-        'Mode of Payment':'',
-        'Remarks/Status': new Date(val.expiryDate) <= new Date() ? 'Expired':'Valid',
+        'Mode of Payment': '',
+        'Remarks/Status': new Date(val.expiryDate) <= new Date() ? 'Expired' : 'Valid',
         'Suppliers Name': val.companyName,
-        'Contact Persons' :val.renewing_name,
+        'Contact Persons': val.renewing_name,
         'Mobile Number': val.renewing_phone,
-        'Remarks' : val.description
+        'Remarks': val.description
       };
 
       return c
     })
 
     let customMergeHeaders = [
-      "" ,"" ,"","","","","","","","","Contact Person information","",""
+      "", "", "", "", "", "", "", "", "", "", "Contact Person information", "", ""
     ];
 
     let customHeaders = [
@@ -231,17 +231,17 @@ const AllDocumentsList = () => {
       'Mode of Payment',
       'Remarks/Status',
       'Suppliers Name',
-      'Contact Persons' ,
+      'Contact Persons',
       'Mobile Number',
-      'Remarks' ,
+      'Remarks',
     ];
     const ws = XLSX.utils.json_to_sheet(ex)
-    XLSX.utils.sheet_add_aoa(ws, [customMergeHeaders , customHeaders]);
+    XLSX.utils.sheet_add_aoa(ws, [customMergeHeaders, customHeaders]);
     XLSX.utils.sheet_add_json(ws, ex, {
       skipHeader: true,
       origin: -1,
     });
-    ws['!merges'] = [{s:{c:10,r:0},e:{c:11,r:0}}];
+    ws['!merges'] = [{ s: { c: 10, r: 0 }, e: { c: 11, r: 0 } }];
     ws['!cols'] = { alignment: { wrapText: '1' } };
     XLSX.utils.book_append_sheet(wb, ws, 'hehe')
     XLSX.writeFile(wb, 'documents.xlsx')
@@ -278,7 +278,7 @@ const AllDocumentsList = () => {
       setOpen(true)
     }
 
-    
+
 
     // ------------------------------ Table Definition ---------------------------------
 
@@ -349,7 +349,7 @@ const AllDocumentsList = () => {
       renderCell: ({ row }) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-             <Link href={{ pathname: '/company-dashboard/document/'+row._id }}>{row.title}</Link>
+            <Link href={{ pathname: '/company-dashboard/document/' + row._id }}>{row.title}</Link>
           </Typography>
         )
       }
@@ -380,11 +380,11 @@ const AllDocumentsList = () => {
             <Icon fontSize={20} />
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {row.type.map((t, index) => {
-                if(index > 0 ) return <></>;
-                
+                if (index > 0) return <></>;
+
                 return (
                   <CustomChip
-                    onClick={() =>handleClick(t) }
+                    onClick={() => handleClick(t)}
                     key={index}
                     color='primary'
                     skin='light'
@@ -395,17 +395,17 @@ const AllDocumentsList = () => {
                 )
               })}
               {
-                row.type?.length -1 > 0 ?
-                  <CustomChip                    
-                  key={1}
-                  color='primary'
-                  skin='light'
-                  size='small'
-                  sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
-                  label={`+${row.type?.length -1 } more categories`}
+                row.type?.length - 1 > 0 ?
+                  <CustomChip
+                    key={1}
+                    color='primary'
+                    skin='light'
+                    size='small'
+                    sx={{ mx: 0.5, mt: 0.5, mb: 0.5 }}
+                    label={`+${row.type?.length - 1} more categories`}
                   />
                   :
-                <></>
+                  <></>
               }
             </div>
           </Box>
@@ -421,7 +421,7 @@ const AllDocumentsList = () => {
         return (
           <>
             {row.expiryDateFlag && <span>-</span>}
-            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB') }
+            {!row.expiryDateFlag && new Date(row.expiryDate).toLocaleDateString('en-GB')}
             {!row.expiryDateFlag && (
               <CustomChip
                 skin='light'
@@ -533,12 +533,12 @@ const AllDocumentsList = () => {
             <Grid item sm={2} xs={6}></Grid>
             <Grid item sm={5} xs={12} textAlign={right}>
               {session && session.user && session.user.permissions.includes('AddDocument') && (
-                <Button type='button' variant='contained' sx={{ mb: 3 , margin:1 }} onClick={() => addDocument()}>
+                <Button type='button' variant='contained' sx={{ mb: 3, margin: 1 }} onClick={() => addDocument()}>
                   Add Document
                 </Button>
               )}
-              <Button type='button' variant='contained' sx={{ mb: 3 , margin:1 }} onClick={() => handleExcelExport()}>
-                  Export
+              <Button type='button' variant='contained' sx={{ mb: 3, margin: 1 }} onClick={() => handleExcelExport()}>
+                Export
               </Button>
             </Grid>
           </Grid>
@@ -546,21 +546,21 @@ const AllDocumentsList = () => {
           <Divider />
 
           {/* -------------------------- Table -------------------------------------- */}
-{          
-          loading ?
-          <Loading header='Please Wait' description='Documents are loading'></Loading>:
-          <DataGrid
-            autoHeight
-            rowHeight={85}
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-}
+          {
+            loading ?
+              <Loading header='Please Wait' description='Documents are loading'></Loading> :
+              <DataGrid
+                autoHeight
+                rowHeight={85}
+                rows={store.data}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+              />
+          }
         </Card>
       </Grid>
 
