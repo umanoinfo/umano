@@ -71,7 +71,10 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
   const [DocStatus, setDocStatus] = useState('active');
   const [AllDocumentTypes, setAllDocumentTypes] = useState([]);
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
-  const [tags, setTags] = useState([]);
+  const [vendorsDataSource, setVendorsDataSource] = useState([])
+  const [vendors, setVendors] = useState([])
+  const [vendor, setVendor] = useState()
+  const [tags, setTags] = useState()
 
 
 
@@ -84,6 +87,33 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
 
     //  return ( <img src={'/images/icons/file-icons/file.png'} alt="Document" style={{ width: 50, height: 50, objectFit: 'cover' }} /> );
   };
+
+  // ----------------------------- Get Options ----------------------------------
+
+  const getVendors = async () => {
+    setLoading(true);
+    axios.get('/api/vendor-list', {}).then(function (response) {
+      setVendors(response.data?.data)
+
+      const arr = response.data?.data?.map(department => ({
+        label: department.name,
+        value: department._id
+      }))
+
+      setVendorsDataSource(arr)
+
+      // if (response.data.data && response.data.data.length > 0)
+      //   setVendor(response.data.data[0]._id)
+      // setFormValue({
+      //   companyName: response.data.data[0].name,
+      //   companyMobile: response.data.data[0].mobile,
+      //   companyEmail: response.data.data[0].email,
+      //   companyLandline: response.data.data[0].landline,
+      //   companyContactPerson: response.data.data[0].contactperson,
+      // })
+    }).catch((err) => {
+    })
+  }
 
   const getDocumentTypes = async (resolve, reject) => {
     setLoading(true);
@@ -130,6 +160,7 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
 
   useEffect(() => {
     fetchOnInit();
+    getVendors();
   }, [])
 
   const goToIndex = () => {
@@ -137,6 +168,16 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
     router.push('/company-dashboard/document/category/Third Party Contracts/' + type)
   }
 
+  const selectVendor = e => {
+    const selectedVendor = vendors.find(ven => ven._id === e);
+    setFormValue({
+      companyName: selectedVendor.name,
+      companyMobile: selectedVendor.mobile,
+      companyEmail: selectedVendor.email,
+      companyLandline: selectedVendor.landline,
+      companyContactPerson: selectedVendor.contactperson,
+    })
+  }
 
 
   // ------------------------------ Get Document ------------------------------------
@@ -151,6 +192,9 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
         setIssueDate(response?.data?.data?.[0]?.issueDate)
         setNotifyBeforeDays(response?.data?.data?.[0]?.notifyBeforeDays)
         let tempArr = []
+        console.log(
+          response.data.data[0]
+        )
         response?.data?.data?.[0]?.files_info?.map((file, index) => {
           console.log(file);
           if (!file?.deleted_at) {
@@ -165,7 +209,6 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
         })
         setFiles(tempArr);
 
-        // setFiles(response.data.data[0].files_info.map((file)=>{return file.originalFileObject}))
         setFormValue(response.data.data[0])
         resolve()
         setLoading(false);
@@ -533,44 +576,6 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
                           </Grid>
                         </Grid>
                       </div>
-
-                      <Grid item sm={12} xs={12} mt={5}>
-                        <strong pt={5} mt={5} className='px-5 pt-4'>Another Person in charge of renewing licences informations</strong >
-
-                        <div className='flex d-flex row-flex'>
-                          <small>Name</small>
-                          <Form.Control
-                            controlId='another_renewing_name'
-                            size='sm'
-                            type='text'
-                            name='another_renewing_name'
-                            placeholder='Name'
-                          />
-                          <Grid container sm={12} md={12}>
-                            <Grid item sm={6} md={6} pr={2}>
-                              <small>Phone</small>
-                              <Form.Control
-                                controlId='another_renewing_phone'
-                                size='sm'
-                                type='number'
-                                name='another_renewing_phone'
-                                placeholder='Phone'
-                              />
-                            </Grid>
-                            <Grid item sm={6} md={6} pr={2}>
-                              <small>Email</small>
-                              <Form.Control
-                                controlId='another_renewing_email'
-                                size='sm'
-                                type='text'
-                                name='another_renewing_email'
-                                placeholder='Email'
-                              />
-                            </Grid>
-                          </Grid>
-                        </div>
-
-                      </Grid>
                     </Grid>
 
                   </Grid>
@@ -644,6 +649,23 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
                         Company Information
                       </Typography>
                     </Grid>
+                    {/* {vendorsDataSource && (
+                      <Grid item sm={12} xs={12} mt={2}>
+                        <small>Select Vendor</small>
+                        <SelectPicker
+                          size='sm'
+                          name='vendor1'
+                          controlId='vendor1'
+                          onChange={e => {
+                            setVendor(e)
+                            selectVendor(e)
+                          }}
+                          value={vendor}
+                          data={vendorsDataSource}
+                          block
+                        />
+                      </Grid>
+                    )} */}
                     <Grid item sm={12} md={8} pr={2} pt={3}>
                       <small> Company Name </small>
                       <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
@@ -668,6 +690,44 @@ const AddDepartment = ({ popperPlacement, id, search }) => {
                     <Grid item sm={12} md={8} pr={2} pt={3}>
                       <small> Company Contact Person </small>
                       <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
+                    </Grid>
+
+                    <Grid item sm={12} xs={12} mt={5}>
+                      <strong pt={5} mt={5} className='px-5 pt-4'>Additional Contact Person </strong >
+
+                      <div className='flex d-flex row-flex'>
+                        <small>Name</small>
+                        <Form.Control
+                          controlId='another_renewing_name'
+                          size='sm'
+                          type='text'
+                          name='another_renewing_name'
+                          placeholder='Name'
+                        />
+                        <Grid container sm={12} md={12}>
+                          <Grid item sm={6} md={6} pr={2}>
+                            <small>Phone</small>
+                            <Form.Control
+                              controlId='another_renewing_phone'
+                              size='sm'
+                              type='number'
+                              name='another_renewing_phone'
+                              placeholder='Phone'
+                            />
+                          </Grid>
+                          <Grid item sm={6} md={6} pr={2}>
+                            <small>Email</small>
+                            <Form.Control
+                              controlId='another_renewing_email'
+                              size='sm'
+                              type='text'
+                              name='another_renewing_email'
+                              placeholder='Email'
+                            />
+                          </Grid>
+                        </Grid>
+                      </div>
+
                     </Grid>
 
                   </>

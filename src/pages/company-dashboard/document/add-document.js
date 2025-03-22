@@ -20,15 +20,13 @@ import ListItem from '@mui/material/ListItem'
 import Avatar from '@mui/material/Avatar'
 import toast from 'react-hot-toast'
 
+
 // ** Rsuite Imports
-import { Form, Schema, DatePicker, TagPicker, Uploader, Input, Checkbox } from 'rsuite'
+import { Form, Schema, DatePicker, TagPicker, Uploader, SelectPicker, Checkbox } from 'rsuite'
 import 'rsuite/dist/rsuite.min.css'
 
 // ** Axios Imports
 import axios from 'axios'
-
-// ** Actions Imports
-import { fetchData } from 'src/store/apps/company'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -111,6 +109,36 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [formValue, setFormValue] = useState({ type: documentCategory ? [documentCategory] : [] })
   const [AllDocumentTypes, setAllDocumentTypes] = useState();
   const [documentTypeCategory, setDocumentTypeCategory] = useState();
+  const [vendorsDataSource, setVendorsDataSource] = useState([])
+  const [vendors, setVendors] = useState([])
+  const [vendor, setVendor] = useState()
+
+
+  // ----------------------------- Get Options ----------------------------------
+
+  const getVendors = async () => {
+    setLoading(true);
+    axios.get('/api/vendor-list', {}).then(function (response) {
+      setVendors(response.data?.data)
+
+      const arr = response.data?.data?.map(department => ({
+        label: department.name,
+        value: department._id
+      }))
+
+      setVendorsDataSource(arr)
+      if (response.data.data && response.data.data.length > 0)
+        setVendor(response.data.data[0]._id)
+      setFormValue({
+        companyName: response.data.data[0].name,
+        companyMobile: response.data.data[0].mobile,
+        companyEmail: response.data.data[0].email,
+        companyLandline: response.data.data[0].landline,
+        companyContactPerson: response.data.data[0].contactperson,
+      })
+    }).catch((err) => {
+    })
+  }
 
   const getDocumentTypes = async () => {
     setLoading(true);
@@ -148,6 +176,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   useEffect(() => {
     getDocumentTypes();
+    getVendors();
   }, [])
 
   const goToIndex = () => {
@@ -379,7 +408,16 @@ const AddDepartment = ({ popperPlacement, id }) => {
     setFiles(temp);
   }
 
-  // const Textarea = forwardRef((props, ref) => <Input as='textarea' />)
+  const selectVendor = e => {
+    const selectedVendor = vendors.find(ven => ven._id === e);
+    setFormValue({
+      companyName: selectedVendor.name,
+      companyMobile: selectedVendor.mobile,
+      companyEmail: selectedVendor.email,
+      companyLandline: selectedVendor.landline,
+      companyContactPerson: selectedVendor.contactperson,
+    })
+  }
 
   // ------------------------------ View ---------------------------------
 
@@ -563,45 +601,6 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           </Grid>
                         </div>
                       </Grid>
-
-                      <Grid item sm={12} xs={12} mt={5}>
-                        <strong pt={5} className='px-5 pt-4'>Another Person In-Charge of renewing licenses informations</strong >
-
-                        <div className='flex d-flex row-flex'>
-                          <small>Name</small>
-                          <Form.Control
-                            controlId='renewing_name'
-                            size='sm'
-                            type='text'
-                            name='another_renewing_name'
-                            placeholder='Name'
-                          />
-                          <Grid container sm={12} md={12}>
-                            <Grid item sm={6} md={6} pr={2}>
-                              <small>Phone</small>
-                              <Form.Control
-                                controlId='renewing_phone'
-                                size='sm'
-                                type='number'
-                                name='another_renewing_phone'
-                                placeholder='Phone'
-                              />
-                            </Grid>
-                            <Grid item sm={6} md={6} pr={2}>
-                              <small>Email</small>
-                              <Form.Control
-                                controlId='renewing_email'
-                                size='sm'
-                                type='text'
-                                name='another_renewing_email'
-                                placeholder='Email'
-                              />
-                            </Grid>
-                          </Grid>
-                        </div>
-                      </Grid>
-
-
                     </Grid>
                   </Grid>
 
@@ -654,6 +653,23 @@ const AddDepartment = ({ popperPlacement, id }) => {
                           Company Information
                         </Typography>
                       </Grid>
+                      {vendorsDataSource && (
+                        <Grid item sm={12} xs={12} mt={2}>
+                          <small>Select Vendor</small>
+                          <SelectPicker
+                            size='sm'
+                            name='vendor1'
+                            controlId='vendor1'
+                            onChange={e => {
+                              setVendor(e)
+                              selectVendor(e)
+                            }}
+                            value={vendor}
+                            data={vendorsDataSource}
+                            block
+                          />
+                        </Grid>
+                      )}
                       <Grid item sm={12} md={8} pr={2} pt={3}>
                         <small> Company Name </small>
                         <Form.Control type='text' controlId='companyName' size='sm' name='companyName' placeholder='Company Name' />
@@ -680,33 +696,44 @@ const AddDepartment = ({ popperPlacement, id }) => {
                         <Form.Control controlId='companyContactPerson' size='sm' name='companyContactPerson' placeholder='company Contact Person' />
                       </Grid>
 
+                      <Grid item sm={12} xs={12} mt={5}>
+                        <strong pt={5} className='px-5 pt-4'>Additional Contact Person</strong >
+
+                        <div className='flex d-flex row-flex'>
+                          <small>Name</small>
+                          <Form.Control
+                            controlId='renewing_name'
+                            size='sm'
+                            type='text'
+                            name='another_renewing_name'
+                            placeholder='Name'
+                          />
+                          <Grid container sm={12} md={12}>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Phone</small>
+                              <Form.Control
+                                controlId='renewing_phone'
+                                size='sm'
+                                type='number'
+                                name='another_renewing_phone'
+                                placeholder='Phone'
+                              />
+                            </Grid>
+                            <Grid item sm={6} md={6} pr={2}>
+                              <small>Email</small>
+                              <Form.Control
+                                controlId='renewing_email'
+                                size='sm'
+                                type='text'
+                                name='another_renewing_email'
+                                placeholder='Email'
+                              />
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </Grid>
                     </>
-
-                    // :
-                    // <>
-                    // </>
                   }
-                  {
-
-                    // tags.includes('Third Party Contracts') ?
-                    // <>
-                    //   <Typography sx={{ fontWeight: 'bold', fontSize: 18 }} >
-                    //     Third Party Contractors Information
-                    //   </Typography>
-                    //   <Grid item sm={12} md={8} pr={2}>
-                    //     <small> Email </small>
-                    //     <Form.Control controlId='thirdPartyContractorsEmail' size='sm' name='thirdPartyContractorsEmail' placeholder='Third Party Contractors Email' />
-                    //   </Grid>
-                    //   <Grid item sm={12} md={8} pr={2}>
-                    //     <small> LandLine </small>
-                    //     <Form.Control type='number' controlId='thirdPartyContractorsLandline' size='sm' name='thirdPartyContractorsLandline' placeholder='Third Party Contractors Landline' />
-                    //   </Grid>
-                    // </>
-
-                    // :
-                    // <></>
-                  }
-
                 </Grid>
 
               </Grid>

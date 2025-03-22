@@ -116,6 +116,9 @@ const RolesComponent = () => {
   // ------------------------ Change Permission ------------------------------------
 
   const changePermission = e => {
+
+
+
     if (e.target.checked && !selectedPermissions.includes(e.target.id)) {
       selectedPermissions.push(e.target.id)
       setSelectedPermissions([...selectedPermissions])
@@ -126,6 +129,7 @@ const RolesComponent = () => {
       setSelectedPermissions([...selectedPermissions])
     }
 
+    console.log(e.target.checked, e.target.id, selectedPermissions)
   }
 
   const changeGroupPermissions = (e, _id) => {
@@ -396,6 +400,7 @@ const RolesComponent = () => {
                 </Grid>
               )}
               {/* --------------------------------------- ADD Edit Dialog ------------------------------------------- */}
+
               <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
                 <DialogTitle sx={{ textAlign: 'center' }}>
                   <Typography variant='h5' component='span'>
@@ -403,6 +408,7 @@ const RolesComponent = () => {
                   </Typography>
                   <Typography variant='body2'>Set Role Permissions</Typography>
                 </DialogTitle>
+
                 <DialogContent sx={{ p: { xs: 6, sm: 12 } }}>
                   <Box sx={{ my: 4 }}>
                     <FormControl fullWidth>
@@ -456,10 +462,11 @@ const RolesComponent = () => {
                                       <>
                                         <FormControlLabel
                                           sx={{ pr: 5 }}
-                                          label={permission.title}
+                                          label={permission.alias}
                                           control={
                                             <Checkbox
-                                              checked={selectedPermissions.includes(permission.alias) && session.user.permissions.includes(permission.alias)}
+                                              checked={selectedPermissions.includes(permission.alias)
+                                                && session.user.permissions.includes(permission.alias)}
 
                                               size='small'
                                               id={permission.alias}
@@ -499,7 +506,9 @@ const RolesComponent = () => {
                   </DialogActions>
                 )}
               </Dialog>
+
               {/* -----------------------------  --------- Delete Dialog ------------------------------------------------------- */}
+
               <Dialog
                 open={openDeleteDialog}
                 disableEscapeKeyDown
@@ -555,6 +564,7 @@ const RolesComponent = () => {
                   <Button onClick={handleDeleteClose}>No</Button>
                 </DialogActions>
               </Dialog>
+
             </Grid>
           </Grid>
         </Card>

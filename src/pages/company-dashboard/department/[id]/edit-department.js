@@ -57,7 +57,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
   const [newParent, setNewParent] = useState('')
   const [newStatus, setNewStatus] = useState('active')
   const [formError, setFormError] = useState({})
-  const [notAuthorized , setNotAuthorized] = useState(false);
+  const [notAuthorized, setNotAuthorized] = useState(false);
 
   const [formValue, setFormValue] = useState({
     name: ''
@@ -106,112 +106,113 @@ const AddDepartment = ({ popperPlacement, id }) => {
 
   const getUsers = async () => {
     setIsLoading(true)
-    try{
+    try {
       const res = await fetch('/api/company-employee')
-      const { data , message , success } = await res.json()
-      if(res.status == 401 ){
+      const { data, message, success } = await res.json()
+      if (res.status == 401) {
         setNotAuthorized(true);
         setUsersDataSource([{
-          label: <div style={{color:'red'}}> You do not have Permission to View Employees</div>,
+          label: <div style={{ color: 'red' }}> You do not have Permission to View Employees</div>,
           value: undefined
         }])
       }
-      if(!success){
+      if (!success) {
         throw new Error('Error: Fetching Employees ( ' + message + ' )');
       }
-  
+
       const users = data.map(user => ({
         label: user.firstName + ' ' + user.lastName + '  (' + user.email + ')',
         value: user._id
       }))
       setUsersDataSource(users)
-      
+
     }
-    catch(err){
+    catch (err) {
       console.log(err);
-      toast.error(err.toString() , {duration : 5000 , position: 'bottom-right'});
+      toast.error(err.toString(), { duration: 5000, position: 'bottom-right' });
     }
     setIsLoading(false)
   }
 
   // ----------------------------- Get Department ----------------------------------
 
-  const getDepartment =   async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/company-department/' + id)
-    const { data } = await res.json()
-    
-    setFormValue(data[0])
-    setNewParent(data[0].parent)
+  const getDepartment = async () => {
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/company-department/' + id)
+      const { data } = await res.json()
 
-    let parents = parentsDataSource
+      setFormValue(data[0])
+      setNewParent(data[0].parent)
 
-    if(!data[0].parent )
-    parents.push({
-      label: 'Main',
-      value: ''
-    })
-    
-    setParentsDataSource(parents)
+      let parents = parentsDataSource
 
-    if (!data[0].parent) {
-      setNewParent('')
+      if (!data[0].parent)
+        parents.push({
+          label: 'Main',
+          value: ''
+        })
+
+      setParentsDataSource(parents)
+
+      if (!data[0].parent) {
+        setNewParent('')
+      }
+      setUserID(data[0].user_id)
+      setNewStatus(data[0].status)
+      setSelectedDepartment(data)
+      setIsLoading(false)
     }
-    setUserID(data[0].user_id)
-    setNewStatus(data[0].status)
-    setSelectedDepartment(data)
-    setIsLoading(false)
+    catch (err) {
+
     }
-    catch(err){
-      
-    }
-  } 
+  }
 
 
   // ----------------------------- Get Parents ----------------------------------
 
-  const getParents =  async () => {
-    try{
-    setIsLoading(true)
-    const res = await fetch('/api/company-department/')
-    const { data } = await res.json()
+  const getParents = async () => {
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/company-department/')
+      const { data } = await res.json()
 
-    let containMain = false ;
-    
-    const parents = []
-    data.map(departmen => {
-      if(departmen._id != id)
-      {parents.push({
-      label: departmen.name,
-      value: departmen._id
-    })}
+      let containMain = false;
 
-    if(!departmen.parent && formValue.parent ){containMain = true}
-  })
+      const parents = []
+      data.map(departmen => {
+        if (departmen._id != id) {
+          parents.push({
+            label: departmen.name,
+            value: departmen._id
+          })
+        }
 
-    if(!containMain )
-    parents.push({
-      label: 'Main',
-      value: ''
-    })
-    
-    setParentsDataSource(parents)
-    setIsLoading(false)
+        if (!departmen.parent && formValue.parent) { containMain = true }
+      })
+
+      if (!containMain)
+        parents.push({
+          label: 'Main',
+          value: ''
+        })
+
+      setParentsDataSource(parents)
+      setIsLoading(false)
     }
-    catch(err){
-      
+    catch (err) {
+
     }
-  }  
+  }
 
   useEffect(() => {
     getDepartment()
       .then(() => {
-        getUsers().then(()=>{
+        getUsers().then(() => {
           getParents()
         })
       })
-  }, [    ])
+  }, [])
 
 
   // -------------------------------- Changes -----------------------------------------------
@@ -281,17 +282,17 @@ const AddDepartment = ({ popperPlacement, id }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-          <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
-            <Link underline='hover' color='inherit' href='/'>
-              Home
-            </Link>
-            <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
-              Departments List
-            </Link>
-            <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
-              Edit Department
-            </Typography>
-          </Breadcrumbs>
+            <Breadcrumbs aria-label='breadcrumb' sx={{ pb: 0, p: 3 }}>
+              <Link underline='hover' color='inherit' href='/'>
+                Home
+              </Link>
+              <Link underline='hover' color='inherit' href='/company-dashboard/department/'>
+                Departments List
+              </Link>
+              <Typography color='text.primary' sx={{ fontSize: 18, fontWeight: '500' }}>
+                Edit Department
+              </Typography>
+            </Breadcrumbs>
             <Divider />
             <Grid container>
               <Grid item xs={12} sm={7} md={7} sx={{ p: 2, px: 5, mb: 5 }}>
@@ -305,19 +306,19 @@ const AddDepartment = ({ popperPlacement, id }) => {
                 >
                   <Grid container spacing={3}>
                     <Grid item sm={8} xs={12} mt={2}>
-                      <small>Core Department</small> 
-                        <SelectPicker
-                          size='lg'
-                          name='parent '
-                          onChange={e => {
-                            changeParent(e)
-                          }}
-                          value={newParent}
-                          data={parentsDataSource}
-                          block
-                        />
-                        
-                    </Grid> 
+                      <small>Core Department</small>
+                      <SelectPicker
+                        size='lg'
+                        name='parent '
+                        onChange={e => {
+                          changeParent(e)
+                        }}
+                        value={newParent}
+                        data={parentsDataSource}
+                        block
+                      />
+
+                    </Grid>
                   </Grid>
 
                   <Grid container spacing={3}>
@@ -333,7 +334,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     <Grid item sm={12} xs={12} mt={2}>
                       <Form.Group controlId='description'>
                         <small>Department/Section Description</small>
-                        <Form.Control size='lg'  name='description' placeholder='Description' />
+                        <Form.Control size='lg' name='description' placeholder='Description' />
                       </Form.Group>
                     </Grid>
                   </Grid>
@@ -371,7 +372,7 @@ const AddDepartment = ({ popperPlacement, id }) => {
                     </Grid>
                   </Grid>
 
-                  <Box sx={{mt:2, mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
+                  <Box sx={{ mt: 2, mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 40, mt: 6 }}>
                     {!loading && (
                       <>

@@ -8,12 +8,12 @@ import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 import { DataGrid } from '@mui/x-data-grid'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
@@ -71,7 +71,7 @@ const PermissionsTable = () => {
   const [editPositionId, setEditPositionId] = useState(null);
   const [editPositionValue, setEditPositionValue] = useState(null);
   const { data: session, status } = useSession()
-  
+
 
   // ** Hooks
   const dispatch = useDispatch()
@@ -81,7 +81,7 @@ const PermissionsTable = () => {
     dispatch(
       fetchData({
       })
-    ).then(() => setLoading(false)).catch((err)=>{
+    ).then(() => setLoading(false)).catch((err) => {
       setLoading(false);
     })
   }, [dispatch, value])
@@ -94,9 +94,9 @@ const PermissionsTable = () => {
   const editPosition = async () => {
     handleDialogEditToggle();
 
-    let position_ = store.data.filter((pos)=>{
-      return pos.id == editPositionId ;
-    })[0] ;
+    let position_ = store.data.filter((pos) => {
+      return pos.id == editPositionId;
+    })[0];
     console.log(position_);
     let position = { ...position_, title: editPositionValue };
     setLoading(true);
@@ -110,7 +110,7 @@ const PermissionsTable = () => {
       })).then(() => {
         setLoading(false);
 
-        toast.success('edited position succesfully' , {duration:1000 , position:'bottom-right'});
+        toast.success('edited position succesfully', { duration: 1000, position: 'bottom-right' });
       })
 
     }
@@ -377,93 +377,34 @@ const PermissionsTable = () => {
                   </Button>
                 )}
               </Box>
-{
-              loading ?
-              <Loading header='Please Wait' description='Positions are loading'></Loading>:
-              <DataGrid
-                autoHeight
-                rows={store.data}
-                columns={columns}
-                pageSize={pageSize}
-                disableEscapeKeyDown
-                disableIgnoreModificationsIfProcessingProps
-                disableColumnFilter
-                disableColumnSelector
-                disableExtendRowFullWidth
-                disableDensitySelector
-                disableColumnMenu
-                disableVirtualization
+              {
+                loading ?
+                  <Loading header='Please Wait' description='Positions are loading'></Loading> :
+                  <DataGrid
+                    autoHeight
+                    rows={store.data}
+                    columns={columns}
+                    pageSize={pageSize}
+                    disableEscapeKeyDown
+                    disableIgnoreModificationsIfProcessingProps
+                    disableColumnFilter
+                    disableColumnSelector
+                    disableExtendRowFullWidth
+                    disableDensitySelector
+                    disableColumnMenu
+                    disableVirtualization
 
-                disableSelectionOnClick
-                rowsPerPageOptions={[10, 25, 50]}
-                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-              />
+                    disableSelectionOnClick
+                    rowsPerPageOptions={[10, 25, 50]}
+                    onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                    sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                  />
 
-}              
+              }
             </Grid>
           </Card>
         </Grid>
       </Grid>
-
-      
-
-      {/* <Dialog fullWidth maxWidth='sm' onClose={handleDialogEditToggle} open={editDialogOpen}>
-        <DialogTitle sx={{ pt: 12, mx: 'auto', textAlign: 'center' }}>
-          <Typography variant='h5' component='span' sx={{ mb: 2 }}>
-            Edit Permission
-          </Typography>
-        </DialogTitle>
-        <DialogContent sx={{ pb: 12, mx: 'auto' }}>
-          <Box component='form' sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <Select
-              fullWidth
-              value={group}
-              id='select-group'
-              label='Select Group'
-              labelId='group-select'
-              onChange={e => setGroup(e.target.value)}
-              inputProps={{ placeholder: 'Select Group' }}
-            >
-              <MenuItem value='User'>User</MenuItem>
-              <MenuItem value='Role'>Role</MenuItem>
-              <MenuItem value='Permission'>Permission</MenuItem>
-              <MenuItem value='Company'>Company</MenuItem>
-              <MenuItem value='Card'>Card</MenuItem>
-            </Select>
-
-            <TextField
-              fullWidth
-              value={title}
-              name='title'
-              label='Permission Title'
-              onChange={e => {
-                setTitle(e.target.value)
-              }}
-              sx={{ mb: 1, mt: 3, maxWidth: 360 }}
-              placeholder='Enter Position Name'
-            />
-
-            <Box sx={{ mb: 2, alignItems: 'center' }}>{loading && <LinearProgress />}</Box>
-            {!loading && (
-              <Box className='demo-space-x' sx={{ '& > :last-child': { mr: '0 !important' } }}>
-                <Button
-                  size='large'
-                  onClick={e => {
-                    onSubmitEdit()
-                  }}
-                  variant='contained'
-                >
-                  Save Permission
-                </Button>
-                <Button type='reset' size='large' variant='outlined' color='secondary' onClick={handleDialogEditToggle}>
-                  Discard
-                </Button>
-              </Box>
-            )}
-          </Box>
-        </DialogContent>
-      </Dialog> */}
 
       {/* -----------------------------------Add Dialog----------------------------------------- */}
 
@@ -533,7 +474,7 @@ const PermissionsTable = () => {
 
             <TextField
               fullWidth
-              value={ editPositionValue }
+              value={editPositionValue}
               name='title'
               label='Position Title'
               onChange={e => {
